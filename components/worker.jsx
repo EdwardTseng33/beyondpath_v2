@@ -524,46 +524,6 @@ function WorkerDashboard({ inShell = false }) {
 
 function WorkerEmptyState() {
   const APPLICATION_EMAIL = "edwardt0303@gmail.com";
-  const buildApplicationMailto = () => {
-    const today = new Date().toISOString().slice(0, 10);
-    const subject = encodeURIComponent(`[BeyondPath Tier B] {你的名字}・{主領域}・申請 ${today}`);
-    const lines = [
-      "Hi BeyondPath team、",
-      "",
-      "我想申請 Tier B Certification。",
-      "",
-      "▸ 基本資料",
-      "- 名字：",
-      "- 主要 email：",
-      "- 所在地（城市）：",
-      "- 主領域（從 15 領域擇 1-2）：",
-      "- 近 12 個月實作案件數：",
-      "- 目前主要接案管道：（PTT / 朋友介紹 / 104 / Cake / Behance / 其他）",
-      "",
-      "▸ AI workflow",
-      "- 主要使用 AI 工具：（Claude / ChatGPT / Cursor / Midjourney / 其他）",
-      "- 你最自豪的 1 個 AI workflow 案例（簡述 + URL）：",
-      "",
-      "▸ Portfolio · 3 個近 12 個月實際 AI 相關案件",
-      "1. URL + 你的角色 + 客戶類型：",
-      "2. ",
-      "3. ",
-      "",
-      "▸ Logistics",
-      "- 從哪聽到 BeyondPath（推薦人 / 社群 / 文章 / 其他）：",
-      "- 期望被審通過的 Tier 級別：（B / B+ / A）",
-      "- 可進行 30-min video review 的時段（平日 / 週末 · 上午 / 下午 / 晚上）：",
-      "",
-      "▸ 附註（optional）",
-      "任何想讓我們知道的：",
-      "",
-      "————",
-      "本信由 BeyondPath landing page 自動產生申請草稿。",
-      "Prototype demo · 真實服務 2026 Q3 上線。",
-    ];
-    return `mailto:${APPLICATION_EMAIL}?subject=${subject}&body=${encodeURIComponent(lines.join("\n"))}`;
-  };
-  const applicationMailto = buildApplicationMailto();
   const [copiedEmail, setCopiedEmail] = uSW(false);
   const [submitted, setSubmitted] = uSW(() => {
     try {
@@ -607,7 +567,7 @@ function WorkerEmptyState() {
 
           <div style={{ background: "rgba(199,232,74,0.05)", border: "1px solid rgba(199,232,74,0.4)", padding: "14px 18px", marginBottom: 28, fontSize: 13, color: "#c8c6c0", textAlign: "left" }}>
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#c7e84a", display: "block", marginBottom: 6 }}>◆ PROTOTYPE NOTE</span>
-            這是 prototype demo · 目前不會自動送出或儲存個資。若你要正式申請，請用下方按鈕開啟 email 草稿，或手動寄到 Edward 的信箱。
+            這是 prototype demo · 目前不會自動送出或儲存個資。若你要正式申請，請把作品、AI workflow 與可聯絡方式手動寄到 Edward 的信箱。
           </div>
 
           <div style={{ border: "1px dashed rgba(255,255,255,0.16)", padding: "14px 16px", marginBottom: 22, textAlign: "left", background: "rgba(255,255,255,0.018)" }}>
@@ -631,7 +591,6 @@ function WorkerEmptyState() {
           </div>
 
           <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
-            <a href={applicationMailto} style={{ display: "inline-block", padding: "12px 24px", border: "1px solid #c7e84a", background: "#c7e84a", color: "#0a0a0b", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textDecoration: "none" }}>寄申請信給 Edward</a>
             <a href="app.html?role=worker&view=worker-demo" style={{ display: "inline-block", padding: "12px 24px", border: "1px solid rgba(199,232,74,0.65)", color: "#c7e84a", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.12em", textDecoration: "none" }}>看通過後 Worker Console</a>
             <a href="landing.html" style={{ display: "inline-block", padding: "12px 24px", border: "1px solid #c8c6c0", color: "#f0eee8", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.12em", textDecoration: "none" }}>← 回 BeyondPath 首頁</a>
           </div>
