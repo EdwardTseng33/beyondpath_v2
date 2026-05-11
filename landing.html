@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BeyondPath · 華語區 AI 工作者認證網路</title>
-<meta name="description" content="BeyondPath 幫台灣品牌與中小企業把 AI 內容、網站、自動化需求變成可驗收的交付專案，媒合已審核的 AI 工作者。中文 brief、3 天候選人、beta 人工把關。" />
+<meta name="description" content="BeyondPath 幫台灣品牌與中小企業把 AI 內容、網站、自動化需求變成可驗收的交付專案，媒合已審核的 AI 工作者。中文 brief、24 小時初步判斷、beta 人工把關。" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -636,8 +636,8 @@ function EStaticBar() {
         <span style={{ color: "var(--text)", marginLeft: "auto" }}>v0.5β · TAIWAN BETA</span>
       </div>
       <div className="item">
-        <span className="k">FIRST MATCH</span>
-        <span style={{ color: "var(--accent)", marginLeft: "auto" }}>3 DAYS</span>
+        <span className="k">FIRST REVIEW</span>
+        <span style={{ color: "var(--accent)", marginLeft: "auto" }}>24H</span>
       </div>
       <div className="item">
         <span className="k">FIRST PROJECT</span>
@@ -728,15 +728,15 @@ function EHero() {
           <span>// 台灣 beta · AI 工作交付媒合 · 發案與接案雙邊審核</span>
         </div>
         <h1 className="le-hero-title le-zh">
-          <span>會用 <span className="le-grad">AI</span> 的人很多。</span>
-          <span className="sub">能對交付結果負責的人很少。</span>
+          <span>把模糊的 <span className="le-grad">AI</span> 需求，</span>
+          <span className="sub">變成可驗收的交付成果。</span>
         </h1>
         {/* v0.4.9 wave 6 #6 · Takeaway pills · 讓用戶 1 秒掌握 LP 賣什麼（Edward 反饋「無法快速掌握重點」） */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, margin: "20px 0 28px" }}>
           {[
-            { k: "1", v: "你說結果，我們先把需求拆成可驗收範圍" },
-            { k: "2", v: "3 天內看 3 位已審核候選人與配對理由" },
-            { k: "3", v: "創辦人先審 brief、候選人與交付標準" },
+            { k: "1", v: "你說結果，我們先拆範圍、交付物與驗收標準" },
+            { k: "2", v: "24 小時內回覆適配領域、預算與候選方向" },
+            { k: "3", v: "進入短名單後，再看已審核候選人與配對理由" },
           ].map((p) => (
             <div key={p.k} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", border: "1px solid var(--accent-line)", borderRadius: 999, background: "rgba(199,232,74,0.04)" }}>
               <span style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.1em" }}>0{p.k}</span>
@@ -746,7 +746,7 @@ function EHero() {
         </div>
         <div className="le-hero-grid">
           <div className="le-hero-blurb le-zh">
-            BeyondPath 幫台灣品牌與中小企業，把 AI 內容、網站、自動化需求變成 <b>可驗收的交付專案</b>，並媒合已審核的 AI-native 工作者。你不是把案子丟給陌生人，而是交給一套有人把關的 AI 交付流程。
+            BeyondPath 幫台灣品牌與中小企業，把 AI 內容、網站、自動化需求變成 <b>可驗收的交付專案</b>，並媒合已審核的 AI-native 工作者。最快 24 小時先回覆這案能不能做、該找哪類人、下一步怎麼開案。
           </div>
           <div className="le-hero-cta-col">
             <div className="le-hero-trust-label">
@@ -754,8 +754,8 @@ function EHero() {
               founder-led beta · 已審核候選人 · milestone 交付
             </div>
             <a href="app.html?role=client&step=0" className="le-cta-primary">
-              <span>我想找 3 位候選人 →</span>
-              <span style={{ fontSize: 11, opacity: 0.6 }}>留下需求 · 3 天回覆</span>
+              <span>我想先做需求判斷 →</span>
+              <span style={{ fontSize: 11, opacity: 0.6 }}>留下需求 · 24 小時內初步回覆</span>
             </a>
             <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary">
               <span>我想申請首案候選池 →</span>
@@ -793,8 +793,8 @@ function EHero() {
           </div>
           <div className="cell">
             <span className="badge target">SPEC</span>
-            <div className="l">MATCH TIME</div>
-            <div className="v" style={{ color: "var(--text)" }}>3d</div>
+            <div className="l">REVIEW TIME</div>
+            <div className="v" style={{ color: "var(--text)" }}>24h</div>
           </div>
           <div className="cell">
             <span className="badge target">SPEC</span>
@@ -970,7 +970,7 @@ function EManifesto() {
 // Engines · 6 (v0.4.6 加「你因此 →」用戶利益句 · 蕪菁頭 must-fix #2)
 const ENGINES = [
   { n: "01", en: "AI BRIEF PARSER", zh: "Brief 拆解引擎", d: "把一段中文需求拆成目標、交付物、時程、預算與驗收點。POC 階段會先由創辦人覆核。", you: "你因此 → 不用先會寫專業 brief，也能把案子說清楚", m: "BriefMock", staticMock: null },
-  { n: "02", en: "TIER MATCH ENGINE", zh: "Tier 配對引擎", d: "根據領域、作品、工具流與交付經驗推薦 Top 3，並附上為什麼適合。", you: "你因此 → 不發 30 封信、3 天內看到 3 個比較像對的人", m: null, staticMock: { metric: "Top 3", label: "MATCH · TIER A+ / A / B" } },
+  { n: "02", en: "TIER MATCH ENGINE", zh: "Tier 配對引擎", d: "根據領域、作品、工具流與交付經驗推薦 Top 3，並附上為什麼適合。", you: "你因此 → 不發 30 封信，24 小時內先知道該找哪類人", m: null, staticMock: { metric: "Top 3", label: "MATCH · TIER A+ / A / B" } },
   { n: "03", en: "SCOPE + MILESTONE", zh: "範圍 × 驗收點", d: "POC 階段先人工確認交付物、時間與風險；正式 beta 再逐步開啟合約與釋金。", you: "你因此 → 開案前先知道什麼算完成，不會整筆預算一次失控", m: "ContractMock", staticMock: null },
   { n: "04", en: "PROJECT DASHBOARD", zh: "案件儀表板", d: "把進度、版本、交付物與待確認事項集中，避免案子散在 email、LINE 與雲端檔案裡。", you: "你因此 → 知道現在卡在哪，不用一直追問", m: null, staticMock: { metric: "M1-M5", label: "MILESTONE · AUDIT-READY" } },
   { n: "05", en: "NPS FLYWHEEL", zh: "NPS 雙邊飛輪", d: "每次結案都留下客戶回饋、交付品質與合作紀錄，逐步形成推薦權重。", you: "你因此 → 好的工作者會被看見，不只靠人脈與聲量", m: null, staticMock: { metric: "+10", label: "ANTI-MATTHEW · 5-DIM NPS" } },
@@ -1156,7 +1156,7 @@ function EProtocol() {
     <section className="le-section" id="flywheel">
       <div className="inner">
         <div className="le-cap" style={{ color: "var(--accent-dim)", marginBottom: 24 }}>◆ PROTOCOL · 12 步協定 · 從 brief 到收款</div>
-        <h2 className="le-h2">上傳需求 → 3 天配對 → 開案 → 結案拿錢。<br/>全程 <span className="le-acc-dim">0</span> 個 email。</h2>
+        <h2 className="le-h2">上傳需求 → 24 小時初判 → 短名單配對 → 開案交付。<br/>全程 <span className="le-acc-dim">0</span> 個 email。</h2>
         <div className="le-protocol-flow">
           <div className="le-protocol-stages">
             {PROTOCOL_STAGES.map((s, si) => (
@@ -1303,8 +1303,8 @@ function EVerticals() {
   return (
     <section className="le-section" id="network" style={{ padding: "56px 56px" }}>
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 16 }}>◆ NETWORK · 15 領域、3 天內配對</div>
-        <h2 className="le-h2" style={{ fontSize: 32 }}>15 個 <span className="le-acc">領域</span>，3 天內找到對的人。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 16 }}>◆ NETWORK · 15 領域、24 小時初步判斷</div>
+        <h2 className="le-h2" style={{ fontSize: 32 }}>15 個 <span className="le-acc">領域</span>，先判斷該找哪一種人。</h2>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 24 }}>
           {VERTICALS.map((v, i) => {
             const isHot = HOT.indexOf(i) >= 0;
@@ -1334,7 +1334,7 @@ function EVerticals() {
 function ETrust3() {
   const items = [
     { v: "1:1", en: "FOUNDER REVIEW", zh: "POC 階段人工把關", facts: ["先拆 brief 與交付範圍", "再挑候選人與評估風險", "不讓你直接丟進平台黑箱"], color: "var(--accent)" },
-    { v: "3", en: "SHORTLIST", zh: "3 天看候選人", facts: ["附配對理由與能力拆解", "中文 brief 原生理解", "先看適配，再談開案"], color: "var(--text)" },
+    { v: "24h", en: "MATCH DIRECTION", zh: "先給候選方向", facts: ["初判領域與預算是否合理", "中文 brief 原生理解", "先看適配，再談短名單"], color: "var(--text)" },
     { v: "M1", en: "MILESTONE", zh: "每案先定驗收點", facts: ["交付物、時間、風險先講清楚", "正式 beta 逐步開啟釋金機制", "避免整筆預算一次失控"], color: "var(--accent-dim)" }
   ];
   return (
@@ -1361,7 +1361,7 @@ function ETrust3() {
 
 // FAQ · v0.4.6 (2026-05-10) 改寫為發案/接案者真問題、不再是投資人 FAQ
 const FAQS = [
-  { n: "01", tag: "發案者", q: "我已經有合作的接案者 / 設計師了，為什麼要換 BeyondPath？", a: "你不用換、你可以平行用。BeyondPath 解的是「現有人脈池外、突然要新類型 AI 交付」這個場景——例如你平常合作的設計師不會剪短影音、你又不想為了一支 reels 重新發 30 封 brief。留下需求、3 天內看到 Top 3 配對、附打分數理由。首案合不合適你自己判斷、平台不綁約、不收訂閱。" },
+  { n: "01", tag: "發案者", q: "我已經有合作的接案者 / 設計師了，為什麼要換 BeyondPath？", a: "你不用換、你可以平行用。BeyondPath 解的是「現有人脈池外、突然要新類型 AI 交付」這個場景——例如你平常合作的設計師不會剪短影音、你又不想為了一支 reels 重新發 30 封 brief。留下需求後，24 小時內先得到適配領域、預算與候選方向；進入短名單後再看 Top 3 配對與理由。首案合不合適你自己判斷、平台不綁約、不收訂閱。" },
   { n: "02", tag: "發案者", q: "做不出來 / 品質不對怎麼辦？", a: "POC 階段先不把你丟進全自動平台。我們會先協助拆需求、確認 milestone 與交付標準，再推薦候選人。正式 beta 會逐步開啟階段釋金、雙邊 NPS、替補與爭議處理機制；目前的目標是先把第一批交付專案用人工把關跑穩。" },
   { n: "03", tag: "發案者", q: "這個比 Fiverr 貴 / 比工作室便宜嗎？怎麼定價？", a: "我們在 Fiverr 跟月費代理之間。首案 NT$ 50-100K / 案、按案計費、不綁約。如果合作得好可以轉 retainer NT$ 30-60K / 月、彈性換多工種。比 Fiverr 貴是因為這裡的人都通過 < 10% 認證、出包平台會接住；比月費代理便宜是因為你不用養一個用不滿的整個 team。" },
   { n: "04", tag: "接案者", q: "我想接案、要怎麼申請？真的通過率 < 10%？", a: "對。4 階段認證：（1）技能測驗——你的領域基本功、（2）同儕 review——已認證 worker 評分、（3）客戶模擬案件——平台給一個假需求、你交一份成果、（4）主審委員會——通過前三關才進。整個流程約 2-3 週。沒過可以 6 個月後重申、平台會給回饋說明哪裡需要補強。" },
@@ -1456,11 +1456,11 @@ function EFinalCta() {
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ JOIN · PRIVATE BETA</div>
         <h2 className="h">把第一個案子，交給對的人。</h2>
         <div className="grid">
-          <div className="blurb le-zh">第一批 beta 先人工審核。發案方可以留下需求，3 天內回覆是否適合首案交付；接案者可以提交作品與 AI workflow，通過後進入首案候選池。</div>
+          <div className="blurb le-zh">第一批 beta 先人工審核。發案方可以留下需求，24 小時內先回覆是否適合首案交付、該找哪類人與下一步；接案者可以提交作品與 AI workflow，通過後進入首案候選池。</div>
           <div className="form">
             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10, marginBottom: 14 }}>
               <a href="app.html?role=client&step=0" className="le-cta-primary" style={{ padding: "14px 18px", fontSize: 12 }}>
-                <span>我想找 3 位候選人 →</span>
+                <span>我想先做需求判斷 →</span>
                 <span style={{ fontSize: 10, opacity: 0.65 }}>發案方</span>
               </a>
               <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary" style={{ padding: "14px 18px", fontSize: 12 }}>
@@ -1551,7 +1551,7 @@ function EStory() {
                 <b style={{ color: "var(--accent)", fontWeight: 700 }}>① 先用首案驗證合作</b> · 先從 <b style={{ color: "var(--accent)" }}>NT$ 50-100K</b> 交付專案開始，不需要一次簽長約。
               </div>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>② 少管理不確定性</b> · 留下需求、<b style={{ color: "var(--accent)" }}>3 天</b>看到候選人與配對理由，不用自己發 30 封訊息。
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>② 少管理不確定性</b> · 留下需求、<b style={{ color: "var(--accent)" }}>24 小時</b>先知道候選方向與下一步，不用自己發 30 封訊息。
               </div>
               <div>
                 <b style={{ color: "var(--accent)", fontWeight: 700 }}>③ 有人先幫你判斷</b> · POC 階段由創辦人協助拆範圍、看候選人、確認交付條件。
@@ -1602,7 +1602,7 @@ function EStory() {
           </p>
           <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
             <a href="app.html?role=client&step=0" className="le-cta-primary" style={{ padding: "14px 22px", fontSize: 13 }}>
-              <span>我想找 3 位候選人 →</span>
+              <span>我想先做需求判斷 →</span>
             </a>
             <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary" style={{ padding: "14px 22px", fontSize: 13 }}>
               <span>我想申請首案候選池 →</span>

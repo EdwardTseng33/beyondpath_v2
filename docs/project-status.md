@@ -31,6 +31,7 @@ Last updated: 2026-05-11
 - Updated the shell logout action so demo users clear role/onboarding state and return to `landing.html`.
 - Added `waitlist.html` as a manual waitlist contact page with visible recipient email, copy-email fallback, and email draft link; prototype banners now link there instead of directly opening mailto.
 - Reworked the landing hero and related copy from "trial/test project" language toward "可驗收的 AI 交付專案 / 首案交付", and added `docs/product-flow-competitor-review-2026-05-11.md` with competitor-informed product recommendations.
+- Updated the landing promise from "3 天候選人" to a more accurate AI-assisted service promise: "24 小時初步判斷" first, then shortlist matching.
 
 ## Known Constraints
 

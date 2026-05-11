@@ -51,7 +51,7 @@ BeyondPath 目前最有潛力的定位不是「AI freelancer marketplace」，�
 | A.Team | Vetted experts / AI builders，組隊交付 production-ready AI | 和高階 peers 做高影響力專案 | BeyondPath 可加入「不是單一 freelancer，而是可組隊交付」敘事。 |
 | MarketerHire | 48 小時內以 AI + human expertise 配對 vetted marketer | 被推薦給需要行銷成果的品牌 | 對 DTC / MarTech 方向很接近，可借鏡「快、少篩選、直接給人選」。 |
 | Upwork Expert-Vetted | Top 1% talent badge，Enterprise trust | badge、priority、higher pay、Talent Manager | 接案者需要「被看見的憑證」與更高報價理由。 |
-| Lemon.io / Gun.io | 48h 或 3-5 天內給 vetted developer shortlist | 已審核、被手工配對、較高品質案源 | BeyondPath 的「3 天看候選人」方向是對的，應補上替補與交付失敗處理。 |
+| Lemon.io / Gun.io | 48h 或 3-5 天內給 vetted developer shortlist | 已審核、被手工配對、較高品質案源 | BeyondPath 不必照抄固定天數：先承諾 24 小時初步判斷，再進入短名單媒合。 |
 | Contra | Commission-free contracts、portfolio、payments、workspace | 0% commission / freelancer-friendly | 接案者會被低抽成、作品展示、直接溝通吸引；BeyondPath 可強調初期分潤透明。 |
 | Mayple | Vetted marketing experts，強調 achieved above-benchmark results | 專家被高品質品牌看見 | BeyondPath 的 worker 審核應從「會用 AI」升級成「有結果證據」。 |
 | Mercor | AI talent / domain expert marketplace，服務 AI labs 與 AI training | 高技能專家被媒合到 AI 相關工作 | BeyondPath 應避開 Mercor 的 AI lab/data training，專注台灣品牌的 AI 交付。 |
@@ -139,7 +139,8 @@ BeyondPath 目前最有潛力的定位不是「AI freelancer marketplace」，�
 - 可驗收交付
 - 已審核 AI 工作者
 - 中文 brief
-- 3 天候選人
+- 24 小時初步判斷
+- 短名單候選人
 - 首案交付
 - AI 工作交付信任層
 
