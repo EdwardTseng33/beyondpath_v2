@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Join Waitlist · BeyondPath</title>
+<meta name="description" content="加入 BeyondPath waitlist。Prototype 階段不會自動收集個資，請寄信給 Edward 或複製 email 手動聯繫。" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="components/styles.css">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --bg-1: #101012;
+    --line: rgba(255,255,255,0.08);
+    --line-soft: rgba(255,255,255,0.04);
+    --text: #f0eee8;
+    --text-2: #c8c6c0;
+    --muted: #9a9aa3;
+    --accent: #c7e84a;
+    --accent-line: rgba(199,232,74,0.4);
+    --accent-soft: rgba(199,232,74,0.08);
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', 'Noto Sans TC', system-ui, sans-serif;
+    --zh: 'Noto Sans TC', 'IBM Plex Sans', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); }
+  .wl-root { min-height: 100vh; display: flex; flex-direction: column; }
+  .wl-top { padding: 18px 32px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .wl-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.02em; }
+  .wl-mark { width: 16px; height: 16px; border-radius: 4px; background: var(--accent); box-shadow: 0 0 0 4px rgba(199,232,74,0.08); }
+  .wl-brand span span { color: var(--accent); }
+  .wl-top a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); font: 600 11px/1 var(--mono); letter-spacing: 0.12em; }
+  .wl-top a:hover { color: var(--accent); border-bottom-color: var(--accent-line); }
+  .wl-main { flex: 1; display: grid; place-items: center; padding: 56px 24px; position: relative; overflow: hidden; }
+  .wl-main::before { content: ""; position: absolute; inset: -20%; background: radial-gradient(circle at 20% 20%, rgba(199,232,74,0.12), transparent 28%), radial-gradient(circle at 80% 70%, rgba(94,196,214,0.08), transparent 30%); pointer-events: none; }
+  .wl-card { width: 100%; max-width: 660px; position: relative; z-index: 1; border: 1px solid var(--line); background: rgba(10,10,11,0.92); box-shadow: 0 30px 90px rgba(0,0,0,0.55); padding: 40px 36px; }
+  .wl-eyebrow { font: 700 10px/1 var(--mono); letter-spacing: 0.22em; color: var(--accent); text-transform: uppercase; margin-bottom: 18px; }
+  .wl-h { font: 800 40px/1.18 var(--zh); letter-spacing: -0.02em; margin: 0 0 16px; }
+  .wl-sub { font: 400 16px/1.75 var(--zh); color: var(--text-2); margin: 0 0 28px; max-width: 34rem; }
+  .wl-note { border: 1px solid var(--accent-line); background: var(--accent-soft); padding: 14px 16px; color: var(--text-2); font: 400 13px/1.7 var(--zh); margin-bottom: 22px; }
+  .wl-note b { color: var(--accent); }
+  .wl-email-box { border: 1px dashed rgba(255,255,255,0.16); padding: 16px; margin-bottom: 22px; background: rgba(255,255,255,0.018); }
+  .wl-label { font: 700 10px/1 var(--mono); color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 10px; }
+  .wl-email-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .wl-email { color: var(--accent); font: 700 15px/1.2 var(--mono); background: rgba(199,232,74,0.06); border: 1px solid rgba(199,232,74,0.2); padding: 10px 12px; }
+  .wl-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+  .wl-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 13px 18px; text-decoration: none; border: 1px solid var(--text-2); color: var(--text); font: 800 12px/1 var(--mono); letter-spacing: 0.12em; background: transparent; cursor: pointer; }
+  .wl-btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .wl-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .wl-btn.primary:hover { color: var(--bg); filter: brightness(1.08); }
+  .wl-roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 22px; }
+  .wl-role { padding: 12px 14px; border: 1px solid var(--line); background: rgba(255,255,255,0.018); }
+  .wl-role .t { font: 700 12px/1.3 var(--zh); color: var(--text); margin-bottom: 5px; }
+  .wl-role .s { font: 500 10px/1.5 var(--mono); color: var(--muted); letter-spacing: 0.08em; }
+  .wl-bottom { padding: 16px 32px; border-top: 1px solid var(--line-soft); color: var(--muted); font: 500 10px/1.6 var(--mono); letter-spacing: 0.08em; }
+  @media (max-width: 720px) {
+    .wl-top { padding: 14px 18px; }
+    .wl-card { padding: 30px 22px; }
+    .wl-h { font-size: 30px; }
+    .wl-roles { grid-template-columns: 1fr; }
+    .wl-actions { flex-direction: column; }
+    .wl-btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="wl-root">
+  <header class="wl-top">
+    <div class="wl-brand"><span class="wl-mark"></span><span>Beyond<span>Path</span></span></div>
+    <a href="landing.html">BACK TO LANDING</a>
+  </header>
+  <main class="wl-main">
+    <section class="wl-card">
+      <div class="wl-eyebrow">◆ JOIN WAITLIST · PROTOTYPE STAGE</div>
+      <h1 class="wl-h">想收到 BeyondPath beta 進度，先寄信給 Edward。</h1>
+      <p class="wl-sub">
+        目前 prototype 還沒有正式表單後端，不會自動收集或儲存你的個資。你可以用 email 告訴我你是發案方、接案者，或只是想追蹤產品進度。
+      </p>
+      <div class="wl-note">
+        <b>建議信件內容：</b>你的名字、角色、想看的方向、是否願意參與第一批 beta 試做。
+      </div>
+      <div class="wl-email-box">
+        <div class="wl-label">manual recipient</div>
+        <div class="wl-email-row">
+          <code class="wl-email" id="waitlist-email">edwardt0303@gmail.com</code>
+          <button class="wl-btn" type="button" id="copy-email">複製 EMAIL</button>
+        </div>
+      </div>
+      <div class="wl-roles">
+        <div class="wl-role"><div class="t">發案方</div><div class="s">CLIENT · WANT PILOT</div></div>
+        <div class="wl-role"><div class="t">接案者</div><div class="s">WORKER · WANT CERT</div></div>
+        <div class="wl-role"><div class="t">追蹤進度</div><div class="s">FOLLOW · PRODUCT UPDATES</div></div>
+      </div>
+      <div class="wl-actions">
+        <a class="wl-btn primary" href="mailto:edwardt0303@gmail.com?subject=BeyondPath%20Waitlist&body=%E4%BD%A0%E5%A5%BD%20Edward%EF%BC%8C%0A%0A%E6%88%91%E6%83%B3%E5%8A%A0%E5%85%A5%20BeyondPath%20waitlist%E3%80%82%0A%0A-%20%E5%90%8D%E5%AD%97%EF%BC%9A%0A-%20%E8%A7%92%E8%89%B2%EF%BC%88%E7%99%BC%E6%A1%88%E6%96%B9%20%2F%20%E6%8E%A5%E6%A1%88%E8%80%85%20%2F%20%E8%BF%BD%E8%B9%A4%E9%80%B2%E5%BA%A6%EF%BC%89%EF%BC%9A%0A-%20%E6%83%B3%E7%9C%8B%E7%9A%84%E6%96%B9%E5%90%91%EF%BC%9A%0A-%20%E6%98%AF%E5%90%A6%E9%A1%98%E6%84%8F%E5%8F%83%E8%88%87%E7%AC%AC%E4%B8%80%E6%89%B9%20beta%20%E8%A9%A6%E5%81%9A%EF%BC%9A%0A%0A%E8%AC%9D%E8%AC%9D%E3%80%82">開啟 waitlist email 草稿 →</a>
+        <a class="wl-btn" href="landing.html">回產品頁</a>
+      </div>
+    </section>
+  </main>
+  <footer class="wl-bottom">BeyondPath · Prototype v0.2 · waitlist uses manual email until a privacy-reviewed form backend is ready.</footer>
+</div>
+<script>
+  document.getElementById("copy-email").addEventListener("click", function () {
+    var email = document.getElementById("waitlist-email").textContent;
+    try {
+      navigator.clipboard.writeText(email);
+      this.textContent = "已複製";
+      var btn = this;
+      setTimeout(function () { btn.textContent = "複製 EMAIL"; }, 1600);
+    } catch (e) {}
+  });
+</script>
+</body>
+</html>

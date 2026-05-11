@@ -16,6 +16,7 @@ Last updated: 2026-05-11
 - `app.html?role=worker&onboarding=1&submitted=1`: worker application submitted state.
 - `mobile.html`: mobile prototype.
 - `index.html`: design canvas / artboard view.
+- `waitlist.html`: manual waitlist contact page for prototype-stage visitors.
 
 ## Recent Fixes
 
@@ -28,6 +29,7 @@ Last updated: 2026-05-11
 - Clarified the worker application submitted state: the prototype does not auto-submit data, so applicants are instructed to email `edwardt0303@gmail.com`, with a mailto draft and visible manual recipient fallback.
 - Added a direct Worker Console demo path so the worker-side prototype is visible without being trapped behind the certification application flow: `app.html?role=worker&view=worker-demo`.
 - Updated the shell logout action so demo users clear role/onboarding state and return to `landing.html`.
+- Added `waitlist.html` as a manual waitlist contact page with visible recipient email, copy-email fallback, and email draft link; prototype banners now link there instead of directly opening mailto.
 
 ## Known Constraints
 
