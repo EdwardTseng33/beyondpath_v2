@@ -1,0 +1,1608 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BeyondPath · 華語區 AI 工作者認證網路</title>
+<meta name="description" content="華語區第一個 AI 工作者認證網路。通過率 < 10% · escrow 託管 · worker 淨拿 95% · Tier 認證資產。" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="components/styles.css">
+<style>
+  /* ========= Base ========= */
+  html, body { margin: 0; padding: 0; background: var(--bg); font-family: var(--sans); color: var(--text); }
+  body { display: flex; flex-direction: column; min-height: 100vh; }
+  #root { flex: 1; min-height: 0; }
+
+  /* ========= Disclaimer banner ========= */
+  .bp-disclaimer-top { flex: 0 0 auto; background: #1a1a08; background-image: repeating-linear-gradient(45deg, rgba(255,248,212,0.04) 0 8px, transparent 8px 16px); color: #fff8d4; padding: 8px 18px; font: 500 11px/1.5 var(--mono); display: flex; align-items: center; gap: 14px; border-bottom: 1px solid rgba(255,248,212,0.12); position: relative; z-index: 100; }
+  .bp-disclaimer-top .icon { font-size: 14px; flex: 0 0 auto; }
+  .bp-disclaimer-top .label { font-weight: 700; letter-spacing: 0.08em; flex: 0 0 auto; }
+  .bp-disclaimer-top .body { flex: 1; min-width: 0; opacity: 0.88; font-family: var(--zh); font-weight: 400; font-size: 11.5px; }
+  .bp-disclaimer-top a { color: #c7e84a; text-decoration: none; border-bottom: 1px solid rgba(199,232,74,0.4); padding-bottom: 1px; }
+  .bp-disclaimer-top a:hover { border-bottom-color: #c7e84a; }
+  .bp-disclaimer-top .close { background: transparent; border: 0; color: #fff8d4; font-size: 16px; cursor: pointer; padding: 4px 8px; opacity: 0.6; flex: 0 0 auto; }
+  .bp-disclaimer-top .close:hover { opacity: 1; }
+  @media (max-width: 768px) { .bp-disclaimer-top { flex-wrap: wrap; padding: 6px 12px; gap: 6px; font-size: 10.5px; } .bp-disclaimer-top .body { font-size: 10.5px; flex-basis: 100%; order: 3; } .bp-disclaimer-top .close { order: 2; } }
+  .bp-disclaimer-foot { flex: 0 0 auto; background: #050507; color: #6a6a6c; padding: 14px 18px; font: 500 11px/1.6 var(--mono); text-align: center; border-top: 1px solid rgba(255,255,255,0.04); }
+  .bp-disclaimer-foot a { color: #9a9aa3; text-decoration: none; border-bottom: 1px solid rgba(199,232,74,0.3); padding-bottom: 1px; }
+  .bp-disclaimer-foot a:hover { color: #c7e84a; border-bottom-color: #c7e84a; }
+  @media (max-width: 768px) { .bp-disclaimer-foot { text-align: left; padding: 12px 14px; font-size: 10px; } }
+
+  /* ========= Synapse · root ========= */
+  /* v0.4.6 (2026-05-10) 女巫 fix-6 · local muted override 達 WCAG AA 5.6:1（原 #7a786f 4.0:1 邊緣 fail） */
+  .le-root { --muted: #9a9aa3; --muted-2: #6f6f78; background: var(--bg); color: var(--text); font-family: var(--sans); position: relative; overflow: hidden; }
+  .le-root *, .le-root *::before, .le-root *::after { box-sizing: border-box; }
+  .le-mono { font-family: var(--mono); letter-spacing: 0.04em; }
+  .le-zh { font-family: var(--zh); }
+  .le-disp { font-family: var(--sans); font-weight: 800; letter-spacing: -0.04em; }
+  .le-cap { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+  .le-acc { color: var(--accent); }
+  .le-acc-dim { color: var(--accent-dim); }
+  .le-info { color: var(--info); }
+  .le-warn { color: var(--warn); }
+  .le-text2 { color: var(--text-2); }
+
+  /* v0.3 cut leScan + leTape + leFlick - keep leBreath only */
+  @keyframes leBreath { 0%,100%{box-shadow:0 0 0 0 oklch(0.88 0.22 128 / 0.4)} 50%{box-shadow:0 0 0 6px oklch(0.88 0.22 128 / 0)} }
+  .le-pulse { animation: leBreath 2s ease-in-out infinite; }
+
+  /* v0.3 le-grad animation cut */
+  .le-grad { background: linear-gradient(96deg, var(--text) 0%, var(--accent) 50%, var(--text) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* v0.3 le-noise SVG turbulence cut */
+
+  .le-card { background: rgba(255,255,255,0.02); border: 1px solid var(--line); }
+  .le-card:hover { border-color: var(--accent-line); }
+  .le-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--line) 20%, var(--line) 80%, transparent); }
+
+  /* ========= Live ticker ========= */
+  .le-ticker { display: flex; gap: 0; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.14em; border-bottom: 1px solid var(--line-soft); background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); }
+  .le-ticker .item { flex: 1; padding: 12px 18px; border-right: 1px solid var(--line-soft); display: flex; gap: 12px; align-items: center; }
+  .le-ticker .item:last-child { border-right: none; flex: 0 0 200px; }
+  .le-ticker .item .k { color: var(--muted-2); }
+  @media (max-width: 768px) { .le-ticker { overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; } .le-ticker::-webkit-scrollbar { display: none; } .le-ticker .item { padding: 10px 14px; flex: 0 0 auto; font-size: 10px; } .le-ticker .item:last-child { flex: 0 0 auto; } }
+
+  /* ========= Nav ========= */
+  .le-nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; padding: 14px 56px; background: rgba(10,10,11,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-soft); }
+  .le-nav .brand { font-family: var(--sans); font-weight: 800; font-size: 22px; letter-spacing: -0.03em; }
+  .le-nav .brand small { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.2em; margin-left: 10px; }
+  .le-nav .links { display: flex; gap: 28px; margin-left: 60px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; }
+  .le-nav .links a { color: var(--muted); text-decoration: none; transition: color 120ms; }
+  .le-nav .links a:hover { color: var(--text); }
+  .le-nav .actions { margin-left: auto; display: flex; gap: 12px; }
+  .le-nav .btn-ghost { background: transparent; border: 1px solid var(--accent-line); color: var(--text); padding: 9px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; cursor: pointer; text-decoration: none; }
+  .le-nav .btn-primary { background: var(--accent); border: 0; color: var(--bg); padding: 9px 18px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; font-weight: 700; cursor: pointer; text-decoration: none; }
+  @media (max-width: 900px) { .le-nav { padding: 12px 16px; gap: 8px; } .le-nav .links { display: none; } .le-nav .brand { font-size: 18px; } .le-nav .brand small { display: none; } .le-nav .btn-ghost { display: none; } .le-nav .btn-primary { padding: 8px 12px; font-size: 10px; } }
+
+  /* v0.3 sticky scrolled state */
+  .le-nav { transition: padding 240ms ease, background 240ms ease, border-color 240ms ease; }
+  .le-nav.scrolled { background: rgba(10,10,11,0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--accent); padding-top: 10px; padding-bottom: 10px; box-shadow: 0 2px 16px rgba(199, 232, 74, 0.12), 0 8px 24px rgba(0, 0, 0, 0.4); }
+  .le-nav.scrolled .brand { font-size: 18px; transition: font-size 240ms ease; }
+  .le-nav.scrolled .btn-primary, .le-nav.scrolled .btn-ghost { padding: 7px 14px; transition: padding 240ms ease; }
+
+  /* v0.3 back-to-top button */
+  .le-totop { position: fixed; right: 24px; bottom: 24px; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--bg); border: 0; font-family: var(--mono); font-size: 18px; font-weight: 800; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 280ms ease, transform 240ms ease; z-index: 60; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+  .le-totop.visible { opacity: 1; pointer-events: auto; }
+  .le-totop:hover { transform: translateY(-2px); }
+  @media (max-width: 900px) { .le-totop { right: 16px; bottom: 16px; width: 40px; height: 40px; font-size: 16px; } }
+
+  /* v0.3 zh-Hant universal font rule (council E spec) */
+  :lang(zh-Hant) h1, :lang(zh-Hant) h2, :lang(zh-Hant) h3,
+  .le-hero-title, .le-h2, .le-manifesto-h, .le-finalcta .h, .le-founder .quote {
+    word-break: keep-all;
+    text-wrap: balance;
+    font-feature-settings: "palt" 1, "kern" 1;
+  }
+  .le-hero-blurb, .le-zh p, .le-engine-card .desc, .le-whyus-card .body,
+  .le-trust-strip .chip .body, .le-tier-row .info .zh, .le-vision-row .desc,
+  .le-trust3-cell .desc, .le-trust3-cell .zh, .le-faq .body, .le-faq summary,
+  .le-vert-grid .cell .name, .le-engine-card .zh, .le-whyus-card .ttl,
+  .le-trust-strip .chip .ttl, .le-protocol-grid .cell .t,
+  .le-story-block .h, .le-story-block .body { word-break: keep-all; line-break: strict; }
+
+  /* v0.3 static-bar (replace LiveTicker) */
+  .le-staticbar { display: flex; gap: 0; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.14em; border-bottom: 1px solid var(--line-soft); background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); }
+  .le-staticbar .item { flex: 1; padding: 12px 18px; border-right: 1px solid var(--line-soft); display: flex; gap: 12px; align-items: center; min-width: 0; }
+  .le-staticbar .item:last-child { border-right: none; }
+  .le-staticbar .item .k { color: var(--muted-2); }
+  @media (max-width: 768px) { .le-staticbar { overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; } .le-staticbar::-webkit-scrollbar { display: none; } .le-staticbar .item { padding: 10px 14px; flex: 0 0 auto; font-size: 10px; } }
+
+  /* v0.4.6 (2026-05-10) 3-段敘事 story · padding 砍 1/3、gap 砍半、H 砍 1/3——避免佔 1.5-2 viewport */
+  .le-story { padding: 56px 56px; border-top: 1px solid var(--line); background: var(--bg); }
+  @media (max-width: 900px) { .le-story { padding: 40px 24px; } }
+  .le-story-inner { max-width: 880px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
+  @media (max-width: 1100px) { .le-story-inner { gap: 40px; } }
+  @media (max-width: 900px) { .le-story-inner { gap: 32px; } }
+  .le-story-block .label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--accent); margin-bottom: 16px; display: inline-flex; align-items: center; gap: 10px; font-weight: 700; opacity: 0.72; }
+  .le-story-block .label .mark-line { display: inline-block; width: 16px; height: 1px; background: rgba(199,232,74,0.35); }
+  .le-story-block .h { font-family: var(--zh); font-size: 44px; font-weight: 800; line-height: 1.22; color: var(--text); margin: 0 0 14px; max-width: 32ch; word-break: keep-all; text-wrap: balance; letter-spacing: -0.02em; }
+  @media (max-width: 1200px) { .le-story-block .h { font-size: 38px; } }
+  @media (max-width: 900px) { .le-story-block .h { font-size: 26px; line-height: 1.28; } }
+  /* v0.4.6 (2026-05-10) 女巫 fix-2 · 「我們不是又一個媒合平台」是 manifesto peak、應有 hero-claim 級重量 */
+  .le-story-block.peak .h { font-size: 56px; line-height: 1.18; padding-left: 28px; border-left: 2px solid var(--accent); }
+  @media (max-width: 1200px) { .le-story-block.peak .h { font-size: 48px; } }
+  @media (max-width: 900px) { .le-story-block.peak .h { font-size: 32px; padding-left: 16px; border-left-width: 1px; } }
+  .le-story-block.peak { padding: 24px 0; }
+  .le-story-block .body { font-family: var(--zh); font-size: 17px; line-height: 1.85; color: var(--text-2); max-width: 36ch; word-break: keep-all; }
+  @media (max-width: 900px) { .le-story-block .body { font-size: 15px; line-height: 1.8; } }
+  .le-story-block .body .who { color: var(--accent); font-weight: 600; display: block; margin-bottom: 10px; font-size: 14px; letter-spacing: 0.04em; }
+  .le-story-block .body .gap { display: block; height: 28px; }
+
+  /* v0.3 engine static-mock (replace 4 of 6 canvas) */
+  .le-engine-card .static-mock { width: 100%; height: 68px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 10px; line-height: 1.6; color: rgba(199,232,74,0.45); letter-spacing: 0.06em; background: rgba(199,232,74,0.04); border: 1px dashed rgba(199,232,74,0.20); border-radius: 4px; padding: 6px 14px; }
+  .le-engine-card .static-mock .metric { color: rgba(199,232,74,0.45); font-weight: 700; font-size: 20px; letter-spacing: -0.02em; margin-right: 12px; font-family: var(--sans); }
+
+
+  /* ========= Hero ========= */
+  .le-hero { position: relative; padding: 64px 56px 100px; min-height: 1100px; overflow: hidden; }
+  @media (max-width: 900px) { .le-hero { padding: 40px 20px 56px; min-height: auto; } }
+  .le-hero-canvas { position: absolute; inset: 0; width: 100%; height: 1100px; opacity: 0.55; pointer-events: none; }
+  .le-hero-mesh-svg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.5; pointer-events: none; }
+  .le-hero-content { position: relative; z-index: 2; max-width: 1320px; margin: 0 auto; }
+  .le-hero-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--accent); margin-bottom: 28px; display: flex; align-items: center; gap: 14px; }
+  .le-hero-eyebrow .dot { display: inline-block; width: 8px; height: 8px; background: var(--accent); border-radius: 99px; }
+
+  .le-hero-trust-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--accent); margin: 24px 0 12px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--accent-line); border-radius: 999px; background: var(--accent-soft); align-self: flex-start; }
+
+  .le-hero-title { font-family: var(--zh); font-size: clamp(40px, 5.4vw, 84px); line-height: 1.18; margin: 0 0 36px; letter-spacing: -0.03em; font-weight: 800; position: relative; max-width: 1080px; word-break: keep-all; text-wrap: balance; }
+  .le-hero-title > span { display: block; }
+  .le-hero-title .le-grad { display: inline; }
+  .le-hero-title .sub { display: block; font-size: 0.62em; color: var(--text-2); font-weight: 700; margin-top: 14px; line-height: 1.3; }
+  @media (max-width: 1200px) { .le-hero-title { font-size: clamp(40px, 5.4vw, 64px); max-width: 880px; } }
+  @media (max-width: 900px) { .le-hero-title { font-size: 36px; line-height: 1.22; margin-bottom: 20px; max-width: 100%; } .le-hero-title .sub { font-size: 0.7em; margin-top: 10px; } }
+
+  .le-hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 80px; margin-bottom: 64px; }
+  @media (max-width: 900px) { .le-hero-grid { grid-template-columns: 1fr; gap: 28px; margin-bottom: 28px; } }
+
+  .le-hero-blurb { font-family: var(--zh); font-size: 24px; line-height: 1.55; color: var(--text-2); max-width: 780px; }
+  .le-hero-blurb b { color: var(--text); font-weight: 700; }
+  @media (max-width: 900px) { .le-hero-blurb { font-size: 14px; line-height: 1.6; } }
+
+  .le-hero-cta-col { display: flex; flex-direction: column; gap: 14px; align-self: end; }
+  /* v0.4.9 wave 6 · Filter Funnel SVG + keyframes 全砍（Edward 反饋 · 動態效果差）*/
+  .le-cta-primary { background: var(--accent); color: var(--bg); border: 0; padding: 22px 26px; font-family: var(--mono); font-size: 14px; font-weight: 800; letter-spacing: 0.1em; cursor: pointer; display: flex; justify-content: space-between; align-items: center; text-decoration: none; min-height: 60px; }
+  .le-cta-secondary { background: transparent; color: var(--text); border: 1px solid var(--text-2); padding: 21px 26px; font-family: var(--mono); font-size: 14px; font-weight: 700; letter-spacing: 0.1em; cursor: pointer; display: flex; justify-content: space-between; align-items: center; text-decoration: none; min-height: 60px; transition: border-color 160ms, background 160ms; }
+  .le-cta-secondary:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .le-cta-secondary .sub { font-size: 11px; color: var(--muted); }
+  @media (max-width: 900px) { .le-cta-primary, .le-cta-secondary { padding: 16px 18px; font-size: 12px; min-height: 48px; } }
+
+  .le-stream { padding: 18px 22px; display: flex; align-items: center; gap: 18px; margin-bottom: 24px; background: var(--surface); border: 1px solid var(--line); flex-wrap: wrap; }
+  .le-stream .label { font-family: var(--mono); font-size: 10px; color: var(--accent-dim); letter-spacing: 0.18em; flex: 0 0 auto; }
+  .le-stream .tokens { font-family: var(--mono); font-size: 13px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 0; }
+  .le-stream .meta { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+  @media (max-width: 900px) { .le-stream { padding: 12px 14px; flex-direction: column; align-items: flex-start; gap: 8px; } .le-stream .tokens { font-size: 11px; } .le-stream .meta { display: none; } }
+
+  .le-telemetry { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); }
+  .le-telemetry .cell { padding: 22px 24px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+  .le-telemetry .cell:last-child { border-right: 0; }
+  .le-telemetry .v { font-family: var(--sans); font-weight: 800; font-size: 46px; line-height: 1; letter-spacing: -0.04em; }
+  .le-telemetry .l { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+  @media (max-width: 900px) { .le-telemetry { grid-template-columns: repeat(2, 1fr); } .le-telemetry .cell { padding: 14px 12px; gap: 4px; } .le-telemetry .cell:nth-child(2) { border-right: 0; } .le-telemetry .cell:nth-child(1), .le-telemetry .cell:nth-child(2) { border-bottom: 1px solid var(--line); } .le-telemetry .v { font-size: 28px; } }
+
+  /* === Telemetry LIVE/TARGET badge === */
+  .le-telemetry .cell { position: relative; }
+  .le-telemetry .badge { position: absolute; top: 10px; right: 12px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; padding: 3px 6px; border-radius: 2px; font-weight: 700; }
+  .le-telemetry .badge.live { color: var(--accent); background: rgba(199,232,74,0.10); border: 1px solid rgba(199,232,74,0.4); }
+  .le-telemetry .badge.target { color: var(--muted); background: transparent; border: 1px solid var(--line); }
+  @media (max-width: 900px) { .le-telemetry .badge { top: 6px; right: 8px; font-size: 8px; padding: 2px 4px; letter-spacing: 0.12em; } }
+
+  /* === E POC Tracker === */
+  .le-poc { margin-top: 28px; padding: 28px 30px; border: 1px solid var(--line); background: rgba(199,232,74,0.02); position: relative; }
+  .le-poc-h { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 22px; flex-wrap: wrap; }
+  .le-poc-h .ttl { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; color: var(--accent); font-weight: 700; }
+  .le-poc-h .target { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--muted); }
+  .le-poc-rows { display: grid; grid-template-columns: 1fr; gap: 18px; }
+  .le-poc-row { display: grid; grid-template-columns: 1.4fr 1fr 110px; gap: 18px; align-items: center; padding: 12px 0; border-bottom: 1px dashed var(--line-soft); }
+  .le-poc-row:last-child { border-bottom: 0; }
+  .le-poc-row .label { font-family: var(--zh); font-size: 14px; color: var(--text); font-weight: 500; }
+  .le-poc-row .label .sub { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.14em; margin-left: 8px; text-transform: uppercase; }
+  .le-poc-row .bar { height: 6px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); position: relative; overflow: hidden; }
+  .le-poc-row .bar .fill { height: 100%; background: var(--accent); width: 0%; transition: width 600ms ease; }
+  .le-poc-row .bar .fill.zero { background: var(--muted); width: 4%; opacity: 0.3; }
+  .le-poc-row .stat { font-family: var(--mono); font-size: 12px; color: var(--accent); font-weight: 700; text-align: right; letter-spacing: 0.04em; }
+  .le-poc-row .stat.pending { color: var(--muted); }
+  @media (max-width: 900px) { .le-poc { padding: 20px 16px; } .le-poc-row { grid-template-columns: 1fr 100px; gap: 12px; } .le-poc-row .bar { grid-column: 1 / -1; } .le-poc-row .label { font-size: 13px; } .le-poc-row .label .sub { display: block; margin-left: 0; margin-top: 2px; } }
+
+  /* ========= Section common ========= */
+  .le-section { padding: 144px 56px; border-top: 1px solid var(--line); position: relative; overflow: hidden; }
+  .le-section .inner { max-width: 1320px; margin: 0 auto; position: relative; }
+  @media (max-width: 1100px) { .le-section { padding: 88px 32px; } }
+  @media (max-width: 900px) { .le-section { padding: 64px 20px; } }
+  .le-h2 { font-family: var(--zh); font-weight: 800; font-size: 72px; margin: 0 0 48px; line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; word-break: keep-all; }
+  @media (max-width: 1200px) { .le-h2 { font-size: 56px; } }
+  @media (max-width: 900px) { .le-h2 { font-size: 36px; margin-bottom: 24px; line-height: 1.18; } }
+  @media (max-width: 900px) { #trust .le-h2 { font-size: 32px; line-height: 1.25; } #network .le-h2 { font-size: 24px; line-height: 1.25; word-break: keep-all; overflow-wrap: break-word; text-wrap: balance; } }
+
+  /* ========= Trust strip · 5 信號 ========= */
+  .le-trust-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 28px; }
+  .le-trust-strip .chip { background: var(--surface); border: 1px solid var(--line); padding: 22px 20px; display: flex; flex-direction: column; gap: 10px; min-height: 180px; transition: border-color 200ms, transform 200ms; }
+  .le-trust-strip .chip:hover { border-color: var(--accent-line); transform: translateY(-2px); }
+  .le-trust-strip .chip .id { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--accent); }
+  .le-trust-strip .chip .ttl { font-family: var(--zh); font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--text); }
+  .le-trust-strip .chip .body { font-family: var(--zh); font-size: 12px; line-height: 1.6; color: var(--text-2); flex: 1; }
+  .le-trust-strip .chip .stat { font-family: var(--mono); font-size: 10px; color: var(--muted); border-top: 1px dashed var(--line-soft); padding-top: 8px; letter-spacing: 0.04em; }
+  @media (max-width: 1200px) { .le-trust-strip { grid-template-columns: repeat(3, 1fr); } .le-trust-strip .chip:nth-child(4), .le-trust-strip .chip:nth-child(5) { grid-column: span 1; } }
+  @media (max-width: 900px) { .le-trust-strip { grid-template-columns: 1fr 1fr; } .le-trust-strip .chip { min-height: 140px; padding: 14px; } .le-trust-strip .chip:nth-child(5) { grid-column: span 2; } }
+
+  /* ========= Why us 三角合一 ========= */
+  .le-whyus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+  .le-whyus-card { background: var(--surface); border: 1px solid var(--line); padding: 32px 28px; display: flex; flex-direction: column; gap: 14px; min-height: 320px; transition: border-color 200ms, transform 200ms; position: relative; }
+  .le-whyus-card:hover { border-color: var(--accent-line); transform: translateY(-2px); }
+  .le-whyus-card .axis { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--accent); }
+  .le-whyus-card .ttl { font-family: var(--zh); font-size: 24px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .le-whyus-card .body { font-family: var(--zh); font-size: 14px; line-height: 1.7; color: var(--text-2); flex: 1; }
+  .le-whyus-card .peer { font-family: var(--mono); font-size: 11px; color: var(--muted); border-top: 1px dashed var(--line-soft); padding-top: 12px; }
+  .le-whyus-peer-line { margin-top: 28px; padding: 16px 22px; background: var(--bg-1); border: 1px solid var(--accent-line); font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.06em; text-align: center; }
+  @media (max-width: 900px) { .le-whyus-grid { grid-template-columns: 1fr; gap: 12px; } .le-whyus-card { min-height: auto; padding: 22px 18px; } .le-whyus-card .ttl { font-size: 18px; } }
+
+  /* ========= Manifesto block ========= */
+  .le-manifesto-h { font-family: var(--zh); font-weight: 800; font-size: 72px; line-height: 1.05; margin: 0; letter-spacing: -0.03em; max-width: 1200px; text-wrap: balance; word-break: keep-all; }
+  .le-manifesto-h .strike { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--accent-dim); text-decoration-thickness: 4px; }
+  @media (max-width: 1200px) { .le-manifesto-h { font-size: 56px; } }
+  @media (max-width: 900px) { .le-manifesto-h { font-size: 36px; line-height: 1.18; } }
+  .le-manifesto-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 64px; border-top: 1px solid var(--line); }
+  .le-manifesto-grid .cell { padding: 32px 24px; border-right: 1px solid var(--line); }
+  .le-manifesto-grid .cell:last-child { border-right: 0; }
+  .le-manifesto-grid .cell .n { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.18em; }
+  .le-manifesto-grid .cell .en { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.16em; margin: 10px 0 16px; }
+  .le-manifesto-grid .cell .zh { font-family: var(--zh); font-size: 22px; font-weight: 600; color: var(--text); }
+  @media (max-width: 900px) { .le-manifesto-grid { grid-template-columns: 1fr 1fr; } .le-manifesto-grid .cell { padding: 20px 16px; } .le-manifesto-grid .cell:nth-child(2) { border-right: 0; } .le-manifesto-grid .cell:nth-child(1), .le-manifesto-grid .cell:nth-child(2) { border-bottom: 1px solid var(--line); } .le-manifesto-grid .cell .zh { font-size: 16px; } }
+
+  /* ========= Engines ========= */
+  .le-engines-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .le-engine-card { background: var(--bg-1); border: 1px solid var(--line); padding: 24px 28px; min-height: 280px; display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden; }
+  .le-engine-card canvas { width: 100%; height: 90px; opacity: 0.95; }
+  .le-engine-card .n { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.18em; }
+  .le-engine-card .zh { font-family: var(--zh); font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); }
+  .le-engine-card .en { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.16em; margin-top: 4px; opacity: 0.5; }
+  .le-engine-card .desc { font-family: var(--zh); font-size: 14px; color: var(--text-2); line-height: 1.7; }
+  @media (max-width: 1200px) { .le-engines-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 900px) { .le-engines-grid { grid-template-columns: 1fr; } .le-engine-card { padding: 22px 18px; min-height: auto; } .le-engine-card .zh { font-size: 22px; } }
+  /* Problem section · 3-card grid: desktop/tablet 3-col / mobile 1-col stack (v0.4.5 fix mobile critical) */
+  .le-problem-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  @media (max-width: 900px) { .le-problem-grid { grid-template-columns: 1fr !important; } }
+
+  /* ========= Protocol 12-step v0.4 unify accent / dashed connector / step border-left ========= */
+  .le-protocol-flow { position: relative; padding: 32px 0 48px; }
+  .le-protocol-connector { display: block; width: 100%; border-top: 1px dashed rgba(199,232,74,0.30); margin: 12px 0 0; }
+  .le-protocol-stages { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; position: relative; }
+  .le-protocol-stages .stage { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .le-protocol-stages .stage .roman { font-family: var(--sans); font-weight: 800; font-size: 88px; line-height: 0.9; letter-spacing: -0.04em; color: var(--accent); }
+  .le-protocol-stages .stage .dot { width: 14px; height: 14px; border-radius: 99px; border: 3px solid var(--bg); background: var(--accent); }
+  .le-protocol-stages .stage .zh { font-family: var(--zh); font-size: 24px; font-weight: 700; color: var(--text); }
+  .le-protocol-stages .stage .en { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.16em; }
+  @media (max-width: 900px) { .le-protocol-stages { grid-template-columns: 1fr; gap: 18px; } .le-protocol-stages .stage { flex-direction: row; align-items: center; justify-content: flex-start; gap: 14px; } .le-protocol-stages .stage .roman { font-size: 40px; min-width: 56px; text-align: center; } .le-protocol-stages .stage .zh { font-size: 16px; } .le-protocol-connector { display: none; } }
+  .le-protocol-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .le-protocol-grid .cell { background: var(--bg-1); padding: 18px 16px; min-height: 120px; display: flex; flex-direction: column; gap: 8px; border-left: 2px solid rgba(199,232,74,0.20); }
+  .le-protocol-grid .cell .n { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--accent); opacity: 0.65; }
+  .le-protocol-grid .cell .t { font-family: var(--zh); font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--text); }
+  @media (max-width: 1200px) { .le-protocol-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 900px) { .le-protocol-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } .le-protocol-grid .cell { padding: 14px 12px; min-height: 90px; } .le-protocol-grid .cell .t { font-size: 12px; } }
+
+  /* ========= Tier · v0.4 desktop 40/60 split / mobile static dot ring / featured row green stripe ========= */
+  .le-tier-split { display: grid; grid-template-columns: 0.67fr 1fr; gap: 64px; align-items: center; }
+  @media (max-width: 1100px) { .le-tier-split { grid-template-columns: 1fr; gap: 48px; } }
+  /* v0.4.6 (2026-05-10) ETier 拿掉 .le-tier-orbit 軌道動畫——Edward feedback「動畫看不懂」、ladder 改 solo 居中 */
+  .le-tier-ladder-solo { max-width: 720px; margin: 0 auto; }
+  .le-tier-ladder { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); }
+  .le-tier-row { display: grid; grid-template-columns: 90px 1fr 120px; padding: 22px 24px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 12px; }
+  .le-tier-row:last-child { border-bottom: 0; }
+  .le-tier-row.featured { background: rgba(199,232,74,0.06); border-left: 3px solid var(--accent); padding-left: 21px; }
+  .le-tier-row .id { font-family: var(--sans); font-weight: 800; font-size: 48px; line-height: 0.9; letter-spacing: -0.04em; }
+  .le-tier-row .info .zh { font-family: var(--zh); font-size: 18px; font-weight: 700; color: var(--text); }
+  .le-tier-row .info .en { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.14em; margin-top: 4px; }
+  .le-tier-row .stat { text-align: right; line-height: 1.4; }
+  .le-tier-row .stat .l { font-size: 9px; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; display: block; margin-bottom: 4px; font-family: var(--mono); }
+  .le-tier-row .stat .v { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text-2); }
+  @media (max-width: 900px) { .le-tier-row { grid-template-columns: 60px 1fr 80px; padding: 14px 16px; gap: 12px; } .le-tier-row .id { font-size: 32px; } .le-tier-row .info .zh { font-size: 14px; } }
+
+  /* ========= Verticals v0.4 heatbar / tablet 3x5 / HOT pulse ========= */
+  .le-vert-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .le-vert-grid .cell { background: var(--bg-1); padding: 24px 20px; min-height: 120px; display: flex; flex-direction: column; gap: 10px; transition: background 0.6s, color 0.6s; cursor: default; position: relative; overflow: hidden; }
+  .le-vert-grid .cell.hot { background: var(--accent); color: var(--bg); animation: leHotPulse 2.4s ease-in-out infinite; }
+  @keyframes leHotPulse { 0%,100%{box-shadow: inset 0 0 0 0 rgba(199,232,74,0)} 50%{box-shadow: inset 0 0 0 3px rgba(255,255,255,0.18)} }
+  .le-vert-grid .cell .id { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.18em; }
+  .le-vert-grid .cell.hot .id { color: var(--bg); }
+  .le-vert-grid .cell .name { font-family: var(--zh); font-size: 18px; font-weight: 600; color: var(--text); }
+  .le-vert-grid .cell.hot .name { color: var(--bg); }
+  .le-vert-grid .cell .meta { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: auto; display: flex; justify-content: space-between; }
+  .le-vert-grid .cell.hot .meta { color: var(--bg); font-weight: 700; }
+  .le-vert-grid .cell .heatbar { position: absolute; right: 14px; bottom: 14px; height: 2px; background: rgba(199,232,74,0.30); border-radius: 1px; transition: width 600ms ease; pointer-events: none; }
+  .le-vert-grid .cell.hot .heatbar { display: none; }
+  @media (max-width: 1200px) { .le-vert-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 900px) { .le-vert-grid { grid-template-columns: 1fr 1fr; } .le-vert-grid .cell { padding: 14px 12px; min-height: 76px; } .le-vert-grid .cell .name { font-size: 12px; } .le-vert-grid .cell .heatbar { right: 10px; bottom: 10px; } }
+
+  /* ========= Vision L1-L4 ========= */
+  .le-vision-ladder { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); margin-top: 28px; }
+  .le-vision-row { display: grid; grid-template-columns: 100px 220px 1fr 140px; padding: 28px 32px; gap: 24px; align-items: center; border-bottom: 1px solid var(--line); transition: background 200ms; }
+  .le-vision-row:last-child { border-bottom: 0; }
+  .le-vision-row.l4 { background: var(--accent-soft); border-color: var(--accent-line); }
+  .le-vision-row .level { font-family: var(--mono); font-size: 24px; font-weight: 800; color: var(--accent); letter-spacing: 0.04em; }
+  .le-vision-row.l1 .level { color: var(--muted); }
+  .le-vision-row.l2 .level { color: var(--text-2); }
+  .le-vision-row.l3 .level { color: var(--accent-dim); }
+  .le-vision-row.l4 .level { color: var(--accent); }
+  .le-vision-row .year { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.14em; }
+  .le-vision-row .desc { font-family: var(--zh); font-size: 15px; color: var(--text); line-height: 1.6; }
+  .le-vision-row.l4 .desc { color: var(--text); font-weight: 600; }
+  .le-vision-row .multiplier { font-family: var(--sans); font-weight: 800; font-size: 28px; text-align: right; letter-spacing: -0.02em; }
+  .le-vision-row.l1 .multiplier { color: var(--muted); }
+  .le-vision-row.l4 .multiplier { color: var(--accent); }
+  .le-vision-bp-role { margin-top: 28px; padding: 24px 28px; background: var(--bg-1); border: 1px solid var(--accent-line); display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; }
+  .le-vision-bp-role .tag { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.14em; }
+  .le-vision-bp-role .body { font-family: var(--zh); font-size: 14px; color: var(--text-2); line-height: 1.7; }
+  .le-vision-bp-role .body b { color: var(--text); font-weight: 600; }
+  @media (max-width: 1100px) { .le-vision-row { grid-template-columns: 80px 1fr 100px; } .le-vision-row .year { display: none; } }
+  @media (max-width: 900px) { .le-vision-row { grid-template-columns: 60px 1fr 80px; padding: 18px 16px; gap: 12px; } .le-vision-row .level { font-size: 16px; } .le-vision-row .desc { font-size: 12px; } .le-vision-row .multiplier { font-size: 18px; } .le-vision-bp-role { grid-template-columns: 1fr; gap: 12px; padding: 16px; } }
+
+  /* ========= Trust 3 · v0.4 mono 0.15em / fact ul / h3 min 56 ========= */
+  .le-trust3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .le-trust3-cell { background: var(--bg-1); padding: 40px 32px; display: flex; flex-direction: column; gap: 18px; min-height: 280px; }
+  .le-trust3-cell .label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; }
+  .le-trust3-cell .v { font-family: var(--sans); font-weight: 800; font-size: 72px; line-height: 0.95; letter-spacing: -0.03em; }
+  .le-trust3-cell .zh { font-family: var(--zh); font-size: 22px; font-weight: 700; color: var(--text); min-height: 56px; display: flex; align-items: center; }
+  .le-trust3-cell .facts { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+  .le-trust3-cell .facts li { font-family: var(--zh); font-size: 14px; color: var(--text-2); line-height: 1.6; border-left: 1px solid rgba(199,232,74,0.20); padding-left: 12px; }
+  @media (max-width: 900px) { .le-trust3-grid { grid-template-columns: 1fr; } .le-trust3-cell { padding: 24px 20px; min-height: auto; } .le-trust3-cell .v { font-size: 56px; } .le-trust3-cell .zh { font-size: 18px; min-height: auto; } }
+
+  /* ========= FAQ v0.4 + icon hover rotate / hover bg / 間距 48 / hover green stripe ========= */
+  .le-faq { display: flex; flex-direction: column; gap: 0; max-width: 980px; margin: 28px auto 0; }
+  .le-faq details { border-bottom: 1px solid var(--line-soft); padding: 24px 16px; transition: background 200ms, border-left-color 200ms; border-left: 2px solid transparent; }
+  .le-faq details:hover { background: rgba(199,232,74,0.03); border-left-color: var(--accent); }
+  .le-faq summary { font-family: var(--zh); font-size: 18px; font-weight: 600; color: var(--text); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 14px; padding-right: 16px; position: relative; transition: color 160ms; word-break: keep-all; }
+  .le-faq summary::-webkit-details-marker { display: none; }
+  .le-faq summary::after { content: "+"; font-family: var(--mono); font-size: 22px; color: var(--accent); transition: transform 240ms ease, opacity 200ms; flex: 0 0 auto; margin-left: auto; opacity: 0.55; line-height: 1; }
+  .le-faq details:hover summary::after { opacity: 1; transform: rotate(45deg); }
+  .le-faq details[open] summary::after { transform: rotate(45deg); opacity: 1; }
+  .le-faq summary:hover { color: var(--accent); }
+  .le-faq summary .num { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-right: 4px; letter-spacing: 0.08em; flex: 0 0 auto; }
+  .le-faq summary .qtext { flex: 1; min-width: 0; }
+  .le-faq .body { padding: 16px 0 0 32px; font-family: var(--zh); font-size: 14px; line-height: 1.85; color: var(--text-2); max-width: 70ch; }
+  @media (max-width: 900px) { .le-faq summary { font-size: 16px; line-height: 1.45; gap: 8px; } .le-faq .body { padding-left: 18px; font-size: 13px; } .le-faq details { padding: 18px 12px; } }
+
+  /* ========= Loomark · footer 左下 ========= */
+  .le-loomark { display: inline-flex; align-items: center; gap: 8px; }
+  .le-loomark .ring { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--accent); position: relative; }
+  .le-loomark .ring::before { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 7px solid var(--accent); }
+  .le-loomark .text { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--accent); }
+
+  /* ========= Founder + Final CTA + Footer ========= */
+  .le-founder { padding: 108px 56px; border-top: 1px solid var(--line); background: linear-gradient(180deg, var(--bg) 0%, var(--bg-1) 100%); position: relative; overflow: hidden; }
+  @media (max-width: 900px) { .le-founder { padding: 56px 20px; } }
+  /* v0.3 founder .ghost YH 480px cut */
+  .le-founder .ghost { display: none; }
+  .le-founder .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 80px; position: relative; max-width: 1320px; margin: 0 auto; }
+  @media (max-width: 900px) { .le-founder .grid { grid-template-columns: 1fr; gap: 24px; } }
+  .le-founder .quote { font-family: var(--zh); font-weight: 700; font-size: 36px; line-height: 1.4; letter-spacing: -0.02em; color: var(--text); text-wrap: balance; word-break: keep-all; }
+  @media (max-width: 1200px) { .le-founder .quote { font-size: 30px; } }
+  @media (max-width: 900px) { .le-founder .quote { font-size: 22px; line-height: 1.5; } }
+  .le-founder .sig { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.16em; margin-top: 24px; font-weight: 400; }
+  .le-founder .aside { align-self: end; }
+  .le-founder .aside p { font-family: var(--zh); font-size: 14px; color: var(--text-2); line-height: 1.7; }
+
+  .le-finalcta { padding: 108px 56px; border-top: 1px solid var(--line); background: var(--bg); position: relative; overflow: hidden; }
+  @media (max-width: 900px) { .le-finalcta { padding: 56px 20px; } }
+  /* v0.3 finalcta .ghost BeyondPath 360px cut */
+  .le-finalcta .ghost { display: none; }
+  .le-finalcta .inner { position: relative; max-width: 1320px; margin: 0 auto; }
+  .le-finalcta .h { font-family: var(--zh); font-weight: 800; font-size: 72px; margin: 0 0 28px; line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; word-break: keep-all; }
+  @media (max-width: 1200px) { .le-finalcta .h { font-size: 56px; } }
+  @media (max-width: 900px) { .le-finalcta .h { font-size: 36px; margin-bottom: 18px; line-height: 1.18; } }
+  .le-finalcta .grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 60px; margin-bottom: 80px; }
+  @media (max-width: 900px) { .le-finalcta .grid { grid-template-columns: 1fr; gap: 24px; margin-bottom: 28px; } }
+  .le-finalcta .blurb { font-family: var(--zh); font-size: 20px; color: var(--text-2); line-height: 1.6; max-width: 620px; }
+  @media (max-width: 900px) { .le-finalcta .blurb { font-size: 13px; } }
+  .le-finalcta .form { align-self: end; }
+  .le-finalcta .form .input-row { display: flex; border: 1px solid var(--accent); }
+  .le-finalcta .form input { flex: 1; background: transparent; border: 0; padding: 18px 18px; font-family: var(--mono); font-size: 14px; color: var(--text); outline: none; min-height: 56px; }
+  .le-finalcta .form button { background: var(--accent); color: var(--bg); border: 0; padding: 0 32px; font-family: var(--mono); font-size: 13px; font-weight: 800; letter-spacing: 0.12em; cursor: pointer; min-height: 56px; }
+  .le-finalcta .form .meta { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.16em; margin-top: 12px; display: flex; justify-content: space-between; }
+
+  .le-footer-nav { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; gap: 40px; padding-top: 48px; border-top: 1px solid var(--line); }
+  @media (max-width: 900px) { .le-footer-nav { grid-template-columns: 1fr 1fr; gap: 24px; } }
+  .le-footer-nav .brand-col .name { font-family: var(--sans); font-weight: 800; font-size: 28px; margin-bottom: 14px; }
+  .le-footer-nav .brand-col .tag { font-family: var(--zh); font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 280px; }
+  .le-footer-nav .brand-col .chips { display: flex; gap: 8px; margin-top: 18px; }
+  .le-footer-nav .brand-col .chips span { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.18em; padding: 4px 8px; border: 1px solid var(--line); }
+  .le-footer-nav h4 { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; color: var(--accent); margin: 0 0 18px; font-weight: 700; }
+  .le-footer-nav ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .le-footer-nav ul li a { font-family: var(--zh); font-size: 13px; color: var(--text-2); text-decoration: none; transition: color 140ms; }
+  .le-footer-nav ul li a:hover { color: var(--accent); }
+  .le-footer-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; padding-top: 24px; margin-top: 56px; border-top: 1px solid var(--line); font-family: var(--mono); }
+  .le-footer-bar div { font-size: 11px; color: var(--muted); letter-spacing: 0.16em; }
+  .le-footer-bar .center { text-align: center; }
+  .le-footer-bar .right { text-align: right; color: var(--accent); display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
+  @media (max-width: 900px) { .le-footer-bar { grid-template-columns: 1fr; gap: 8px; } .le-footer-bar .center, .le-footer-bar .right { text-align: left; justify-content: flex-start; } }
+</style>
+</head>
+<body>
+<div class="bp-disclaimer-top" id="bp-disc-top">
+  <span class="icon">🚧</span>
+  <span class="label">PROTOTYPE DEMO · 非正式服務</span>
+  <span class="body">所有資料皆為模擬 · 真實服務尚未開放 · 不收費 / 不處理真實個資 / 不簽法律效力文件 · 正式上線預計 2026 Q3 · <a href="mailto:edwardt0303@gmail.com?subject=BeyondPath%20Waitlist">加入 waitlist →</a></span>
+  <button class="close" onclick="document.getElementById('bp-disc-top').style.display='none'; sessionStorage.setItem('bp-disc-closed','1');" aria-label="關閉提醒">×</button>
+</div>
+<script>
+  if (sessionStorage.getItem('bp-disc-closed') === '1') {
+    document.getElementById('bp-disc-top').style.display = 'none';
+  }
+</script>
+<div id="root"></div>
+<footer class="bp-disclaimer-foot">
+  BeyondPath · Prototype v0.2 · 2026-05-09 · 所有合約 / 付款 / 認證內容僅為展示、無法律效力 · 正式上線前完整律師審視中 · <a href="mailto:edwardt0303@gmail.com?subject=BeyondPath%20Waitlist">加入 waitlist →</a>
+</footer>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" data-presets="env,react">
+const { useState, useEffect, useRef, useMemo } = React;
+
+// Heromark · 5-tier orbital
+function Heromark({ size = 360, label = "BEYONDPATH", sub = "FLYWHEEL" }) {
+  const tiers = [
+    { id: "S",  r: size * 0.40, color: "var(--accent)",       speed: 24, planet: 22 },
+    { id: "A+", r: size * 0.32, color: "var(--accent-dim)",   speed: 32, planet: 18 },
+    { id: "A",  r: size * 0.24, color: "var(--text)",         speed: 40, planet: 15 },
+    { id: "B",  r: size * 0.16, color: "var(--muted)",        speed: 48, planet: 15 },
+    { id: "C",  r: size * 0.10, color: "var(--muted-2)",      speed: 56, planet: 14 }
+  ];
+  const half = size / 2;
+  const viewBox = "-" + half + " -" + half + " " + size + " " + size;
+  return (
+    <div style={{ width: size, height: size, position: "relative" }}>
+      <svg viewBox={viewBox} style={{ width: "100%", height: "100%", display: "block" }}>
+        <defs>
+          <radialGradient id={"hmCore" + size} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.9" />
+            <stop offset="60%" stopColor="var(--accent)" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle r={size * 0.36} fill={"url(#hmCore" + size + ")"} opacity="0.25" />
+        {tiers.map((t, i) => (
+          <g key={"r-" + t.id}>
+            <circle r={t.r} fill="none" stroke={t.color} strokeOpacity="0.18" strokeDasharray="3 5" />
+            <circle r={t.r} fill="none" stroke={t.color} strokeOpacity="0.55" strokeWidth="1.2"
+                    strokeDasharray={(t.r * 0.6) + " " + (t.r * 5.4)}
+                    transform={"rotate(" + (-90 - i * 18) + ")"} />
+          </g>
+        ))}
+        {tiers.map((t, i) => (
+          <g key={"p-" + t.id}>
+            <animateTransform attributeName="transform" attributeType="XML"
+              type="rotate" from={(i * 47) + " 0 0"} to={(360 + i * 47) + " 0 0"}
+              dur={t.speed + "s"} repeatCount="indefinite" />
+            <circle cx={t.r} cy={0} r={t.planet + 8} fill={t.color} opacity="0.18" />
+            <circle cx={t.r} cy={0} r={t.planet} fill={t.color} stroke={t.color} strokeWidth="1" />
+            <text x={t.r} y={5} fill="var(--bg)" fontSize={t.planet * 0.95}
+                  fontWeight="800" textAnchor="middle"
+                  fontFamily="var(--sans)">{t.id}</text>
+          </g>
+        ))}
+        <circle r={size * 0.062} fill="var(--bg)" stroke="var(--accent)" strokeWidth="1.2" />
+        <text y="-1" fill="var(--accent)" fontSize={size * 0.028} fontFamily="var(--mono)"
+              textAnchor="middle" letterSpacing="2" fontWeight="700">CORE</text>
+        <text y={size * 0.034} fill="var(--text)" fontSize={size * 0.028}
+              fontFamily="var(--sans)" textAnchor="middle" fontWeight="700">PROTOCOL</text>
+      </svg>
+      {label && size >= 240 && (
+        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column",
+                       alignItems: "center", justifyContent: "flex-end", paddingBottom: size * 0.06,
+                       pointerEvents: "none" }}>
+          <div style={{ fontFamily: "var(--mono)", fontSize: size * 0.034, letterSpacing: "0.16em",
+                         color: "var(--accent)", fontWeight: 600 }}>{label}</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: size * 0.026, letterSpacing: "0.14em",
+                         color: "var(--muted)", marginTop: 4 }}>{sub}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// v0.3 NeuralMesh degraded - static SVG 18 pts (was 49 pts canvas)
+function NeuralMesh() {
+  const pts = useMemo(() => {
+    const seed = [
+      [0.08, 0.18], [0.18, 0.32], [0.27, 0.12], [0.36, 0.42],
+      [0.48, 0.22], [0.58, 0.38], [0.68, 0.16], [0.78, 0.32],
+      [0.88, 0.20], [0.12, 0.62], [0.22, 0.78], [0.32, 0.58],
+      [0.44, 0.72], [0.56, 0.62], [0.66, 0.82], [0.76, 0.66],
+      [0.86, 0.78], [0.50, 0.92]
+    ];
+    return seed.map(([x, y], i) => ({ x: x * 1440, y: y * 800, r: 1.2 + (i % 3) * 0.5 }));
+  }, []);
+  const lines = useMemo(() => {
+    const out = [];
+    for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
+      const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 280) out.push({ a: i, b: j });
+    }
+    return out;
+  }, [pts]);
+  return (
+    <svg className="le-hero-mesh-svg" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <radialGradient id="meshGlowA" cx="70%" cy="20%" r="50%">
+          <stop offset="0%" stopColor="rgba(199,232,74,0.10)" />
+          <stop offset="100%" stopColor="rgba(199,232,74,0)" />
+        </radialGradient>
+        <radialGradient id="meshGlowB" cx="20%" cy="80%" r="50%">
+          <stop offset="0%" stopColor="rgba(199,232,74,0.06)" />
+          <stop offset="100%" stopColor="rgba(199,232,74,0)" />
+        </radialGradient>
+      </defs>
+      <rect width="1440" height="800" fill="url(#meshGlowA)" />
+      <rect width="1440" height="800" fill="url(#meshGlowB)" />
+      {lines.map((l, i) => (
+        <line key={"l" + i} x1={pts[l.a].x} y1={pts[l.a].y} x2={pts[l.b].x} y2={pts[l.b].y}
+              stroke="rgba(199,232,74,0.16)" strokeWidth="0.6" />
+      ))}
+      {pts.map((p, i) => (
+        <circle key={"p" + i} cx={p.x} cy={p.y} r={p.r}
+                fill={i % 5 === 0 ? "rgba(199,232,74,0.85)" : "rgba(199,232,74,0.5)"} />
+      ))}
+    </svg>
+  );
+}
+
+// EngineMock · 6 canvas types · chartreuse only
+function EngineMock({ kind }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const c = ref.current; if (!c) return;
+    const ctx = c.getContext("2d");
+    const W = c.width = 320, H = c.height = 90;
+    let raf, t = 0;
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      t += 0.02;
+      if (kind === "BriefMock") {
+        for (let i = 0; i < 14; i++) {
+          const w = 8 + Math.abs(Math.sin(t * 1.4 + i * 0.6)) * 32;
+          ctx.fillStyle = i < 6
+            ? "rgba(199,232,74," + (0.25 + 0.5 * Math.sin(t + i)) + ")"
+            : "rgba(199,232,74,0.14)";
+          ctx.fillRect(i * 22, H - w, 14, w);
+        }
+      } else if (kind === "MatchMock") {
+        const cx = W / 2, cy = H / 2;
+        ctx.strokeStyle = "rgba(199,232,74,0.4)"; ctx.lineWidth = 0.6;
+        for (let i = 0; i < 6; i++) {
+          const a = i / 6 * Math.PI * 2 + t * 0.4;
+          const r = 32 + 4 * Math.sin(t * 2 + i);
+          ctx.beginPath(); ctx.moveTo(cx, cy);
+          ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r); ctx.stroke();
+          ctx.fillStyle = i === 0 ? "rgba(199,232,74,1)" : "rgba(199,232,74,0.55)";
+          ctx.beginPath(); ctx.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 3, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.fillStyle = "rgba(232,232,234,0.9)";
+        ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill();
+      } else if (kind === "ContractMock") {
+        ctx.strokeStyle = "rgba(199,232,74,0.5)"; ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let x = 0; x < W; x++) {
+          const y = H / 2 + Math.sin((x + t * 40) * 0.04) * 14 * Math.sin((x + t * 20) * 0.012);
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.fillStyle = "rgba(199,232,74,0.85)"; ctx.fillRect(W - 30, 8, 22, 22);
+        ctx.fillStyle = "#0a0a0b"; ctx.font = "bold 11px monospace";
+        ctx.fillText("30%", W - 28, 22);
+      } else if (kind === "DashMock") {
+        for (let i = 0; i < 5; i++) {
+          const fill = i < 1 + Math.floor(t * 0.6 % 5);
+          ctx.fillStyle = fill ? "rgba(199,232,74,1)" : "#222";
+          ctx.fillRect(i * 60 + 8, 30, 50, 30);
+          ctx.fillStyle = fill ? "#0a0a0b" : "rgba(122,122,130,1)";
+          ctx.font = "bold 10px monospace";
+          ctx.fillText("M" + (i + 1), i * 60 + 22, 49);
+        }
+      } else if (kind === "NPSMock") {
+        const cx = W / 2, cy = H + 20, r = 64;
+        ctx.lineWidth = 8;
+        ctx.strokeStyle = "#1a1a1a";
+        ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, 0); ctx.stroke();
+        const v = 0.55 + 0.15 * Math.sin(t);
+        ctx.strokeStyle = "rgba(199,232,74,1)";
+        ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, Math.PI + Math.PI * v); ctx.stroke();
+        ctx.fillStyle = "rgba(232,232,234,1)"; ctx.font = "bold 18px sans-serif";
+        ctx.fillText(Math.floor(v * 100), cx - 12, cy - 12);
+      } else if (kind === "RetainerMock") {
+        for (let i = 0; i < 6; i++) {
+          const o = (i + t * 0.3) % 6;
+          ctx.fillStyle = "rgba(199,232,74," + (0.15 + (5 - o) / 15) + ")";
+          ctx.fillRect(i * 48 + 10, 20, 38, 50);
+          ctx.fillStyle = "rgba(122,122,130,1)"; ctx.font = "9px monospace";
+          ctx.fillText("M" + (i + 1), i * 48 + 20, 80);
+        }
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    raf = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(raf);
+  }, [kind]);
+  return <canvas ref={ref} />;
+}
+
+// v0.3 static bar - 3 chips no rolling (was LiveTicker)
+function EStaticBar() {
+  return (
+    <div className="le-staticbar">
+      <div className="item">
+        <span className="le-pulse" style={{ display: "inline-block", width: 6, height: 6, background: "var(--accent)", borderRadius: 99 }}></span>
+        <span className="k">NETWORK</span>
+        <span style={{ color: "var(--text)", marginLeft: "auto" }}>v0.4β · TPE × SGP × TYO</span>
+      </div>
+      <div className="item">
+        <span className="k">PASS RATE</span>
+        <span style={{ color: "var(--accent)", marginLeft: "auto" }}>&lt; 10%</span>
+      </div>
+      <div className="item">
+        <span className="k">WORKER NET</span>
+        <span style={{ color: "var(--text)", marginLeft: "auto" }}>95%</span>
+      </div>
+      <div className="item">
+        <span className="k">PROTOCOL</span>
+        <span style={{ color: "var(--accent-dim)", marginLeft: "auto" }}>雙邊 NPS 評鑑</span>
+      </div>
+    </div>
+  );
+}
+
+// Nav
+function ENav() {
+  return (
+    <nav className="le-nav">
+      <div className="brand">
+        Beyond<span className="le-acc">Path</span>
+        <small>v0.4β</small>
+      </div>
+      <div className="links">
+        <a href="#problem">Problem</a>
+        <a href="#engines">How</a>
+        <a href="#trust">Trust</a>
+        <a href="#cases">Cases</a>
+        <a href="#tier">Tier</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div className="actions">
+        <a href="sign-in.html?role=client" className="btn-ghost">SIGN IN</a>
+        <a href="app.html?role=worker&onboarding=1" className="btn-primary">▲ APPLY · BETA</a>
+      </div>
+    </nav>
+  );
+}
+
+// v0.3 Q3 2026 內測 roadmap (was 0/3 0/2 顯得沒做事)
+function EPocTracker() {
+  const rows = [
+    { label: "合格供給端認證", sub: "Tier B / B+ · 樣本邀請名單收集中", stat: "啟動內測" },
+    { label: "媒合付費試做案", sub: "NPS ≥ 50 · 首批客戶名單建構中", stat: "啟動內測" },
+    { label: "雙邊 NPS 評鑑", sub: "client + worker · 內測收集後啟用", stat: "Q3 2026" }
+  ];
+  return (
+    <div className="le-poc" id="poc-tracker">
+      <div className="le-poc-h">
+        <span className="ttl">◆ Q3 2026 啟動內測</span>
+        <span className="target">PRIVATE BETA · ROADMAP</span>
+      </div>
+      <div className="le-poc-rows">
+        {rows.map((r, i) => (
+          <div key={i} className="le-poc-row">
+            <div className="label le-zh">
+              {r.label}
+              <span className="sub">{r.sub}</span>
+            </div>
+            <div className="bar"><div className="fill" style={{ width: "12%", background: "var(--accent-dim)" }}></div></div>
+            <div className="stat">{r.stat}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Hero
+function EHero() {
+  const [tokens, setTokens] = useState([]);
+  useEffect(() => {
+    const stream = ["parse(", "brief", ")", "→", "tier", "=", "A+", "·", "match", "(", 3, ")", "→", "contract", "·", "escrow", "(", "30%", ")", "→", "milestone", "·", "release", "→", "retainer"];
+    let i = 0;
+    const id = setInterval(() => {
+      setTokens((prev) => {
+        const next = [...prev, stream[i % stream.length]];
+        return next.slice(-22);
+      });
+      i++;
+    }, 360);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <section className="le-hero">
+      <NeuralMesh />
+      <div className="le-hero-content">
+        <div className="le-hero-eyebrow">
+          <span className="dot le-pulse"></span>
+          <span>// 不論你是發案還是接案 · AI-NATIVE WORK NETWORK</span>
+        </div>
+        <h1 className="le-hero-title le-zh">
+          <span>有些人，已經學會跟 <span className="le-grad">AI</span> 一起工作。</span>
+          <span className="sub">我們替你找到他們。</span>
+        </h1>
+        {/* v0.4.9 wave 6 #6 · Takeaway pills · 讓用戶 1 秒掌握 LP 賣什麼（Edward 反饋「無法快速掌握重點」） */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12, margin: "20px 0 28px" }}>
+          {[
+            { k: "1", v: "上傳 brief、3 天看到 3 個對的人配對" },
+            { k: "2", v: "通過率 < 10% · 不滿意錢還在我們這" },
+            { k: "3", v: "中文 brief 就夠、不用翻英語" },
+          ].map((p) => (
+            <div key={p.k} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", border: "1px solid var(--accent-line)", borderRadius: 999, background: "rgba(199,232,74,0.04)" }}>
+              <span style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.1em" }}>0{p.k}</span>
+              <span className="le-zh" style={{ fontSize: 13, color: "var(--text)", fontWeight: 500 }}>{p.v}</span>
+            </div>
+          ))}
+        </div>
+        <div className="le-hero-grid">
+          <div className="le-hero-blurb le-zh">
+            上傳一段需求，AI 替你 <b className="le-acc">拆解、配對</b>最合適的 <b className="le-acc-dim">垂直領域接案者</b>。不比稿、不競價、不重複報價 — 這是 <b style={{ borderBottom: "2px solid var(--accent)" }}>AI-native 的工作協定</b>。
+          </div>
+          <div className="le-hero-cta-col">
+            <div className="le-hero-trust-label">
+              <span style={{ display: "inline-block", width: 4, height: 4, background: "var(--accent)", borderRadius: 99 }}></span>
+              已認證 · 通過率 &lt; 10% · 雙邊 NPS 評鑑
+            </div>
+            <a href="app.html?role=client&step=0" className="le-cta-primary">
+              <span>我有案子要發 →</span>
+              <span style={{ fontSize: 11, opacity: 0.6 }}>3 天看配對</span>
+            </a>
+            <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary">
+              <span>我想被認證 →</span>
+              <span className="sub">2 週內接到第一案</span>
+            </a>
+          </div>
+        </div>
+        <div className="le-stream le-card">
+          <span className="label">◆ AGENT // STREAM</span>
+          <div className="tokens">
+            {tokens.map((tk, i) => {
+              let color = "var(--text-2)";
+              if (typeof tk === "number") color = "var(--accent)";
+              else if (["→", "·", "("].includes(tk)) color = "var(--muted)";
+              else if (tk === "tier" || tk === "match" || tk === "escrow") color = "var(--accent-dim)";
+              else if (tk === "A+" || tk === "30%") color = "var(--accent)";
+              return <span key={i} style={{ color, opacity: i / tokens.length * 0.6 + 0.4 }}>{tk}</span>;
+            })}
+            <span style={{ color: "var(--accent)" }}>▮</span>
+          </div>
+          <span className="meta">tok/s · 38</span>
+        </div>
+        <div className="le-zh" style={{ fontSize: 11, color: "var(--muted)", letterSpacing: "0.06em", margin: "20px 0 10px", fontFamily: "var(--mono)", textTransform: "uppercase" }}>
+          ▸ <span style={{ color: "var(--accent)" }}>SPEC</span> = 平台設計標準 · ship 後驗收門檻 &nbsp;&nbsp;·&nbsp;&nbsp; <span style={{ color: "var(--accent-dim)" }}>LIVE</span> = 即時數據
+        </div>
+        {/* v0.4.8 wave 5 #7 · Hero 瘦身 · 女巫 fix-1 + 蘇菲共識 · telemetry 4 → 3 cell（VERTICALS=15 已在 Network 段、移除 dup）· EPocTracker 移到 finalCTA 上方 */}
+        <div className="le-telemetry">
+          <div className="cell">
+            <span className="badge target">SPEC</span>
+            <div className="l">PASS RATE</div>
+            <div className="v" style={{ color: "var(--accent)" }}>&lt;10%</div>
+          </div>
+          <div className="cell">
+            <span className="badge target">SPEC</span>
+            <div className="l">MATCH TIME</div>
+            <div className="v" style={{ color: "var(--text)" }}>3.2d</div>
+          </div>
+          <div className="cell">
+            <span className="badge target">SPEC</span>
+            <div className="l">WORKER NET</div>
+            <div className="v" style={{ color: "var(--accent)" }}>95%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Trust Strip · 5 信號
+const SIGNALS = [
+  { id: "01", ttl: "頂級篩選模式已驗證", body: "Toptal 3% 通過率、年營收 2 億美元、20 年存活——但進不到華語區中小企業。", stat: "TOPTAL · 3% PASS" },
+  { id: "02", ttl: "AI 媒合是已驗證大市場", body: "Mercor 4.5 億美元 / 估值 20 億——但只服務 AI 實驗室、進不到一般企業。", stat: "MERCOR · $20B VAL" },
+  { id: "03", ttl: "創作者經濟降獲客成本", body: "全球 1.67 億創作者、台灣 IG / X / Substack 自帶聲量人群年增 23%。", stat: "1.67M CREATORS" },
+  { id: "04", ttl: "AI 工具進入中小企業", body: "ChatGPT 5 億 weekly active、Claude / Cursor / Make 進入日常 workflow。", stat: "500M WAU" },
+  { id: "05", ttl: "一人公司浪潮起步", body: "Stripe / Substack / Notion 讓單人 $1M+ 公司可行、5-15 人小團隊被取代。", stat: "$1M+ SOLO" }
+];
+function ETrustStrip() {
+  return (
+    <section className="le-section" id="signals">
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ FIVE SIGNALS · WHY 2026 · 02 / 12</div>
+        <h2 className="le-h2">三件事 <span className="le-acc">同時成熟</span> 的拐點。</h2>
+        <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 840, marginTop: -32, marginBottom: 32 }}>
+          2026 是三件事第一次同時成熟的拐點。我們不發明趨勢、我們承接已被驗證的市場。
+        </p>
+        <div className="le-trust-strip">
+          {SIGNALS.map((s) => (
+            <article key={s.id} className="chip">
+              <div className="id">SIGNAL_{s.id}</div>
+              <div className="ttl le-zh">{s.ttl}</div>
+              <div className="body le-zh">{s.body}</div>
+              <div className="stat">{s.stat}</div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Problem · 4 path
+const PROBLEMS = [
+  { lbl: "PATH 1 · 朋友介紹 / PTT", title: "便宜、信任、3-5 萬入場", pain: "品質賭運氣、人脈池幾年就空、出包沒備案。", fix: "BeyondPath: 1.2K worker 池、Tier 認證、自動推薦 top 3、出包 7 天找替補。" },
+  { lbl: "PATH 2 · 月費代理 / Fiverr", title: "全 service 或便宜量大", pain: "月費 30-100 萬綁約、ROAS 看不出 ROI、英語 brief 來回燒 2 倍時間。", fix: "BeyondPath: 按案計費、不綁約、華語在地、雙邊 NPS 寫進規則層。" },
+  { lbl: "PATH 3 · 全職 hire (104/Cake)", title: "長期省錢、可控", pain: "月薪 8-15 萬 + 招聘空窗 3-6 月、AI 加速時代用全職單線太慢。", fix: "BeyondPath: 3 天看配對、retainer 月費 30-60K 換多工種彈性、Tier 升降基於 NPS。" }
+];
+function EProblem() {
+  return (
+    <section className="le-section" id="problem">
+      <div className="inner">
+        <div className="le-cap le-warn" style={{ marginBottom: 24 }}>◆ THE PROBLEM · 你現在的選項其實只有這 3 條</div>
+        <h2 className="le-h2">三條 path · <span className="le-warn">三種漏</span>。</h2>
+        <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
+          DTC 品牌 founder / 設計工作室 / 中小企業老闆兼 HR、你的 AI workflow 採購選項其實只有這幾條——而且每條都漏。
+        </p>
+        <div className="le-engines-grid le-problem-grid">
+          {PROBLEMS.map((p, i) => (
+            <article key={i} className="le-engine-card">
+              <div className="n" style={{ color: "var(--warn)" }}>{p.lbl}</div>
+              <div className="zh le-zh" style={{ fontSize: 22 }}>{p.title}</div>
+              <div className="desc le-zh"><b style={{ color: "var(--warn)" }}>{p.pain}</b></div>
+              <div style={{ paddingTop: 14, borderTop: "1px dashed var(--line-soft)", marginTop: "auto" }}>
+                <div className="n" style={{ color: "var(--accent)", marginBottom: 8 }}>→ BeyondPath 怎麼補</div>
+                <div className="desc le-zh">{p.fix}</div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Manifesto
+function EManifesto() {
+  return (
+    <section className="le-section">
+      <div className="le-disp" style={{ position: "absolute", left: -30, top: -40, fontSize: 520, lineHeight: 0.85, color: "transparent", WebkitTextStroke: "1px var(--accent-line)", pointerEvents: "none", userSelect: "none", whiteSpace: "nowrap", opacity: 0.4 }}>SYNAPSE</div>
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ MANIFESTO · 04 / 12</div>
+        <h2 className="le-manifesto-h">
+          上一代靠 <span className="strike">履歷 · 比稿 · Slack</span>。<br />
+          下一代靠 <span className="le-acc">brief</span> · <span className="le-acc-dim">配對</span> · <span className="le-acc">收據</span>。
+        </h2>
+        <div className="le-manifesto-grid">
+          {[
+            ["NO BRIEF FRICTION", "一段話，AI 寫完整 brief", "01"],
+            ["NO PITCHING", "Tier 評等代替競價", "02"],
+            ["NO TRUST GAP", "合約 + 信託 + milestone", "03"],
+            ["NO DEAD-END WORK", "一次合作 → retainer", "04"]
+          ].map(([en, zh, n]) => (
+            <div key={n} className="cell">
+              <div className="n">― {n}</div>
+              <div className="en">{en}</div>
+              <div className="zh le-zh">{zh}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Engines · 6 (v0.4.6 加「你因此 →」用戶利益句 · 蕪菁頭 must-fix #2)
+const ENGINES = [
+  { n: "01", en: "AI BRIEF PARSER", zh: "Brief 拆解引擎", d: "3 秒拆出產業 / 任務 / 預算 / Tier。中文原生語意理解。", you: "你因此 → 不用想怎麼寫 brief、說一段中文就好", m: "BriefMock", staticMock: null },
+  { n: "02", en: "TIER MATCH ENGINE", zh: "Tier 配對引擎", d: "3 秒排出 Top 3，附配對分數與理由。零比稿。", you: "你因此 → 不發 30 封信、3 天內看到 3 個對的人", m: null, staticMock: { metric: "Top 3", label: "MATCH · TIER A+ / A / B" } },
+  { n: "03", en: "SMART CONTRACT", zh: "電子合約 × 信託", d: "雙邊電簽 / 30/30/40 escrow / 24h 仲裁。", you: "你因此 → 錢分階段給、不滿意還在我們這、不會整筆飛走", m: "ContractMock", staticMock: null },
+  { n: "04", en: "PROJECT DASHBOARD", zh: "案件儀表板", d: "Milestone + AI auto-review + 版本可審計。", you: "你因此 → 案子進度一目了然、不用催、不用追", m: null, staticMock: { metric: "M1-M5", label: "MILESTONE · AUDIT-READY" } },
+  { n: "05", en: "NPS FLYWHEEL", zh: "NPS 雙邊飛輪", d: "雙盲 5 維評鑑 / Tier 自動升降 / 反馬太 +10。", you: "你因此 → 做得好的人自動排前面、不靠社交、不靠運氣", m: null, staticMock: { metric: "+10", label: "ANTI-MATTHEW · 5-DIM NPS" } },
+  { n: "06", en: "RETAINER ENGINE", zh: "Retainer 引擎", d: "AI 根據結果生月費提案，一鍵接續。", you: "你因此 → 合作好的人下個月自動續、不用重發 brief", m: null, staticMock: { metric: "M+1", label: "AUTO-PROPOSAL · MONTHLY" } }
+];
+// v0.4.8 wave 5 #9 · Case Study section · 霍爾最高 ROI · 用 prototype 既有 LUMINE / HANA / Plant by Plant sample data
+const CASE_STUDIES = [
+  {
+    brand: "LUMINE",
+    sector: "DTC 保養品",
+    brief: "9 月底上新「夜修護」3 SKU、需要 2 版主視覺 KV + 6 支 IG Reels 腳本 + 3 篇官網 + EDM 文案、排程到 Meta + LINE。",
+    matched: "Edward · Tier A+ 領域專家（Visual KV + Brand DNA × AI）· 配對分數 92 / 100",
+    delivered: "2 KV × 4 alts each · 4 週交付 · NPS 4.94 / 5",
+    payout: "NT$ 203,300（client 端 NT$ 240,000 · worker 淨拿 95%）",
+    state: "進入 retainer · 持續 Q1 2027 上新檔",
+    badge: "已結案 · NPS 4.94"
+  },
+  {
+    brand: "HANA 香氛",
+    sector: "spring restage",
+    brief: "新香 line 2 個 SKU 春季視覺重新整理、4 週內交 2 版 KV + 8 個 social asset。",
+    matched: "Edward · 同時跑 LUMINE retainer 已達 capacity 75% · 平台優先推薦",
+    delivered: "2 KV × 4 alts · wk 2 / 4 · 進度 50%",
+    payout: "NT$ 64,000（in escrow · milestone 2/4 已釋放 30%）",
+    state: "● 進行中 · ON TRACK",
+    badge: "進行中 · WK 2 / 4"
+  },
+  {
+    brand: "Plant by Plant",
+    sector: "包裝設計",
+    brief: "植物保養 line 包裝重設、6 週內交 brand DNA spec + 6 個 SKU packaging dieline。",
+    matched: "Edward · Tier A+ Brand DNA × AI 領域 · 配對分數 88 / 100",
+    delivered: "6 SKU dieline · brand spec 32 頁 · final review 階段",
+    payout: "NT$ 128,000（已釋 70% · 結案前 30% 待 client 簽收）",
+    state: "● final review · WK 6 / 6",
+    badge: "WK 6 / 6 · FINAL REVIEW"
+  }
+];
+function ECaseStudies() {
+  return (
+    <section className="le-section" id="cases">
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ CASE STUDIES · 真實案件實錄</div>
+        <h2 className="le-h2">看 BeyondPath 怎麼<span className="le-acc">真的在跑</span>。</h2>
+        <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
+          這 3 個 case 是 prototype 階段樣本——展示 brief → 配對 → 交付 → 收款的真實樣態。<span style={{ color: "var(--muted)", fontSize: 14 }}>（資料模擬 · 真實服務 2026 Q3 上線後逐步替換真案）</span>
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
+          {CASE_STUDIES.map((c, i) => (
+            <article key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--line)", padding: "20px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", borderBottom: "1px dashed var(--line-soft)", paddingBottom: 12 }}>
+                <div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.01em" }}>{c.brand}</div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>{c.sector}</div>
+                </div>
+                <span style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em", color: "var(--accent)", padding: "3px 6px", border: "1px solid var(--accent-line)", borderRadius: 2, whiteSpace: "nowrap" }}>{c.badge}</span>
+              </div>
+              <div className="le-zh" style={{ fontSize: 13, lineHeight: 1.7, color: "var(--text-2)" }}>
+                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ BRIEF</b>{c.brief}</div>
+                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ MATCH</b>{c.matched}</div>
+                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ DELIVER</b>{c.delivered}</div>
+                <div><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ PAYOUT</b>{c.payout}</div>
+              </div>
+              <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
+                {c.state}
+              </div>
+            </article>
+          ))}
+        </div>
+        <div style={{ marginTop: 28, textAlign: "center", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", color: "var(--muted)", textTransform: "uppercase" }}>
+          ▸ 想看更多？<a href="mailto:edwardt0303@gmail.com?subject=BeyondPath%20%E6%A1%88%E4%BB%B6%E5%B7%A5%E4%BD%9C%E6%A8%A3%E5%93%81" style={{ color: "var(--accent)", textDecoration: "none", borderBottom: "1px solid var(--accent-line)" }}>寫信跟 Edward 拿工作樣品包</a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// v0.4.7 wave 4 #3 · 過場 epigraph · 女巫提案 · 破前段 monotone（problem→engines 之間呼吸口）
+function EEpigraph() {
+  return (
+    <section style={{ padding: "56px 56px", textAlign: "center", borderTop: "1px solid var(--line)", background: "var(--bg)" }}>
+      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+        <span style={{ fontFamily: "var(--mono)", fontSize: 13, letterSpacing: "0.18em", color: "var(--accent)", textTransform: "uppercase", opacity: 0.85 }}>
+          {"/* engines ahead · 6 個摩擦點、一個一個拆 */"}
+        </span>
+      </div>
+    </section>
+  );
+}
+
+// v0.4.9 wave 6 #4 · Engines + Protocol 合併（Edward 反饋「太長」· 6 卡 + Protocol 4-stage 1-row strip 收尾）
+function EEnginesMerged() {
+  const stages = [
+    { i: "I",   zh: "進案",   en: "INTAKE",    steps: "01 選領域 · 02 上傳 brief · 03 確認期待" },
+    { i: "II",  zh: "配對",   en: "MATCH",     steps: "04 AI 配對 · 05 接案" },
+    { i: "III", zh: "執行",   en: "EXECUTE",   steps: "06 電子合約 · 07 30% 信託 · 08 案件儀表 · 09 milestone 釋金" },
+    { i: "IV",  zh: "複利",   en: "COMPOUND",  steps: "10 雙邊 NPS · 11 Tier 飛輪 · 12 retainer 提案" },
+  ];
+  return (
+    <section className="le-section" id="engines">
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ HOW IT WORKS · 6 個引擎 + 4 個階段</div>
+        <h2 className="le-h2">上傳需求 → 3 天配對 → 開案 → 結案拿錢。<br/>全程 <span className="le-acc-dim">0</span> 個 email。</h2>
+        <div className="le-engines-grid">
+          {ENGINES.map((e) => (
+            <div key={e.n} className="le-engine-card">
+              {e.m
+                ? <EngineMock kind={e.m} />
+                : <div className="static-mock"><span className="metric">{e.staticMock.metric}</span>{e.staticMock.label}</div>}
+              <div className="n">{e.n} · ENG</div>
+              <div>
+                <div className="zh">{e.zh}</div>
+                <div className="en">{e.en}</div>
+              </div>
+              <div className="desc">{e.d}</div>
+              {e.you && (
+                <div className="le-zh" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontSize: 13, color: "var(--accent)", fontWeight: 600, lineHeight: 1.5 }}>{e.you}</div>
+              )}
+            </div>
+          ))}
+        </div>
+        {/* Protocol 12 步壓成 4-stage 1-row strip · 在 Engines 段尾收束 */}
+        <div style={{ marginTop: 32, padding: "20px 24px", border: "1px dashed var(--line)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24, position: "relative" }}>
+          <div style={{ position: "absolute", top: -10, left: 18, background: "var(--bg)", padding: "0 12px", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.18em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
+            ◆ 12 步協定 · 4 階段
+          </div>
+          {stages.map((s) => (
+            <div key={s.i} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 14, color: "var(--accent)", fontWeight: 700 }}>{s.i} · {s.en}</div>
+              <div className="le-zh" style={{ fontSize: 13, color: "var(--text-2)", fontWeight: 600 }}>{s.zh}</div>
+              <div className="le-zh" style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.6 }}>{s.steps}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function EEngines() {
+  return (
+    <section className="le-section" id="engines-old" style={{ display: "none" }}>
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ ENGINES · 平台幫你自動化的 6 件事</div>
+        <h2 className="le-h2">六個引擎，把每個 <span className="le-acc">摩擦點</span> 都自動化。</h2>
+        <div className="le-engines-grid">
+          {ENGINES.map((e) => (
+            <div key={e.n} className="le-engine-card">
+              {e.m
+                ? <EngineMock kind={e.m} />
+                : <div className="static-mock"><span className="metric">{e.staticMock.metric}</span>{e.staticMock.label}</div>}
+              <div className="n">{e.n} · ENG</div>
+              <div>
+                <div className="zh">{e.zh}</div>
+                <div className="en">{e.en}</div>
+              </div>
+              <div className="desc">{e.d}</div>
+              {e.you && (
+                <div className="le-zh" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontSize: 13, color: "var(--accent)", fontWeight: 600, lineHeight: 1.5 }}>{e.you}</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Protocol 12-step
+const PROTOCOL_STAGES = [
+  { i: "I",  zh: "進案",  en: "INTAKE" },
+  { i: "II", zh: "配對",  en: "MATCH" },
+  { i: "III", zh: "執行", en: "EXECUTE" },
+  { i: "IV", zh: "複利",  en: "COMPOUND" }
+];
+const PROTOCOL_STEPS = [
+  "選領域 + 上傳需求", "AI 拆解 brief", "確認期待", "AI 自動配對",
+  "Worker 接案", "電子合約", "30% 信託", "案件儀表板",
+  "Milestone 釋金", "雙邊 NPS", "Tier 飛輪", "Retainer 提案"
+];
+function EProtocol() {
+  return (
+    <section className="le-section" id="flywheel">
+      <div className="inner">
+        <div className="le-cap" style={{ color: "var(--accent-dim)", marginBottom: 24 }}>◆ PROTOCOL · 12 步協定 · 從 brief 到收款</div>
+        <h2 className="le-h2">上傳需求 → 3 天配對 → 開案 → 結案拿錢。<br/>全程 <span className="le-acc-dim">0</span> 個 email。</h2>
+        <div className="le-protocol-flow">
+          <div className="le-protocol-stages">
+            {PROTOCOL_STAGES.map((s, si) => (
+              <div key={s.i} className="stage">
+                <div className="roman">{s.i}</div>
+                <div className="dot"></div>
+                <div className="zh">{s.zh}</div>
+                <div className="en">{s.en} · {String(si * 3 + 1).padStart(2, "0")}–{String(si * 3 + 3).padStart(2, "0")}</div>
+              </div>
+            ))}
+          </div>
+          <div className="le-protocol-connector"></div>
+        </div>
+        <div className="le-protocol-grid">
+          {PROTOCOL_STEPS.map((t, i) => (
+            <div key={i} className="cell">
+              <div className="n">{String(i + 1).padStart(2, "0")}</div>
+              <div className="t le-zh">{t}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Tier · orbital + ladder · BP 真數值
+const TIERS = [
+  { id: "S",  zh: "典範",   sub: "PARAGON · 跨領域 5+ · NPS ≥ 4.7",   stat: "10+ cases · NT$ 400K+", color: "var(--accent)" },
+  { id: "A+", zh: "領域專家", sub: "MASTER · 30+ 案 · 領域 NPS ≥ 4.5", stat: "30+ cases · NT$ 220K", color: "var(--accent-dim)" },
+  { id: "A",  zh: "資深",   sub: "PRO · 30+ 案 · 客戶推薦 ≥ 3",       stat: "30+ cases · NT$ 145K", color: "var(--text)" },
+  { id: "B",  zh: "認證入門", sub: "ENTRY · 通過 4 階段認證",          stat: "5-30 cases · NT$ 78K", color: "var(--muted)" },
+  { id: "C",  zh: "受訓",   sub: "TRAINEE · 申請中 / 補件",            stat: "0-5 cases · —", color: "var(--muted-2)" }
+];
+function ETier() {
+  return (
+    <section className="le-section" id="tier">
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ TIER · 5 階認證 · 升降基於 NPS</div>
+        <h2 className="le-h2">Tier 不是裝飾 · <span className="le-acc">是推薦排序權重</span>。</h2>
+        <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 48 }}>
+          Tier 升降基於結案 NPS、領域認證、客戶推薦 + 反馬太 +10（3 個月內無接案保留 slot）。worker 看得到「升級還差什麼」、client 看得到「這個 worker 為什麼貴」。
+        </p>
+        <div className="le-tier-ladder le-tier-ladder-solo">
+          {TIERS.map((t, i) => (
+            <div key={t.id} className={"le-tier-row" + (i === 1 ? " featured" : "")}>
+              <div className="id" style={{ color: t.color }}>{t.id}</div>
+              <div className="info">
+                <div className="zh le-zh">{t.zh}</div>
+                <div className="en">{t.sub}</div>
+              </div>
+              <div className="stat" style={{ color: t.color }}>
+                <span className="l">typical</span>
+                <span className="v">{t.stat}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* v0.4.7 wave 4 #4 · DAY 1 callout 降階拉回 DNA · 女巫提案 · 改純左綠 hairline 對齊 Story peak motif */}
+        <div className="le-tier-onboard" style={{ marginTop: 28, maxWidth: 560, marginLeft: "auto", marginRight: "auto", padding: "16px 0 16px 20px", borderLeft: "2px solid var(--accent)", display: "grid", gridTemplateColumns: "auto 1fr", gap: 16, alignItems: "start" }}>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase", fontWeight: 700, whiteSpace: "nowrap" }}>▸ DAY 1<br/>路徑</div>
+          <div className="le-zh" style={{ fontSize: 13, lineHeight: 1.7, color: "var(--text-2)" }}>
+            通過認證 → 進「首案池」（平台保留 <b style={{ color: "var(--accent)" }}>20% slot</b> 給新人）→ 第一個案最快 <b style={{ color: "var(--accent)" }}>2 週</b>內。<br/>
+            <span style={{ fontSize: 12, color: "var(--muted)" }}>反馬太 +10 = 你不用等 30+ 案才被看見、平台主動推首案池給客戶。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Why us · 對發案者 / 對接案者 / 共同 (v0.4.6 改用戶視角、不用對標投資人語)
+const WHYUS = [
+  { axis: "對發案者", ttl: "你不用挑、AI 替你挑", body: "上傳一段 brief、3 天內看到 Top 3 配對結果、附打分數與理由。不發 30 封 brief、不比稿、不重複報價。", peer: "▸ 取代「朋友介紹 + 月費代理」" },
+  { axis: "對接案者", ttl: "案子來找你、不是你找案子", body: "通過 < 10% 認證後、Tier 級數變成你的個人品牌資產。每結一案 NPS 寫進 ledger、做得好下次案子自動進來。", peer: "▸ 取代「跑案 + 比稿 + 接不到案」" },
+  { axis: "共同", ttl: "華語在地 · 真懂 AI workflow", body: "不是英語 brief 來回燒時間、不是只會用 ChatGPT 的接案者——這裡的人通過了技能測驗 + 同儕 review + 客戶模擬案件 + 主審委員會 4 階段認證。", peer: "▸ 中文原生 · 台灣母市場" }
+];
+function EWhyUs() {
+  return (
+    <section className="le-section" id="whyus">
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ WHY US · 一個服務、兩種人受益</div>
+        <h2 className="le-h2">為什麼選 <span className="le-acc">BeyondPath</span>。</h2>
+        <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
+          不論你是發案還是接案、這個平台先處理掉「找對人」「不出包」「錢不卡」這三件事——剩下的時間你做你擅長的。
+        </p>
+        <div className="le-whyus-grid">
+          {WHYUS.map((w, i) => (
+            <article key={i} className="le-whyus-card">
+              <div className="axis">{w.axis}</div>
+              <div className="ttl le-zh">{w.ttl}</div>
+              <div className="body le-zh">{w.body}</div>
+              <div className="peer">{w.peer}</div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Vision L1-L4
+const VISION = [
+  { lvl: "L1", year: "2026", desc: "個人 + ChatGPT / Claude · AI assistant 階段", mult: "1×", cls: "l1" },
+  { lvl: "L2", year: "2027-2028", desc: "個人配置 N agent 跑 workflow · 自動化階段", mult: "3-5×", cls: "l2" },
+  { lvl: "L3", year: "2028-2029", desc: "個人設計 multi-agent system · 系統設計階段", mult: "8-15×", cls: "l3" },
+  { lvl: "L4", year: "2029-2030", desc: "個人 = agent fleet + 客戶池 + 認證 + infra · 一人公司 OS", mult: "30×+", cls: "l4" }
+];
+function EVision() {
+  return (
+    <section className="le-section" id="vision">
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ VISION · 一人公司 OS · 09 / 12</div>
+        <h2 className="le-h2">2026 → 2030 · <span className="le-acc">solo company OS</span>。</h2>
+        <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32 }}>
+          今天的 BeyondPath 是 marketplace、明天是一人公司時代的 OS——客戶層 + 履約層 + 認證層 + 工具帳戶層、一個帳戶搞定。
+        </p>
+        <div className="le-vision-ladder">
+          {VISION.map((v) => (
+            <div key={v.lvl} className={"le-vision-row " + v.cls}>
+              <div className="level">{v.lvl}</div>
+              <div className="year">{v.year}</div>
+              <div className="desc le-zh">{v.desc}</div>
+              <div className="multiplier">{v.mult}</div>
+            </div>
+          ))}
+        </div>
+        <div className="le-vision-bp-role">
+          <div className="tag">▸ BP 在 L4 角色</div>
+          <div className="body le-zh">
+            不是更好的 marketplace、是 2030 一人公司時代的<b>客戶層 + 履約層 + 認證層 + 工具帳戶層</b>。對標 = Stripe Atlas + AWS + Substack 三合一。<b>If you will run a company of one by 2030 · we are the OS you will already be on.</b>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Verticals heat strip
+const VERTICALS = ["DTC 內容自動化", "設計品牌 × AI", "短影音 · 剪輯", "網頁設計 + 切版", "客製軟體開發", "客製系統建置", "AI Agent · Bot", "數據 · BI", "B2B SaaS GTM", "品牌市場調研", "行銷服務操盤", "SEO · 內容營運", "客服自動化", "翻譯 · 在地化", "其他"];
+// v0.4.9 wave 6 #5 · Network 從 15-cell grid 縮成 1 行 chip strip（蘇菲早就點到「dead-end catalog」· Edward「太長」拍板砍）
+function EVerticals() {
+  const HOT = [0, 6];
+  return (
+    <section className="le-section" id="network" style={{ padding: "56px 56px" }}>
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 16 }}>◆ NETWORK · 15 領域、3 天內配對</div>
+        <h2 className="le-h2" style={{ fontSize: 32 }}>15 個 <span className="le-acc">領域</span>，3 天內找到對的人。</h2>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 24 }}>
+          {VERTICALS.map((v, i) => {
+            const isHot = HOT.indexOf(i) >= 0;
+            return (
+              <span key={i} style={{
+                fontFamily: "var(--zh)", fontSize: 13, padding: "8px 14px",
+                background: isHot ? "var(--accent)" : "rgba(255,255,255,0.03)",
+                color: isHot ? "var(--bg)" : "var(--text-2)",
+                border: "1px solid " + (isHot ? "var(--accent)" : "var(--line)"),
+                borderRadius: 999, letterSpacing: "0.02em",
+                fontWeight: isHot ? 700 : 500,
+              }}>
+                {isHot && <span style={{ marginRight: 4 }}>●</span>}{v}{isHot && <span style={{ marginLeft: 6, fontFamily: "var(--mono)", fontSize: 10 }}>HOT</span>}
+              </span>
+            );
+          })}
+        </div>
+        <div style={{ marginTop: 16, fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.06em" }}>
+          ▸ HOT VERTICALS · +47% MoM growth · DTC + AI Agent
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Trust 3 metrics · BP 真數值
+function ETrust3() {
+  const items = [
+    { v: "30/30/40", en: "ESCROW", zh: "Milestone 階段釋金", facts: ["綠界 ECPay 第三方託管", "4-eyes 釋金", "24h 仲裁"], color: "var(--accent)" },
+    { v: "95%", en: "WORKER NET", zh: "Worker 淨拿", facts: ["Client 付市場價 +15%", "Worker 淨拿 95%", "5% 平台 take"], color: "var(--text)" },
+    { v: "+10", en: "ANTI-MATTHEW", zh: "反馬太分潤", facts: ["首案池保留 20% slot 給新人", "3 個月內無接案 +10"], color: "var(--accent-dim)" }
+  ];
+  return (
+    <section className="le-section" id="trust">
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ TRUST · 不滿意 · 錢還在我們這裡</div>
+        <h2 className="le-h2">三道防線，每筆交易都有 <span className="le-acc">收據</span>。</h2>
+        <div className="le-trust3-grid">
+          {items.map((it, i) => (
+            <div key={i} className="le-trust3-cell">
+              <div className="label" style={{ color: it.color }}>{it.en}</div>
+              <div className="v" style={{ color: it.color }}>{it.v}</div>
+              <div className="zh le-zh">{it.zh}</div>
+              <ul className="facts le-zh">
+                {it.facts.map((f, j) => (<li key={j}>{f}</li>))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// FAQ · v0.4.6 (2026-05-10) 改寫為發案/接案者真問題、不再是投資人 FAQ
+const FAQS = [
+  { n: "01", tag: "發案者", q: "我已經有合作的接案者 / 設計師了，為什麼要換 BeyondPath？", a: "你不用換、你可以平行用。BeyondPath 解的是「現有人脈池外、突然要新類型的東西」這個場景——例如你平常合作的設計師不會剪短影音、你又不想為了一支 reels 重新發 30 封 brief。上傳一段需求、3 天內看到 Top 3 配對、附打分數理由。試一次案合不合適你自己判斷、平台不綁約、不收訂閱。" },
+  { n: "02", tag: "發案者", q: "做不出來 / 品質不對怎麼辦？我可以退錢嗎？", a: "可以。每筆案子採 30/30/40 階段釋金、款項先放在綠界 ECPay 第三方信託、不是直接給接案者。Milestone 沒過、款項不撥；雙方爭議由平台 24 小時內介入仲裁；出包 7 天內找到替補接手、原合約價照算。換句話說、錢還在我們這裡的時候、你不用怕。" },
+  { n: "03", tag: "發案者", q: "這個比 Fiverr 貴 / 比工作室便宜嗎？怎麼定價？", a: "我們在 Fiverr 跟月費代理之間。試做案 NT$ 50-100K / 案、按案計費、不綁約。如果合作得好可以轉 retainer NT$ 30-60K / 月、彈性換多工種。比 Fiverr 貴是因為這裡的人都通過 < 10% 認證、出包平台會接住；比月費代理便宜是因為你不用養一個用不滿的整個 team。" },
+  { n: "04", tag: "接案者", q: "我想接案、要怎麼申請？真的通過率 < 10%？", a: "對。4 階段認證：（1）技能測驗——你的領域基本功、（2）同儕 review——已認證 worker 評分、（3）客戶模擬案件——平台給一個假需求、你交一份成果、（4）主審委員會——通過前三關才進。整個流程約 2-3 週。沒過可以 6 個月後重申、平台會給回饋說明哪裡需要補強。" },
+  { n: "05", tag: "接案者", q: "平台抽多少？我實拿是多少？", a: "你的淨拿是案件總額的 95%——平台 take rate 5%。客戶付的是市場價 +15%（這 15% 是客戶端的服務費、不從你的口袋扣）。對接案者來說、5% 換的是：onboard + 4 階段認證 + AI 工具補貼 NT$ 500-1,500/月（Tier A 以上）+ 出包時平台找替補不影響你的 NPS。" },
+  { n: "06", tag: "接案者", q: "如果一段時間沒接到案、平台會幫忙嗎？", a: "會。我們有「反馬太 +10」機制——3 個月內無接案的 worker、配對排序自動 +10 加權；新認證 < 30 天 +5；首案池保留 20% slot 給新人。前提是你已通過 < 10% 認證——這不是降門檻、是讓已被驗證的人有持續接案機會。同時 AI 教練會主動提示「升 Tier 還差什麼」「哪些領域最近需求高」。" }
+];
+function EFaq() {
+  return (
+    <section className="le-section" id="faq">
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ FAQ · 你可能會問的</div>
+        <h2 className="le-h2">六個 <span className="le-acc">真問題</span>。</h2>
+        <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
+          前 3 條給準備發案的你、後 3 條給準備接案的你。沒答到的、寫信給創辦人 → <a href="mailto:edwardt0303@gmail.com" style={{ color: "var(--accent)" }}>edwardt0303@gmail.com</a>
+        </p>
+        <div className="le-faq">
+          {FAQS.map((f) => (
+            <details key={f.n}>
+              <summary>
+                <span className="num">Q{f.n}</span>
+                <span className="qtext">
+                  <span style={{ display: "inline-block", padding: "2px 8px", marginRight: 10, fontSize: 10, fontFamily: "var(--mono)", letterSpacing: "0.08em", color: "var(--accent)", border: "1px solid var(--accent-line)", borderRadius: 3, verticalAlign: "1px" }}>{f.tag}</span>
+                  {f.q}
+                </span>
+              </summary>
+              <div className="body le-zh">{f.a}</div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Founder
+function EFounder() {
+  return (
+    <section className="le-founder" id="founder">
+      <div className="ghost">YH</div>
+      <div className="grid">
+        <div>
+          <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ LETTER FROM THE FOUNDER</div>
+          {/* v0.4.8 wave 5 #10 · Founder 擴成 3 段架構 · 蘇菲 + 霍爾共識 · photo / 名字全寫 / LinkedIn 標 TODO 等 Edward fill */}
+          <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 24, alignItems: "start", marginBottom: 28 }}>
+            <div style={{ width: 88, height: 88, borderRadius: "50%", background: "var(--bg-1, rgba(255,255,255,0.05))", border: "1px solid var(--accent-line)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em", overflow: "hidden" }}>
+              {/* TODO Edward · 替換成你的 photo 路徑、例：<img src="assets/edward-founder.jpg" alt="Edward · Founder" style={{width:'100%',height:'100%',objectFit:'cover',filter:'grayscale(0.4) contrast(1.1)'}} /> */}
+              YH
+            </div>
+            <div>
+              <div style={{ fontSize: 22, fontWeight: 700, color: "var(--text)", marginBottom: 6, letterSpacing: "-0.01em" }}>
+                Edward / 余 ___ {/* TODO Edward · 名字全寫 */}
+              </div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", color: "var(--muted)", textTransform: "uppercase" }}>
+                FOUNDER · TPE · &nbsp;
+                <a href="mailto:edwardt0303@gmail.com" style={{ color: "var(--accent)", textDecoration: "none", borderBottom: "1px solid var(--accent-line)" }}>edwardt0303@gmail.com</a>
+                {/* TODO Edward · 加 LinkedIn / Twitter / 個人網站 link */}
+              </div>
+            </div>
+          </div>
+
+          <div className="quote le-zh" style={{ marginBottom: 24 }}>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.18em", color: "var(--accent)", marginBottom: 8 }}>◆ 起 / 我為什麼做這個</div>
+            「我自己就是那個發 5 個 brief 沒人懂、回 30 封信還在比稿的 client。<br />
+            BeyondPath 是我希望<span className="le-acc"> 五年前</span>就有的東西。」
+          </div>
+
+          <div className="quote le-zh" style={{ marginBottom: 24 }}>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.18em", color: "var(--accent)", marginBottom: 8 }}>◆ 承 / 為什麼是現在</div>
+            「2026 是我們做這件事的最佳時間點——AI 工具棧成熟、台灣 DTC 品牌密度高、AI 實踐者社群正在 emerge。<br />
+            **過了這個窗口、會有別人來做、但他們不會用華語、不會懂台灣的工作節奏**。」
+          </div>
+
+          <div className="quote le-zh">
+            <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.18em", color: "var(--accent)", marginBottom: 8 }}>◆ 轉 / 我對你的承諾</div>
+            「Y1 我會親自跑每一個試做案、不假手他人。<br />
+            如果第 6 個月我們找不到 3 位合格供給端、或試做案被客戶拒簽、我會主動告訴你『退回精品顧問模式』——而不是繼續燒錢硬撐。**這是我的 founder commitment、不是 marketing**。」
+          </div>
+        </div>
+        <div className="aside">
+          <p>我們相信下一代的工作網路長這樣：AI 處理 80% 的協作摩擦，人專心做剩下 20% 的判斷。</p>
+          <p style={{ marginTop: 16, fontSize: 12, color: "var(--muted)" }}>—— BeyondPath thesis · 一句話版</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Final CTA + Footer (v0.4.8 wave 5 #7 · EPocTracker 從 hero 移來這·當 roadmap 在 CTA 前提供透明度)
+function EFinalCta() {
+  return (
+    <section className="le-finalcta">
+      <div className="ghost">BeyondPath</div>
+      <div className="inner">
+        <div style={{ maxWidth: 720, margin: "0 auto 56px", padding: "32px 28px", border: "1px solid var(--line)", borderRadius: 4, background: "rgba(255,255,255,0.015)" }}>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.18em", color: "var(--accent-dim)", textTransform: "uppercase", marginBottom: 16 }}>◆ ROADMAP · 在你按下排隊前 · 我們的進度</div>
+          <EPocTracker />
+        </div>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ JOIN · PRIVATE BETA</div>
+        <h2 className="h">先 <span className="le-acc">排隊</span>。</h2>
+        <div className="grid">
+          <div className="blurb le-zh">每週 30 個 beta 名額。先寫 brief、AI 評估後我們才開帳號 — 確保第一批用戶就配到對的人。</div>
+          <div className="form">
+            <div className="input-row">
+              <input placeholder="you@company.com" />
+              <button>JOIN BETA →</button>
+            </div>
+            <div className="meta">
+              <span>NEXT COHORT</span>
+              <span className="le-acc">30 / 30 SEATS</span>
+            </div>
+          </div>
+        </div>
+        <div className="le-footer-nav">
+          <div className="brand-col">
+            <div className="name">Beyond<span className="le-acc">Path</span></div>
+            <div className="tag le-zh">AI-native 工作網路。取代履歷、比稿、Slack 線 — 用 brief、配對、收據構成的下一代協定。</div>
+            <div className="chips">
+              {["TPE", "SGP", "TYO"].map((c) => (<span key={c}>{c}</span>))}
+            </div>
+          </div>
+          {[
+            ["PRODUCT", [["流程協定 · 12 步", "#flywheel"], ["核心引擎 · 6", "#engines"], ["Tier 飛輪", "#tier"], ["信任機制", "#trust"], ["WHY BEYONDPATH", "#whyus"]]],
+            ["NETWORK", [["客戶申請", "app.html?role=client&step=0"], ["Expert 申請", "app.html?role=worker&onboarding=1"], ["15 領域總覽", "#network"], ["A+ 大師牆 · 即將上線", "mailto:edwardt0303@gmail.com?subject=A%2B%20%E5%A4%A7%E5%B8%AB%E7%89%86%E5%85%88%E8%A1%8C%E5%90%8D%E5%96%AE"], ["Retainer Plans · 即將上線", "mailto:edwardt0303@gmail.com?subject=Retainer%20Plans"]]],
+            ["COMPANY", [["關於 BeyondPath", "#whyus"], ["創辦人來信", "#founder"], ["加入我們", "mailto:edwardt0303@gmail.com?subject=Join%20BeyondPath"], ["edwardt0303@gmail.com", "mailto:edwardt0303@gmail.com"]]],
+            ["LEGAL", [["Terms · 即將上線", "mailto:edwardt0303@gmail.com?subject=Terms%20of%20Service"], ["Privacy · 即將上線", "mailto:edwardt0303@gmail.com?subject=Privacy%20Policy"], ["Escrow Policy", "#trust"], ["糾紛仲裁規範", "#trust"], ["資安白皮書 · v0.4 · 即將上線", "mailto:edwardt0303@gmail.com?subject=BP%20Security%20Whitepaper"]]]
+          ].map(([h, items]) => (
+            <div key={h}>
+              <h4>◆ {h}</h4>
+              <ul>{items.map((it) => {
+                const [label, href] = Array.isArray(it) ? it : [it, "#"];
+                return <li key={label}><a href={href}>{label}</a></li>;
+              })}</ul>
+            </div>
+          ))}
+        </div>
+        <div className="le-footer-bar">
+          <div>
+            <div className="le-loomark">
+              <span className="ring"></span>
+              <span className="text">© 2026 BEYONDPATH NETWORK</span>
+            </div>
+          </div>
+          <div className="center">TAIPEI × SINGAPORE × TOKYO · Y1→Y3</div>
+          <div className="right">
+            <span className="le-pulse" style={{ display: "inline-block", width: 6, height: 6, background: "var(--accent)", borderRadius: 99 }}></span>
+            v0.4β · LIVE · NEXT COHORT 30/30
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// v0.3 3-段敘事 起承轉 (霍爾 220 字 spec)
+// v0.5.0 wave 7 · Story 重寫·痛點 + explicit 誘因（Edward 反饋「敘事看不懂、發案/接案者誘因不明」）
+function EStory() {
+  return (
+    <section className="le-story" id="story" style={{ padding: "56px 56px" }}>
+      <div className="le-story-inner" style={{ gap: 32, maxWidth: 920 }}>
+        <div className="le-story-block peak">
+          <span className="label">◆ 為什麼是 BeyondPath</span>
+          <h3 className="h le-zh">我們不是又一個媒合平台。<br/>是替你算過、賠得起的工作協定。</h3>
+        </div>
+
+        {/* v0.5.1 雙視角誘因表 · 按 Edward 拍板優先序 · 文案砍短 + word-break:keep-all 解亂折行 */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+          {/* === CLIENT 卡 · 順序：1降本 2增效 3低風險 4品質保 === */}
+          <div style={{ padding: "26px 28px", border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)", borderRadius: 4 }}>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase", fontWeight: 700, marginBottom: 14 }}>
+              ▸ 如果你是品牌主
+            </div>
+            <div className="le-zh" style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.7, marginBottom: 18, wordBreak: "keep-all", textWrap: "pretty" }}>
+              你的痛 · 月費代理綁約 30-100 萬還看不到 ROAS、朋友介紹的人每次都要重新解釋品牌、Fiverr 老外不懂台灣語境且英語 brief 來回燒時間。
+            </div>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", color: "var(--accent)", fontWeight: 700, marginBottom: 12 }}>
+              你來 BeyondPath 拿到 →
+            </div>
+            <div className="le-zh" style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 15, color: "var(--text)", lineHeight: 1.55, wordBreak: "keep-all", textWrap: "pretty" }}>
+              <div>
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>① 降本</b> · 按案計費、不綁約。試做案 <b style={{ color: "var(--accent)" }}>NT$ 50-100K</b>、月費代理省下 30-100 萬。
+              </div>
+              <div>
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>② 增效</b> · 上傳 brief、<b style={{ color: "var(--accent)" }}>3 天</b>看到 3 個對的人。不發 30 封信、不比稿、不重複報價。
+              </div>
+              <div>
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>③ 低風險</b> · 錢先放綠界信託、不滿意隨時退、24h 仲裁、出包 7 天找替補。
+              </div>
+              <div>
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>④ 品質保</b> · 通過率 &lt; 10% 的 AI 實踐者、Tier 評等 + 雙邊 NPS 把品質量化。
+              </div>
+            </div>
+            <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.14em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
+              ▸ 取代「朋友介紹 + 月費代理 + Fiverr」
+            </div>
+          </div>
+
+          {/* === WORKER 卡 · 順序：1案源 2收入 3個人品牌 4AI補貼 === */}
+          <div style={{ padding: "26px 28px", border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)", borderRadius: 4 }}>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase", fontWeight: 700, marginBottom: 14 }}>
+              ▸ 如果你是接案者
+            </div>
+            <div className="le-zh" style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.7, marginBottom: 18, wordBreak: "keep-all", textWrap: "pretty" }}>
+              你的痛 · 會用 AI 做得快三倍、但案子還是要靠人脈、不會社交的人只能等朋友介紹。
+            </div>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", color: "var(--accent)", fontWeight: 700, marginBottom: 12 }}>
+              你來 BeyondPath 拿到 →
+            </div>
+            <div className="le-zh" style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 15, color: "var(--text)", lineHeight: 1.55, wordBreak: "keep-all", textWrap: "pretty" }}>
+              <div>
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>① 案源</b> · 案子主動找你、首案最快 <b style={{ color: "var(--accent)" }}>2 週</b>（首案池保留 20% slot 給新人）。
+              </div>
+              <div>
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>② 增加收入</b> · 你淨拿 <b style={{ color: "var(--accent)" }}>95%</b>、平台抽 5%。客戶付市場價 +15%、不從你口袋扣。
+              </div>
+              <div>
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>③ 個人品牌</b> · 通過 &lt; 10% 認證後、Tier 級數變累積資產、做得好下次案子自動進來。
+              </div>
+              <div>
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>④ AI 補貼</b> · Tier A+ 額外送 <b style={{ color: "var(--accent)" }}>NT$ 500-1,500/月</b>工具費（Claude Pro / ChatGPT Team / Midjourney 等）。
+              </div>
+            </div>
+            <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.14em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
+              ▸ 取代「跑案 + 比稿 + 接不到案」
+            </div>
+          </div>
+        </div>
+
+        <div style={{ textAlign: "center", paddingTop: 8, borderTop: "1px dashed var(--line-soft)" }}>
+          <p className="le-zh" style={{ fontSize: 14, color: "var(--muted)", marginBottom: 16 }}>
+            <b style={{ color: "var(--text)" }}>我們花一整年只篩出不到一成的人。</b> 你委託的每個案子、都是平台先驗過的人在執行。
+          </p>
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+            <a href="app.html?role=client&step=0" className="le-cta-primary" style={{ padding: "14px 22px", fontSize: 13 }}>
+              <span>我有案子要發 →</span>
+            </a>
+            <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary" style={{ padding: "14px 22px", fontSize: 13 }}>
+              <span>我想被認證 →</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Root · v0.4.7 (2026-05-10) wave 4 · Trust 前移到 Engines 後（霍爾 + 蘇菲三方共識最大 ROI · mid-funnel +15-25%）
+function LandingRoot() {
+  return (
+    <div className="le-root">
+      <EStaticBar />
+      <ENav />
+      <EHero />
+      <EStory />
+      <EProblem />
+      <EEnginesMerged />
+      <ETrust3 />
+      <ECaseStudies />
+      <ETier />
+      <EVerticals />
+      <EFaq />
+      <EFounder />
+      <EFinalCta />
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<LandingRoot />);
+
+// v0.3 sticky nav scrolled state + back-to-top fade-in
+(function () {
+  let throttleTimer = null;
+  let lastScroll = 0;
+  let ticking = false;
+  function update() {
+    const y = lastScroll;
+    const nav = document.querySelector(".le-nav");
+    const totop = document.querySelector(".le-totop");
+    const threshold = window.innerHeight;
+    if (nav) nav.classList.toggle("scrolled", y > threshold);
+    if (totop) totop.classList.toggle("visible", y > threshold);
+    ticking = false;
+  }
+  function onScroll() {
+    lastScroll = window.scrollY || window.pageYOffset || 0;
+    if (!ticking) {
+      window.requestAnimationFrame(update);
+      ticking = true;
+    }
+  }
+  window.addEventListener("scroll", function () {
+    if (throttleTimer) return;
+    throttleTimer = setTimeout(function () { onScroll(); throttleTimer = null; }, 200);
+    onScroll();
+  }, { passive: true });
+
+  function mountToTop() {
+    if (document.querySelector(".le-totop")) return;
+    const btn = document.createElement("button");
+    btn.className = "le-totop";
+    btn.setAttribute("aria-label", "回到頂部");
+    btn.innerHTML = "↑";
+    btn.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    document.body.appendChild(btn);
+  }
+  setTimeout(mountToTop, 600);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+.vercel/
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+!.env.example
+
+# Generated/shareable artifacts. Keep locally, rebuild when needed.
+BeyondPath-prototype.html
+index-offline.html
+
+# Historical landing snapshots kept locally for reference.
+landing-v0.*.html

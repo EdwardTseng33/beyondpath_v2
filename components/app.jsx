@@ -1,0 +1,1052 @@
+// BeyondPath · Client Intake (Step 1-4) — interactive React app
+// Mounts into both desktop and mobile artboards via window.BPApp({device}).
+
+const { useState, useEffect, useRef, useMemo } = React;
+const { VERTICALS, VERTICAL_CATS, SAMPLE_BRIEF, AI_PARSE_RESULT, WORKERS, SUGGESTED_PAIR } = window.BP_DATA;
+
+const fmtNT = (n) => "NT$" + n.toLocaleString();
+
+// ---------- Tiny atoms ----------
+
+const Tier = ({ t }) => (
+  <span className={"bp-tier " + (t === "A+" ? "aplus" : "a")}>Tier {t}</span>
+);
+const Badge = ({ children }) => <span className="bp-badge">{children}</span>;
+
+// ---------- Topbar ----------
+
+function Topbar({ step, device, hideStepper }) {
+  const labels = [
+    { n: "01", en: "Pre-intake", zh: "選領域 + 上傳需求" },
+    { n: "02", en: "AI Parse", zh: "AI 拆解需求" },
+    { n: "03", en: "Confirm", zh: "確認期待" },
+    { n: "04", en: "Match", zh: "AI 自動配對" },
+  ];
+  return (
+    <div className="bp-topbar">
+      <div className="bp-logo">
+        <span className="bp-logo-mark"></span>
+        BEYONDPATH
+        {device === "desktop" && <small>CLIENT · INTAKE OS v0.3</small>}
+      </div>
+      {device === "desktop" && !hideStepper && (
+        <div className="bp-stepper">
+          {labels.map((l, i) => (
+            <div
+              key={l.n}
+              className={i === step ? "active" : i < step ? "done" : ""}
+            >
+              <span className="num">{l.n}</span>
+              <span>{l.en}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="bp-statusbar">
+        <span className="dot"></span>
+        <span>
+          AI broker <b>online</b>
+        </span>
+        {device === "desktop" && (
+          <>
+            <span>·</span>
+            <span>
+              session <b>0xC3F4</b>
+            </span>
+            <span>·</span>
+            <span>
+              region <b>tw</b>
+            </span>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---------- STEP 1 · Pre-intake ----------
+
+function Step1({ state, set, device }) {
+  const [tab, setTab] = useState("sample"); // upload | paste | sample
+  const [text, setText] = useState(state.brief || "");
+  const [cat, setCat] = useState("all");
+  const [q, setQ] = useState("");
+
+  const filteredVerticals = useMemo(() => {
+    let list = VERTICALS;
+    if (cat !== "all") list = list.filter((v) => v.cat === cat);
+    if (q.trim()) {
+      const k = q.trim().toLowerCase();
+      list = list.filter(
+        (v) =>
+          v.en.toLowerCase().includes(k) ||
+          v.zh.includes(q.trim()) ||
+          v.blurb.includes(q.trim())
+      );
+    }
+    return list;
+  }, [cat, q]);
+
+  const useSample = () => {
+    setTab("sample");
+    setText(SAMPLE_BRIEF);
+    set({ brief: SAMPLE_BRIEF, briefSource: "sample" });
+  };
+
+  useEffect(() => {
+    if (tab === "sample" && !text) useSample();
+  }, []);
+
+  return (
+    <div>
+      <div className="bp-eyebrow">
+        <span>Step 01 / Pre-intake</span>
+        <span className="pill green">● live</span>
+      </div>
+      <h1 className="bp-h1">
+        Pick a vertical, drop your brief.
+        <br />
+        <span className="zh" style={{ color: "var(--muted)" }}>
+          選擇案件垂直領域，匯入需求文件。
+        </span>
+      </h1>
+      <p className="bp-sub">
+        BeyondPath 用領域分流，每個領域有自己的需求模板與專屬 worker pool。先選領域，
+        再用平台 AI 模板整理你的需求 — 或直接貼進來，我們幫你拆。
+      </p>
+
+      <div style={{ marginTop: 26 }}>
+        <div className="bp-h2" style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <span>Vertical · 垂直領域</span>
+          <span style={{ flex: 1 }} />
+          <input
+            className="bp-input"
+            placeholder="搜尋領域 / search…"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            style={{ width: 200, fontSize: 12, padding: "6px 10px", fontFamily: "var(--mono)" }}
+          />
+        </div>
+        <div className="bp-toolbar" style={{ marginTop: 8 }}>
+          {VERTICAL_CATS.map((c) => {
+            const count = c.id === "all" ? VERTICALS.length : VERTICALS.filter((v) => v.cat === c.id).length;
+            return (
+              <button
+                key={c.id}
+                className={"bp-chip " + (cat === c.id ? "active" : "")}
+                onClick={() => setCat(c.id)}
+              >
+                {c.en} <span className="zh" style={{ opacity: 0.7 }}>· {c.zh}</span>
+                <span style={{ opacity: 0.5, marginLeft: 4, fontFamily: "var(--mono)", fontSize: 10 }}>{count}</span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="bp-vert-grid" style={{ marginTop: 12 }}>
+          {filteredVerticals.map((v) => (
+            <button
+              key={v.id}
+              className={"bp-vert " + (state.vertical === v.id ? "selected" : "")}
+              onClick={() => set({ vertical: v.id })}
+            >
+              <span className="check">✓</span>
+              <span className="ic">{v.icon}</span>
+              <span className="en">{v.en}</span>
+              <span className="zh">{v.zh}</span>
+              <span className="blurb">{v.blurb}</span>
+              <span className="meta">
+                <span>{v.sample} sample workers</span>
+              </span>
+            </button>
+          ))}
+          {filteredVerticals.length === 0 && (
+            <div className="bp-empty" style={{ gridColumn: "1 / -1" }}>
+              <div className="ic">∅</div>
+              沒有符合的領域。試試清除搜尋或切「Other」分流給平台客服。
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div style={{ marginTop: 26 }}>
+        <div
+          className="bp-h2"
+          style={{ display: "flex", alignItems: "center" }}
+        >
+          <span>Brief · 需求文件</span>
+          <span style={{ flex: 1 }} />
+          <div className="bp-tabs" style={{ marginLeft: "auto" }}>
+            <button
+              className={tab === "upload" ? "active" : ""}
+              onClick={() => setTab("upload")}
+            >
+              .md / .pdf
+            </button>
+            <button
+              className={tab === "paste" ? "active" : ""}
+              onClick={() => {
+                setTab("paste");
+                if (state.briefSource === "sample") {
+                  setText("");
+                  set({ brief: "", briefSource: "paste" });
+                }
+              }}
+            >
+              paste
+            </button>
+            <button
+              className={tab === "sample" ? "active" : ""}
+              onClick={useSample}
+            >
+              demo
+            </button>
+          </div>
+        </div>
+
+        {tab === "upload" && (
+          <div className="bp-upload">
+            <div>
+              <div className="ttl">Drop a brief.md or brief.pdf</div>
+              <div className="desc">
+                可下載我們的{" "}
+                <code>
+                  {VERTICALS.find((v) => v.id === state.vertical)?.id || "DTC"}
+                  -brief-template.md
+                </code>{" "}
+                ，用 ChatGPT / Claude 套版整理後上傳。AI 會掃描 PII 並自動遮罩。
+              </div>
+            </div>
+            <div className="bp-upload-actions">
+              <button className="bp-btn ghost">↓ template</button>
+              <button
+                className="bp-btn"
+                onClick={() => {
+                  setTab("sample");
+                  useSample();
+                }}
+              >
+                ⊕ choose file
+              </button>
+            </div>
+          </div>
+        )}
+
+        {(tab === "paste" || tab === "sample") && (
+          <div
+            className="bp-panel"
+            style={{ marginTop: 12, overflow: "hidden" }}
+          >
+            <div className="bp-panel-h">
+              <span>{tab === "sample" ? "demo · LUMINE.md" : "brief.md"}</span>
+              <span style={{ marginLeft: "auto" }}>
+                {text.length.toLocaleString()} chars · ~
+                {Math.max(1, Math.round(text.length / 4))} tok
+              </span>
+            </div>
+            <textarea
+              className="bp-input"
+              style={{
+                fontFamily: "var(--mono)",
+                fontSize: 12,
+                lineHeight: 1.65,
+                minHeight: device === "mobile" ? 200 : 280,
+                border: 0,
+                background: "var(--bg-1)",
+                borderRadius: 0,
+                resize: "vertical",
+                whiteSpace: "pre",
+              }}
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value);
+                set({ brief: e.target.value, briefSource: tab });
+              }}
+              placeholder="# 我們是 ____\n# 我們需要 ____\n# 預算 ____ 時間 ____"
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---------- STEP 2 · AI Parse ----------
+
+const PARSE_LOG = [
+  { t: "00.04", lvl: "task", en: "ingest", msg: "brief.md · 4.2KB · zh-Hant detected" },
+  { t: "00.18", lvl: "ok", en: "scrub", msg: "PII scan → 0 hits, 0 redactions" },
+  { t: "00.41", lvl: "ok", en: "industry", msg: "→ D2C Skincare · conf 0.94" },
+  { t: "00.62", lvl: "task", en: "tokenize", msg: "2,041 tokens · 5 sections · 12 entities" },
+  { t: "01.02", lvl: "task", en: "decompose", msg: "splitting deliverables → 5 task primitives" },
+  { t: "01.34", lvl: "ok", en: "task[1]", msg: "Visual KV × 2 → 18h · Visual · Tier A+" },
+  { t: "01.51", lvl: "ok", en: "task[2]", msg: "Reels Script × 6 → 22h · Copy · Tier A+" },
+  { t: "01.66", lvl: "ok", en: "task[3]", msg: "Product Copy × 3 → 14h · Copy · Tier A" },
+  { t: "01.80", lvl: "ok", en: "task[4]", msg: "Channel Scheduling → 8h · Ops · Tier A" },
+  { t: "01.94", lvl: "ok", en: "task[5]", msg: "ROAS Read-out → 6h · Ops · Tier A" },
+  { t: "02.11", lvl: "info", en: "tier", msg: "推薦 Tier A+ · 因品牌 DNA × Reels 涉及策略性視覺" },
+  { t: "02.40", lvl: "info", en: "budget", msg: "市場行情 NT$160-210K · +15% 平台溢價 → 184-241K" },
+  { t: "02.62", lvl: "warn", en: "schedule", msg: "8 週 / 68h → 建議 multi-expert 共案 (DAG attached)" },
+  { t: "02.88", lvl: "ok", en: "contract", msg: "推薦 Trial Project (試做案) · ROAS 階段可轉 retainer" },
+  { t: "03.12", lvl: "ok", en: "ready", msg: "B1 → handoff to expectation form" },
+];
+
+function Step2({ state, set }) {
+  const [phase, setPhase] = useState("running"); // running | done
+  const [shown, setShown] = useState(0);
+  const intervalRef = useRef();
+
+  useEffect(() => {
+    if (state.parseDone) {
+      setPhase("done");
+      setShown(PARSE_LOG.length);
+      return;
+    }
+    setShown(0);
+    setPhase("running");
+    intervalRef.current = setInterval(() => {
+      setShown((s) => {
+        if (s >= PARSE_LOG.length) {
+          clearInterval(intervalRef.current);
+          setPhase("done");
+          set({ parseDone: true, parsed: AI_PARSE_RESULT });
+          return s;
+        }
+        return s + 1;
+      });
+    }, 240);
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
+  const result = state.parsed || AI_PARSE_RESULT;
+  const visibleLog = PARSE_LOG.slice(0, shown);
+
+  return (
+    <div>
+      <div className="bp-eyebrow">
+        <span>Step 02 / B1 · 需求媒合</span>
+        <span className="pill">{phase === "running" ? "parsing…" : "complete"}</span>
+      </div>
+      <h1 className="bp-h1">
+        AI is reading your brief.
+        <br />
+        <span className="zh" style={{ color: "var(--muted)" }}>
+          平台 AI 正在拆解你的需求成可執行任務。
+        </span>
+      </h1>
+
+      <div className="bp-parse-grid" style={{ marginTop: 22 }}>
+        <div>
+          <div className="bp-h2" style={{ marginBottom: 8 }}>Trace · 推理日誌</div>
+          <div className="bp-log">
+            {visibleLog.map((r, i) => (
+              <div className="row" key={i}>
+                <span className="t">[{r.t}]</span>
+                <span className={"lvl " + r.lvl}>{r.en}</span>
+                <span className="msg">
+                  <span className={/[\u4e00-\u9fff]/.test(r.msg) ? "zh" : ""}>
+                    {r.msg}
+                  </span>
+                </span>
+              </div>
+            ))}
+            {phase === "running" && (
+              <div className="row">
+                <span className="t">[--.--]</span>
+                <span className="lvl">_</span>
+                <span className="msg cursor"></span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <div className="bp-h2" style={{ marginBottom: 8 }}>Result · 結構化卡片</div>
+          {phase === "done" ? (
+            <div className="bp-result-grid">
+              <div className="bp-rcard bp-rise bp-rise-1">
+                <div className="lbl">Industry</div>
+                <div className="val">
+                  {result.industry.en}{" "}
+                  <span className="zh" style={{ color: "var(--muted)", fontSize: 14 }}>
+                    {result.industry.zh}
+                  </span>
+                </div>
+                <div className="sub">conf {result.industry.confidence}</div>
+              </div>
+              <div className="bp-rcard bp-rise bp-rise-1">
+                <div className="lbl">Recommended Tier</div>
+                <div className="val">
+                  Tier <span className="accent">{result.recommendedTier}</span>{" "}
+                  <span className="zh" style={{ color: "var(--muted)", fontSize: 14 }}>
+                    DTC / Brand DNA × AI
+                  </span>
+                </div>
+                <div className="sub">{result.vertical}</div>
+              </div>
+              <div className="bp-rcard span2 bp-rise bp-rise-2">
+                <div className="lbl">Tasks · 任務拆解</div>
+                <div className="bp-tasklist">
+                  {result.tasks.map((t) => (
+                    <div className="row" key={t.id}>
+                      <div className="name">
+                        <span className="en">{t.en}</span>
+                        <span className="zh">/ {t.zh}</span>
+                      </div>
+                      <div className="role">{t.role}</div>
+                      <div>
+                        <Tier t={t.tier} />
+                      </div>
+                      <div className="hours">{t.hours}h</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bp-rcard bp-rise bp-rise-3">
+                <div className="lbl">Budget · 預估</div>
+                <div className="val">
+                  <span className="accent">{fmtNT(result.budget.lo)}</span> –{" "}
+                  <span className="accent">{fmtNT(result.budget.hi)}</span>
+                </div>
+                <div className="sub">includes +15% platform premium</div>
+              </div>
+              <div className="bp-rcard bp-rise bp-rise-3">
+                <div className="lbl">Effort · 總工時</div>
+                <div className="val">
+                  <span className="accent">{result.totalHours}h</span>{" "}
+                  <span style={{ color: "var(--muted)", fontSize: 14 }}>
+                    · 8wk · 2-3 expert
+                  </span>
+                </div>
+                <div className="sub">multi-expert DAG attached</div>
+              </div>
+              <div className="bp-rcard span2 bp-rise bp-rise-4">
+                <div className="lbl">Flags · AI 提醒</div>
+                <div style={{ marginTop: 4 }}>
+                  {result.flags.map((f, i) => (
+                    <div key={i} className={"bp-flag " + f.kind}>
+                      <span className="ic">
+                        {f.kind === "ok" ? "✓" : f.kind === "warn" ? "△" : "ⓘ"}
+                      </span>
+                      <span>{f.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div
+              style={{
+                border: "1px dashed var(--line)",
+                borderRadius: "var(--r-md)",
+                padding: 40,
+                textAlign: "center",
+                fontFamily: "var(--mono)",
+                color: "var(--muted)",
+                fontSize: 12,
+                background: "var(--bg-1)",
+                minHeight: 380,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              awaiting trace · cards will materialise
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------- STEP 3 · Expectations ----------
+
+function Step3({ state, set, device }) {
+  const e = state.expect;
+  const setE = (patch) => set({ expect: { ...e, ...patch } });
+
+  return (
+    <div>
+      <div className="bp-eyebrow">
+        <span>Step 03 / Expectations</span>
+        <span className="pill">補完 AI 沒猜到的</span>
+      </div>
+      <h1 className="bp-h1">
+        Confirm what AI missed.
+        <br />
+        <span className="zh" style={{ color: "var(--muted)" }}>
+          補完 AI 拆解中沒涵蓋的偏好。
+        </span>
+      </h1>
+
+      <div className="bp-form" style={{ marginTop: 22 }}>
+        <div className="bp-field">
+          <div className="bp-field-l">
+            <div className="lbl-en">Worker Tier</div>
+            <div className="lbl-zh">期待認證等級</div>
+          </div>
+          <div className="bp-seg">
+            {[
+              { v: "A", en: "A · 基礎", zh: "通過 < 10% 篩選" },
+              { v: "A+", en: "A+ · 垂直", zh: "DTC / B2B / 品牌 DNA × AI" },
+              { v: "any", en: "Any", zh: "AI 推薦最匹配" },
+            ].map((o) => (
+              <button
+                key={o.v}
+                className={e.tier === o.v ? "active" : ""}
+                onClick={() => setE({ tier: o.v })}
+              >
+                {o.en} <span className="zh">/ {o.zh}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="bp-field">
+          <div className="bp-field-l">
+            <div className="lbl-en">Vertical Badge</div>
+            <div className="lbl-zh">領域認證徽章</div>
+          </div>
+          <div className="bp-seg">
+            {["DTC 內容", "B2B SaaS GTM", "設計品牌", "品牌 DNA × AI", "客服自動化"].map(
+              (b) => (
+                <button
+                  key={b}
+                  className={e.badges.includes(b) ? "active" : ""}
+                  onClick={() => {
+                    const has = e.badges.includes(b);
+                    setE({
+                      badges: has ? e.badges.filter((x) => x !== b) : [...e.badges, b],
+                    });
+                  }}
+                >
+                  <span className="zh">{b}</span>
+                </button>
+              )
+            )}
+          </div>
+        </div>
+
+        <div className="bp-field">
+          <div className="bp-field-l">
+            <div className="lbl-en">Delivery Window</div>
+            <div className="lbl-zh">期待交付時間</div>
+          </div>
+          <div className="bp-seg">
+            {["4 wk", "6 wk", "8 wk", "10 wk", "彈性"].map((w) => (
+              <button
+                key={w}
+                className={e.window === w ? "active" : ""}
+                onClick={() => setE({ window: w })}
+              >
+                {w}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="bp-field">
+          <div className="bp-field-l">
+            <div className="lbl-en">Budget Cap</div>
+            <div className="lbl-zh">預算上限（彈性 / 嚴格）</div>
+          </div>
+          <div className="bp-range">
+            <input
+              type="range"
+              min="100000"
+              max="400000"
+              step="10000"
+              value={e.budget}
+              onChange={(ev) => setE({ budget: +ev.target.value })}
+            />
+            <div className="v">
+              {fmtNT(e.budget)} <span style={{ opacity: 0.6 }}>cap</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bp-field">
+          <div className="bp-field-l">
+            <div className="lbl-en">Multi-expert</div>
+            <div className="lbl-zh">是否接受多人共案</div>
+          </div>
+          <div style={{ display: "flex", gap: 18, alignItems: "center", flexWrap: "wrap" }}>
+            <button
+              className={"bp-toggle " + (e.multi ? "on" : "")}
+              onClick={() => setE({ multi: !e.multi })}
+            >
+              <span className="sw"></span>
+              <span>{e.multi ? "ON · 接受 2-3 expert" : "OFF · 單一 worker"}</span>
+            </button>
+            <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>
+              AI 建議：<span style={{ color: "var(--accent)" }}>ON</span> · 8 週 / 68h 單人風險高
+            </span>
+          </div>
+        </div>
+
+        <div className="bp-field">
+          <div className="bp-field-l">
+            <div className="lbl-en">NPS Threshold</div>
+            <div className="lbl-zh">過往 NPS 門檻</div>
+          </div>
+          <div className="bp-seg">
+            {[
+              { v: 4.0, en: "≥ 4.0", zh: "寬鬆" },
+              { v: 4.3, en: "≥ 4.3", zh: "標準" },
+              { v: 4.5, en: "≥ 4.5", zh: "嚴格" },
+              { v: 4.7, en: "≥ 4.7", zh: "頂級" },
+            ].map((o) => (
+              <button
+                key={o.v}
+                className={e.nps === o.v ? "active" : ""}
+                onClick={() => setE({ nps: o.v })}
+              >
+                {o.en} <span className="zh">/ {o.zh}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="bp-field">
+          <div className="bp-field-l">
+            <div className="lbl-en">Bonus Signals</div>
+            <div className="lbl-zh">加分條件（複選）</div>
+          </div>
+          <div className="bp-seg">
+            {[
+              { id: "voice", en: "自帶聲量", zh: "IG / Threads" },
+              { id: "local", en: "在地經驗", zh: "TW market" },
+              { id: "loyalty", en: "舊合作", zh: "loyalty +5" },
+              { id: "mercy", en: "新人加成", zh: "反馬太" },
+            ].map((b) => (
+              <button
+                key={b.id}
+                className={e.bonus.includes(b.id) ? "active" : ""}
+                onClick={() => {
+                  const has = e.bonus.includes(b.id);
+                  setE({
+                    bonus: has ? e.bonus.filter((x) => x !== b.id) : [...e.bonus, b.id],
+                  });
+                }}
+              >
+                {b.en} <span className="zh">/ {b.zh}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------- STEP 4 · Match ----------
+
+function Step4({ state, set, device }) {
+  const [filter, setFilter] = useState("all"); // all | tierA+ | mercy
+  const [expanded, setExpanded] = useState(state.selectedWorkers[0] || "w-arc");
+  const selected = state.selectedWorkers;
+
+  const filtered = useMemo(() => {
+    let list = WORKERS.slice().sort((a, b) => b.score - a.score);
+    if (filter === "tierA+") list = list.filter((w) => w.tier === "A+");
+    if (filter === "mercy") list = list.filter((w) => w.boost.mercy > 0);
+    return list;
+  }, [filter]);
+
+  const toggleSel = (id) => {
+    const has = selected.includes(id);
+    set({
+      selectedWorkers: has ? selected.filter((x) => x !== id) : [...selected, id],
+    });
+  };
+
+  return (
+    <div>
+      <div className="bp-eyebrow">
+        <span>Step 04 / B1 · 自動配對</span>
+        <span className="pill green">● 5 candidates · 3 recommended</span>
+      </div>
+      <h1 className="bp-h1">
+        Top matches, ranked by ADR-006.
+        <br />
+        <span className="zh" style={{ color: "var(--muted)" }}>
+          AI 已套用權重 algorithm，依 100 分加權排序。
+        </span>
+      </h1>
+
+      <div className="bp-match-head" style={{ marginTop: 22 }}>
+        <div>
+          <div className="ttl-en">SUGGESTED PAIR · 2-EXPERT DAG</div>
+          <div className="ttl-zh">
+            Edward <span style={{ color: "var(--muted)" }}>(視覺 · 50%)</span> +
+            Edward <span style={{ color: "var(--muted)" }}>(文案 · 30%)</span> +
+            Edward <span style={{ color: "var(--muted)" }}>(排程 · 20%)</span>
+          </div>
+        </div>
+        <div className="stats">
+          <div>
+            avg score · <b>88</b>
+          </div>
+          <div>
+            est. cost · <b>NT$214K</b>
+          </div>
+          <div>
+            first-match · <b>14d</b>
+          </div>
+        </div>
+      </div>
+
+      <div className="bp-toolbar">
+        <button
+          className={"bp-chip " + (filter === "all" ? "active" : "")}
+          onClick={() => setFilter("all")}
+        >
+          all · 5
+        </button>
+        <button
+          className={"bp-chip " + (filter === "tierA+" ? "active" : "")}
+          onClick={() => setFilter("tierA+")}
+        >
+          tier A+ · 2
+        </button>
+        <button
+          className={"bp-chip " + (filter === "mercy" ? "active" : "")}
+          onClick={() => setFilter("mercy")}
+        >
+          反馬太加成 · 1
+        </button>
+        <span style={{ flex: 1 }} />
+        <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>
+          sort · score desc
+        </span>
+      </div>
+
+      {filtered.length === 0 && (
+        <div className="bp-empty">
+          <div className="ic">∅</div>
+          沒有符合的 worker。試試放寬條件，或 24h 客服介入。
+        </div>
+      )}
+
+      {filtered.map((w, i) => {
+        const isSel = selected.includes(w.id);
+        const isExp = expanded === w.id;
+        const isSuggested = SUGGESTED_PAIR.includes(w.id);
+        return (
+          <div
+            key={w.id}
+            className={"bp-worker " + (isSel ? "selected" : "") + " bp-rise"}
+            style={{ animationDelay: `${i * 80}ms` }}
+            onClick={() => setExpanded(isExp ? null : w.id)}
+          >
+            {w.boost.mercy > 0 && <span className="mercy">+10 反馬太</span>}
+            <div className="av">
+              {w.avatar ? (
+                <img src={w.avatar} alt={w.name} loading="lazy" />
+              ) : (
+                w.name.split(" ").map((n) => n[0]).join("")
+              )}
+            </div>
+            <div className="body">
+              <div className="title-row">
+                <span className="name">{w.name}</span>
+                <span className="handle">{w.handle}</span>
+                <Tier t={w.tier} />
+                {isSuggested && (
+                  <span
+                    className="bp-badge"
+                    style={{
+                      color: "var(--accent)",
+                      borderColor: "var(--accent-line)",
+                      background: "var(--accent-soft)",
+                    }}
+                  >
+                    AI suggested
+                  </span>
+                )}
+              </div>
+              <div className="role">{w.role}</div>
+              <div className="blurb">{w.blurb}</div>
+              <div className="badges">
+                {w.badges.map((b) => (
+                  <Badge key={b}>{b}</Badge>
+                ))}
+              </div>
+              <div className="stats-grid">
+                <div>
+                  NPS <b>{w.nps}</b>
+                </div>
+                <div>
+                  load <b>{w.cases}/{w.capacity}</b>
+                </div>
+                <div>
+                  last <b>{w.last}</b>
+                </div>
+                <div>
+                  domain <b>{Math.round(w.domainMatch * 100)}%</b>
+                </div>
+                <div>
+                  voice <b>{(w.voice / 1000).toFixed(1)}k</b> {w.voiceCh}
+                </div>
+                <div>
+                  works <b>{w.works.slice(0, 2).join(" · ")}</b>
+                </div>
+              </div>
+
+              {isExp && (
+                <div className="bp-breakdown">
+                  {[
+                    { k: "load", lbl: "case load (25)", v: w.breakdown.load, max: 25 },
+                    { k: "calendar", lbl: "calendar (20)", v: w.breakdown.calendar, max: 20 },
+                    { k: "tier", lbl: "tier (15)", v: w.breakdown.tier, max: 15 },
+                    { k: "nps", lbl: "past NPS (15)", v: w.breakdown.nps, max: 15 },
+                    { k: "domain", lbl: "domain (15)", v: w.breakdown.domain, max: 15 },
+                    { k: "voice", lbl: "voice (5)", v: w.breakdown.voice, max: 5 },
+                    { k: "boost", lbl: "boosters (≤10)", v: w.breakdown.boost, max: 15 },
+                  ].map((row) => (
+                    <div className="bp-bar-row" key={row.k}>
+                      <span className="lbl">{row.lbl}</span>
+                      <span
+                        className="bar"
+                        style={{ "--pct": `${(row.v / row.max) * 100}%` }}
+                      ></span>
+                      <span className="v">{row.v}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="score-col">
+              <div className="score">
+                {w.score}
+                <span className="of">/100</span>
+              </div>
+              <div className="score-lbl">match score</div>
+              <button
+                className={"bp-btn " + (isSel ? "primary" : "")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleSel(w.id);
+                }}
+                style={{ marginTop: 6 }}
+              >
+                {isSel ? "✓ shortlisted" : "+ shortlist"}
+              </button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ---------- Right Rail (desktop) ----------
+
+function Rail({ step, state }) {
+  const v = VERTICALS.find((x) => x.id === state.vertical);
+  return (
+    <div className="bp-rail">
+      <div>
+        <div className="bp-rail-h">why this exists</div>
+        <p className="desc" style={{ marginTop: 8 }}>
+          客戶輸入需求 → 平台 AI 拆解 → 配給合適 AI 工作者執行 →
+          雙邊評鑑 → 數據回到推薦系統。<b style={{ color: "var(--text)" }}>
+          B1 → B4 → B5 → B2 → B3 飛輪</b>。
+        </p>
+      </div>
+
+      <div className="bp-tip">
+        {step === 0 && (
+          <span>
+            <code>tip</code>{" "}
+            <span className="zh">
+              想清楚是 <b>內容自動化</b> 還是 <b>策略諮詢</b>。前者走 worker pool
+              ，後者通常需要 Tier A+ 雙領域。
+            </span>
+          </span>
+        )}
+        {step === 1 && (
+          <span>
+            <code>parse</code>{" "}
+            <span className="zh">
+              AI 拆解結果 = 合約附件 A，會直接綁進 Step 6 電子合約服務範圍。
+            </span>
+          </span>
+        )}
+        {step === 2 && (
+          <span>
+            <code>fit</code>{" "}
+            <span className="zh">
+              條件越嚴 → 配對池越窄。推薦先寬，看完前 5 名再回來收緊。
+            </span>
+          </span>
+        )}
+        {step === 3 && (
+          <span>
+            <code>adr-006</code>{" "}
+            <span className="zh">
+              載入 / 檔期 / Tier / NPS / 領域 / 聲量 = 100 分。+10 反馬太、
+              +5 loyalty、−5 連拒。
+            </span>
+          </span>
+        )}
+      </div>
+
+      <div>
+        <div className="bp-rail-h">session spec</div>
+        <div className="bp-spec" style={{ marginTop: 10 }}>
+          <span>vertical</span>
+          <b>{v ? v.en : "—"}</b>
+          <span>brief</span>
+          <b>{state.brief ? `${state.brief.length} ch` : "empty"}</b>
+          <span>tier req</span>
+          <b>{state.expect.tier}</b>
+          <span>budget cap</span>
+          <b>{fmtNT(state.expect.budget)}</b>
+          <span>multi-expert</span>
+          <b>{state.expect.multi ? "yes" : "no"}</b>
+          <span>shortlist</span>
+          <b>{state.selectedWorkers.length} / 5</b>
+          <span>est. step</span>
+          <b>{["choose", "review", "tune", "match"][step]}</b>
+        </div>
+      </div>
+
+      <div>
+        <div className="bp-rail-h">what comes next</div>
+        <div className="bp-spec" style={{ marginTop: 10 }}>
+          <span>05</span>
+          <b style={{ color: "var(--muted)" }}>worker accept</b>
+          <span>06</span>
+          <b style={{ color: "var(--muted)" }}>e-contract sign</b>
+          <span>07</span>
+          <b style={{ color: "var(--muted)" }}>30% escrow</b>
+          <span>08</span>
+          <b style={{ color: "var(--muted)" }}>kickoff dashboard</b>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------- Main App ----------
+
+function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = false, step: controlledStep, onStep, onAdvanceBeyond, hideStepper = false, hideTopbar = false }) {
+  const [uStep, setUStep] = useState(initialStep);
+  const step = controlledStep != null ? controlledStep : uStep;
+  const setStep = (next) => {
+    const v = typeof next === "function" ? next(step) : next;
+    if (onStep) onStep(v); else setUStep(v);
+  };
+  const [state, setState] = useState({
+    vertical: "dtc",
+    brief: SAMPLE_BRIEF,
+    briefSource: "sample",
+    parseDone: presetParsed || initialStep > 1,
+    parsed: (presetParsed || initialStep > 1) ? AI_PARSE_RESULT : null,
+    expect: {
+      tier: "A+",
+      badges: ["DTC 內容", "品牌 DNA × AI"],
+      window: "8 wk",
+      budget: 240000,
+      multi: true,
+      nps: 4.5,
+      bonus: ["voice", "local"],
+    },
+    selectedWorkers: ["w-arc", "w-mei"],
+  });
+
+  const set = (patch) => setState((s) => ({ ...s, ...patch }));
+  const contentRef = useRef();
+
+  useEffect(() => {
+    if (contentRef.current) contentRef.current.scrollTop = 0;
+  }, [step]);
+
+  const canContinue = () => {
+    if (step === 0) return state.vertical && state.brief && state.brief.trim().length > 30;
+    if (step === 1) return state.parseDone;
+    return true;
+  };
+
+  const ctaLabel = () => {
+    if (step === 0) return "Run AI parse →";
+    if (step === 1) return "Confirm expectations →";
+    if (step === 2) return "Find matches →";
+    return "Continue to contract →";
+  };
+
+  return (
+    <div className={"bp-root " + (device === "mobile" ? "bp-mobile is-mobile" : "is-desktop")}>
+      {!hideTopbar && <Topbar step={step} device={device} hideStepper={hideStepper} />}
+      <div className="bp-main">
+        <div className="bp-content" ref={contentRef}>
+          {step === 0 && <Step1 state={state} set={set} device={device} />}
+          {step === 1 && <Step2 state={state} set={set} />}
+          {step === 2 && <Step3 state={state} set={set} device={device} />}
+          {step === 3 && <Step4 state={state} set={set} device={device} />}
+          {device === "desktop" && (
+            <div className="bp-dock">
+              <button
+                className="bp-btn ghost"
+                disabled={step === 0}
+                onClick={() => setStep((s) => Math.max(0, s - 1))}
+              >
+                ← back
+              </button>
+              <span className="meta">
+                step <b>{String(step + 1).padStart(2, "0")}</b> / 04
+                {step === 3 && (
+                  <>
+                    {" "}
+                    · shortlisted <b>{state.selectedWorkers.length}</b> worker
+                    {state.selectedWorkers.length === 1 ? "" : "s"}
+                  </>
+                )}
+              </span>
+              <span className="spacer"></span>
+              <button
+                className="bp-btn primary"
+                disabled={!canContinue()}
+                onClick={() => {
+                  if (step === 3 && onAdvanceBeyond) onAdvanceBeyond();
+                  else setStep((s) => Math.min(3, s + 1));
+                }}
+              >
+                {ctaLabel()} <span className="arrow">→</span>
+              </button>
+            </div>
+          )}
+        </div>
+        {device === "desktop" && <Rail step={step} state={state} />}
+      </div>
+
+      {device === "mobile" && (
+        <div className="bp-mnav">
+          <button
+            className="bp-btn ghost"
+            disabled={step === 0}
+            onClick={() => setStep((s) => Math.max(0, s - 1))}
+          >
+            ←
+          </button>
+          <div className="meta">
+            <b>0{step + 1}</b> / 04 · {["pre-intake", "ai parse", "confirm", "match"][step]}
+          </div>
+          <button
+            className="bp-btn primary"
+            disabled={!canContinue()}
+            onClick={() => {
+              if (step === 3 && onAdvanceBeyond) onAdvanceBeyond();
+              else setStep((s) => Math.min(3, s + 1));
+            }}
+          >
+            {step === 3 ? "contract →" : "next →"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+window.ClientIntakeApp = ClientIntakeApp;

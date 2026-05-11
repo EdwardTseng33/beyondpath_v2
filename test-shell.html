@@ -1,0 +1,44 @@
+<!-- DEBUG ONLY · 不進 deploy · Gate 4 保留決定 2026-05-09 · 供下個 sprint 卡西法調試用 -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<title>BP · AppShell direct test</title>
+<link rel="stylesheet" href="components/styles.css">
+<style>
+  html,body{margin:0;height:100%;background:#0a0a0b;font-family:"IBM Plex Sans","Noto Sans TC",system-ui,sans-serif;}
+  #root{height:100vh;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+  window.__resources = {
+    avEdward: "assets/edward.jpg",
+    avArc: "assets/avArc.svg",
+    avJay: "assets/avJay.svg",
+    avMei: "assets/avMei.svg",
+    avNoa: "assets/avNoa.svg",
+    avRen: "assets/avRen.svg"
+  };
+</script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+
+<script type="text/babel" src="components/data.standalone.jsx"></script>
+<script type="text/babel" src="components/app2.jsx"></script>
+<script type="text/babel" src="components/steps-5-8.jsx"></script>
+<script type="text/babel" src="components/steps-9-12.jsx"></script>
+<script type="text/babel" src="components/worker.jsx"></script>
+<script type="text/babel" src="components/loop.jsx"></script>
+<script type="text/babel" src="components/journey.jsx"></script>
+<script type="text/babel" src="components/shell.standalone.jsx"></script>
+
+<script type="text/babel" data-presets="env,react">
+  const Root = () => <window.BP_AppShell />;
+  ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
+</script>
+</body>
+</html>
