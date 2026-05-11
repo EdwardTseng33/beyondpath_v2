@@ -36,6 +36,7 @@ Last updated: 2026-05-11
 - Reframed the landing page around joining the next AI work network and reducing anxiety, unease, and uncertainty for both clients and AI-native workers.
 - Removed visible escrow / platform payout positioning from the public prototype; early service now emphasizes scope review, candidate matching, acceptance records, and off-platform commercial terms.
 - Added an irreplaceability section to the landing page: LLMs can recommend names, but BeyondPath compounds delivery evidence, workflow proof, NPS, and acceptance records into a trust data layer.
+- Removed the founder letter section from the landing page; future credibility should come from client and worker feedback instead of founder narrative.
 
 ## Known Constraints
 

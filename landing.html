@@ -90,7 +90,7 @@
 
   /* v0.3 zh-Hant universal font rule (council E spec) */
   :lang(zh-Hant) h1, :lang(zh-Hant) h2, :lang(zh-Hant) h3,
-  .le-hero-title, .le-h2, .le-manifesto-h, .le-finalcta .h, .le-founder .quote {
+  .le-hero-title, .le-h2, .le-manifesto-h, .le-finalcta .h {
     word-break: keep-all;
     text-wrap: balance;
     font-feature-settings: "palt" 1, "kern" 1;
@@ -368,20 +368,7 @@
   .le-loomark .ring::before { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 7px solid var(--accent); }
   .le-loomark .text { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--accent); }
 
-  /* ========= Founder + Final CTA + Footer ========= */
-  .le-founder { padding: 108px 56px; border-top: 1px solid var(--line); background: linear-gradient(180deg, var(--bg) 0%, var(--bg-1) 100%); position: relative; overflow: hidden; }
-  @media (max-width: 900px) { .le-founder { padding: 56px 20px; } }
-  /* v0.3 founder .ghost YH 480px cut */
-  .le-founder .ghost { display: none; }
-  .le-founder .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 80px; position: relative; max-width: 1320px; margin: 0 auto; }
-  @media (max-width: 900px) { .le-founder .grid { grid-template-columns: 1fr; gap: 24px; } }
-  .le-founder .quote { font-family: var(--zh); font-weight: 700; font-size: 36px; line-height: 1.4; letter-spacing: -0.02em; color: var(--text); text-wrap: balance; word-break: keep-all; }
-  @media (max-width: 1200px) { .le-founder .quote { font-size: 30px; } }
-  @media (max-width: 900px) { .le-founder .quote { font-size: 22px; line-height: 1.5; } }
-  .le-founder .sig { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.16em; margin-top: 24px; font-weight: 400; }
-  .le-founder .aside { align-self: end; }
-  .le-founder .aside p { font-family: var(--zh); font-size: 14px; color: var(--text-2); line-height: 1.7; }
-
+  /* ========= Final CTA + Footer ========= */
   .le-finalcta { padding: 108px 56px; border-top: 1px solid var(--line); background: var(--bg); position: relative; overflow: hidden; }
   @media (max-width: 900px) { .le-finalcta { padding: 56px 20px; } }
   /* v0.3 finalcta .ghost BeyondPath 360px cut */
@@ -969,7 +956,7 @@ function EManifesto() {
 
 // Engines · 6 (v0.4.6 加「你因此 →」用戶利益句 · 蕪菁頭 must-fix #2)
 const ENGINES = [
-  { n: "01", en: "AI BRIEF PARSER", zh: "Brief 拆解引擎", d: "把一段中文需求拆成目標、交付物、時程、預算與驗收點。POC 階段會先由創辦人覆核。", you: "你因此 → 不用先會寫專業 brief，也能把案子說清楚", m: "BriefMock", staticMock: null },
+  { n: "01", en: "AI BRIEF PARSER", zh: "Brief 拆解引擎", d: "把一段中文需求拆成目標、交付物、時程、預算與驗收點。POC 階段會先由團隊覆核。", you: "你因此 → 不用先會寫專業 brief，也能把案子說清楚", m: "BriefMock", staticMock: null },
   { n: "02", en: "TIER MATCH ENGINE", zh: "Tier 配對引擎", d: "根據領域、作品、工具流與交付經驗推薦 Top 3，並附上為什麼適合。", you: "你因此 → 不發 30 封信，24 小時內先知道該找哪類人", m: null, staticMock: { metric: "Top 3", label: "MATCH · TIER A+ / A / B" } },
   { n: "03", en: "SCOPE + MILESTONE", zh: "範圍 × 驗收點", d: "POC 階段先確認交付物、時間、風險與驗收標準；付款與合約先由雙方自行處理。", you: "你因此 → 開案前先知道什麼算完成，不會把合作押在口頭共識上", m: "ContractMock", staticMock: null },
   { n: "04", en: "PROJECT DASHBOARD", zh: "案件儀表板", d: "把進度、版本、交付物與待確認事項集中，避免案子散在 email、LINE 與雲端檔案裡。", you: "你因此 → 知道現在卡在哪，不用一直追問", m: null, staticMock: { metric: "M1-M5", label: "MILESTONE · AUDIT-READY" } },
@@ -1419,9 +1406,9 @@ function EFaq() {
     <section className="le-section" id="faq">
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ FAQ · 你可能會問的</div>
-        <h2 className="le-h2">六個 <span className="le-acc">真問題</span>。</h2>
+        <h2 className="le-h2">七個 <span className="le-acc">真問題</span>。</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
-          前 3 條給準備發案的你、後 3 條給準備接案的你。沒答到的、寫信給創辦人 → <a href="mailto:edwardt0303@gmail.com" style={{ color: "var(--accent)" }}>edwardt0303@gmail.com</a>
+          前 4 條給準備發案的你、後 3 條給準備接案的你。沒答到的、寫信給 BeyondPath → <a href="mailto:edwardt0303@gmail.com" style={{ color: "var(--accent)" }}>edwardt0303@gmail.com</a>
         </p>
         <div className="le-faq">
           {FAQS.map((f) => (
@@ -1436,53 +1423,6 @@ function EFaq() {
               <div className="body le-zh">{f.a}</div>
             </details>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Founder
-function EFounder() {
-  return (
-    <section className="le-founder" id="founder">
-      <div className="ghost">YH</div>
-      <div className="grid">
-        <div>
-          <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ LETTER FROM THE FOUNDER</div>
-          {/* v0.4.8 wave 5 #10 · Founder 擴成 3 段架構 · 蘇菲 + 霍爾共識 · photo / 名字全寫 / LinkedIn 標 TODO 等 Edward fill */}
-          <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 24, alignItems: "start", marginBottom: 28 }}>
-            <div style={{ width: 88, height: 88, borderRadius: "50%", background: "var(--bg-1, rgba(255,255,255,0.05))", border: "1px solid var(--accent-line)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em", overflow: "hidden" }}>
-              {/* TODO Edward · 替換成你的 photo 路徑、例：<img src="assets/edward-founder.jpg" alt="Edward · Founder" style={{width:'100%',height:'100%',objectFit:'cover',filter:'grayscale(0.4) contrast(1.1)'}} /> */}
-              YH
-            </div>
-            <div>
-              <div style={{ fontSize: 22, fontWeight: 700, color: "var(--text)", marginBottom: 6, letterSpacing: "-0.01em" }}>
-                Edward / 余 ___ {/* TODO Edward · 名字全寫 */}
-              </div>
-              <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", color: "var(--muted)", textTransform: "uppercase" }}>
-                FOUNDER · TPE · &nbsp;
-                <a href="mailto:edwardt0303@gmail.com" style={{ color: "var(--accent)", textDecoration: "none", borderBottom: "1px solid var(--accent-line)" }}>edwardt0303@gmail.com</a>
-                {/* TODO Edward · 加 LinkedIn / Twitter / 個人網站 link */}
-              </div>
-            </div>
-          </div>
-
-          <div className="quote le-zh" style={{ marginBottom: 24 }}>
-            我做 BeyondPath，是因為我自己就是那個被外包流程折磨過的 client。
-          </div>
-
-          <div className="quote le-zh" style={{ marginBottom: 24, fontSize: 22, lineHeight: 1.65 }}>
-            我不是缺 freelancer。我缺的是一個能幫我把需求拆清楚、找到真正會用 AI 交付成果的人。現在 AI 工具成熟了，台灣品牌也開始有需求，但中間那層「可信任的交付媒合」還沒被做好。
-          </div>
-
-          <div className="quote le-zh" style={{ fontSize: 22, lineHeight: 1.65 }}>
-            所以第一年我不會急著做大平台。我會親自跑每一個首批案子，親自審人、審 brief、審交付結果。如果六個月內證明不了客戶願意付費、供給端能穩定交付，我會把它退回精品顧問模式，而不是硬燒錢。
-          </div>
-        </div>
-        <div className="aside">
-          <p>我們相信下一代的工作網路長這樣：AI 處理摩擦，人負責判斷；平台不只撮合人，而是留下可以被信任的交付證據。</p>
-          <p style={{ marginTop: 16, fontSize: 12, color: "var(--muted)" }}>—— BeyondPath thesis · 一句話版</p>
         </div>
       </div>
     </section>
@@ -1538,7 +1478,7 @@ function EFinalCta() {
           {[
             ["PRODUCT", [["流程協定 · 12 步", "#flywheel"], ["核心引擎 · 6", "#engines"], ["Tier 飛輪", "#tier"], ["信任機制", "#trust"], ["WHY BEYONDPATH", "#moat"]]],
             ["NETWORK", [["客戶申請", "app.html?role=client&step=0"], ["Expert 申請", "app.html?role=worker&onboarding=1"], ["15 領域總覽", "#network"], ["A+ 大師牆 · 即將上線", "mailto:edwardt0303@gmail.com?subject=A%2B%20%E5%A4%A7%E5%B8%AB%E7%89%86%E5%85%88%E8%A1%8C%E5%90%8D%E5%96%AE"], ["Retainer Plans · 即將上線", "mailto:edwardt0303@gmail.com?subject=Retainer%20Plans"]]],
-            ["COMPANY", [["關於 BeyondPath", "#whyus"], ["創辦人來信", "#founder"], ["加入我們", "mailto:edwardt0303@gmail.com?subject=Join%20BeyondPath"], ["edwardt0303@gmail.com", "mailto:edwardt0303@gmail.com"]]],
+            ["COMPANY", [["關於 BeyondPath", "#whyus"], ["合作回饋 · 即將上線", "#cases"], ["加入我們", "mailto:edwardt0303@gmail.com?subject=Join%20BeyondPath"], ["edwardt0303@gmail.com", "mailto:edwardt0303@gmail.com"]]],
             ["LEGAL", [["Terms · 即將上線", "mailto:edwardt0303@gmail.com?subject=Terms%20of%20Service"], ["Privacy · 即將上線", "mailto:edwardt0303@gmail.com?subject=Privacy%20Policy"], ["驗收規則", "#trust"], ["爭議紀錄流程", "#trust"], ["資安白皮書 · v0.4 · 即將上線", "mailto:edwardt0303@gmail.com?subject=BP%20Security%20Whitepaper"]]]
           ].map(([h, items]) => (
             <div key={h}>
@@ -1680,7 +1620,6 @@ function LandingRoot() {
       <ETier />
       <EVerticals />
       <EFaq />
-      <EFounder />
       <EFinalCta />
     </div>
   );
