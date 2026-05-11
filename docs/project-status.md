@@ -25,6 +25,7 @@ Last updated: 2026-05-11
 - Added cache-busting on `components/worker.jsx` references in `app.html` and `index.html`.
 - Repositioned the landing page for Taiwan beta acquisition: clearer client promise, concrete beta use cases, founder-led trust layer, and more credible worker certification CTA.
 - Strengthened the landing page narrative around the AI work trust layer: sharper client/worker pains, less platform jargon above the fold, clearer founder commitment, and split CTAs for client shortlist vs. worker candidate pool.
+- Clarified the worker application submitted state: the prototype does not auto-submit data, so applicants are instructed to email `edwardt0303@gmail.com`, with a mailto draft and visible manual recipient fallback.
 
 ## Known Constraints
 

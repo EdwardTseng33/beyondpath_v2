@@ -508,6 +508,7 @@ function WorkerDashboard({ inShell = false }) {
 }
 
 function WorkerEmptyState() {
+  const APPLICATION_EMAIL = "edwardt0303@gmail.com";
   const buildApplicationMailto = () => {
     const today = new Date().toISOString().slice(0, 10);
     const subject = encodeURIComponent(`[BeyondPath Tier B] {你的名字}・{主領域}・申請 ${today}`);
@@ -545,9 +546,10 @@ function WorkerEmptyState() {
       "本信由 BeyondPath landing page 自動產生申請草稿。",
       "Prototype demo · 真實服務 2026 Q3 上線。",
     ];
-    return `mailto:edwardt0303@gmail.com?subject=${subject}&body=${encodeURIComponent(lines.join("\n"))}`;
+    return `mailto:${APPLICATION_EMAIL}?subject=${subject}&body=${encodeURIComponent(lines.join("\n"))}`;
   };
   const applicationMailto = buildApplicationMailto();
+  const [copiedEmail, setCopiedEmail] = uSW(false);
   const [submitted, setSubmitted] = uSW(() => {
     try {
       return new URLSearchParams(window.location.search).get("submitted") === "1";
@@ -566,8 +568,8 @@ function WorkerEmptyState() {
             <circle cx="40" cy="40" r="36" fill="none" stroke="#c7e84a" strokeWidth="2"/>
             <path d="M24 40 l12 12 l22 -22" fill="none" stroke="#c7e84a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.2, margin: "0 0 14px", color: "#f0eee8" }}>申請已送出。</h1>
-          <p style={{ color: "#9a9aa3", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.08em", marginBottom: 28 }}>APPLICATION RECEIVED · 7 DAYS REVIEW</p>
+          <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.2, margin: "0 0 14px", color: "#f0eee8" }}>申請草稿已準備好。</h1>
+          <p style={{ color: "#9a9aa3", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.08em", marginBottom: 28 }}>EMAIL APPLICATION · SEND TO EDWARD</p>
 
           <div style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.08)", marginBottom: 28, textAlign: "left" }}>
             <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.14em", color: "#9a9aa3", textTransform: "uppercase" }}>
@@ -575,7 +577,8 @@ function WorkerEmptyState() {
             </div>
             <div style={{ padding: "18px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
               {[
-                "7 天內 AI broker + 平台委員會審核 · 結果寄到你的 email",
+                `請先把申請信寄到 ${APPLICATION_EMAIL}`,
+                "Edward 收到後，會在 7 天內回覆是否進入初步 review",
                 "通過 → 進首案池（保留 20% slot 給新人）→ 第一個案最快 2 週",
                 "沒通過 → 我們會給回饋說明哪裡需要補強 · 6 個月後可重申",
               ].map((t, i) => (
@@ -589,11 +592,31 @@ function WorkerEmptyState() {
 
           <div style={{ background: "rgba(199,232,74,0.05)", border: "1px solid rgba(199,232,74,0.4)", padding: "14px 18px", marginBottom: 28, fontSize: 13, color: "#c8c6c0", textAlign: "left" }}>
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#c7e84a", display: "block", marginBottom: 6 }}>◆ PROTOTYPE NOTE</span>
-            這是 prototype demo · 目前先用頁內完成狀態模擬送出，不會真的收集個資。若你要把申請內容寄給創辦人 Edward，可以開啟下方 email 草稿。
+            這是 prototype demo · 目前不會自動送出或儲存個資。若你要正式申請，請用下方按鈕開啟 email 草稿，或手動寄到 Edward 的信箱。
+          </div>
+
+          <div style={{ border: "1px dashed rgba(255,255,255,0.16)", padding: "14px 16px", marginBottom: 22, textAlign: "left", background: "rgba(255,255,255,0.018)" }}>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#9a9aa3", textTransform: "uppercase", marginBottom: 8 }}>手動寄送收件人</div>
+            <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+              <code style={{ color: "#c7e84a", fontFamily: "'JetBrains Mono', monospace", fontSize: 14, background: "rgba(199,232,74,0.06)", border: "1px solid rgba(199,232,74,0.2)", padding: "8px 10px" }}>{APPLICATION_EMAIL}</code>
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    navigator.clipboard.writeText(APPLICATION_EMAIL);
+                    setCopiedEmail(true);
+                    setTimeout(() => setCopiedEmail(false), 1600);
+                  } catch (e) {}
+                }}
+                style={{ padding: "8px 12px", border: "1px solid rgba(199,232,74,0.5)", background: "transparent", color: "#f0eee8", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.1em", cursor: "pointer" }}
+              >
+                {copiedEmail ? "已複製" : "複製 email"}
+              </button>
+            </div>
           </div>
 
           <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
-            <a href={applicationMailto} style={{ display: "inline-block", padding: "12px 24px", border: "1px solid #c7e84a", background: "#c7e84a", color: "#0a0a0b", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textDecoration: "none" }}>開啟申請信草稿</a>
+            <a href={applicationMailto} style={{ display: "inline-block", padding: "12px 24px", border: "1px solid #c7e84a", background: "#c7e84a", color: "#0a0a0b", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textDecoration: "none" }}>寄申請信給 Edward</a>
             <a href="landing.html" style={{ display: "inline-block", padding: "12px 24px", border: "1px solid #c8c6c0", color: "#f0eee8", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.12em", textDecoration: "none" }}>← 回 BeyondPath 首頁</a>
           </div>
         </div>
