@@ -23,6 +23,7 @@ Last updated: 2026-05-11
 - Changed Tier B apply behavior so the user reaches an in-page submitted state first.
 - Moved the email draft to an optional link on the submitted page.
 - Added cache-busting on `components/worker.jsx` references in `app.html` and `index.html`.
+- Repositioned the landing page for Taiwan beta acquisition: clearer client promise, concrete beta use cases, founder-led trust layer, and more credible worker certification CTA.
 
 ## Known Constraints
 
