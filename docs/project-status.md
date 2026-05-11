@@ -35,6 +35,7 @@ Last updated: 2026-05-11
 - Shifted visible landing language from "人工把關" to "AI 把關 / AI 初審 + 人工覆核" so the product feels more AI-native while staying credible for beta.
 - Reframed the landing page around joining the next AI work network and reducing anxiety, unease, and uncertainty for both clients and AI-native workers.
 - Removed visible escrow / platform payout positioning from the public prototype; early service now emphasizes scope review, candidate matching, acceptance records, and off-platform commercial terms.
+- Added an irreplaceability section to the landing page: LLMs can recommend names, but BeyondPath compounds delivery evidence, workflow proof, NPS, and acceptance records into a trust data layer.
 
 ## Known Constraints
 
