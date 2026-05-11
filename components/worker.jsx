@@ -5,9 +5,24 @@ const _ARC = _DW.WORKERS.find((w) => w.id === "w-arc");
 
 function WorkerDashboard({ inShell = false }) {
   const [tab, setTab] = uSW("active");
+  const isDemoView = (() => {
+    try {
+      const qs = new URLSearchParams(window.location.search);
+      return qs.get("view") === "worker-demo" || qs.get("view") === "worker-dashboard" || qs.get("onboarding") === "0";
+    } catch (e) {
+      return false;
+    }
+  })();
 
   return (
     <div className="bp-root is-desktop">
+      {isDemoView && (
+        <div style={{ padding: "10px 18px", borderBottom: "1px solid rgba(199,232,74,0.22)", background: "rgba(199,232,74,0.055)", display: "flex", gap: 12, alignItems: "center", justifyContent: "center", flexWrap: "wrap", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.08em", color: "var(--text-2)" }}>
+          <span style={{ color: "var(--accent)", fontWeight: 700 }}>WORKER PROTOTYPE DEMO</span>
+          <span className="zh" style={{ fontFamily: "var(--zh)", letterSpacing: 0 }}>這是通過認證後的接案方畫面範例，資料皆為模擬。</span>
+          <a href="app.html?role=worker&onboarding=1" style={{ color: "var(--accent)", textDecoration: "none", borderBottom: "1px solid var(--accent-line)" }}>我要申請認證 →</a>
+        </div>
+      )}
       <div className="bp-topbar">
         {!inShell && (
           <div className="bp-logo">
@@ -617,6 +632,7 @@ function WorkerEmptyState() {
 
           <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
             <a href={applicationMailto} style={{ display: "inline-block", padding: "12px 24px", border: "1px solid #c7e84a", background: "#c7e84a", color: "#0a0a0b", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textDecoration: "none" }}>寄申請信給 Edward</a>
+            <a href="app.html?role=worker&view=worker-demo" style={{ display: "inline-block", padding: "12px 24px", border: "1px solid rgba(199,232,74,0.65)", color: "#c7e84a", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.12em", textDecoration: "none" }}>看通過後 Worker Console</a>
             <a href="landing.html" style={{ display: "inline-block", padding: "12px 24px", border: "1px solid #c8c6c0", color: "#f0eee8", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.12em", textDecoration: "none" }}>← 回 BeyondPath 首頁</a>
           </div>
         </div>
@@ -698,6 +714,9 @@ function WorkerEmptyState() {
             >
               → Apply for Tier B Certification
             </button>
+            <div style={{ marginTop: 14, display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+              <a href="app.html?role=worker&view=worker-demo" className="bp-btn ghost" style={{ textDecoration: "none" }}>先看通過後 Worker Console →</a>
+            </div>
             <div className="bp-onb-ghost"><a href="#" onClick={(e) => e.preventDefault()}>Read terms &amp; DPA →</a></div>
             <div className="bp-onb-fine">
               提交後 7 天內 AI broker + 平台委員會審核

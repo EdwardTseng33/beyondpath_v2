@@ -262,7 +262,7 @@
 
 <script>
   // === BeyondPath Query Param Bootstrap (v1.5 · sprint round 5) ===
-  // Read ?role=client|worker  ?step=0..11  ?onboarding=0|1
+  // Read ?role=client|worker  ?step=0..11  ?onboarding=0|1  ?view=worker-demo|worker-apply
   // Override localStorage so cold-start users land where landing.html intends
   (function() {
     try {
@@ -270,6 +270,15 @@
       var role = qs.get("role");
       var step = qs.get("step");
       var onboarding = qs.get("onboarding");
+      var view = qs.get("view");
+
+      if (view === "worker-demo" || view === "worker-dashboard") {
+        role = "worker";
+        onboarding = "0";
+      } else if (view === "worker-apply") {
+        role = "worker";
+        onboarding = "1";
+      }
 
       if (role === "client" || role === "worker") {
         localStorage.setItem("bp-active-role", role);
@@ -322,9 +331,9 @@
 <script type="text/babel" src="components/app2.jsx"></script>
 <script type="text/babel" src="components/steps-5-8.jsx"></script>
 <script type="text/babel" src="components/steps-9-12.jsx"></script>
-<script type="text/babel" src="components/worker.jsx?v=0.5.5"></script>
+<script type="text/babel" src="components/worker.jsx?v=0.5.6"></script>
 <script type="text/babel" src="components/journey.jsx"></script>
-<script type="text/babel" src="components/shell.standalone.jsx"></script>
+<script type="text/babel" src="components/shell.standalone.jsx?v=0.5.6"></script>
 
 <style>
   /* RWD mobile mode (≤ 768px) — full-bleed iPhone shell */
@@ -376,7 +385,15 @@ function MobileShell() {
 
 function Root() {
   const isMobile = useIsMobile();
-  return isMobile ? <MobileShell /> : <BP_AppShell />;
+  const isWorkerEntry = (() => {
+    try {
+      const qs = new URLSearchParams(window.location.search);
+      return qs.get("role") === "worker" || localStorage.getItem("bp-active-role") === "worker";
+    } catch (e) {
+      return false;
+    }
+  })();
+  return isMobile && !isWorkerEntry ? <MobileShell /> : <BP_AppShell />;
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<Root />);

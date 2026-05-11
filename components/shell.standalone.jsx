@@ -78,7 +78,7 @@ function BP_AppShell() {
                   </button>
                   <button
                     className={"bp-shell-menu-role " + (role === "worker" ? "active" : "")}
-                    onClick={() => { setRole("worker"); setMenuOpen(false); }}
+                    onClick={() => { try { localStorage.removeItem("bp-worker-onboarding"); } catch {} setRole("worker"); setMenuOpen(false); }}
                   >
                     <span className="ic">
                       <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="8" r="3.2" fill="none" stroke="currentColor" strokeWidth="1.6"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/><path d="M16.5 4.5l1.5 1.5-3 3-1.5-1.5z" fill="currentColor"/></svg>
