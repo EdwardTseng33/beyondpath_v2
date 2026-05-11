@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BeyondPath · 華語區 AI 工作者認證網路</title>
-<meta name="description" content="BeyondPath 幫台灣品牌與中小企業把 AI 內容、網站、自動化需求變成可驗收的交付專案，媒合已審核的 AI 工作者。中文 brief、24 小時初步判斷、beta 人工把關。" />
+<meta name="description" content="BeyondPath 幫台灣品牌與中小企業把 AI 內容、網站、自動化需求變成可驗收的交付專案，媒合已審核的 AI 工作者。中文 brief、24 小時初步判斷、AI 輔助把關。" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -645,7 +645,7 @@ function EStaticBar() {
       </div>
       <div className="item">
         <span className="k">MODE</span>
-        <span style={{ color: "var(--accent-dim)", marginLeft: "auto" }}>人工把關</span>
+        <span style={{ color: "var(--accent-dim)", marginLeft: "auto" }}>AI 把關</span>
       </div>
     </div>
   );
@@ -751,7 +751,7 @@ function EHero() {
           <div className="le-hero-cta-col">
             <div className="le-hero-trust-label">
               <span style={{ display: "inline-block", width: 4, height: 4, background: "var(--accent)", borderRadius: 99 }}></span>
-              founder-led beta · 已審核候選人 · milestone 交付
+              AI-assisted beta · 已審核候選人 · milestone 交付
             </div>
             <a href="app.html?role=client&step=0" className="le-cta-primary">
               <span>我想先做需求判斷 →</span>
@@ -1232,7 +1232,7 @@ function ETier() {
 const WHYUS = [
   { axis: "對發案者", ttl: "你不用先懂 AI，先說你要的結果", body: "BeyondPath 會先把需求拆成範圍、交付物與驗收點，再推薦 3 位候選人與配對理由。你買的不是工具，是有人把成果交出來。", peer: "▸ 降低找錯人、管錯案的成本" },
   { axis: "對接案者", ttl: "你的 AI workflow 會被翻譯成客戶看得懂的價值", body: "通過認證後，案例、工具流、交付品質會被整理成 Tier 證據。你不用一直靠低價、截圖與人脈證明自己。", peer: "▸ 讓好交付累積成下一案的信任" },
-  { axis: "共同", ttl: "台灣語境 · 華語 brief · founder-led beta", body: "第一批不急著全自動。我們先用人工審核把供給品質、客戶期待與交付標準跑穩，再把可重複的流程產品化。", peer: "▸ 先服務，再平台化" }
+  { axis: "共同", ttl: "AI 把關 · 華語 brief · 認證化供給", body: "第一批不假裝全自動。我們先用 AI 初審、人工覆核把供給品質、客戶期待與交付標準跑穩，再把可重複的流程產品化。", peer: "▸ 先驗證，再平台化" }
 ];
 function EWhyUs() {
   return (
@@ -1333,7 +1333,7 @@ function EVerticals() {
 // Trust 3 metrics · BP 真數值
 function ETrust3() {
   const items = [
-    { v: "1:1", en: "FOUNDER REVIEW", zh: "POC 階段人工把關", facts: ["先拆 brief 與交付範圍", "再挑候選人與評估風險", "不讓你直接丟進平台黑箱"], color: "var(--accent)" },
+    { v: "AI", en: "AI REVIEW", zh: "AI 初審 + 人工覆核", facts: ["先由 AI 拆 brief 與交付範圍", "再由人工覆核候選人與風險", "不讓你直接丟進平台黑箱"], color: "var(--accent)" },
     { v: "24h", en: "MATCH DIRECTION", zh: "先給候選方向", facts: ["初判領域與預算是否合理", "中文 brief 原生理解", "先看適配，再談短名單"], color: "var(--text)" },
     { v: "M1", en: "MILESTONE", zh: "每案先定驗收點", facts: ["交付物、時間、風險先講清楚", "正式 beta 逐步開啟釋金機制", "避免整筆預算一次失控"], color: "var(--accent-dim)" }
   ];
@@ -1362,7 +1362,7 @@ function ETrust3() {
 // FAQ · v0.4.6 (2026-05-10) 改寫為發案/接案者真問題、不再是投資人 FAQ
 const FAQS = [
   { n: "01", tag: "發案者", q: "我已經有合作的接案者 / 設計師了，為什麼要換 BeyondPath？", a: "你不用換、你可以平行用。BeyondPath 解的是「現有人脈池外、突然要新類型 AI 交付」這個場景——例如你平常合作的設計師不會剪短影音、你又不想為了一支 reels 重新發 30 封 brief。留下需求後，24 小時內先得到適配領域、預算與候選方向；進入短名單後再看 Top 3 配對與理由。首案合不合適你自己判斷、平台不綁約、不收訂閱。" },
-  { n: "02", tag: "發案者", q: "做不出來 / 品質不對怎麼辦？", a: "POC 階段先不把你丟進全自動平台。我們會先協助拆需求、確認 milestone 與交付標準，再推薦候選人。正式 beta 會逐步開啟階段釋金、雙邊 NPS、替補與爭議處理機制；目前的目標是先把第一批交付專案用人工把關跑穩。" },
+  { n: "02", tag: "發案者", q: "做不出來 / 品質不對怎麼辦？", a: "POC 階段先不把你丟進全自動黑箱。我們會先用 AI 拆需求、判斷領域與風險，再由人工覆核 milestone、交付標準與候選人。正式 beta 會逐步開啟階段釋金、雙邊 NPS、替補與爭議處理機制；目前的目標是先把第一批交付專案用 AI 輔助把關跑穩。" },
   { n: "03", tag: "發案者", q: "這個比 Fiverr 貴 / 比工作室便宜嗎？怎麼定價？", a: "我們在 Fiverr 跟月費代理之間。首案 NT$ 50-100K / 案、按案計費、不綁約。如果合作得好可以轉 retainer NT$ 30-60K / 月、彈性換多工種。比 Fiverr 貴是因為這裡的人都通過 < 10% 認證、出包平台會接住；比月費代理便宜是因為你不用養一個用不滿的整個 team。" },
   { n: "04", tag: "接案者", q: "我想接案、要怎麼申請？真的通過率 < 10%？", a: "對。4 階段認證：（1）技能測驗——你的領域基本功、（2）同儕 review——已認證 worker 評分、（3）客戶模擬案件——平台給一個假需求、你交一份成果、（4）主審委員會——通過前三關才進。整個流程約 2-3 週。沒過可以 6 個月後重申、平台會給回饋說明哪裡需要補強。" },
   { n: "05", tag: "接案者", q: "平台抽多少？我實拿是多少？", a: "beta 前期會以個案條件確認分潤與報價，目標是讓接案者保留大部分交付價值，而不是靠低價競標。正式規則會在首批案子跑完後公布；目前你申請認證不用付費，也不需要先承諾排他。" },
@@ -1456,7 +1456,7 @@ function EFinalCta() {
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ JOIN · PRIVATE BETA</div>
         <h2 className="h">把第一個案子，交給對的人。</h2>
         <div className="grid">
-          <div className="blurb le-zh">第一批 beta 先人工審核。發案方可以留下需求，24 小時內先回覆是否適合首案交付、該找哪類人與下一步；接案者可以提交作品與 AI workflow，通過後進入首案候選池。</div>
+          <div className="blurb le-zh">第一批 beta 先用 AI 初審與人工覆核並行。發案方可以留下需求，24 小時內先回覆是否適合首案交付、該找哪類人與下一步；接案者可以提交作品與 AI workflow，通過後進入首案候選池。</div>
           <div className="form">
             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10, marginBottom: 14 }}>
               <a href="app.html?role=client&step=0" className="le-cta-primary" style={{ padding: "14px 18px", fontSize: 12 }}>
@@ -1554,7 +1554,7 @@ function EStory() {
                 <b style={{ color: "var(--accent)", fontWeight: 700 }}>② 少管理不確定性</b> · 留下需求、<b style={{ color: "var(--accent)" }}>24 小時</b>先知道候選方向與下一步，不用自己發 30 封訊息。
               </div>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>③ 有人先幫你判斷</b> · POC 階段由創辦人協助拆範圍、看候選人、確認交付條件。
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>③ AI 先幫你判斷</b> · POC 階段先由 AI 拆範圍、看候選方向，再由人工覆核交付條件。
               </div>
               <div>
                 <b style={{ color: "var(--accent)", fontWeight: 700 }}>④ 交付可驗收</b> · 每案先定 milestone 與交付標準，避免「做了很多但不知道算不算完成」。
@@ -1598,7 +1598,7 @@ function EStory() {
 
         <div style={{ textAlign: "center", paddingTop: 8, borderTop: "1px dashed var(--line-soft)" }}>
           <p className="le-zh" style={{ fontSize: 14, color: "var(--muted)", marginBottom: 16 }}>
-            <b style={{ color: "var(--text)" }}>第一批 beta 會慢一點，但會比較穩。</b> 我們先用人工把關建立供需品質，再把流程產品化成平台。
+            <b style={{ color: "var(--text)" }}>第一批 beta 會先求穩，但會盡可能 AI 化。</b> 我們先用 AI 初審、公平化評分與人工覆核建立供需品質，再把流程產品化成平台。
           </p>
           <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
             <a href="app.html?role=client&step=0" className="le-cta-primary" style={{ padding: "14px 22px", fontSize: 13 }}>

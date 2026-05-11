@@ -27,7 +27,7 @@ BeyondPath 目前最有潛力的定位不是「AI freelancer marketplace」，�
 - 首頁說明還需要更直接解釋「為什麼交給 BeyondPath 的人比較可靠」。
 - Client flow 對第一次來的品牌主偏產品展示，還缺「交付保障」的安心語言。
 - Match 畫面有分數，但還可以更像採購決策表：風險、適配理由、預算信心、替補機制。
-- 尚未把「創辦人人工把關」產品化成一個明確 step，例如 Scope Review / Delivery Review。
+- 尚未把「AI 初審 + 人工覆核」產品化成一個明確 step，例如 Scope Review / Delivery Review。
 
 ### 接案者流程現況
 
@@ -66,9 +66,9 @@ BeyondPath 目前最有潛力的定位不是「AI freelancer marketplace」，�
    - 目的：讓品牌主不是只看分數，而是能做採購決策。
 
 2. **Scope Review / 首案範圍審核**
-   - 在 brief parse 後加一個 founder-led review 狀態。
+   - 在 brief parse 後加一個 AI-assisted review 狀態。
    - 文案：`Edward 會先確認這個需求是否適合首案交付、預算是否合理、驗收點是否清楚。`
-   - 目的：把「人工把關」變成產品流程，不只是口號。
+   - 目的：把「AI 把關」變成產品流程，不只是口號。
 
 3. **Acceptance Criteria 驗收清單**
    - 每個專案自動產生 3-7 條驗收標準。
@@ -147,7 +147,7 @@ BeyondPath 目前最有潛力的定位不是「AI freelancer marketplace」，�
 應避免過早使用的詞：
 
 - 試做案：容易讓客戶覺得像實驗品。
-- 全自動平台：目前還是 founder-led beta，不宜過度承諾。
+- 全自動平台：目前仍需要人工覆核，不宜過度承諾完全自動化。
 - escrow / 信託：正式法律與付款機制未完成前，應保守呈現。
 - top 1% / top 3%：除非有實際審核樣本與通過率，不要硬借用。
 
