@@ -14,7 +14,7 @@ function _Top912({ step, label }) {
         STEP {String(step).padStart(2, "0")} / 12 · <span style={{ color: "var(--text-2)" }}>{label}</span>
       </div>
       <div className="bp-statusbar">
-        <span className="dot"></span><span>escrow <b>green</b></span>
+        <span className="dot"></span><span>review <b>green</b></span>
         <span>·</span><span>case <b>#0xC3F4</b></span>
       </div>
     </div>
@@ -29,9 +29,9 @@ function Step9() {
       <_Top912 step={9} label="Milestone Review · 期中交付" />
       <div className="bp-main" style={{ gridTemplateColumns: "1fr" }}>
         <div className="bp-content">
-          <div className="bp-eyebrow"><span>Step 09 / Milestone · Milestone 釋金</span><span className="pill green">● mid milestone submitted</span></div>
+          <div className="bp-eyebrow"><span>Step 09 / Milestone · Milestone 驗收</span><span className="pill green">● mid milestone submitted</span></div>
           <h1 className="bp-h1">Mid-stage delivery from Arc + Mei.<br/>
-            <span className="zh" style={{ color: "var(--muted)" }}>確認 7 日內，超時自動視為通過 · escrow 釋出 30%。</span>
+            <span className="zh" style={{ color: "var(--muted)" }}>確認 7 日內回覆，BeyondPath 只記錄驗收狀態，不處理款項。</span>
           </h1>
           <div style={{ marginTop: 22, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             {[
@@ -73,15 +73,15 @@ function Step9() {
           }}>
             <div style={{ flex: 1 }}>
               <div style={{ fontFamily: "var(--mono)", fontSize: 12, color: ok ? "var(--accent)" : "var(--text)" }}>
-                {ok ? "✓ Mid milestone approved · escrow released NT$64,200" : "Approve mid milestone?"}
+                {ok ? "✓ Mid milestone approved · acceptance logged" : "Approve mid milestone?"}
               </div>
               <div style={{ fontFamily: "var(--zh)", fontSize: 12, color: "var(--muted)", marginTop: 4 }}>
-                {ok ? "Worker net 95% · 平台 5% · 下一站 Final delivery (wk 8)" : "未在 7 日內回應將自動視為通過。或可申請仲裁。"}
+                {ok ? "驗收紀錄已更新 · 下一站 Final delivery (wk 8)" : "若品質有疑慮，可先標記 issue，平台協助整理爭議紀錄。"}
               </div>
             </div>
             {!ok && (<>
               <button className="bp-btn ghost">⚠ dispute</button>
-              <button className="bp-btn primary" onClick={() => setOk(true)}>✓ approve · release</button>
+              <button className="bp-btn primary" onClick={() => setOk(true)}>✓ approve · log</button>
             </>)}
           </div>
         </div>
@@ -105,7 +105,7 @@ function Step10() {
       <_Top912 step={10} label="Closing · NPS 雙邊評鑑" />
       <div className="bp-main" style={{ gridTemplateColumns: "1fr" }}>
         <div className="bp-content">
-          <div className="bp-eyebrow"><span>Step 10 / NPS · 雙邊評鑑</span><span className="pill">case complete · final escrow released</span></div>
+          <div className="bp-eyebrow"><span>Step 10 / NPS · 雙邊評鑑</span><span className="pill">case complete · acceptance archived</span></div>
           <h1 className="bp-h1">Rate Arc · 5 dimensions.<br/>
             <span className="zh" style={{ color: "var(--muted)" }}>AI 自動撰寫評語草稿，雙方確認送出。</span>
           </h1>
@@ -120,7 +120,7 @@ function Step10() {
                     Edward <span style={{ color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 12 }}>@edward</span>
                   </div>
                   <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>
-                    Visual + Brand DNA · payout NT$101,650 (50% × 95%)
+                    Visual + Brand DNA · delivery quality record
                   </div>
                 </div>
                 <span className="bp-tier aplus">Tier A+</span>
@@ -245,7 +245,7 @@ function Step11() {
               ["+0.4s", "B3", "Tier A+ DTC progress 80% → 92% · 解鎖徽章", "ok"],
               ["+0.8s", "B1", "下次推薦權重 +15% (domain × NPS)", "info"],
               ["+1.2s", "B2", "Arc 接案 capacity 4/4 → portfolio 自動更新", "task"],
-              ["+1.6s", "wallet", "payout NT$101,650 → 已撥款 (T+3)", "ok"],
+              ["+1.6s", "record", "acceptance log archived · commercial terms off-platform", "ok"],
             ].map((e, i) => (
               <div className="row" key={i}>
                 <span className="t">{e[0]}</span>
@@ -277,8 +277,8 @@ function Step12() {
               <div className="bp-h2">Trial outcome · LUMINE Q4</div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
                 {[
-                  { lbl: "Final escrow", v: _fmt912(85600), sub: "released · T+3", a: true },
-                  { lbl: "Total spend", v: _fmt912(214000), sub: "vs cap NT$240K (-11%)" },
+                  { lbl: "Final acceptance", v: "OK", sub: "logged · archived", a: true },
+                  { lbl: "Scope variance", v: "-11%", sub: "vs original effort cap" },
                   { lbl: "ROAS", v: "+38%", sub: "vs prior agency baseline", a: true },
                   { lbl: "Days", v: "53 / 56", sub: "delivered 3d ahead" },
                   { lbl: "NPS · client", v: "4.94", sub: "(personal best for Arc)" },

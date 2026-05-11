@@ -38,7 +38,7 @@ function WorkerDashboard({ inShell = false }) {
             <span className="num">A+</span><span>tier</span>
           </div>
           <div className={tab === "wallet" ? "active" : ""} onClick={() => setTab("wallet")} style={{ cursor: "pointer" }}>
-            <span className="num">$</span><span>wallet + AI 補貼</span>
+            <span className="num">$</span><span>terms + AI 補貼</span>
           </div>
           <div className={tab === "coach" ? "active" : ""} onClick={() => setTab("coach")} style={{ cursor: "pointer" }}>
             <span className="num">✦</span><span>AI coach</span>
@@ -90,8 +90,8 @@ function WorkerDashboard({ inShell = false }) {
                 <div className="bp-panel-b" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
                   {[
                     { lbl: "Your scope", v: "Visual KV × 2", sub: "4 alts each · 18h" },
-                    { lbl: "Your payout", v: "NT$101,650", sub: "50% × 95% net", a: true },
-                    { lbl: "Released", v: "NT$30,495", sub: "deposit 30% · escrow", a: true },
+                    { lbl: "Your scope", v: "50%", sub: "Visual KV · accepted", a: true },
+                    { lbl: "Acceptance", v: "M1 OK", sub: "scope locked · review log", a: true },
                     { lbl: "Next milestone", v: "wk 4 · mid", sub: "2 KV + 4 alts due" },
                   ].map((s, i) => (
                     <div key={i} className="bp-rcard" style={{ background: "var(--bg-1)" }}>
@@ -107,8 +107,8 @@ function WorkerDashboard({ inShell = false }) {
               <div className="bp-h2" style={{ marginTop: 22 }}>other active</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                 {[
-                  { name: "HANA 香氛 · spring restage", role: "Visual KV", w: "wk 2 / 4", payout: 64000, p: 50 },
-                  { name: "Plant by Plant · packaging", role: "Brand DNA", w: "wk 6 / 6 · final review", payout: 128000, p: 95 },
+                  { name: "HANA 香氛 · spring restage", role: "Visual KV", w: "wk 2 / 4", proof: "mid review", p: 50 },
+                  { name: "Plant by Plant · packaging", role: "Brand DNA", w: "wk 6 / 6 · final review", proof: "final proof", p: 95 },
                 ].map((c, i) => (
                   <div key={i} className="bp-panel">
                     <div className="bp-panel-h">
@@ -121,8 +121,8 @@ function WorkerDashboard({ inShell = false }) {
                         <div style={{ width: c.p + "%", height: "100%", background: "var(--accent)" }}></div>
                       </div>
                       <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, fontFamily: "var(--mono)", fontSize: 11 }}>
-                        <span style={{ color: "var(--muted)" }}>payout</span>
-                        <span style={{ color: "var(--text-2)" }}>NT${c.payout.toLocaleString()}</span>
+                        <span style={{ color: "var(--muted)" }}>proof</span>
+                        <span style={{ color: "var(--text-2)" }}>{c.proof}</span>
                       </div>
                     </div>
                   </div>
@@ -288,11 +288,11 @@ function WorkerDashboard({ inShell = false }) {
 
           {tab === "wallet" && (
             <>
-              <div className="bp-h2" style={{ marginTop: 26 }}>wallet · this month</div>
+              <div className="bp-h2" style={{ marginTop: 26 }}>commercial terms · this month</div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
                 {[
-                  { lbl: "Released", v: "NT$162,145", sub: "↑ 38% MoM", a: true },
-                  { lbl: "In escrow", v: "NT$170,750", sub: "from 3 active cases" },
+                  { lbl: "Accepted scope", v: "3 cases", sub: "↑ 38% MoM", a: true },
+                  { lbl: "Review logs", v: "7", sub: "from 3 active cases" },
                   { lbl: "AI 工具補貼", v: "NT$3,500", sub: "Claude Pro · ChatGPT Team", a: true },
                 ].map((s, i) => (
                   <div key={i} className="bp-rcard">
@@ -327,8 +327,8 @@ function WorkerDashboard({ inShell = false }) {
                 </div>
               </div>
               <div className="bp-tip" style={{ marginTop: 14 }}>
-                <span style={{ fontFamily: "var(--mono)" }}>worker net</span>{" "}
-                <span className="zh">扣除平台 5% 抽佣後即時撥款 (T+3) · AI 工具補貼為 Tier A+ 額外福利，不計入抽佣。</span>
+                <span style={{ fontFamily: "var(--mono)" }}>commercial terms</span>{" "}
+                <span className="zh">早期不在平台內代收專案款；報價、付款與合約由雙方自行約定，BeyondPath 先累積驗收與交付證據。</span>
               </div>
             </>
           )}
@@ -497,7 +497,7 @@ function WorkerDashboard({ inShell = false }) {
             <div className="bp-spec" style={{ marginTop: 10 }}>
               <span>NPS</span><b>4.94</b>
               <span>cases delivered</span><b>5</b>
-              <span>avg payout</span><b>NT$92K</b>
+              <span>avg project</span><b>NT$92K</b>
               <span>capacity</span><b>3 / 4</b>
               <span>response time</span><b>2h 14m</b>
               <span>accept rate</span><b>67%</b>

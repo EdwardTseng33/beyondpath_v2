@@ -17,9 +17,9 @@ BeyondPath 目前最有潛力的定位不是「AI freelancer marketplace」，�
 
 目前已有的強項：
 
-- 從 vertical / brief / AI parse / expectation / match 到 contract / escrow / milestone / NPS / retainer，流程完整。
+- 從 vertical / brief / AI parse / expectation / match 到 acceptance framework / milestone review / NPS / retainer，流程完整。
 - 已有「3 位候選人 + 配對理由」的核心價值。
-- 已有 milestone、escrow、NPS、retainer 等信任機制雛形。
+- 已有 milestone、NPS、retainer 等信任機制雛形；付款與合約先維持 off-platform。
 - 對發案方而言，最有價值的是「不用自己判斷誰真的會 AI 交付」。
 
 目前的缺口：
@@ -148,7 +148,7 @@ BeyondPath 目前最有潛力的定位不是「AI freelancer marketplace」，�
 
 - 試做案：容易讓客戶覺得像實驗品。
 - 全自動平台：目前仍需要人工覆核，不宜過度承諾完全自動化。
-- escrow / 信託：正式法律與付款機制未完成前，應保守呈現。
+- 代收代付 / escrow：正式法律與付款機制未完成前，公開 prototype 應避免呈現平台碰款，先改成驗收框架與媒合服務費方向。
 - top 1% / top 3%：除非有實際審核樣本與通過率，不要硬借用。
 
 ## 建議下一步

@@ -998,7 +998,7 @@ function Rail({ step, state }) {
             { n: "04", t: "match expert" },
             { n: "05", t: "worker accept" },
             { n: "06", t: "e-contract sign" },
-            { n: "07", t: "30% escrow" },
+            { n: "07", t: "acceptance framework" },
             { n: "08", t: "kickoff dashboard" },
             { n: "09", t: "milestone review" },
             { n: "10", t: "delivery & nps" },

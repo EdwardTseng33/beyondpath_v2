@@ -8,9 +8,9 @@ const _LOOP = [
   { n: 4, key: "pair", who: "client", label: "Pair confirm", zh: "確認 3 人組合 · Arc + Mei + Jay", pillar: "B1" },
   { n: 5, key: "accept", who: "worker", label: "Worker accept", zh: "72h 內 3 人 ✓ accept", pillar: "B2" },
   { n: 6, key: "contract", who: "system", label: "E-contract", zh: "10 條必含 · 雙邊簽署", pillar: "B2" },
-  { n: 7, key: "escrow", who: "client", label: "Escrow 立案", zh: "30% 訂金入綠界託管", pillar: "B2" },
+  { n: 7, key: "acceptance", who: "client", label: "Acceptance framework", zh: "鎖定驗收標準 · 商務條款 off-platform", pillar: "B2" },
   { n: 8, key: "kickoff", who: "system", label: "Kickoff DAG", zh: "雙邊看板 live · AI daily summary", pillar: "B2" },
-  { n: 9, key: "milestone", who: "client", label: "Milestone review", zh: "期中通過 · 釋出 30%", pillar: "B2" },
+  { n: 9, key: "milestone", who: "client", label: "Milestone review", zh: "期中驗收 · 留存交付證據", pillar: "B2" },
   { n: 10, key: "nps", who: "both", label: "Closing NPS", zh: "雙邊 5 維互評 · AI 草稿", pillar: "B5" },
   { n: 11, key: "tier", who: "system", label: "Tier flywheel", zh: "Arc → Tier A+ · 推薦權重 +15%", pillar: "B3" },
   { n: 12, key: "retainer", who: "client", label: "Retainer 轉月費", zh: "trial → recurring · NT$82K/mo", pillar: "B1" },
@@ -200,7 +200,7 @@ function FullLoop() {
                   <span>pillar</span><b style={{ color: _PILLAR_COLOR[cur.pillar] }}>{cur.pillar} · {_PILLAR_NAME[cur.pillar]}</b>
                   <span>artifact</span><b>{[
                     "brief.json", "DAG.yaml", "rank.json", "pair.lock",
-                    "accepts.log", "contract.md", "escrow.tx", "board.live",
+                    "accepts.log", "terms.md", "acceptance.md", "board.live",
                     "midship.zip", "nps.json", "tier.delta", "retainer.md",
                   ][cur.n - 1]}</b>
                   <span>fires event</span><b style={{ fontFamily: "var(--mono)" }}>step.{cur.key}.done</b>

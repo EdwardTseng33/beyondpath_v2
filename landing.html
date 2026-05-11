@@ -708,7 +708,7 @@ function EPocTracker() {
 function EHero() {
   const [tokens, setTokens] = useState([]);
   useEffect(() => {
-    const stream = ["parse(", "brief", ")", "→", "tier", "=", "A+", "·", "match", "(", 3, ")", "→", "contract", "·", "escrow", "(", "30%", ")", "→", "milestone", "·", "release", "→", "retainer"];
+    const stream = ["parse(", "brief", ")", "→", "tier", "=", "A+", "·", "match", "(", 3, ")", "→", "scope", "·", "acceptance", "(", "M1", ")", "→", "milestone", "·", "nps", "→", "retainer"];
     let i = 0;
     const id = setInterval(() => {
       setTokens((prev) => {
@@ -773,8 +773,8 @@ function EHero() {
               let color = "var(--text-2)";
               if (typeof tk === "number") color = "var(--accent)";
               else if (["→", "·", "("].includes(tk)) color = "var(--muted)";
-              else if (tk === "tier" || tk === "match" || tk === "escrow") color = "var(--accent-dim)";
-              else if (tk === "A+" || tk === "30%") color = "var(--accent)";
+              else if (tk === "tier" || tk === "match" || tk === "acceptance") color = "var(--accent-dim)";
+              else if (tk === "A+" || tk === "M1") color = "var(--accent)";
               return <span key={i} style={{ color, opacity: i / tokens.length * 0.6 + 0.4 }}>{tk}</span>;
             })}
             <span style={{ color: "var(--accent)" }}>▮</span>
@@ -971,7 +971,7 @@ function EManifesto() {
 const ENGINES = [
   { n: "01", en: "AI BRIEF PARSER", zh: "Brief 拆解引擎", d: "把一段中文需求拆成目標、交付物、時程、預算與驗收點。POC 階段會先由創辦人覆核。", you: "你因此 → 不用先會寫專業 brief，也能把案子說清楚", m: "BriefMock", staticMock: null },
   { n: "02", en: "TIER MATCH ENGINE", zh: "Tier 配對引擎", d: "根據領域、作品、工具流與交付經驗推薦 Top 3，並附上為什麼適合。", you: "你因此 → 不發 30 封信，24 小時內先知道該找哪類人", m: null, staticMock: { metric: "Top 3", label: "MATCH · TIER A+ / A / B" } },
-  { n: "03", en: "SCOPE + MILESTONE", zh: "範圍 × 驗收點", d: "POC 階段先人工確認交付物、時間與風險；正式 beta 再逐步開啟合約與釋金。", you: "你因此 → 開案前先知道什麼算完成，不會整筆預算一次失控", m: "ContractMock", staticMock: null },
+  { n: "03", en: "SCOPE + MILESTONE", zh: "範圍 × 驗收點", d: "POC 階段先確認交付物、時間、風險與驗收標準；付款與合約先由雙方自行處理。", you: "你因此 → 開案前先知道什麼算完成，不會把合作押在口頭共識上", m: "ContractMock", staticMock: null },
   { n: "04", en: "PROJECT DASHBOARD", zh: "案件儀表板", d: "把進度、版本、交付物與待確認事項集中，避免案子散在 email、LINE 與雲端檔案裡。", you: "你因此 → 知道現在卡在哪，不用一直追問", m: null, staticMock: { metric: "M1-M5", label: "MILESTONE · AUDIT-READY" } },
   { n: "05", en: "NPS FLYWHEEL", zh: "NPS 雙邊飛輪", d: "每次結案都留下客戶回饋、交付品質與合作紀錄，逐步形成推薦權重。", you: "你因此 → 好的工作者會被看見，不只靠人脈與聲量", m: null, staticMock: { metric: "+10", label: "ANTI-MATTHEW · 5-DIM NPS" } },
   { n: "06", en: "RETAINER ENGINE", zh: "Retainer 引擎", d: "如果第一案合作順利，再把一次性需求整理成可續作的月度合作提案。", you: "你因此 → 合作好的人可以接著做，不用每次重新找人", m: null, staticMock: { metric: "M+1", label: "AUTO-PROPOSAL · MONTHLY" } }
@@ -984,7 +984,7 @@ const CASE_STUDIES = [
     brief: "9 月底上新「夜修護」3 SKU、需要 2 版主視覺 KV + 6 支 IG Reels 腳本 + 3 篇官網 + EDM 文案、排程到 Meta + LINE。",
     matched: "Edward · Tier A+ 領域專家（Visual KV + Brand DNA × AI）· 配對分數 92 / 100",
     delivered: "2 KV × 4 alts each · 4 週交付 · NPS 4.94 / 5",
-    payout: "NT$ 203,300（client 端 NT$ 240,000 · worker 淨拿 95%）",
+    proof: "交付證據：brief、版本紀錄、驗收清單、NPS 4.94 / 5",
     state: "進入 retainer · 持續 Q1 2027 上新檔",
     badge: "已結案 · NPS 4.94"
   },
@@ -994,7 +994,7 @@ const CASE_STUDIES = [
     brief: "新香 line 2 個 SKU 春季視覺重新整理、4 週內交 2 版 KV + 8 個 social asset。",
     matched: "Edward · 同時跑 LUMINE retainer 已達 capacity 75% · 平台優先推薦",
     delivered: "2 KV × 4 alts · wk 2 / 4 · 進度 50%",
-    payout: "NT$ 64,000（in escrow · milestone 2/4 已釋放 30%）",
+    proof: "交付證據：wk 2 版本上傳、mid review 已完成 2/4",
     state: "● 進行中 · ON TRACK",
     badge: "進行中 · WK 2 / 4"
   },
@@ -1004,7 +1004,7 @@ const CASE_STUDIES = [
     brief: "植物保養 line 包裝重設、6 週內交 brand DNA spec + 6 個 SKU packaging dieline。",
     matched: "Edward · Tier A+ Brand DNA × AI 領域 · 配對分數 88 / 100",
     delivered: "6 SKU dieline · brand spec 32 頁 · final review 階段",
-    payout: "NT$ 128,000（已釋 70% · 結案前 30% 待 client 簽收）",
+    proof: "交付證據：6 SKU dieline、brand spec 32 頁、final review",
     state: "● final review · WK 6 / 6",
     badge: "WK 6 / 6 · FINAL REVIEW"
   }
@@ -1016,7 +1016,7 @@ function ECaseStudies() {
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ CASE STUDIES · 真實案件實錄</div>
         <h2 className="le-h2">看 BeyondPath 怎麼<span className="le-acc">真的在跑</span>。</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
-          這 3 個 case 是 prototype 階段樣本——展示 brief → 配對 → 交付 → 收款的真實樣態。<span style={{ color: "var(--muted)", fontSize: 14 }}>（資料模擬 · 真實服務 2026 Q3 上線後逐步替換首批實案）</span>
+          這 3 個 case 是 prototype 階段樣本——展示 brief → 配對 → 交付 → 驗收紀錄的真實樣態。<span style={{ color: "var(--muted)", fontSize: 14 }}>（資料模擬 · 真實服務 2026 Q3 上線後逐步替換首批實案）</span>
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
           {CASE_STUDIES.map((c, i) => (
@@ -1032,7 +1032,7 @@ function ECaseStudies() {
                 <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ BRIEF</b>{c.brief}</div>
                 <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ MATCH</b>{c.matched}</div>
                 <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ DELIVER</b>{c.delivered}</div>
-                <div><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ PAYOUT</b>{c.payout}</div>
+                <div><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ PROOF</b>{c.proof}</div>
               </div>
               <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
                 {c.state}
@@ -1148,14 +1148,14 @@ const PROTOCOL_STAGES = [
 ];
 const PROTOCOL_STEPS = [
   "選領域 + 上傳需求", "AI 拆解 brief", "確認期待", "AI 自動配對",
-  "Worker 接案", "電子合約", "30% 信託", "案件儀表板",
-  "Milestone 釋金", "雙邊 NPS", "Tier 飛輪", "Retainer 提案"
+  "Worker 接案", "合作條件", "驗收框架", "案件儀表板",
+  "Milestone 驗收", "雙邊 NPS", "Tier 飛輪", "Retainer 提案"
 ];
 function EProtocol() {
   return (
     <section className="le-section" id="flywheel">
       <div className="inner">
-        <div className="le-cap" style={{ color: "var(--accent-dim)", marginBottom: 24 }}>◆ PROTOCOL · 12 步協定 · 從 brief 到收款</div>
+        <div className="le-cap" style={{ color: "var(--accent-dim)", marginBottom: 24 }}>◆ PROTOCOL · 12 步協定 · 從 brief 到驗收</div>
         <h2 className="le-h2">上傳需求 → 24 小時初判 → 短名單配對 → 開案交付。<br/>全程 <span className="le-acc-dim">0</span> 個 email。</h2>
         <div className="le-protocol-flow">
           <div className="le-protocol-stages">
@@ -1335,7 +1335,7 @@ function ETrust3() {
   const items = [
     { v: "AI", en: "AI REVIEW", zh: "AI 初審 + 人工覆核", facts: ["先由 AI 拆 brief 與交付範圍", "再由人工覆核候選人與風險", "不讓你直接丟進平台黑箱"], color: "var(--accent)" },
     { v: "24h", en: "MATCH DIRECTION", zh: "先給候選方向", facts: ["初判領域與預算是否合理", "中文 brief 原生理解", "先看適配，再談短名單"], color: "var(--text)" },
-    { v: "M1", en: "MILESTONE", zh: "每案先定驗收點", facts: ["交付物、時間、風險先講清楚", "正式 beta 逐步開啟釋金機制", "避免整筆預算一次失控"], color: "var(--accent-dim)" }
+    { v: "M1", en: "MILESTONE", zh: "每案先定驗收點", facts: ["交付物、時間、風險先講清楚", "付款與合約先由雙方自行處理", "避免做完才爭論算不算完成"], color: "var(--accent-dim)" }
   ];
   return (
     <section className="le-section" id="trust">
@@ -1362,10 +1362,10 @@ function ETrust3() {
 // FAQ · v0.4.6 (2026-05-10) 改寫為發案/接案者真問題、不再是投資人 FAQ
 const FAQS = [
   { n: "01", tag: "發案者", q: "我已經有合作的接案者 / 設計師了，為什麼要換 BeyondPath？", a: "你不用換、你可以平行用。BeyondPath 解的是「現有人脈池外、突然要新類型 AI 交付」這個場景——例如你平常合作的設計師不會剪短影音、你又不想為了一支 reels 重新發 30 封 brief。留下需求後，24 小時內先得到適配領域、預算與候選方向；進入短名單後再看 Top 3 配對與理由。首案合不合適你自己判斷、平台不綁約、不收訂閱。" },
-  { n: "02", tag: "發案者", q: "做不出來 / 品質不對怎麼辦？", a: "POC 階段先不把你丟進全自動黑箱。我們會先用 AI 拆需求、判斷領域與風險，再由人工覆核 milestone、交付標準與候選人。正式 beta 會逐步開啟階段釋金、雙邊 NPS、替補與爭議處理機制；目前的目標是先把第一批交付專案用 AI 輔助把關跑穩。" },
+  { n: "02", tag: "發案者", q: "做不出來 / 品質不對怎麼辦？", a: "POC 階段先不把你丟進全自動黑箱。我們會先用 AI 拆需求、判斷領域與風險，再由人工覆核 milestone、交付標準與候選人。早期不做平台代收代付；付款與合約由雙方自行處理。BeyondPath 先把需求、候選人與驗收紀錄跑穩。" },
   { n: "03", tag: "發案者", q: "這個比 Fiverr 貴 / 比工作室便宜嗎？怎麼定價？", a: "我們在 Fiverr 跟月費代理之間。首案 NT$ 50-100K / 案、按案計費、不綁約。如果合作得好可以轉 retainer NT$ 30-60K / 月、彈性換多工種。比 Fiverr 貴是因為這裡的人都通過 < 10% 認證、出包平台會接住；比月費代理便宜是因為你不用養一個用不滿的整個 team。" },
   { n: "04", tag: "接案者", q: "我想接案、要怎麼申請？真的通過率 < 10%？", a: "對。4 階段認證：（1）技能測驗——你的領域基本功、（2）同儕 review——已認證 worker 評分、（3）客戶模擬案件——平台給一個假需求、你交一份成果、（4）主審委員會——通過前三關才進。整個流程約 2-3 週。沒過可以 6 個月後重申、平台會給回饋說明哪裡需要補強。" },
-  { n: "05", tag: "接案者", q: "平台抽多少？我實拿是多少？", a: "beta 前期會以個案條件確認分潤與報價，目標是讓接案者保留大部分交付價值，而不是靠低價競標。正式規則會在首批案子跑完後公布；目前你申請認證不用付費，也不需要先承諾排他。" },
+  { n: "05", tag: "接案者", q: "平台怎麼收費？我需要先付費嗎？", a: "beta 前期先不在平台上代收專案款，也不做抽佣承諾。BeyondPath 會先測試需求診斷、候選短名單、認證服務或媒合服務費等模式；目前你申請認證不用付費，也不需要先承諾排他。" },
   { n: "06", tag: "接案者", q: "如果一段時間沒接到案、平台會幫忙嗎？", a: "會。我們有「反馬太 +10」機制——3 個月內無接案的 worker、配對排序自動 +10 加權；新認證 < 30 天 +5；首案池保留 20% slot 給新人。前提是你已通過 < 10% 認證——這不是降門檻、是讓已被驗證的人有持續接案機會。同時 AI 教練會主動提示「升 Tier 還差什麼」「哪些領域最近需求高」。" }
 ];
 function EFaq() {
@@ -1493,7 +1493,7 @@ function EFinalCta() {
             ["PRODUCT", [["流程協定 · 12 步", "#flywheel"], ["核心引擎 · 6", "#engines"], ["Tier 飛輪", "#tier"], ["信任機制", "#trust"], ["WHY BEYONDPATH", "#whyus"]]],
             ["NETWORK", [["客戶申請", "app.html?role=client&step=0"], ["Expert 申請", "app.html?role=worker&onboarding=1"], ["15 領域總覽", "#network"], ["A+ 大師牆 · 即將上線", "mailto:edwardt0303@gmail.com?subject=A%2B%20%E5%A4%A7%E5%B8%AB%E7%89%86%E5%85%88%E8%A1%8C%E5%90%8D%E5%96%AE"], ["Retainer Plans · 即將上線", "mailto:edwardt0303@gmail.com?subject=Retainer%20Plans"]]],
             ["COMPANY", [["關於 BeyondPath", "#whyus"], ["創辦人來信", "#founder"], ["加入我們", "mailto:edwardt0303@gmail.com?subject=Join%20BeyondPath"], ["edwardt0303@gmail.com", "mailto:edwardt0303@gmail.com"]]],
-            ["LEGAL", [["Terms · 即將上線", "mailto:edwardt0303@gmail.com?subject=Terms%20of%20Service"], ["Privacy · 即將上線", "mailto:edwardt0303@gmail.com?subject=Privacy%20Policy"], ["Escrow Policy", "#trust"], ["糾紛仲裁規範", "#trust"], ["資安白皮書 · v0.4 · 即將上線", "mailto:edwardt0303@gmail.com?subject=BP%20Security%20Whitepaper"]]]
+            ["LEGAL", [["Terms · 即將上線", "mailto:edwardt0303@gmail.com?subject=Terms%20of%20Service"], ["Privacy · 即將上線", "mailto:edwardt0303@gmail.com?subject=Privacy%20Policy"], ["驗收規則", "#trust"], ["爭議紀錄流程", "#trust"], ["資安白皮書 · v0.4 · 即將上線", "mailto:edwardt0303@gmail.com?subject=BP%20Security%20Whitepaper"]]]
           ].map(([h, items]) => (
             <div key={h}>
               <h4>◆ {h}</h4>

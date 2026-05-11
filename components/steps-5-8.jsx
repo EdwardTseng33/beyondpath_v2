@@ -15,7 +15,7 @@ function _Top({ step, label }) {
         STEP {String(step).padStart(2, "0")} / 12 · <span style={{ color: "var(--text-2)" }}>{label}</span>
       </div>
       <div className="bp-statusbar">
-        <span className="dot"></span><span>escrow <b>green</b></span>
+        <span className="dot"></span><span>review <b>green</b></span>
         <span>·</span><span>case <b>#0xC3F4</b></span>
       </div>
     </div>
@@ -88,14 +88,14 @@ function Step6() {
   const clauses = [
     ["01", "雙方資訊", "LUMINE Co. ↔ 3-expert pool"],
     ["02", "服務範圍", "見附件 A · AI 拆解 5 任務", true],
-    ["03", "預算 + Milestone", "NT$214,000 · 30/30/40", true],
+    ["03", "範圍 + Milestone", "交付物 · 驗收標準 · 版本節點", true],
     ["04", "IP 三段式", "客戶 / 模板匿名再用 / portfolio"],
     ["05", "NDA 雙向", "3 年 · 自簽署日"],
-    ["06", "終止條款", "已 milestone 結算"],
+    ["06", "終止條款", "依雙方合約自行約定"],
     ["07", "DPA 個資", "個資法 §27 · 30 日清除"],
     ["08", "仲裁地", "台北 · 中華民國仲裁協會"],
     ["09", "不可抗力", "force majeure"],
-    ["10", "平台聲明", "媒合 + escrow · 責任 = 抽佣 × 2"],
+    ["10", "平台聲明", "需求拆解 + 候選推薦 + 驗收紀錄"],
   ];
   const parties = [
     { id: "client", role: "Client", name: "LUMINE", who: "Edward" },
@@ -156,26 +156,26 @@ function Step6() {
   );
 }
 
-// ===== STEP 7 · Escrow =====
+// ===== STEP 7 · Acceptance framework =====
 function Step7() {
   const [stage, setStage] = useState57("ready");
   const milestones = [
-    { n: 1, lbl: "訂金 Deposit", pct: 30, amt: 64200, when: "now", state: stage === "done" ? "paid" : "charging" },
-    { n: 2, lbl: "期中 Mid", pct: 30, amt: 64200, when: "wk 4", state: "scheduled" },
-    { n: 3, lbl: "結案 Final", pct: 40, amt: 85600, when: "wk 8", state: "scheduled" },
+    { n: 1, lbl: "Kickoff 定義", pct: "M1", when: "now", state: stage === "done" ? "locked" : "reviewing" },
+    { n: 2, lbl: "期中驗收", pct: "M2", when: "wk 4", state: "scheduled" },
+    { n: 3, lbl: "結案驗收", pct: "M3", when: "wk 8", state: "scheduled" },
   ];
   return (
     <div className="bp-root is-desktop">
-      <_Top step={7} label="Escrow · 第三方託管" />
+      <_Top step={7} label="Acceptance · 驗收框架" />
       <div className="bp-main" style={{ gridTemplateColumns: "1fr" }}>
         <div className="bp-content">
-          <div className="bp-eyebrow"><span>Step 07 / Escrow · 30% 信託</span><span className="pill">綠界 ECPay · ADR-007</span></div>
-          <h1 className="bp-h1">Charge 30% deposit to escrow.<br/>
-            <span className="zh" style={{ color: "var(--muted)" }}>付款入第三方託管 → 平台立案 → worker 開工。</span>
+          <div className="bp-eyebrow"><span>Step 07 / Acceptance · 驗收框架</span><span className="pill">prototype · no fund custody</span></div>
+          <h1 className="bp-h1">Lock scope and acceptance criteria.<br/>
+            <span className="zh" style={{ color: "var(--muted)" }}>BeyondPath 先定義交付與驗收；付款與合約由雙方自行處理。</span>
           </h1>
           <div style={{ marginTop: 22, display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 18 }}>
             <div className="bp-panel">
-              <div className="bp-panel-h">milestone schedule · 30 / 30 / 40</div>
+              <div className="bp-panel-h">milestone acceptance · 3 checkpoints</div>
               <div className="bp-panel-b">
                 {milestones.map((m, i) => (
                   <div key={m.n} style={{
@@ -185,37 +185,37 @@ function Step7() {
                   }}>
                     <div style={{
                       width: 28, height: 28, borderRadius: "50%",
-                      background: m.state === "paid" ? "var(--accent)" : m.state === "charging" ? "var(--accent-soft)" : "var(--bg-1)",
+                      background: m.state === "locked" ? "var(--accent)" : m.state === "reviewing" ? "var(--accent-soft)" : "var(--bg-1)",
                       border: "1px solid " + (m.state === "scheduled" ? "var(--line)" : "var(--accent)"),
-                      color: m.state === "paid" ? "var(--bg)" : "var(--accent)",
+                      color: m.state === "locked" ? "var(--bg)" : "var(--accent)",
                       fontFamily: "var(--mono)", fontSize: 12,
                       display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>{m.state === "paid" ? "✓" : m.n}</div>
+                    }}>{m.state === "locked" ? "✓" : m.n}</div>
                     <div>
                       <div style={{ fontFamily: "var(--zh)", fontSize: 14, color: "var(--text)" }}>{m.lbl}</div>
-                      <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{m.pct}% · {m.when}</div>
+                      <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{m.pct} · {m.when}</div>
                     </div>
-                    <div style={{ fontFamily: "var(--mono)", fontSize: 14, color: "var(--text-2)" }}>{_fmt(m.amt)}</div>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: 14, color: "var(--text-2)" }}>{["scope", "mid", "final"][i]}</div>
                     <div style={{
                       fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
-                      color: m.state === "paid" ? "var(--accent)" : m.state === "charging" ? "var(--warn)" : "var(--muted)",
+                      color: m.state === "locked" ? "var(--accent)" : m.state === "reviewing" ? "var(--warn)" : "var(--muted)",
                     }}>{m.state}</div>
                   </div>
                 ))}
                 <div style={{ marginTop: 14, padding: "10px 12px", background: "var(--bg-1)", borderRadius: 4, fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>
-                  total · <b style={{ color: "var(--text)" }}>{_fmt(214000)}</b> · platform 5% / worker 95%
+                  output · <b style={{ color: "var(--text)" }}>acceptance.md</b> · no platform fund custody
                 </div>
               </div>
             </div>
             <div>
               <div className="bp-panel">
-                <div className="bp-panel-h">payment method</div>
+                <div className="bp-panel-h">off-platform commercial terms</div>
                 <div className="bp-panel-b" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {[
-                    { n: "ATM 轉帳", k: "atm" },
-                    { n: "信用卡 (TapPay)", k: "card", a: true },
-                    { n: "LINE Pay", k: "line" },
-                    { n: "街口 / TWQR", k: "jko" },
+                    { n: "付款由雙方自行約定", k: "direct", a: true },
+                    { n: "商務條款由雙方自行處理", k: "no-custody" },
+                    { n: "合約條款由雙方或律師確認", k: "contract" },
+                    { n: "BeyondPath 只保留驗收紀錄", k: "record" },
                   ].map((p) => (
                     <div key={p.k} style={{
                       padding: "10px 12px",
@@ -232,25 +232,25 @@ function Step7() {
                 </div>
               </div>
               <button className="bp-btn primary" style={{ marginTop: 14, width: "100%", justifyContent: "center", padding: "14px" }}
-                onClick={() => { setStage("charging"); setTimeout(() => setStage("done"), 1400); }}>
-                {stage === "ready" && "→ Pay NT$64,200 to escrow"}
-                {stage === "charging" && "processing…"}
-                {stage === "done" && "✓ Deposit secured · case live"}
+                onClick={() => { setStage("reviewing"); setTimeout(() => setStage("done"), 900); }}>
+                {stage === "ready" && "→ Lock acceptance criteria"}
+                {stage === "reviewing" && "AI checking scope…"}
+                {stage === "done" && "✓ Acceptance locked · case ready"}
               </button>
               <div style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", textAlign: "center", lineHeight: 1.6 }}>
-                escrow held by 綠界 ECPay · 退款 5 情境見 ADR-007
+                prototype note · commercial terms and legal contracts are outside BeyondPath
               </div>
             </div>
           </div>
 
-          <div className="bp-h2" style={{ marginTop: 28 }}>您的訂金保護機制 · 5 SCENARIOS</div>
+          <div className="bp-h2" style={{ marginTop: 28 }}>您的驗收保護機制 · 5 SCENARIOS</div>
           <div className="bp-trust-grid">
             <_TrustCard
               variant="safe"
               icon="lifebuoy"
-              en="100% REFUND"
+              en="REPLACEMENT PATH"
               zh="Worker 中途離場"
-              body="平台 7 天內幫你找替補 worker、訂金 100% 安全。"
+              body="平台 7 天內協助找替補 worker，並保留交付紀錄給雙方接續。"
               stat="0 案發 · 7-day SLA"
             />
             <_TrustCard
@@ -258,15 +258,15 @@ function Step7() {
               icon="scales"
               en="MID ARBITRATION"
               zh="品質有爭議"
-              body="雙方提證據、平台 7 天內判定、不服可走法院。"
+              body="雙方提證據，平台協助整理紀錄與建議，不碰付款裁決。"
               stat="1.2% 案件觸發"
             />
             <_TrustCard
               variant="neutral"
               icon="door"
-              en="PRO-RATA · 70/30"
+              en="SCOPE RESET"
               zh="你想取消"
-              body="按進度退 70%、剩 30% 補償 worker 已投入時間。"
+              body="協助重新定義完成範圍、交付物與待處理項目。"
               stat="0.6% 案件觸發"
             />
             <_TrustCard
@@ -274,7 +274,7 @@ function Step7() {
               icon="handshake"
               en="MUTUAL CANCEL"
               zh="雙方都想停"
-              body="按完成進度結算、誰也不吃虧。"
+              body="整理已完成成果、未完成項目與後續交接清單。"
               stat="0.4% 案件觸發"
             />
             <_TrustCard
@@ -282,18 +282,18 @@ function Step7() {
               icon="storm"
               en="FORCE MAJEURE"
               zh="不可抗力"
-              body="天災 / 戰爭 / 重大疫病、訂金全退、雙方互不究責。"
+              body="協助暫停時程、記錄已完成成果，讓雙方重新約定後續。"
               stat="< 0.1% 案件觸發"
             />
           </div>
           <div className="bp-escrow-strip">
-            <span className="bp-escrow-logo">綠界 ECPay 信託</span>
+            <span className="bp-escrow-logo">BeyondPath Acceptance Log</span>
             <span className="bp-escrow-sep">·</span>
-            <span>第三方資金保管</span>
+            <span>不保管專案款</span>
             <span className="bp-escrow-sep">·</span>
-            <span>8 年無爭議撥款紀錄</span>
+            <span>付款與合約由雙方自行處理</span>
             <span className="bp-escrow-sep">·</span>
-            <span className="bp-escrow-meta">ADR-007 · 個資法 §27 ✓</span>
+            <span className="bp-escrow-meta">prototype · legal review pending</span>
           </div>
         </div>
       </div>
@@ -361,7 +361,7 @@ function Step8() {
     ["today 11:08", "Mei", "已收到品牌 GPTs v2.3 · 開始 Reels 腳本草稿", "info"],
     ["today 09:00", "system", "kickoff sync 結束 · DAG locked", "task"],
     ["yest 18:42", "Jay", "Meta + LINE OA 串接金鑰已配置", "ok"],
-    ["yest 14:00", "system", "deposit NT$64,200 → escrow secured", "ok"],
+    ["yest 14:00", "system", "acceptance criteria locked · commercial terms off-platform", "ok"],
   ];
   return (
     <div className="bp-root is-desktop">
@@ -375,8 +375,8 @@ function Step8() {
           <div style={{ marginTop: 22, display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
             {[
               { lbl: "Days elapsed", v: "6", sub: "/ 56 · 11%" },
-              { lbl: "Milestones", v: "1", sub: "/ 3 · deposit" },
-              { lbl: "Escrow", v: "NT$214K", sub: "30% paid · 70% held" },
+              { lbl: "Milestones", v: "1", sub: "/ 3 · scope locked" },
+              { lbl: "Acceptance", v: "M1", sub: "scope · criteria · risks" },
               { lbl: "Health", v: "● green", sub: "0 dispute · 0 delay", a: true },
             ].map((s, i) => (
               <div key={i} className="bp-rcard">

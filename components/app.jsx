@@ -920,7 +920,7 @@ function Rail({ step, state }) {
           <span>06</span>
           <b style={{ color: "var(--muted)" }}>e-contract sign</b>
           <span>07</span>
-          <b style={{ color: "var(--muted)" }}>30% escrow</b>
+          <b style={{ color: "var(--muted)" }}>acceptance framework</b>
           <span>08</span>
           <b style={{ color: "var(--muted)" }}>kickoff dashboard</b>
         </div>
