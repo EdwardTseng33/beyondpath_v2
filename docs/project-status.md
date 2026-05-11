@@ -24,6 +24,7 @@ Last updated: 2026-05-11
 - Moved the email draft to an optional link on the submitted page.
 - Added cache-busting on `components/worker.jsx` references in `app.html` and `index.html`.
 - Repositioned the landing page for Taiwan beta acquisition: clearer client promise, concrete beta use cases, founder-led trust layer, and more credible worker certification CTA.
+- Strengthened the landing page narrative around the AI work trust layer: sharper client/worker pains, less platform jargon above the fold, clearer founder commitment, and split CTAs for client shortlist vs. worker candidate pool.
 
 ## Known Constraints
 
