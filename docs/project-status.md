@@ -30,6 +30,7 @@ Last updated: 2026-05-11
 - Added a direct Worker Console demo path so the worker-side prototype is visible without being trapped behind the certification application flow: `app.html?role=worker&view=worker-demo`.
 - Updated the shell logout action so demo users clear role/onboarding state and return to `landing.html`.
 - Added `waitlist.html` as a manual waitlist contact page with visible recipient email, copy-email fallback, and email draft link; prototype banners now link there instead of directly opening mailto.
+- Reworked the landing hero and related copy from "trial/test project" language toward "可驗收的 AI 交付專案 / 首案交付", and added `docs/product-flow-competitor-review-2026-05-11.md` with competitor-informed product recommendations.
 
 ## Known Constraints
 

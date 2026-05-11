@@ -265,7 +265,7 @@ function Step12() {
   const [conv, setConv] = uS912(false);
   return (
     <div className="bp-root is-desktop">
-      <_Top912 step={12} label="Retainer · 從試做案轉月費" />
+      <_Top912 step={12} label="Retainer · 從首案轉月費" />
       <div className="bp-main" style={{ gridTemplateColumns: "1fr" }}>
         <div className="bp-content">
           <div className="bp-eyebrow"><span>Step 12 / Retainer · Retainer 提案</span><span className="pill green">● ROAS +38% · case archived</span></div>

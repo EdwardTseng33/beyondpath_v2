@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BeyondPath · 華語區 AI 工作者認證網路</title>
-<meta name="description" content="BeyondPath 幫台灣品牌與中小企業把 AI 內容、網站、自動化案配對給已審核的 AI 工作者。中文 brief、3 天候選人、beta 人工把關。" />
+<meta name="description" content="BeyondPath 幫台灣品牌與中小企業把 AI 內容、網站、自動化需求變成可驗收的交付專案，媒合已審核的 AI 工作者。中文 brief、3 天候選人、beta 人工把關。" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -679,7 +679,7 @@ function ENav() {
 function EPocTracker() {
   const rows = [
     { label: "合格供給端認證", sub: "Tier B / B+ · 樣本邀請名單收集中", stat: "啟動內測" },
-    { label: "媒合付費試做案", sub: "NPS ≥ 50 · 首批客戶名單建構中", stat: "啟動內測" },
+    { label: "媒合付費交付專案", sub: "NPS ≥ 50 · 首批客戶名單建構中", stat: "啟動內測" },
     { label: "雙邊 NPS 評鑑", sub: "client + worker · 內測收集後啟用", stat: "Q3 2026" }
   ];
   return (
@@ -728,15 +728,15 @@ function EHero() {
           <span>// 台灣 beta · AI 工作交付媒合 · 發案與接案雙邊審核</span>
         </div>
         <h1 className="le-hero-title le-zh">
-          <span>你不是缺 <span className="le-grad">AI</span> 工具。</span>
-          <span className="sub">你缺的是一個能把需求接住、把成果交出來的人。</span>
+          <span>會用 <span className="le-grad">AI</span> 的人很多。</span>
+          <span className="sub">能對交付結果負責的人很少。</span>
         </h1>
         {/* v0.4.9 wave 6 #6 · Takeaway pills · 讓用戶 1 秒掌握 LP 賣什麼（Edward 反饋「無法快速掌握重點」） */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, margin: "20px 0 28px" }}>
           {[
-            { k: "1", v: "你說結果，我們先把需求拆成可交付範圍" },
+            { k: "1", v: "你說結果，我們先把需求拆成可驗收範圍" },
             { k: "2", v: "3 天內看 3 位已審核候選人與配對理由" },
-            { k: "3", v: "第一批案子由創辦人人工把關，不讓你賭運氣" },
+            { k: "3", v: "創辦人先審 brief、候選人與交付標準" },
           ].map((p) => (
             <div key={p.k} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", border: "1px solid var(--accent-line)", borderRadius: 999, background: "rgba(199,232,74,0.04)" }}>
               <span style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.1em" }}>0{p.k}</span>
@@ -746,7 +746,7 @@ function EHero() {
         </div>
         <div className="le-hero-grid">
           <div className="le-hero-blurb le-zh">
-            BeyondPath 幫台灣品牌與中小企業，把模糊的 AI 需求拆成可驗收的試做案，並媒合已審核的 AI-native 工作者。你不用重發 30 封訊息，也不用把第一案押在運氣上。
+            BeyondPath 幫台灣品牌與中小企業，把 AI 內容、網站、自動化需求變成 <b>可驗收的交付專案</b>，並媒合已審核的 AI-native 工作者。你不是把案子丟給陌生人，而是交給一套有人把關的 AI 交付流程。
           </div>
           <div className="le-hero-cta-col">
             <div className="le-hero-trust-label">
@@ -843,9 +843,9 @@ function EUseCases() {
     <section className="le-section" id="beta-use-cases" style={{ paddingTop: 72, paddingBottom: 72 }}>
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ BETA USE CASES · 第一批最適合發的案子</div>
-        <h2 className="le-h2" style={{ marginBottom: 22 }}>不要先買更多工具。<br/>先把下一個<span className="le-acc">會痛的案子</span>交出去。</h2>
+        <h2 className="le-h2" style={{ marginBottom: 22 }}>不要先買更多工具。<br/>先把下一個<span className="le-acc">AI 專案</span>交付出來。</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.65, maxWidth: 900, marginTop: -8, marginBottom: 32 }}>
-          BeyondPath beta 先收「範圍清楚、交付可驗收、用 AI 能明顯加速」的專案。你不用先懂工具，只要知道你希望交出什麼結果。
+          BeyondPath beta 先收「範圍清楚、交付可驗收、用 AI 能明顯加速」的交付專案。你不用先懂工具，只要知道你希望交出什麼結果。
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
           {BETA_USE_CASES.map((c, i) => (
@@ -907,7 +907,7 @@ function ETrustStrip() {
 // Problem · 4 path
 const PROBLEMS = [
   { lbl: "PATH 1 · 朋友介紹 / PTT", title: "便宜、信任、3-5 萬入場", pain: "你以為找到人幫忙，最後卻變成自己在教、在催、在救火。", fix: "BeyondPath: 先由創辦人協助拆案與挑候選人，讓你不用把第一案押在運氣上。" },
-  { lbl: "PATH 2 · 月費代理 / Fiverr", title: "全 service 或便宜量大", pain: "代理商太重，Fiverr 太遠；你要的是一個人接得住台灣語境與交付節奏。", fix: "BeyondPath: 按案試做、不綁約、中文 brief 原生，先把一個具體交付跑順。" },
+  { lbl: "PATH 2 · 月費代理 / Fiverr", title: "全 service 或便宜量大", pain: "代理商太重，Fiverr 太遠；你要的是一個人接得住台灣語境與交付節奏。", fix: "BeyondPath: 按案交付、不綁約、中文 brief 原生，先把一個具體成果跑順。" },
   { lbl: "PATH 3 · 全職 hire (104/Cake)", title: "長期省錢、可控", pain: "招一個會 AI 又懂交付的人太慢，也還不確定需求能不能養滿。", fix: "BeyondPath: 先用外部已審核工作者補能力缺口，等需求穩定再決定要不要內建團隊。" }
 ];
 function EProblem() {
@@ -1016,7 +1016,7 @@ function ECaseStudies() {
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ CASE STUDIES · 真實案件實錄</div>
         <h2 className="le-h2">看 BeyondPath 怎麼<span className="le-acc">真的在跑</span>。</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
-          這 3 個 case 是 prototype 階段樣本——展示 brief → 配對 → 交付 → 收款的真實樣態。<span style={{ color: "var(--muted)", fontSize: 14 }}>（資料模擬 · 真實服務 2026 Q3 上線後逐步替換真案）</span>
+          這 3 個 case 是 prototype 階段樣本——展示 brief → 配對 → 交付 → 收款的真實樣態。<span style={{ color: "var(--muted)", fontSize: 14 }}>（資料模擬 · 真實服務 2026 Q3 上線後逐步替換首批實案）</span>
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
           {CASE_STUDIES.map((c, i) => (
@@ -1361,9 +1361,9 @@ function ETrust3() {
 
 // FAQ · v0.4.6 (2026-05-10) 改寫為發案/接案者真問題、不再是投資人 FAQ
 const FAQS = [
-  { n: "01", tag: "發案者", q: "我已經有合作的接案者 / 設計師了，為什麼要換 BeyondPath？", a: "你不用換、你可以平行用。BeyondPath 解的是「現有人脈池外、突然要新類型的東西」這個場景——例如你平常合作的設計師不會剪短影音、你又不想為了一支 reels 重新發 30 封 brief。上傳一段需求、3 天內看到 Top 3 配對、附打分數理由。試一次案合不合適你自己判斷、平台不綁約、不收訂閱。" },
-  { n: "02", tag: "發案者", q: "做不出來 / 品質不對怎麼辦？", a: "POC 階段先不把你丟進全自動平台。我們會先協助拆需求、確認 milestone 與交付標準，再推薦候選人。正式 beta 會逐步開啟階段釋金、雙邊 NPS、替補與爭議處理機制；目前的目標是先把第一批案子用人工把關跑穩。" },
-  { n: "03", tag: "發案者", q: "這個比 Fiverr 貴 / 比工作室便宜嗎？怎麼定價？", a: "我們在 Fiverr 跟月費代理之間。試做案 NT$ 50-100K / 案、按案計費、不綁約。如果合作得好可以轉 retainer NT$ 30-60K / 月、彈性換多工種。比 Fiverr 貴是因為這裡的人都通過 < 10% 認證、出包平台會接住；比月費代理便宜是因為你不用養一個用不滿的整個 team。" },
+  { n: "01", tag: "發案者", q: "我已經有合作的接案者 / 設計師了，為什麼要換 BeyondPath？", a: "你不用換、你可以平行用。BeyondPath 解的是「現有人脈池外、突然要新類型 AI 交付」這個場景——例如你平常合作的設計師不會剪短影音、你又不想為了一支 reels 重新發 30 封 brief。留下需求、3 天內看到 Top 3 配對、附打分數理由。首案合不合適你自己判斷、平台不綁約、不收訂閱。" },
+  { n: "02", tag: "發案者", q: "做不出來 / 品質不對怎麼辦？", a: "POC 階段先不把你丟進全自動平台。我們會先協助拆需求、確認 milestone 與交付標準，再推薦候選人。正式 beta 會逐步開啟階段釋金、雙邊 NPS、替補與爭議處理機制；目前的目標是先把第一批交付專案用人工把關跑穩。" },
+  { n: "03", tag: "發案者", q: "這個比 Fiverr 貴 / 比工作室便宜嗎？怎麼定價？", a: "我們在 Fiverr 跟月費代理之間。首案 NT$ 50-100K / 案、按案計費、不綁約。如果合作得好可以轉 retainer NT$ 30-60K / 月、彈性換多工種。比 Fiverr 貴是因為這裡的人都通過 < 10% 認證、出包平台會接住；比月費代理便宜是因為你不用養一個用不滿的整個 team。" },
   { n: "04", tag: "接案者", q: "我想接案、要怎麼申請？真的通過率 < 10%？", a: "對。4 階段認證：（1）技能測驗——你的領域基本功、（2）同儕 review——已認證 worker 評分、（3）客戶模擬案件——平台給一個假需求、你交一份成果、（4）主審委員會——通過前三關才進。整個流程約 2-3 週。沒過可以 6 個月後重申、平台會給回饋說明哪裡需要補強。" },
   { n: "05", tag: "接案者", q: "平台抽多少？我實拿是多少？", a: "beta 前期會以個案條件確認分潤與報價，目標是讓接案者保留大部分交付價值，而不是靠低價競標。正式規則會在首批案子跑完後公布；目前你申請認證不用付費，也不需要先承諾排他。" },
   { n: "06", tag: "接案者", q: "如果一段時間沒接到案、平台會幫忙嗎？", a: "會。我們有「反馬太 +10」機制——3 個月內無接案的 worker、配對排序自動 +10 加權；新認證 < 30 天 +5；首案池保留 20% slot 給新人。前提是你已通過 < 10% 認證——這不是降門檻、是讓已被驗證的人有持續接案機會。同時 AI 教練會主動提示「升 Tier 還差什麼」「哪些領域最近需求高」。" }
@@ -1431,7 +1431,7 @@ function EFounder() {
           </div>
 
           <div className="quote le-zh" style={{ fontSize: 22, lineHeight: 1.65 }}>
-            所以第一年我不會急著做大平台。我會親自跑每一個試做案，親自審人、審 brief、審交付結果。如果六個月內證明不了客戶願意付費、供給端能穩定交付，我會把它退回精品顧問模式，而不是硬燒錢。
+            所以第一年我不會急著做大平台。我會親自跑每一個首批案子，親自審人、審 brief、審交付結果。如果六個月內證明不了客戶願意付費、供給端能穩定交付，我會把它退回精品顧問模式，而不是硬燒錢。
           </div>
         </div>
         <div className="aside">
@@ -1456,7 +1456,7 @@ function EFinalCta() {
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ JOIN · PRIVATE BETA</div>
         <h2 className="h">把第一個案子，交給對的人。</h2>
         <div className="grid">
-          <div className="blurb le-zh">第一批 beta 先人工審核。發案方可以留下需求，3 天內回覆是否適合試做；接案者可以提交作品與 AI workflow，通過後進入首案候選池。</div>
+          <div className="blurb le-zh">第一批 beta 先人工審核。發案方可以留下需求，3 天內回覆是否適合首案交付；接案者可以提交作品與 AI workflow，通過後進入首案候選池。</div>
           <div className="form">
             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10, marginBottom: 14 }}>
               <a href="app.html?role=client&step=0" className="le-cta-primary" style={{ padding: "14px 18px", fontSize: 12 }}>
@@ -1548,7 +1548,7 @@ function EStory() {
             </div>
             <div className="le-zh" style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 15, color: "var(--text)", lineHeight: 1.55, wordBreak: "keep-all", textWrap: "pretty" }}>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>① 先小案驗證</b> · 先從 <b style={{ color: "var(--accent)" }}>NT$ 50-100K</b> 試做案開始，不需要一次簽長約。
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>① 先用首案驗證合作</b> · 先從 <b style={{ color: "var(--accent)" }}>NT$ 50-100K</b> 交付專案開始，不需要一次簽長約。
               </div>
               <div>
                 <b style={{ color: "var(--accent)", fontWeight: 700 }}>② 少管理不確定性</b> · 留下需求、<b style={{ color: "var(--accent)" }}>3 天</b>看到候選人與配對理由，不用自己發 30 封訊息。

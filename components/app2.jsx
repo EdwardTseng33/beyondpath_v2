@@ -286,7 +286,7 @@ const PARSE_LOG = [
   { t: "02.11", lvl: "info", en: "tier", msg: "推薦 Tier A+ · 因品牌 DNA × Reels 涉及策略性視覺" },
   { t: "02.40", lvl: "info", en: "budget", msg: "市場行情 NT$160-210K · +15% 平台溢價 → 184-241K" },
   { t: "02.62", lvl: "warn", en: "schedule", msg: "8 週 / 68h → 建議 multi-expert 共案 (DAG attached)" },
-  { t: "02.88", lvl: "ok", en: "contract", msg: "推薦 Trial Project (試做案) · ROAS 階段可轉 retainer" },
+  { t: "02.88", lvl: "ok", en: "contract", msg: "推薦首案交付 · ROAS 階段可轉 retainer" },
   { t: "03.12", lvl: "ok", en: "ready", msg: "B1 → handoff to expectation form" },
 ];
 
