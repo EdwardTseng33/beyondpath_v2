@@ -27,6 +27,7 @@ Last updated: 2026-05-11
 - Strengthened the landing page narrative around the AI work trust layer: sharper client/worker pains, less platform jargon above the fold, clearer founder commitment, and split CTAs for client shortlist vs. worker candidate pool.
 - Clarified the worker application submitted state: the prototype does not auto-submit data, so applicants are instructed to email `edwardt0303@gmail.com`, with a mailto draft and visible manual recipient fallback.
 - Added a direct Worker Console demo path so the worker-side prototype is visible without being trapped behind the certification application flow: `app.html?role=worker&view=worker-demo`.
+- Updated the shell logout action so demo users clear role/onboarding state and return to `landing.html`.
 
 ## Known Constraints
 

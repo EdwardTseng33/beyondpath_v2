@@ -24,6 +24,16 @@ function BP_AppShell() {
     return () => document.removeEventListener("mousedown", onDoc);
   }, [menuOpen]);
   const u = BP_USERS[role];
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem(BP_ROLE_KEY);
+      localStorage.removeItem("bp-worker-onboarding");
+      localStorage.removeItem("bp-journey-step");
+      sessionStorage.removeItem("bp-disc-closed");
+    } catch (e) {}
+    setMenuOpen(false);
+    window.location.href = "landing.html";
+  };
 
   return (
     <div className="bp-shell">
@@ -110,9 +120,9 @@ function BP_AppShell() {
                 <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="1.6"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.7-2.5 2-2.5 4M12 17.5h.01" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
                 說明與支援
               </button>
-              <button className="bp-shell-menu-item danger" onClick={() => setMenuOpen(false)}>
+              <button className="bp-shell-menu-item danger" onClick={handleLogout}>
                 <svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 4H5a2 2 0 00-2 2v12a2 2 0 002 2h4M16 17l5-5-5-5M21 12H9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                登出
+                登出回到產品頁
               </button>
               <div className="bp-shell-menu-foot">
                 BeyondPath <b>{BP_VERSION}</b> · session <b>0xC3F4</b>
