@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BeyondPath · 華語區 AI 工作者認證網路</title>
-<meta name="description" content="BeyondPath 幫台灣品牌與中小企業把 AI 內容、網站、自動化需求變成可驗收的交付專案，媒合已審核的 AI 工作者。中文 brief、24 小時初步判斷、AI 輔助把關。" />
+<title>BeyondPath · AI 時代的工作交付網路</title>
+<meta name="description" content="BeyondPath 是 AI 時代的發案與接案產品，幫台灣品牌與中小企業把模糊需求變成可驗收交付，用 AI 初審、認證化供給與 milestone 交付降低不確定性。" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -725,18 +725,18 @@ function EHero() {
       <div className="le-hero-content">
         <div className="le-hero-eyebrow">
           <span className="dot le-pulse"></span>
-          <span>// 台灣 beta · AI 工作交付媒合 · 發案與接案雙邊審核</span>
+          <span>// AI ERA WORK NETWORK · 台灣 beta · 發案與接案雙邊認證</span>
         </div>
         <h1 className="le-hero-title le-zh">
-          <span>把模糊的 <span className="le-grad">AI</span> 需求，</span>
-          <span className="sub">變成可驗收的交付成果。</span>
+          <span>加入 <span className="le-grad">AI</span> 工作的下一個時代。</span>
+          <span className="sub">把不確定，變成可驗收的交付。</span>
         </h1>
         {/* v0.4.9 wave 6 #6 · Takeaway pills · 讓用戶 1 秒掌握 LP 賣什麼（Edward 反饋「無法快速掌握重點」） */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, margin: "20px 0 28px" }}>
           {[
-            { k: "1", v: "你說結果，我們先拆範圍、交付物與驗收標準" },
-            { k: "2", v: "24 小時內回覆適配領域、預算與候選方向" },
-            { k: "3", v: "進入短名單後，再看已審核候選人與配對理由" },
+            { k: "1", v: "把焦慮的需求，拆成範圍、交付物與驗收標準" },
+            { k: "2", v: "AI 初審適配領域、預算與候選方向" },
+            { k: "3", v: "用認證化供給與 milestone 降低交付不確定性" },
           ].map((p) => (
             <div key={p.k} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", border: "1px solid var(--accent-line)", borderRadius: 999, background: "rgba(199,232,74,0.04)" }}>
               <span style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.1em" }}>0{p.k}</span>
@@ -746,19 +746,19 @@ function EHero() {
         </div>
         <div className="le-hero-grid">
           <div className="le-hero-blurb le-zh">
-            BeyondPath 幫台灣品牌與中小企業，把 AI 內容、網站、自動化需求變成 <b>可驗收的交付專案</b>，並媒合已審核的 AI-native 工作者。最快 24 小時先回覆這案能不能做、該找哪類人、下一步怎麼開案。
+            AI 讓每個人都像能交付，也讓發案與接案更焦慮：需求怎麼拆、能力怎麼判斷、成果怎麼驗收。BeyondPath 用 <b>AI 初審、認證化供給與 milestone 交付</b>，把模糊需求變成一套可被信任的 AI 工作流程。
           </div>
           <div className="le-hero-cta-col">
             <div className="le-hero-trust-label">
               <span style={{ display: "inline-block", width: 4, height: 4, background: "var(--accent)", borderRadius: 99 }}></span>
-              AI-assisted beta · 已審核候選人 · milestone 交付
+              next work network · AI review · verified supply
             </div>
             <a href="app.html?role=client&step=0" className="le-cta-primary">
-              <span>我想先做需求判斷 →</span>
+              <span>我想進入 AI 發案流程 →</span>
               <span style={{ fontSize: 11, opacity: 0.6 }}>留下需求 · 24 小時內初步回覆</span>
             </a>
             <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary">
-              <span>我想申請首案候選池 →</span>
+              <span>我想加入 AI 接案網路 →</span>
               <span className="sub">提交作品與 AI workflow</span>
             </a>
             <a href="app.html?role=worker&view=worker-demo" className="le-zh" style={{ color: "var(--accent)", fontSize: 13, textDecoration: "none", alignSelf: "flex-start", borderBottom: "1px solid var(--accent-line)", paddingBottom: 2 }}>
@@ -906,18 +906,18 @@ function ETrustStrip() {
 
 // Problem · 4 path
 const PROBLEMS = [
-  { lbl: "PATH 1 · 朋友介紹 / PTT", title: "便宜、信任、3-5 萬入場", pain: "你以為找到人幫忙，最後卻變成自己在教、在催、在救火。", fix: "BeyondPath: 先由創辦人協助拆案與挑候選人，讓你不用把第一案押在運氣上。" },
-  { lbl: "PATH 2 · 月費代理 / Fiverr", title: "全 service 或便宜量大", pain: "代理商太重，Fiverr 太遠；你要的是一個人接得住台灣語境與交付節奏。", fix: "BeyondPath: 按案交付、不綁約、中文 brief 原生，先把一個具體成果跑順。" },
-  { lbl: "PATH 3 · 全職 hire (104/Cake)", title: "長期省錢、可控", pain: "招一個會 AI 又懂交付的人太慢，也還不確定需求能不能養滿。", fix: "BeyondPath: 先用外部已審核工作者補能力缺口，等需求穩定再決定要不要內建團隊。" }
+  { lbl: "ANXIETY 1 · 發案方", title: "不知道誰真的能交付", pain: "每個人都說自己會 AI，但你不知道他是會 demo、會做圖，還是真的能把成果交出來。", fix: "BeyondPath: 用 AI 初審、作品證據與候選理由，先把能力翻譯成可判斷的交付風險。" },
+  { lbl: "ANXIETY 2 · 接案方", title: "不知道自己如何被看見", pain: "你已經有 AI workflow，但市場還是把你放回低價比稿與人脈介紹裡。", fix: "BeyondPath: 把作品、工具流、交付品質整理成認證化證據，讓好能力有更公平的入口。" },
+  { lbl: "ANXIETY 3 · 雙邊", title: "不知道什麼算完成", pain: "AI 專案最可怕的不是開始，而是做了很多、改了很久，最後沒有人說得清楚算不算交付。", fix: "BeyondPath: 開案前先拆 milestone、交付物與驗收標準，讓合作從第一天就有共同規則。" }
 ];
 function EProblem() {
   return (
     <section className="le-section" id="problem">
       <div className="inner">
-        <div className="le-cap le-warn" style={{ marginBottom: 24 }}>◆ THE PROBLEM · 你現在的選項其實只有這 3 條</div>
-        <h2 className="le-h2">AI 讓工作變快，<br/>也讓<span className="le-warn">找對人</span>變更難。</h2>
+        <div className="le-cap le-warn" style={{ marginBottom: 24 }}>◆ THE ANXIETY · AI 時代真正放大的不是工具，是不確定性</div>
+        <h2 className="le-h2">AI 讓機會變多，<br/>也讓<span className="le-warn">判斷成本</span>爆炸。</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
-          DTC 品牌 founder、設計工作室與中小企業老闆真正怕的不是沒有工具，而是不知道誰真的能交付、誰只是會講 AI。
+          發案方怕找錯人、押錯案、看不懂成果；接案方怕好能力被拿去跟低價模板比較。BeyondPath 要處理的不是工具缺口，而是 AI 工作網路裡的焦慮、不安與不確定性。
         </p>
         <div className="le-engines-grid le-problem-grid">
           {PROBLEMS.map((p, i) => (
@@ -926,7 +926,7 @@ function EProblem() {
               <div className="zh le-zh" style={{ fontSize: 22 }}>{p.title}</div>
               <div className="desc le-zh"><b style={{ color: "var(--warn)" }}>{p.pain}</b></div>
               <div style={{ paddingTop: 14, borderTop: "1px dashed var(--line-soft)", marginTop: "auto" }}>
-                <div className="n" style={{ color: "var(--accent)", marginBottom: 8 }}>→ BeyondPath 怎麼補</div>
+                <div className="n" style={{ color: "var(--accent)", marginBottom: 8 }}>→ BeyondPath 怎麼把它變成秩序</div>
                 <div className="desc le-zh">{p.fix}</div>
               </div>
             </article>
@@ -945,15 +945,15 @@ function EManifesto() {
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ MANIFESTO · 04 / 12</div>
         <h2 className="le-manifesto-h">
-          AI 世代缺的不是工具。<br />
-          缺的是 <span className="le-acc">信任</span> · <span className="le-acc-dim">判斷</span> · <span className="le-acc">交付證據</span>。
+          下一個 AI 時代，<br />
+          需要新的<span className="le-acc">發案</span> · <span className="le-acc-dim">接案</span> · <span className="le-acc">信任規則</span>。
         </h2>
         <div className="le-manifesto-grid">
           {[
-            ["CLEAR SCOPE", "先把需求拆成可驗收範圍", "01"],
-            ["RIGHT MATCH", "先看能力證據，再看報價", "02"],
-            ["REAL DELIVERY", "用 milestone 驗收第一案", "03"],
-            ["COMPOUND TRUST", "每次合作累積下一次信任", "04"]
+            ["AI FIRST", "讓 AI 先處理判斷摩擦", "01"],
+            ["VERIFIED SUPPLY", "讓能力被認證，而不是自稱", "02"],
+            ["CLEAR DELIVERY", "讓成果先有驗收規則", "03"],
+            ["COMPOUND TRUST", "讓每次合作累積下一次信任", "04"]
           ].map(([en, zh, n]) => (
             <div key={n} className="cell">
               <div className="n">― {n}</div>
@@ -1340,8 +1340,8 @@ function ETrust3() {
   return (
     <section className="le-section" id="trust">
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ TRUST · beta 階段先求穩，不求自動化炫技</div>
-        <h2 className="le-h2">先有人把關，再慢慢產品化。<br/>這是第一批 beta 的<span className="le-acc">信任層</span>。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ TRUST · AI-first，但不把人丟進黑箱</div>
+        <h2 className="le-h2">先用 AI 降低不確定性，<br/>再用覆核與驗收建立<span className="le-acc">信任層</span>。</h2>
         <div className="le-trust3-grid">
           {items.map((it, i) => (
             <div key={i} className="le-trust3-cell">
@@ -1454,17 +1454,17 @@ function EFinalCta() {
           <EPocTracker />
         </div>
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ JOIN · PRIVATE BETA</div>
-        <h2 className="h">把第一個案子，交給對的人。</h2>
+        <h2 className="h">加入第一批 AI 工作網路。</h2>
         <div className="grid">
-          <div className="blurb le-zh">第一批 beta 先用 AI 初審與人工覆核並行。發案方可以留下需求，24 小時內先回覆是否適合首案交付、該找哪類人與下一步；接案者可以提交作品與 AI workflow，通過後進入首案候選池。</div>
+          <div className="blurb le-zh">第一批 beta 先用 AI 初審與人工覆核並行。發案方可以留下需求，把不確定的 AI 專案拆成可驗收流程；接案者可以提交作品與 AI workflow，讓能力被認證、被理解、被推薦。</div>
           <div className="form">
             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10, marginBottom: 14 }}>
               <a href="app.html?role=client&step=0" className="le-cta-primary" style={{ padding: "14px 18px", fontSize: 12 }}>
-                <span>我想先做需求判斷 →</span>
+                <span>我想進入 AI 發案流程 →</span>
                 <span style={{ fontSize: 10, opacity: 0.65 }}>發案方</span>
               </a>
               <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary" style={{ padding: "14px 18px", fontSize: 12 }}>
-                <span>我想申請首案候選池 →</span>
+                <span>我想加入 AI 接案網路 →</span>
                 <span className="sub">接案者</span>
               </a>
               <a href="app.html?role=worker&view=worker-demo" className="le-zh" style={{ color: "var(--accent)", fontSize: 13, textDecoration: "none", textAlign: "center", paddingTop: 2 }}>
@@ -1598,14 +1598,14 @@ function EStory() {
 
         <div style={{ textAlign: "center", paddingTop: 8, borderTop: "1px dashed var(--line-soft)" }}>
           <p className="le-zh" style={{ fontSize: 14, color: "var(--muted)", marginBottom: 16 }}>
-            <b style={{ color: "var(--text)" }}>第一批 beta 會先求穩，但會盡可能 AI 化。</b> 我們先用 AI 初審、公平化評分與人工覆核建立供需品質，再把流程產品化成平台。
+            <b style={{ color: "var(--text)" }}>這不是在加入另一個接案平台。</b> 這是在加入一套 AI 時代的工作交付規則：AI 初審、公平化評分、認證化供給、可驗收交付。
           </p>
           <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
             <a href="app.html?role=client&step=0" className="le-cta-primary" style={{ padding: "14px 22px", fontSize: 13 }}>
-              <span>我想先做需求判斷 →</span>
+              <span>我想進入 AI 發案流程 →</span>
             </a>
             <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary" style={{ padding: "14px 22px", fontSize: 13 }}>
-              <span>我想申請首案候選池 →</span>
+              <span>我想加入 AI 接案網路 →</span>
             </a>
             <a href="app.html?role=worker&view=worker-demo" className="le-cta-secondary" style={{ padding: "14px 22px", fontSize: 13 }}>
               <span>先看 Worker Console →</span>

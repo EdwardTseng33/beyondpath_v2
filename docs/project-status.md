@@ -33,6 +33,7 @@ Last updated: 2026-05-11
 - Reworked the landing hero and related copy from "trial/test project" language toward "可驗收的 AI 交付專案 / 首案交付", and added `docs/product-flow-competitor-review-2026-05-11.md` with competitor-informed product recommendations.
 - Updated the landing promise from "3 天候選人" to a more accurate AI-assisted service promise: "24 小時初步判斷" first, then shortlist matching.
 - Shifted visible landing language from "人工把關" to "AI 把關 / AI 初審 + 人工覆核" so the product feels more AI-native while staying credible for beta.
+- Reframed the landing page around joining the next AI work network and reducing anxiety, unease, and uncertainty for both clients and AI-native workers.
 
 ## Known Constraints
 
