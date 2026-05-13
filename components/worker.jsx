@@ -699,13 +699,9 @@ function WorkerEmptyState() {
   }
 
   return (
-    <div className="bp-root is-desktop">
-      <div className="bp-topbar">
-        <div className="bp-logo"><span className="bp-logo-mark"></span>BEYONDPATH<small>WORKER · pending</small></div>
-        <div className="bp-statusbar"><span className="dot" style={{ background: "var(--warn)", boxShadow: "0 0 0 3px oklch(0.82 0.16 75 / 0.20)" }}></span><span>not certified yet</span></div>
-      </div>
-      <div className="bp-main" style={{ gridTemplateColumns: "1fr" }}>
-        <div className="bp-content">
+    <div style={{ width: "100%", minHeight: "80vh", background: "var(--bg, #0a0a0b)", color: "var(--text, #f0eee8)" }}>
+      <div style={{ padding: "32px 24px 80px" }}>
+        <div>
           {step === "intro" && (
           <div className="bp-onboarding">
             <div className="bp-onb-mark">
