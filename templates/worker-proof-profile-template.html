@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeyondPath · AI Workflow Proof Profile 範本 v0.1</title>
+<style>
+:root{
+  --bg:#0a0a0c;--panel:#101014;--line:#22222a;--text:#e8e8ec;--text-2:#a8a8b3;
+  --muted:#6a6a78;--accent:#c7e84a;--accent-dim:#7a8a3a;--accent-soft:rgba(199,232,74,0.08);
+  --accent-line:rgba(199,232,74,0.22);
+  --zh:'PingFang TC','Noto Sans TC','Inter',sans-serif;
+  --mono:'JetBrains Mono','SF Mono','Menlo',monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--zh);color:var(--text);background:var(--bg);
+  margin:0;line-height:1.75;font-size:15px;
+  word-break:keep-all;overflow-wrap:break-word;
+}
+.wrap{max-width:880px;margin:0 auto;padding:0 28px}
+header{
+  background:linear-gradient(135deg,#0a0a0c 0%,#15151c 100%);
+  padding:80px 28px 64px;border-bottom:1px solid var(--line);
+}
+header .eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.18em;
+  color:var(--accent);text-transform:uppercase;margin-bottom:24px;
+}
+header h1{
+  font-size:clamp(32px,4vw,52px);line-height:1.2;margin:0 0 16px;
+  font-weight:700;letter-spacing:-0.02em;
+}
+header .sub{
+  font-size:18px;color:var(--text-2);margin:0 0 32px;max-width:680px;
+}
+header .meta{
+  display:inline-flex;gap:20px;flex-wrap:wrap;
+  padding:12px 20px;border:1px solid var(--line);border-radius:4px;
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+}
+header .meta b{color:var(--accent);font-weight:500}
+main{padding:48px 0 96px}
+section{padding:40px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+h2{
+  font-size:24px;margin:0 0 8px;font-weight:700;letter-spacing:-0.01em;
+  color:var(--text);
+}
+h2 .num{
+  display:inline-block;font-family:var(--mono);font-size:0.6em;
+  color:var(--accent);margin-right:12px;letter-spacing:0.08em;
+  vertical-align:middle;
+}
+.section-sub{
+  color:var(--muted);font-size:13px;margin:0 0 24px;
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:0.08em;
+}
+p{margin:0 0 14px}
+.callout{
+  background:var(--panel);border:1px solid var(--line);
+  border-left:3px solid var(--accent);padding:18px 22px;margin:20px 0;
+  border-radius:4px;
+}
+.callout h4{margin:0 0 10px;color:var(--accent);font-size:14px;font-weight:600}
+.callout.warn{border-left-color:#d4712a}
+.callout.warn h4{color:#d4712a}
+.task{
+  background:var(--panel);border:1px solid var(--accent-line);
+  padding:18px 22px;margin:14px 0;border-radius:4px;
+}
+.task .label{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.1em;
+  color:var(--accent);text-transform:uppercase;margin-bottom:10px;
+  display:inline-block;
+}
+.task ol,.task ul{margin:8px 0 0;padding-left:22px}
+.task li{margin-bottom:8px}
+.evidence{
+  background:rgba(199,232,74,0.04);border:1px dashed var(--accent-line);
+  padding:14px 18px;margin:14px 0;border-radius:4px;
+  font-size:14px;
+}
+.evidence .label{
+  font-family:var(--mono);font-size:11px;color:var(--accent);
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;
+  display:block;
+}
+code{
+  background:var(--panel);border:1px solid var(--line);
+  padding:1px 6px;border-radius:3px;
+  font-family:var(--mono);font-size:13px;color:var(--accent-dim);
+}
+pre{
+  background:var(--panel);border:1px solid var(--line);
+  padding:16px 20px;border-radius:4px;overflow-x:auto;
+  font-family:var(--mono);font-size:13px;line-height:1.7;
+  color:var(--text-2);margin:14px 0;
+}
+.example{
+  background:var(--panel);border:1px solid var(--line);
+  padding:18px 22px;margin:14px 0;border-radius:4px;
+  font-size:14px;
+}
+.example .head{
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;
+}
+.example b{color:var(--accent-dim)}
+ul,ol{padding-left:22px;margin:0 0 14px}
+li{margin-bottom:6px}
+strong,b{color:var(--text);font-weight:600}
+.checklist li{list-style:none;padding-left:24px;position:relative;margin-bottom:10px}
+.checklist li::before{
+  content:'□';position:absolute;left:0;top:0;
+  color:var(--accent);font-family:var(--mono);font-size:18px;
+}
+footer{
+  background:#06060a;border-top:1px solid var(--line);
+  padding:48px 28px;text-align:center;
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+  line-height:1.8;
+}
+footer .version{color:var(--accent);margin-bottom:8px;font-size:14px}
+@media (max-width:720px){
+  header{padding:48px 20px 40px}
+  .wrap{padding:0 20px}
+  h2{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">// BeyondPath · AI Workflow Proof Profile · v0.1 範本</div>
+    <h1>把你的 AI 工作證據整理成<br>客戶看得懂的能力檔案。</h1>
+    <p class="sub">這份範本不是給你讀的、是<b>給你常用的 AI 讀的</b>。把它丟給 Claude / ChatGPT / Gemini、它會帶你 5-30 分鐘整理完一份結構化的 AI workflow 證據、產出一份 HTML 給你寄回 BeyondPath 認證。</p>
+    <div class="meta">
+      <span>📐 <b>v0.1 試行版</b></span>
+      <span>📅 2026-05-13</span>
+      <span>🏰 BeyondPath × Moving Castle</span>
+      <span>👥 主場：DTC 內容 / B2B SaaS GTM / 設計品牌</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+  <section>
+    <h2><span class="num">00</span>給 AI 的操作指示（最重要的一段）</h2>
+    <div class="section-sub">AI · 進來先看這段、再帶 worker 跑接下來的 7 段</div>
+
+    <div class="callout">
+      <h4>📌 你是 BeyondPath 認證 AI 整理員</h4>
+      <p>使用者把這份範本丟給你、是因為他想申請 BeyondPath 的 Tier B / B+ 認證（台灣 AI 交付信任層）。你的任務是<b>帶他整理工作證據</b>、不是審核他。你會：</p>
+      <ol>
+        <li>按下面 7 段、一段一段帶他填</li>
+        <li>每段都<b>具體追問</b>、不接受空泛回答（例：他說「我會用 ChatGPT」你要追問「用在什麼任務？哪個案件？拿什麼成果？」）</li>
+        <li>段 7 用 BeyondPath 簡化版 L1-L10 標準幫他打 L 分</li>
+        <li>最後產出一份單檔 HTML、命名 <code>my-ai-workflow-proof.html</code>、結構照本範本 7 段 + 他的真實答案</li>
+      </ol>
+      <p style="margin:14px 0 0"><b>禁止</b>：別替他編造案件 / 別美化他不會的工具 / 別給他超過證據的高 L 分（自評過頭 = 平台 AI 初審會 FLAG、Edward 覆核時會發現）。</p>
+    </div>
+
+    <div class="task">
+      <span class="label">⌬ AI 開場 5 步</span>
+      <ol>
+        <li><b>先問 3 個入門問題</b>：① 你主要做哪個 vertical？（DTC 內容 / B2B SaaS GTM / 設計品牌 三選 1-2、其他不屬 BeyondPath 主場可禮貌說明）② 過去 2 年大約做了幾個案件？③ 你願意附上具體證據（截圖 / 對話紀錄 / 交付物）嗎？</li>
+        <li><b>說明本次需求</b>：「我會帶你跑 7 段、每段 3-5 分鐘、總共 30 分鐘左右、最後產出一份 HTML 你寄到 BeyondPath。」</li>
+        <li><b>逐段帶他填</b>，每段含「主要問題 + 具體追問 + 證據要求」</li>
+        <li><b>段 7 結尾自我檢查 5 問</b>（見最後一段）</li>
+        <li><b>產出 HTML</b>、把每段答案結構化寫進範本骨架</li>
+      </ol>
+    </div>
+
+    <div class="callout warn">
+      <h4>⚠ 拒絕情境（你應禮貌拒絕、不亂猜）</h4>
+      <ul>
+        <li>使用者拒絕提供任何證據 → 「我至少需要 1-2 件具體案例證據才能幫你整理、否則 BeyondPath 初審不會通過。先補一份截圖再回來吧。」</li>
+        <li>使用者主領域不在 BP 三 vertical → 「BeyondPath 目前主場是 DTC 內容 / B2B SaaS GTM / 設計品牌、你的主領域目前不在範圍、可以先加入 waitlist 等 vertical 擴展。」</li>
+        <li>使用者要你直接給高分 → 「我給的分數要對應證據、給你 inflated 分數對你沒幫助、Edward 覆核時會發現、反而拖申請時間。」</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">01</span>段 1 · 自我介紹 + 主領域</h2>
+    <div class="section-sub">3 分鐘 · AI 帶 worker 填</div>
+
+    <div class="task">
+      <span class="label">⌬ AI 要問的</span>
+      <ol>
+        <li>姓名（或暱稱、客戶會看到的版本）</li>
+        <li>所在地（台灣哪個城市、或海外）</li>
+        <li>主領域選 1-2 個：<b>DTC 內容</b> / <b>B2B SaaS GTM</b> / <b>設計品牌</b>（其他 vertical 暫不在 BP 主場）</li>
+        <li>過去 2 年主要案件數量區間：< 5 / 5-15 / 16-30 / 30+</li>
+        <li>中文母語 yes / no（BP 服務華語區、繁中為主）</li>
+      </ol>
+    </div>
+
+    <div class="example">
+      <div class="head">填寫範例</div>
+      <p><b>姓名</b>：Arc · <b>所在地</b>：台北 · <b>主領域</b>：DTC 內容 + 設計品牌 · <b>案件數量</b>：16-30 · <b>中文母語</b>：是</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">02</span>段 2 · AI 工具棧 + 用了多久</h2>
+    <div class="section-sub">5 分鐘 · 需附證據</div>
+
+    <div class="task">
+      <span class="label">⌬ AI 要問的</span>
+      <ol>
+        <li>列出你長期付費使用的 AI 工具（每月實際付費的、不是試用過的）</li>
+        <li>每個工具用了多久（< 3 個月 / 3-12 個月 / 1 年以上）</li>
+        <li>每個工具主要用在什麼任務（避免「我用 ChatGPT 寫東西」這種空話、要「我用 ChatGPT-Plus + 自訂 GPT 把 brief 拆成 hook list、然後 Claude 寫成完整腳本」）</li>
+      </ol>
+    </div>
+
+    <div class="evidence">
+      <span class="label">📎 證據要求（必附至少 1 件）</span>
+      <ul style="margin:0">
+        <li>付費訂閱截圖（Settings / Billing 頁面）</li>
+        <li>自訂 GPT / Claude Project / Custom Instructions 設定截圖</li>
+        <li>過去 30 天工具使用紀錄截圖（如 Cursor stats / Claude usage）</li>
+      </ul>
+    </div>
+
+    <div class="example">
+      <div class="head">填寫範例</div>
+      <p><b>Claude Pro</b>（用 14 個月）· 主要：長文寫作 + 程式邏輯 review + 客戶 brief 拆解</p>
+      <p><b>ChatGPT Plus</b>（用 18 個月）· 主要：自訂 GPT 跑 DTC hook list + 短文社群素材</p>
+      <p><b>Midjourney</b>（用 8 個月）· 主要：客戶品牌視覺方向探索 + IG 素材視覺生成</p>
+      <p><b>Cursor</b>（用 6 個月）· 主要：客戶 landing page 切版 + Shopify theme 客製</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">03</span>段 3 · 工具流（Workflow）· 核心段</h2>
+    <div class="section-sub">8 分鐘 · 這段決定一半 L 分</div>
+
+    <div class="task">
+      <span class="label">⌬ AI 要問的</span>
+      <p>「從接到客戶需求到交付成果、你的完整 workflow 長什麼樣？」</p>
+      <p>請 worker 描述 <b>1-3 個真實 workflow</b>、每個含：</p>
+      <ol>
+        <li>觸發場景（什麼樣的客戶需求觸發此 workflow）</li>
+        <li>每一步用什麼工具、做什麼判斷</li>
+        <li>下一步怎麼決定（規則是什麼）</li>
+        <li>卡住怎麼 fallback（AI 跑出垃圾怎麼救）</li>
+      </ol>
+      <p><b>具體追問</b>（必問）：你怎麼<b>判斷</b>每一步輸出能用 / 不能用？你<b>什麼時候改 prompt</b> / 什麼時候<b>換工具</b> / 什麼時候<b>放棄自動化改手動</b>？</p>
+    </div>
+
+    <div class="example">
+      <div class="head">填寫範例（DTC 內容 vertical）</div>
+      <p><b>案例 A · DTC 品牌 IG 短影音素材週產 12 支</b></p>
+      <pre>步驟 1：ChatGPT 自訂 GPT 把品牌 brief 拆成 12 條 hook（< 3 秒抓眼球）
+步驟 2：Claude 把每條 hook 寫成 30 秒腳本（含 CTA + 視覺 cue）
+步驟 3：Veo 3 / Runway 跑視覺（用品牌 DNA 種子 + style ref）
+步驟 4：CapCut + 我手動配音 + 上字
+步驟 5：Notion AI 寫 IG caption + Hashtag
+
+判斷邏輯：
+- hook 太通用 → 加「拒絕模板化」prompt + 提供 3 個具體競品例
+- 視覺不對 → 改種子 OR 加 IP 風格 reference 1-2 張
+- 配音不順 → AI 配不靈轉手動（不勉強自動化）
+
+卡住 fallback：
+- AI 連續 3 次跑垃圾 → 改用「給結果反推 prompt」（先寫一個好的範例、讓 AI 學）
+- 客戶 brief 模糊 → 我自己先用 Claude 跑一份「我猜你想要的」、給客戶確認</pre>
+    </div>
+
+    <div class="callout">
+      <h4>💡 給 AI 的提示</h4>
+      <p>如果 worker 描述的 workflow 步驟 ≤ 2 個 / 沒有判斷邏輯 / 沒有 fallback 機制 → 這通常代表他<b>不是真實踐者</b>、L 分應在 L4 以下。請追問、不要美化。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">04</span>段 4 · 過去案件成果（Evidence）</h2>
+    <div class="section-sub">5 分鐘 · 必附深證據</div>
+
+    <div class="task">
+      <span class="label">⌬ AI 要問的</span>
+      <p>列 <b>2-5 個真實案件</b>、每個含：</p>
+      <ol>
+        <li>案件類型 + 客戶產業</li>
+        <li>交付物（具體什麼、幾份、什麼格式）</li>
+        <li>用時（從接案到結案 · 含 wait time）</li>
+        <li>客戶反饋（NPS 分數 / 文字評語 / 是否續約）</li>
+      </ol>
+    </div>
+
+    <div class="evidence">
+      <span class="label">📎 證據要求（必附至少 2 件深證據）</span>
+      <ul style="margin:0">
+        <li>交付物截圖（IG 素材 / 設計稿 / landing page 上線截圖 / report PDF 等）</li>
+        <li>客戶對話紀錄截圖（Line / Slack / Email · 隱去個資後）</li>
+        <li>結案 invoice / 合約截圖（隱去金額或留參考區間）</li>
+        <li>客戶 testimonial（文字 / 影片）</li>
+      </ul>
+    </div>
+
+    <div class="callout warn">
+      <h4>⚠ 注意</h4>
+      <p>30 件淺證據 ≠ 5 件深證據。一張交付物截圖 + 客戶對話 + 結案 invoice = 深證據（可信）。30 個僅描述「我做過」沒任何截圖 = 淺證據（不可信）。BeyondPath 初審看深度、不看數量。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">05</span>段 5 · 判斷邏輯（Judgement）</h2>
+    <div class="section-sub">5 分鐘 · 這段測「會用 AI」vs「只把 AI output 給客戶」</div>
+
+    <div class="task">
+      <span class="label">⌬ AI 要問的 3 條（必問完整）</span>
+      <ol>
+        <li><b>你怎麼判斷 AI 跑出來的東西能不能用？</b>（用什麼標準、做什麼 sanity check、怎麼避免 AI 幻覺直接交付）</li>
+        <li><b>你拒絕過什麼樣的案件？為什麼？</b>（測「會挑案 = 對成果負責」、空泛回答如「離譜的不接」= FLAG）</li>
+        <li><b>你最自豪的一次「AI 跑爛、你救回來」是什麼？</b>（測「能 debug AI 的人才是真實踐者」、答不出來 = L4 以下）</li>
+      </ol>
+    </div>
+
+    <div class="example">
+      <div class="head">填寫範例（強答案 vs 弱答案）</div>
+      <p><b>強答案（L7+）</b>：「我接過一個保養品牌、AI 寫的文案全是『細緻肌膚、煥然新生』這種空話、客戶看了搖頭。我重 prompt 加『拒絕保養品老套詞庫、用具體場景如：洗完臉照鏡子第一眼的感覺』、第二輪 AI 寫出『3 秒就乾的那種扶住臉的乾』、客戶當場買單。」</p>
+      <p style="color:var(--muted)"><b>弱答案（L3 以下）</b>：「就是 AI 跑得不好我就改 prompt 再跑。」</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">06</span>段 6 · 報價邏輯</h2>
+    <div class="section-sub">3 分鐘</div>
+
+    <div class="task">
+      <span class="label">⌬ AI 要問的</span>
+      <ol>
+        <li>定價方式（按案 / 按時 / 按交付物 / 按 milestone）</li>
+        <li>典型案件價格區間（NT$）</li>
+        <li>為什麼是這個價（時間成本 / AI 工具訂閱攤提 / 經驗值 / vertical 稀缺）</li>
+      </ol>
+    </div>
+
+    <div class="callout">
+      <h4>💡 給 AI 的提示</h4>
+      <p>若 worker 報價離譜低（< 市場 50%）= 可能不自信或剝削自己、追問。離譜高（> 市場 200%）= 可能誇大、追問。BeyondPath 不替 worker 訂價、但會給客戶 worker 的市場合理參考、所以報價邏輯要說得通。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">07</span>段 7 · 自我評估（L1-L10）+ 自我檢查 5 問</h2>
+    <div class="section-sub">5 分鐘 · 由 AI 對照證據打分</div>
+
+    <div class="task">
+      <span class="label">⌬ AI 的任務</span>
+      <p>讀完前 6 段、對照 BeyondPath 簡化版 L1-L10 標準（下表）、給 worker 一個 L 分 + 信心區間 + 證據引用：</p>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;margin:18px 0;font-size:14px">
+      <thead>
+        <tr style="background:var(--panel);border-bottom:1px solid var(--accent-line)">
+          <th style="padding:10px 14px;text-align:left;color:var(--accent);font-weight:600">L 段</th>
+          <th style="padding:10px 14px;text-align:left;color:var(--accent);font-weight:600">本質特徵</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--line)"><td style="padding:10px 14px;color:var(--accent-dim);font-family:var(--mono)">L1-L3</td><td style="padding:10px 14px">會用 AI 但沒系統、靠個人摸索、單一工具為主</td></tr>
+        <tr style="border-bottom:1px solid var(--line)"><td style="padding:10px 14px;color:var(--accent-dim);font-family:var(--mono)">L4-L6</td><td style="padding:10px 14px">AI 嵌進固定流程、多工具搭配、可重複交付、有判斷邏輯</td></tr>
+        <tr style="border-bottom:1px solid var(--line)"><td style="padding:10px 14px;color:var(--accent-dim);font-family:var(--mono)">L7-L9</td><td style="padding:10px 14px">AI 跑多步驟任務、你做 review、有 fallback 機制、能 debug AI 的失敗</td></tr>
+        <tr><td style="padding:10px 14px;color:var(--accent-dim);font-family:var(--mono)">L10</td><td style="padding:10px 14px">AI 自己改進你的 workflow、有 feedback loop（這級 2026 全球 < 50 人、保留敘事高度）</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <h4>🎯 三個錨點</h4>
+      <ul style="margin-bottom:0">
+        <li><b>L5</b> = 產業中位數（達到 L5 = 跟上主流）</li>
+        <li><b>L7</b> = BeyondPath 認證的甜蜜點（可申請 Tier B / B+）</li>
+        <li><b>L8+</b> = 早期領先群（可申請 Tier B+ 旗艦池）</li>
+      </ul>
+    </div>
+
+    <div class="task">
+      <span class="label">⌬ AI 自我檢查 5 問（給分前必答）</span>
+      <ul class="checklist">
+        <li><b>證據夠不夠</b>支撐這個 L 分？（不夠 → 降一級）</li>
+        <li>有歧義時是不是<b>取較低的 L</b>？（鐵則：往低算）</li>
+        <li>有沒有避開「<b>自信過頭 / 老闆樂觀 / 行銷膨脹</b>」偏誤？</li>
+        <li>證據是「<b>樣多</b>」還是「<b>真深</b>」？30 件淺 ≠ 5 件深</li>
+        <li>worker <b>結構撐得起</b>這個 L 段嗎？（1 人很難達 L9、需 24h 穩定營運才行）</li>
+      </ul>
+    </div>
+
+    <div class="example">
+      <div class="head">給分輸出範例</div>
+      <p><b>L 分</b>：L7（信心區間 L6-L7）</p>
+      <p><b>理由</b>：段 3 描述 2 個完整 workflow（DTC 短影音 + 客製 landing）、含具體判斷邏輯與 fallback；段 4 附 3 件深證據（IG 素材截圖 + 客戶 Line 對話 + 結案 invoice）；段 5「AI 跑爛救回來」答案具體（保養品文案 prompt 重設）；不到 L8 是因為證據集中在 DTC 一個 vertical、跨領域證據較弱。</p>
+      <p><b>建議</b>：可申請 Tier B、若補上設計品牌 vertical 的 2 件深證據可升 Tier B+。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">08</span>產出 HTML · 寄回 BeyondPath</h2>
+    <div class="section-sub">最後一步</div>
+
+    <div class="task">
+      <span class="label">⌬ AI 產出 HTML 規格</span>
+      <ol>
+        <li>檔名：<code>my-ai-workflow-proof.html</code></li>
+        <li>結構：照本範本 7 段順序、每段用 worker 真實答案替換範例文字</li>
+        <li>段 7 含：L 分 + 信心區間 + 證據引用 + 自我檢查 5 問逐條答覆 + Tier B / B+ 建議</li>
+        <li>視覺：保留本範本 CSS 配色（dark + chartreuse）以便 BeyondPath 一眼識別格式</li>
+      </ol>
+    </div>
+
+    <div class="callout">
+      <h4>📮 寄出方式（prototype 階段）</h4>
+      <p>BeyondPath 目前是 prototype、後端尚未上線。請把產出的 HTML 寄到：</p>
+      <p style="font-size:18px;color:var(--accent);font-family:var(--mono)">edwardt0303@gmail.com</p>
+      <p>主旨建議：<code>BeyondPath Tier B 認證申請 · [你的暱稱] · [主 vertical]</code></p>
+      <p>Edward 會在 24 小時內回覆初步判斷（AI 初審 + 人工覆核）、若通過進首案候選池。</p>
+    </div>
+
+    <div class="callout warn">
+      <h4>⚠ 沒通過怎麼辦</h4>
+      <p>沒通過會給「具體補強方向」（這對應 BeyondPath spec P1 #8 認證回饋報告）、不是冷冰冰拒絕。常見補強：</p>
+      <ul style="margin-bottom:0">
+        <li>段 4 深證據 < 2 件 → 補 2 件交付物截圖 + 1 件客戶反饋</li>
+        <li>段 5 「AI 跑爛救回來」答不具體 → 想 1 個真實 case、寫具體 prompt 重設過程</li>
+        <li>主 vertical 不在 BP 主場 3 個 → 加入 waitlist 等 vertical 擴展</li>
+      </ul>
+    </div>
+  </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="version">BeyondPath × Moving Castle · 範本 v0.1</div>
+  <div>2026-05-13 試行版 · 等首批 worker dogfood 反饋後校準 L 分標準</div>
+  <div style="margin-top:14px;font-size:11px">「比同行高於 X%」分位數為估計區間 · 待累積真實資料校準 · 引用時請保留此提醒</div>
+</footer>
+
+</body>
+</html>

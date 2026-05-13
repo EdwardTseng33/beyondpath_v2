@@ -522,9 +522,80 @@ function WorkerDashboard({ inShell = false }) {
   );
 }
 
+// ============================================================
+// WORKER EMPTY STATE · Tier B Certification Apply Flow
+// 6-step interactive flow · prototype-safe (no backend, client-side state only)
+// step 'intro' → 'form' → 'portfolio' → 'generate' → 'paste' → 'preview' → submitted=1
+// ============================================================
+
+const APPLICATION_VERTICALS = [
+  { id: "dtc", label: "DTC 內容", desc: "保養 / 食品 / 設計品牌 / 生活風格" },
+  { id: "saas", label: "B2B SaaS GTM", desc: "GTM 內容 / sales deck / demo script / lead automation" },
+  { id: "brand", label: "設計品牌", desc: "品牌 DNA + AI 視覺系統 / 社群素材模板" },
+];
+
+const APPLICATION_TOOLS = [
+  "Claude", "ChatGPT", "Cursor", "Midjourney", "Veo / Runway",
+  "Notion AI", "Make / n8n", "v0.dev", "Perplexity", "其他"
+];
+
+function buildAIBrief(form, portfolio) {
+  const verts = (form.verticals || []).map((v) => APPLICATION_VERTICALS.find((x) => x.id === v)?.label).filter(Boolean).join("、");
+  const tools = (form.tools || []).join("、");
+  const cases = (portfolio || []).filter((p) => p.title).map((p, i) => `  案 ${i+1} · ${p.title}（${p.vertical || "未填"}）· 交付：${p.deliver || "未填"} · 結果：${p.outcome || "未填"}`).join("\n");
+  return `你是 BeyondPath 認證 AI 整理員。我（${form.name || "申請者"}）正在申請台灣 AI 交付網路 BeyondPath 的 Tier B 認證。我已先在平台填了基本資料：
+
+主領域：${verts || "未填"}
+過去 2 年案件數：${form.caseCount || "未填"}
+中文母語：${form.zh ? "是" : "否"}
+長期付費 AI 工具：${tools || "未填"}
+
+我手邊的案件骨架：
+${cases || "  （尚未填）"}
+
+請帶我跑 5 段對話、整理我的 AI 工作證據：
+段 1 · 工具流：我從接案到交付的完整 workflow（每步用什麼工具、判斷邏輯、卡住怎麼 fallback）
+段 2 · 證據深度：每個案件的具體交付物、客戶反饋（具體越好、空泛 = 你要追問）
+段 3 · 判斷力：(a) 我怎麼判斷 AI 跑爛 (b) 我拒絕過什麼案件 (c) 一次我把 AI 救回來的具體 case
+段 4 · 報價邏輯：定價方式、典型區間、為什麼這個價
+段 5 · 自評 L 分：用 L1-L10 標準（L5=主流 / L7=可申請 Tier B / L8+=可申請 B+）對照我的證據打分
+
+跑完後請產出一段 JSON、格式如下、我會貼回 BeyondPath：
+
+{
+  "L_score": <1-10>,
+  "L_confidence": "<例 L6-L7>",
+  "tier_suggestion": "<Tier B 或 Tier B+ 或 補件>",
+  "skill_matrix": {
+    "workflow_design": <1-10>,
+    "tool_orchestration": <1-10>,
+    "judgement": <1-10>,
+    "domain_depth": <1-10>,
+    "client_communication": <1-10>,
+    "delivery_reliability": <1-10>
+  },
+  "strengths": ["<具體 1>", "<具體 2>", "<具體 3>"],
+  "growth": ["<升等需要的 1>", "<升等需要的 2>"],
+  "evidence_quality": "<深 / 中 / 淺>"
+}
+
+重要：證據不夠 → 你要追問、不要美化、自評過頭 BeyondPath 平台會 FLAG。`;
+}
+
 function WorkerEmptyState() {
   const APPLICATION_EMAIL = "edwardt0303@gmail.com";
   const [copiedEmail, setCopiedEmail] = uSW(false);
+  const [copiedBrief, setCopiedBrief] = uSW(false);
+  const [step, setStep] = uSW("intro"); // intro | form | portfolio | generate | paste | preview
+  const [form, setForm] = uSW({ name: "", verticals: [], caseCount: "", zh: true, tools: [] });
+  const [portfolio, setPortfolio] = uSW([
+    { title: "", vertical: "", deliver: "", outcome: "" },
+    { title: "", vertical: "", deliver: "", outcome: "" },
+    { title: "", vertical: "", deliver: "", outcome: "" },
+  ]);
+  const [pasteRaw, setPasteRaw] = uSW("");
+  const [parseError, setParseError] = uSW("");
+  const [parsed, setParsed] = uSW(null);
   const [submitted, setSubmitted] = uSW(() => {
     try {
       return new URLSearchParams(window.location.search).get("submitted") === "1";
@@ -532,6 +603,34 @@ function WorkerEmptyState() {
       return false;
     }
   });
+
+  const brief = buildAIBrief(form, portfolio);
+
+  function toggleArr(key, val) {
+    setForm((f) => {
+      const arr = f[key] || [];
+      return { ...f, [key]: arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val] };
+    });
+  }
+  function setPortfolioField(i, key, val) {
+    setPortfolio((p) => p.map((row, idx) => idx === i ? { ...row, [key]: val } : row));
+  }
+  function tryParsePaste() {
+    setParseError("");
+    setParsed(null);
+    if (!pasteRaw.trim()) { setParseError("貼上 AI 整理的 JSON"); return; }
+    try {
+      const m = pasteRaw.match(/\{[\s\S]*\}/);
+      if (!m) throw new Error("找不到 JSON");
+      const obj = JSON.parse(m[0]);
+      if (typeof obj.L_score !== "number") throw new Error("缺 L_score");
+      if (!obj.skill_matrix) throw new Error("缺 skill_matrix");
+      setParsed(obj);
+      setStep("preview");
+    } catch (e) {
+      setParseError(`格式有問題：${e.message}。請確認貼的是完整 JSON、含 L_score 和 skill_matrix。`);
+    }
+  }
 
   if (submitted) {
     // v0.5.2 · 簡化 confirmation view：不重複 wrap bp-root/bp-topbar（避免跟 BP_AppShell 雙 frame conflict）
@@ -607,6 +706,7 @@ function WorkerEmptyState() {
       </div>
       <div className="bp-main" style={{ gridTemplateColumns: "1fr" }}>
         <div className="bp-content">
+          {step === "intro" && (
           <div className="bp-onboarding">
             <div className="bp-onb-mark">
               <svg viewBox="0 0 240 240" width="120" height="120" fill="none" stroke="currentColor" strokeWidth="1.4">
@@ -664,29 +764,409 @@ function WorkerEmptyState() {
             <button
               className="bp-btn primary bp-onb-cta"
               onClick={() => {
-                try {
-                  window.history.replaceState(null, "", "app.html?role=worker&onboarding=1&submitted=1");
-                } catch (e) {}
-                setSubmitted(true);
+                setStep("form");
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
             >
-              → Apply for Tier B Certification
+              → 開始申請 Tier B 認證
             </button>
             <div style={{ marginTop: 14, display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
               <a href="app.html?role=worker&view=worker-demo" className="bp-btn ghost" style={{ textDecoration: "none" }}>先看通過後 Worker Console →</a>
             </div>
             <div className="bp-onb-ghost"><a href="#" onClick={(e) => e.preventDefault()}>Read terms &amp; DPA →</a></div>
             <div className="bp-onb-fine">
-              提交後 7 天內 AI broker + 平台委員會審核
-              <br/>通過後直接進入配對池 · 不收任何申請費
+              全程約 30-45 分鐘 · 24 小時內初步回覆
+              <br/>免費申請 · prototype 階段不收任何個資
             </div>
           </div>
+          )}
+
+          {/* ====== STEP 1 · BASIC INFO FORM ====== */}
+          {step === "form" && (
+          <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
+            <ApplyProgress current={1} setStep={setStep} />
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>先告訴我們你是誰。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 1 · 5 分鐘填完</span></h1>
+            <div className="bp-panel" style={{ marginTop: 22 }}>
+              <div className="bp-panel-h"><span>基本資料</span><span style={{ marginLeft: "auto", color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11 }}>BASIC · 1/2</span></div>
+              <div className="bp-panel-b" style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                <FormField label="你的暱稱（客戶會看到）">
+                  <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="例：Arc" style={fieldStyle} />
+                </FormField>
+                <FormField label="主領域（選 1-2 個 · BP 主場）">
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {APPLICATION_VERTICALS.map((v) => (
+                      <label key={v.id} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "12px 14px", border: `1px solid ${form.verticals.includes(v.id) ? "var(--accent)" : "var(--line-soft)"}`, background: form.verticals.includes(v.id) ? "var(--accent-soft)" : "transparent", cursor: "pointer" }}>
+                        <input type="checkbox" checked={form.verticals.includes(v.id)} onChange={() => toggleArr("verticals", v.id)} style={{ marginTop: 3, accentColor: "var(--accent)" }} />
+                        <div>
+                          <div style={{ color: "var(--text)", fontWeight: 600 }}>{v.label}</div>
+                          <div style={{ color: "var(--muted)", fontSize: 13, marginTop: 2 }}>{v.desc}</div>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </FormField>
+                <FormField label="過去 2 年案件數量區間">
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {["< 5", "5–15", "16–30", "30+"].map((c) => (
+                      <button key={c} type="button" onClick={() => setForm({ ...form, caseCount: c })} style={{ padding: "8px 14px", border: `1px solid ${form.caseCount === c ? "var(--accent)" : "var(--line-soft)"}`, background: form.caseCount === c ? "var(--accent-soft)" : "transparent", color: "var(--text)", cursor: "pointer", fontFamily: "var(--mono)", fontSize: 13 }}>{c}</button>
+                    ))}
+                  </div>
+                </FormField>
+                <FormField label="長期付費使用的 AI 工具（多選）">
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {APPLICATION_TOOLS.map((t) => (
+                      <button key={t} type="button" onClick={() => toggleArr("tools", t)} style={{ padding: "6px 12px", border: `1px solid ${form.tools.includes(t) ? "var(--accent)" : "var(--line-soft)"}`, background: form.tools.includes(t) ? "var(--accent-soft)" : "transparent", color: form.tools.includes(t) ? "var(--accent)" : "var(--text-2)", cursor: "pointer", fontFamily: "var(--mono)", fontSize: 12, borderRadius: 999 }}>{t}</button>
+                    ))}
+                  </div>
+                </FormField>
+              </div>
+            </div>
+            <StepNav onBack={() => setStep("intro")} onNext={() => setStep("portfolio")} nextDisabled={!form.name || form.verticals.length === 0 || !form.caseCount} nextLabel="下一步 · 填 3 個案件 →" />
+          </div>
+          )}
+
+          {/* ====== STEP 2 · PORTFOLIO CASES ====== */}
+          {step === "portfolio" && (
+          <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
+            <ApplyProgress current={2} setStep={setStep} />
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>列 3 個真實案件。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 2 · 10 分鐘 · 簡略骨架即可、待會 AI 帶你展開</span></h1>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 22 }}>
+              {portfolio.map((p, i) => (
+                <div key={i} className="bp-panel">
+                  <div className="bp-panel-h"><span>案件 {i + 1}</span><span style={{ marginLeft: "auto", color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11 }}>CASE · {i + 1}/3</span></div>
+                  <div className="bp-panel-b" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    <FormField label="案件標題 / 一句話描述">
+                      <input value={p.title} onChange={(e) => setPortfolioField(i, "title", e.target.value)} placeholder="例：DTC 保養品牌週產 12 支 IG 短影音" style={fieldStyle} />
+                    </FormField>
+                    <FormField label="所屬 vertical">
+                      <input value={p.vertical} onChange={(e) => setPortfolioField(i, "vertical", e.target.value)} placeholder="例：DTC 內容" style={fieldStyle} />
+                    </FormField>
+                    <FormField label="交付物（具體什麼、幾份）">
+                      <input value={p.deliver} onChange={(e) => setPortfolioField(i, "deliver", e.target.value)} placeholder="例：12 支 30 秒短影音 + IG caption" style={fieldStyle} />
+                    </FormField>
+                    <FormField label="結果（客戶反饋 / NPS / 是否續約）">
+                      <input value={p.outcome} onChange={(e) => setPortfolioField(i, "outcome", e.target.value)} placeholder="例：NPS 4.8 · 續約 3 個月" style={fieldStyle} />
+                    </FormField>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <StepNav onBack={() => setStep("form")} onNext={() => setStep("generate")} nextDisabled={!portfolio[0].title} nextLabel="下一步 · 生成 AI Brief →" />
+          </div>
+          )}
+
+          {/* ====== STEP 3a · GENERATE PROMPT + OPEN AI ====== */}
+          {step === "generate" && (
+          <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
+            <ApplyProgress current={3} setStep={setStep} />
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>用你自己的 AI 整理工作證據。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 3 · 30 分鐘 · 一鍵打開你常用的 AI</span></h1>
+            <div className="bp-panel" style={{ marginTop: 22, border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)" }}>
+              <div className="bp-panel-h"><span>怎麼用</span></div>
+              <div className="bp-panel-b" style={{ fontSize: 14, lineHeight: 1.75 }}>
+                <ol style={{ paddingLeft: 22, margin: 0 }}>
+                  <li>下方 brief 是<b>給 AI 看的指示</b>、已塞入你 Step 1+2 的答案</li>
+                  <li>點「複製 Brief」→ 再點「打開 Claude / ChatGPT / Gemini」其中一個</li>
+                  <li>到 AI 對話框貼上、AI 會帶你跑 30 分鐘訪談</li>
+                  <li>AI 最後產出一段 JSON、回來這裡<b>貼回 BeyondPath</b></li>
+                </ol>
+                <div style={{ marginTop: 14, padding: "10px 12px", background: "rgba(0,0,0,0.2)", borderLeft: "2px solid var(--accent)", fontSize: 13, color: "var(--text-2)" }}>不收費、不傳資料、純用你自己付費的 AI 跑。</div>
+              </div>
+            </div>
+            <div className="bp-panel" style={{ marginTop: 16 }}>
+              <div className="bp-panel-h"><span>BRIEF · 對 AI 的指示</span><span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{brief.length} chars</span></div>
+              <div className="bp-panel-b">
+                <textarea readOnly value={brief} style={{ width: "100%", minHeight: 280, background: "rgba(0,0,0,0.3)", color: "var(--text-2)", border: "1px solid var(--line-soft)", padding: "12px 14px", fontFamily: "var(--mono)", fontSize: 12, lineHeight: 1.7, resize: "vertical" }} />
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
+                  <button type="button" onClick={() => { try { navigator.clipboard.writeText(brief); setCopiedBrief(true); setTimeout(() => setCopiedBrief(false), 1600); } catch (e) {} }} style={btnPrimaryStyle}>{copiedBrief ? "✓ 已複製" : "複製 Brief"}</button>
+                  <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 Claude →</a>
+                  <a href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 ChatGPT →</a>
+                  <a href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 Gemini →</a>
+                </div>
+              </div>
+            </div>
+            <StepNav onBack={() => setStep("portfolio")} onNext={() => setStep("paste")} nextLabel="AI 跑完了、貼回來 →" />
+          </div>
+          )}
+
+          {/* ====== STEP 3b · PASTE BACK ====== */}
+          {step === "paste" && (
+          <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
+            <ApplyProgress current={4} setStep={setStep} />
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>貼回 AI 整理的結果。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 4 · 1 分鐘 · 把 AI 給的 JSON 整段貼進來</span></h1>
+            <div className="bp-panel" style={{ marginTop: 22 }}>
+              <div className="bp-panel-h"><span>PASTE · AI 整理結果</span></div>
+              <div className="bp-panel-b">
+                <textarea value={pasteRaw} onChange={(e) => { setPasteRaw(e.target.value); setParseError(""); }} placeholder='{ "L_score": 7, "L_confidence": "L6-L7", "tier_suggestion": "Tier B", "skill_matrix": { ... }, "strengths": [...], "growth": [...], "evidence_quality": "深" }' style={{ width: "100%", minHeight: 280, background: "rgba(0,0,0,0.3)", color: "var(--text)", border: "1px solid var(--line-soft)", padding: "12px 14px", fontFamily: "var(--mono)", fontSize: 12, lineHeight: 1.7, resize: "vertical" }} />
+                {parseError && <div style={{ marginTop: 10, padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {parseError}</div>}
+                <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <button type="button" onClick={tryParsePaste} style={btnPrimaryStyle}>檢查格式 + 生成能力卡 →</button>
+                  <button type="button" onClick={() => { setPasteRaw(SAMPLE_PASTE); setParseError(""); }} style={btnGhostStyle}>用範例試試</button>
+                </div>
+              </div>
+            </div>
+            <StepNav onBack={() => setStep("generate")} onNext={tryParsePaste} nextLabel="生成能力卡 →" />
+          </div>
+          )}
+
+          {/* ====== STEP 3c · PREVIEW CARD + LAYER 2 + LAYER 3 ====== */}
+          {step === "preview" && parsed && (
+          <div style={{ maxWidth: 880, margin: "32px auto", padding: "0 24px" }}>
+            <ApplyProgress current={5} setStep={setStep} />
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>這就是你即將出現在客戶面前的樣子。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 5 · 預覽你的能力卡 + 下一關</span></h1>
+
+            {/* ABILITY CARD */}
+            <div className="bp-panel" style={{ marginTop: 22, borderColor: "var(--accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 32px rgba(199,232,74,0.08)" }}>
+              <div className="bp-panel-h" style={{ background: "var(--accent-soft)" }}>
+                <span style={{ color: "var(--accent)" }}>◆ AI WORKFLOW PROOF PROFILE</span>
+                <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>PREVIEW · NOT YET SUBMITTED</span>
+              </div>
+              <div className="bp-panel-b" style={{ padding: "24px 22px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 20, alignItems: "start", marginBottom: 18 }}>
+                  <div>
+                    <div style={{ fontSize: 22, fontWeight: 700, color: "var(--text)" }}>{form.name || "—"}</div>
+                    <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 4, fontFamily: "var(--mono)" }}>{form.verticals.map((v) => APPLICATION_VERTICALS.find((x) => x.id === v)?.label).filter(Boolean).join(" · ")} · {form.caseCount} 案</div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em" }}>AI LEVEL</div>
+                    <div style={{ fontSize: 42, fontWeight: 800, color: "var(--accent)", lineHeight: 1, fontFamily: "var(--mono)" }}>L{parsed.L_score}</div>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{parsed.L_confidence}</div>
+                  </div>
+                </div>
+                <div style={{ padding: "10px 14px", background: "var(--accent-soft)", border: "1px solid var(--accent-line)", marginBottom: 18, fontSize: 14, color: "var(--text)" }}>
+                  <b style={{ color: "var(--accent)" }}>建議：{parsed.tier_suggestion}</b> · 證據強度 {parsed.evidence_quality || "—"}
+                </div>
+
+                {/* SKILL MATRIX 6 維 */}
+                <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--muted)", marginBottom: 10 }}>SKILL MATRIX · 6 維</div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
+                  {Object.entries(parsed.skill_matrix || {}).map(([k, v]) => (
+                    <div key={k} style={{ padding: "10px 12px", border: "1px solid var(--line-soft)", background: "rgba(0,0,0,0.15)" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                        <span style={{ fontSize: 12, color: "var(--text-2)" }}>{skillLabel(k)}</span>
+                        <span style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--accent)", fontWeight: 700 }}>{v}/10</span>
+                      </div>
+                      <div style={{ height: 4, background: "rgba(199,232,74,0.1)", borderRadius: 2, overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: `${(v / 10) * 100}%`, background: "var(--accent)" }}></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {parsed.strengths && parsed.strengths.length > 0 && (
+                  <div style={{ marginTop: 18 }}>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--muted)", marginBottom: 8 }}>STRENGTHS</div>
+                    <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, color: "var(--text)", lineHeight: 1.7 }}>
+                      {parsed.strengths.map((s, i) => <li key={i}>{s}</li>)}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* LAYER 2 · 我們的考核 */}
+            <div className="bp-panel" style={{ marginTop: 22 }}>
+              <div className="bp-panel-h">
+                <span>◇ 第 2 層 · 我們的考核（自評之外）</span>
+                <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>LAYER 2 · OBJECTIVE</span>
+              </div>
+              <div className="bp-panel-b" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <ObjLayer
+                  num="01"
+                  title="情境題 · 30 分鐘 · 看判斷力"
+                  desc="BP 出一份假 client brief（DTC 品牌想做週 12 支短影音、預算 8 萬、3 週）。你 30 分鐘內交回「我會怎麼接、用什麼工具、為什麼這個價」。"
+                  status="pending"
+                />
+                <ObjLayer
+                  num="02"
+                  title="持續 NPS · 每結案一次自動評"
+                  desc="通過後接的每一案、結案 client 評分都累積進你的 trust data。NPS 跌破 3.5 自動降階、4.7+ 自動推薦升 B+。"
+                  status="auto"
+                />
+                <ObjLayer
+                  num="03"
+                  title="試水案 pilot · 等 BP 有 client 進來才開"
+                  desc="BP 派一個小案（5-15K 真實付費）給你、結案表現直接證明能力。"
+                  status="future"
+                />
+              </div>
+            </div>
+
+            {/* LAYER 3 · 教育路徑 · routing by L 分 */}
+            <div className="bp-panel" style={{ marginTop: 16 }}>
+              <div className="bp-panel-h">
+                <span>◈ 第 3 層 · 教育資源（按你 L{parsed.L_score} 自動推薦）</span>
+                <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>LAYER 3 · GROWTH</span>
+              </div>
+              <div className="bp-panel-b">
+                <EducationRouting score={parsed.L_score} growth={parsed.growth || []} />
+              </div>
+            </div>
+
+            {/* SUBMIT */}
+            <div style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 14, alignItems: "center" }}>
+              <button
+                className="bp-btn primary"
+                style={{ minWidth: 280, padding: "14px 28px" }}
+                onClick={() => {
+                  try { window.history.replaceState(null, "", "app.html?role=worker&onboarding=1&submitted=1"); } catch (e) {}
+                  setSubmitted(true);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                → Submit · 送交 Edward 24h 內覆核
+              </button>
+              <button type="button" onClick={() => setStep("paste")} style={{ ...btnGhostStyle, padding: "8px 18px" }}>← 回去改 AI 結果</button>
+            </div>
+          </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
+
+// ============================================================
+// SUB-COMPONENTS · WORKER APPLY FLOW
+// ============================================================
+
+function ApplyProgress({ current, setStep }) {
+  const steps = [
+    { n: 1, label: "基本資料", key: "form" },
+    { n: 2, label: "3 個案件", key: "portfolio" },
+    { n: 3, label: "生成 Brief", key: "generate" },
+    { n: 4, label: "貼回結果", key: "paste" },
+    { n: 5, label: "預覽能力卡", key: "preview" },
+  ];
+  return (
+    <div style={{ display: "flex", gap: 0, alignItems: "center", flexWrap: "wrap", padding: "12px 0", borderBottom: "1px solid var(--line-soft)" }}>
+      <button type="button" onClick={() => setStep("intro")} style={{ background: "transparent", border: "none", color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", cursor: "pointer", marginRight: 14, textTransform: "uppercase" }}>← 回 intro</button>
+      {steps.map((s, i) => (
+        <React.Fragment key={s.n}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, opacity: current >= s.n ? 1 : 0.4 }}>
+            <span style={{ width: 24, height: 24, borderRadius: 99, background: current === s.n ? "var(--accent)" : current > s.n ? "var(--accent-soft)" : "rgba(255,255,255,0.08)", color: current === s.n ? "var(--bg)" : "var(--text)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--mono)", fontSize: 11, fontWeight: 700 }}>{current > s.n ? "✓" : s.n}</span>
+            <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: current === s.n ? "var(--accent)" : "var(--text-2)", letterSpacing: "0.05em" }}>{s.label}</span>
+          </div>
+          {i < steps.length - 1 && <span style={{ width: 18, height: 1, background: "var(--line-soft)", margin: "0 8px" }}></span>}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+function FormField({ label, children }) {
+  return (
+    <div>
+      <div style={{ fontSize: 13, color: "var(--text-2)", marginBottom: 8, fontWeight: 500 }}>{label}</div>
+      {children}
+    </div>
+  );
+}
+
+function StepNav({ onBack, onNext, nextDisabled, nextLabel }) {
+  return (
+    <div style={{ display: "flex", gap: 10, justifyContent: "space-between", marginTop: 24, flexWrap: "wrap" }}>
+      {onBack ? <button type="button" onClick={onBack} style={btnGhostStyle}>← 上一步</button> : <span></span>}
+      <button type="button" onClick={onNext} disabled={nextDisabled} style={{ ...btnPrimaryStyle, opacity: nextDisabled ? 0.35 : 1, cursor: nextDisabled ? "not-allowed" : "pointer" }}>{nextLabel}</button>
+    </div>
+  );
+}
+
+function ObjLayer({ num, title, desc, status }) {
+  const statusBadge = { pending: { txt: "你即將要做", color: "var(--accent)" }, auto: { txt: "通過後自動跑", color: "oklch(0.78 0.10 230)" }, future: { txt: "等 BP 有 client 才開", color: "var(--muted)" } }[status];
+  return (
+    <div style={{ display: "flex", gap: 14, padding: "14px 16px", border: "1px solid var(--line-soft)", background: "rgba(0,0,0,0.15)" }}>
+      <span style={{ fontFamily: "var(--mono)", color: "var(--accent)", fontWeight: 700, fontSize: 13, minWidth: 24 }}>{num}</span>
+      <div style={{ flex: 1 }}>
+        <div style={{ display: "flex", gap: 10, alignItems: "baseline", flexWrap: "wrap" }}>
+          <span style={{ color: "var(--text)", fontWeight: 600, fontSize: 15 }}>{title}</span>
+          <span style={{ fontFamily: "var(--mono)", fontSize: 10, padding: "2px 8px", border: `1px solid ${statusBadge.color}`, color: statusBadge.color, letterSpacing: "0.08em", textTransform: "uppercase" }}>{statusBadge.txt}</span>
+        </div>
+        <div style={{ color: "var(--text-2)", fontSize: 13, marginTop: 6, lineHeight: 1.6 }}>{desc}</div>
+      </div>
+    </div>
+  );
+}
+
+function EducationRouting({ score, growth }) {
+  let tier, color, items;
+  if (score >= 7) {
+    tier = "已達 Tier B 申請門檻"; color = "var(--accent)";
+    items = [
+      { t: "升 Tier B+ 路徑", d: "再補一個 vertical 的 2 件深證據 + 多 vertical workflow 範例" },
+      { t: "AI 工具補貼資訊", d: "通過後可申請 Claude Pro / Cursor 訂閱補貼（每月 NT$ 500-1500）" },
+      { t: "B+ 旗艦池", d: "L8+ 多 vertical 跨界、優先配高單價案件" },
+    ];
+  } else if (score >= 4) {
+    tier = "L4-6 中段 · 補強區"; color = "oklch(0.82 0.16 75)";
+    items = [
+      { t: "你缺的 3 個技能", d: growth.length > 0 ? growth.join(" / ") : "判斷力深度 · 跨工具 orchestration · 客戶溝通 (預設、AI 未填時)" },
+      { t: "Vertical 培訓", d: "DTC 內容 / B2B SaaS GTM / 設計品牌 三方向、每個方向有 5-10 個技能清單" },
+      { t: "補強後重試", d: "申請 6 個月內可重試、保留你的 portfolio 不必重填" },
+    ];
+  } else {
+    tier = "L1-3 入門 · 基礎學習"; color = "var(--muted)";
+    items = [
+      { t: "AI 工具基礎課程", d: "ChatGPT / Claude / Midjourney 基礎用法（外部優質資源連結）" },
+      { t: "Workflow 思維建立", d: "從「會用 AI」到「能對成果負責」需要的 5 個轉變" },
+      { t: "Build evidence first", d: "先累積 3-5 個真實案件、3-6 個月後再來申請" },
+    ];
+  }
+  return (
+    <div>
+      <div style={{ display: "inline-block", padding: "4px 12px", border: `1px solid ${color}`, color, fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.08em", marginBottom: 14 }}>{tier}</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {items.map((it, i) => (
+          <div key={i} style={{ display: "flex", gap: 12, padding: "10px 14px", border: "1px solid var(--line-soft)", background: "rgba(0,0,0,0.15)" }}>
+            <span style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontWeight: 700, fontSize: 13, minWidth: 18 }}>0{i + 1}</span>
+            <div>
+              <div style={{ color: "var(--text)", fontWeight: 600, fontSize: 14 }}>{it.t}</div>
+              <div style={{ color: "var(--text-2)", fontSize: 13, marginTop: 4, lineHeight: 1.6 }}>{it.d}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function skillLabel(k) {
+  return ({
+    workflow_design: "Workflow 設計",
+    tool_orchestration: "多工具搭配",
+    judgement: "判斷力",
+    domain_depth: "領域深度",
+    client_communication: "客戶溝通",
+    delivery_reliability: "交付可靠度",
+  })[k] || k;
+}
+
+const fieldStyle = { width: "100%", padding: "10px 12px", background: "rgba(0,0,0,0.25)", border: "1px solid var(--line-soft)", color: "var(--text)", fontFamily: "var(--zh)", fontSize: 14, borderRadius: 0 };
+const btnPrimaryStyle = { padding: "10px 18px", background: "var(--accent)", color: "var(--bg)", border: "1px solid var(--accent)", fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", fontWeight: 700, textTransform: "uppercase" };
+const btnGhostStyle = { padding: "10px 16px", background: "transparent", color: "var(--text)", border: "1px solid var(--line-soft)", fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", textDecoration: "none", display: "inline-block" };
+
+const SAMPLE_PASTE = `{
+  "L_score": 7,
+  "L_confidence": "L6-L7",
+  "tier_suggestion": "Tier B",
+  "skill_matrix": {
+    "workflow_design": 8,
+    "tool_orchestration": 7,
+    "judgement": 7,
+    "domain_depth": 8,
+    "client_communication": 6,
+    "delivery_reliability": 7
+  },
+  "strengths": [
+    "DTC vertical 兩個完整 workflow 含 fallback 機制",
+    "AI 跑爛救回來的具體 case · 保養品文案 prompt 重設",
+    "報價邏輯清楚 · 按 milestone + 工具訂閱攤提"
+  ],
+  "growth": [
+    "客戶溝通段空泛 · 補一個具體溝通 case",
+    "跨 vertical 深度 · 想升 B+ 需要第二個 vertical 深證據"
+  ],
+  "evidence_quality": "中"
+}`;
 
 window.BP_WorkerDashboard = WorkerDashboard;
 

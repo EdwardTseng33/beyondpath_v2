@@ -37,6 +37,7 @@ Last updated: 2026-05-11
 - Removed visible escrow / platform payout positioning from the public prototype; early service now emphasizes scope review, candidate matching, acceptance records, and off-platform commercial terms.
 - Added an irreplaceability section to the landing page: LLMs can recommend names, but BeyondPath compounds delivery evidence, workflow proof, NPS, and acceptance records into a trust data layer.
 - Removed the founder letter section from the landing page; future credibility should come from client and worker feedback instead of founder narrative.
+- Replaced the worker Tier B certification page (`app.html?role=worker&onboarding=1`) from a static 4-step description into a 5-step interactive apply flow: basic info → 3 portfolio cases → AI brief generator (prefilled prompt + open Claude/ChatGPT/Gemini buttons) → paste back AI's JSON result → preview an ability card with L score, 6-axis skill matrix, layer-2 objective assessment (scenario test + continuous NPS + future pilot case), and layer-3 education routing keyed to the L score. Submit still routes to the existing mailto-based submitted state. All state is client-side; no real submission, no backend.
 
 ## Known Constraints
 
