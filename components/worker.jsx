@@ -17,10 +17,9 @@ function WorkerDashboard({ inShell = false }) {
   return (
     <div className="bp-root is-desktop">
       {isDemoView && (
-        <div style={{ padding: "10px 18px", borderBottom: "1px solid rgba(199,232,74,0.22)", background: "rgba(199,232,74,0.055)", display: "flex", gap: 12, alignItems: "center", justifyContent: "center", flexWrap: "wrap", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.08em", color: "var(--text-2)" }}>
-          <span style={{ color: "var(--accent)", fontWeight: 700 }}>WORKER PROTOTYPE DEMO</span>
-          <span className="zh" style={{ fontFamily: "var(--zh)", letterSpacing: 0 }}>這是通過認證後的接案方畫面範例，資料皆為模擬。</span>
-          <a href="app.html?role=worker&onboarding=1" style={{ color: "var(--accent)", textDecoration: "none", borderBottom: "1px solid var(--accent-line)" }}>我要申請認證 →</a>
+        <div style={{ padding: "8px 18px", borderBottom: "1px solid rgba(199,232,74,0.18)", background: "rgba(199,232,74,0.04)", display: "flex", gap: 10, alignItems: "center", justifyContent: "center", flexWrap: "wrap", fontFamily: "var(--mono)", fontSize: 10.5, letterSpacing: "0.08em", color: "var(--muted)" }}>
+          <span style={{ color: "var(--accent)", fontWeight: 700 }}>◆ DEMO</span>
+          <span className="zh" style={{ fontFamily: "var(--zh)", letterSpacing: 0 }}>這是通過認證後的接案方畫面範例 · 資料皆為模擬</span>
         </div>
       )}
       <div className="bp-topbar">
@@ -55,6 +54,53 @@ function WorkerDashboard({ inShell = false }) {
 
       <div className="bp-main" style={{ gridTemplateColumns: "1fr 360px" }}>
         <div className="bp-content">
+          {/* DEMO ENTRY · 首次訪客大 CTA · 引導去評估流程 */}
+          {isDemoView && (
+            <div style={{
+              padding: "20px 24px",
+              marginBottom: 26,
+              border: "1px solid var(--accent)",
+              background: "linear-gradient(135deg, rgba(199,232,74,0.12), rgba(199,232,74,0.02))",
+              boxShadow: "0 0 0 1px var(--accent-line), 0 8px 32px rgba(199,232,74,0.10)",
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 20,
+              alignItems: "center",
+            }}>
+              <div style={{ width: 64, height: 64, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <svg viewBox="0 0 80 80" width="64" height="64" fill="none">
+                  {Array.from({ length: 12 }, (_, i) => {
+                    const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+                    const cx = 40 + Math.cos(a) * 30;
+                    const cy = 40 + Math.sin(a) * 30;
+                    const col = i < 3 ? "var(--accent)" : i < 6 ? "oklch(0.78 0.10 230)" : i < 9 ? "oklch(0.82 0.16 75)" : "oklch(0.78 0.16 320)";
+                    return <circle key={i} cx={cx} cy={cy} r="4" fill={col} opacity="0.9"/>;
+                  })}
+                  <path d="M37 36l8 4-8 4z" fill="var(--accent)"/>
+                </svg>
+              </div>
+              <div style={{ flex: "1 1 280px", minWidth: 0 }}>
+                <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.12em", marginBottom: 6, textTransform: "uppercase" }}>◆ 首次進入 · TIER B APPLY</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", marginBottom: 4, lineHeight: 1.3 }}>先做你的 AI 認證評估、生成能力卡</div>
+                <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.55 }}>5 步 · 30-45 分鐘 · 用你自己的 AI 整理工作證據 · 24h 內 Edward 親自覆核</div>
+              </div>
+              <a href="app.html?role=worker&onboarding=1" style={{
+                padding: "14px 24px",
+                background: "var(--accent)",
+                color: "var(--bg)",
+                fontFamily: "var(--mono)",
+                fontSize: 12,
+                letterSpacing: "0.1em",
+                fontWeight: 700,
+                textDecoration: "none",
+                textTransform: "uppercase",
+                whiteSpace: "nowrap",
+                border: "1px solid var(--accent)",
+                flexShrink: 0,
+              }}>→ 開始評估</a>
+            </div>
+          )}
+
           {/* HERO · greeting + score */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 24, alignItems: "flex-end", paddingBottom: 22, borderBottom: "1px solid var(--line-soft)" }}>
             <div>
