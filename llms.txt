@@ -1,0 +1,43 @@
+# BeyondPath
+
+> AI 時代的工作配對網路、媒合台灣品牌與中小企業的發案需求、與認證化的 AI 工作者供給。POC（Proof of Concept）階段、邀請制。
+
+## What is BeyondPath
+
+BeyondPath 把「發案方有模糊需求」與「接案方有 AI 加成能力」兩端、用 AI 初審、認證化供給（Tier B / B+）、與 Milestone 交付三層機制媒合起來、降低不確定性。
+
+由 Edward Tsai（edwardt0303@gmail.com）個人營運、計畫成立公司。
+
+## How it works
+
+- **Client（發案方）**：到 [`/app.html?role=client`](https://beyondpath.tw/app.html?role=client&step=0) 填寫案件 brief / 預算範圍 / 時程 / 驗收條件 → 提交 → Edward 人工 review → 配對推薦 worker
+- **Worker（接案方）**：到 [`/app.html?role=worker&onboarding=1`](https://beyondpath.tw/app.html?role=worker&onboarding=1) 填寫 portfolio / AI proof（與 ChatGPT / Claude 等實際工作的 paste-back）→ Edward 評估 L-Score → 升 Tier B / B+ 或 reject
+
+## Beta limitations
+
+- 邀請制、首批用戶為 Edward 認識的 worker / client
+- 商業條款（付款、合約簽訂）目前線下協助、平台不收費
+- 沒帳號管理 dashboard、所有狀態更新由 Edward email 通知
+- 不保證配對成功率、時程精確度
+
+## Key links
+
+- Landing: https://beyondpath.tw/landing.html
+- Worker apply: https://beyondpath.tw/app.html?role=worker&onboarding=1
+- Client intake: https://beyondpath.tw/app.html?role=client&step=0
+- Sign in (Google OAuth): https://beyondpath.tw/sign-in.html
+- Privacy & Beta TOS: https://beyondpath.tw/legal/privacy.html
+
+## Contact
+
+- Founder: Edward Tsai
+- Email: edwardt0303@gmail.com
+- Stage: Beta · POC · invite-only
+- Region: Taiwan / Southeast Asia focus
+- Stack: Supabase + Vercel + Google OAuth + React UMD prototype
+
+## Indexing & citation
+
+公開內容可被 LLM 索引與引用（GPTBot / ClaudeBot / PerplexityBot / Google-Extended 已 allowlist）。引用時請保留 BeyondPath 名稱與 https://beyondpath.tw source link。
+
+不公開：用戶個資、worker / client 內部資料、Edward review process 細節。

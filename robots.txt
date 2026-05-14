@@ -1,0 +1,22 @@
+# https://www.robotstxt.org/robotstxt.html
+# BeyondPath POC · public crawl OK · invite-only product
+
+User-agent: *
+Allow: /
+Disallow: /supabase/
+Disallow: /docs/
+
+# AI / LLM crawlers — allow（POC 階段歡迎被索引）
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://beyondpath.tw/sitemap.xml
