@@ -108,6 +108,8 @@
 <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="components/supabase.js?v=0.1.0"></script>
 
 <script type="text/babel" data-presets="env,react">
 const { useState, useEffect } = React;
@@ -169,35 +171,46 @@ function getRoleFromQuery() {
   return null;
 }
 
-function setRoleAndRedirect(role) {
+function persistRole(role) {
   try {
     localStorage.setItem("bp-active-role", role);
-    // Sign in = 已認證 quick login · 清掉 worker onboarding flag、直接進 dashboard
     localStorage.removeItem("bp-worker-onboarding");
   } catch (e) {}
-  window.location.href = "app.html?role=" + role + "&signedin=1";
 }
 
 function App() {
   const queryRole = getRoleFromQuery();
-  const [stage, setStage] = useState("idle"); // idle / email / loading / done
-  const [email, setEmail] = useState("");
+  const [stage, setStage] = useState("idle"); // idle / loading / error
   const [chosenRole, setChosenRole] = useState(queryRole || "client");
+  const [errMsg, setErrMsg] = useState("");
 
-  const onProviderClick = (provider) => {
-    setStage("loading");
-    setTimeout(() => {
-      setRoleAndRedirect(chosenRole);
-    }, 1100);
-  };
+  // Already signed in? Redirect to their dashboard
+  useEffect(() => {
+    if (!window.bpAuth) return;
+    window.bpAuth.getSession().then(({ session }) => {
+      if (session?.user) {
+        let role = chosenRole;
+        try { role = localStorage.getItem("bp-active-role") || chosenRole; } catch (e) {}
+        window.location.href = "app.html?role=" + role + "&signedin=1";
+      }
+    });
+  }, []);
 
-  const onEmailSubmit = (e) => {
-    e.preventDefault();
-    if (!email || !email.includes("@")) return;
+  const onProviderClick = async () => {
+    setErrMsg("");
+    if (!window.bpAuth) {
+      setErrMsg("Auth SDK 還沒載入、過幾秒再試");
+      return;
+    }
+    persistRole(chosenRole);
     setStage("loading");
-    setTimeout(() => {
-      setRoleAndRedirect(chosenRole);
-    }, 1100);
+    const redirectTo = window.location.origin + window.location.pathname.replace(/sign-in\.html$/, "app.html") + "?role=" + chosenRole + "&signedin=1";
+    const { error } = await window.bpAuth.signInWithGoogle(redirectTo);
+    if (error) {
+      setStage("error");
+      setErrMsg("Google 登入失敗：" + error.message);
+    }
+    // On success Supabase navigates the page to Google OAuth, then back to redirectTo
   };
 
   return (
@@ -218,11 +231,14 @@ function App() {
               <p className="si-sub">繼續你的案件、檢查配對結果、或更新 Tier 進度。</p>
 
               <div className="si-disclaimer">
-                <span className="icon">⚠</span>
+                <span className="icon">●</span>
                 <div className="text">
-                  <b>PROTOTYPE DEMO ·</b> 模擬登入 · 任一 button 都會 fake auth 跳 dashboard · 不需真實 Google 帳號 · 不收任何資料。
+                  <b>EARLY BETA ·</b> 用你的 Google 帳號登入 · BeyondPath 只會看到你的 email 與大頭照 · 不存其他資料 · 後續流程都可隨時退出。
                 </div>
               </div>
+              {errMsg && (
+                <div style={{ background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", padding: "10px 14px", borderRadius: 4, marginBottom: 18, fontSize: 13 }}>⚠ {errMsg}</div>
+              )}
 
               {/* Role select - 用戶自選進哪個 dashboard */}
               <div style={{ display: "flex", gap: 8, marginBottom: 18, padding: 4, background: "var(--bg-1)", border: "1px solid var(--line)", borderRadius: 4 }}>
@@ -251,35 +267,12 @@ function App() {
               </div>
 
               <div className="si-providers">
-                <button className="si-btn" onClick={() => onProviderClick("google")}>
+                <button className="si-btn" onClick={onProviderClick}>
                   <GoogleLogo />
                   <span>Continue with Google</span>
                   <span className="arr">→</span>
                 </button>
-                <button
-                  className="si-btn"
-                  onClick={() => stage === "email" ? null : setStage("email")}
-                  style={{ display: stage === "email" ? "none" : "flex" }}
-                >
-                  <span style={{ fontSize: 16 }}>✉</span>
-                  <span>Continue with email</span>
-                  <span className="arr">→</span>
-                </button>
               </div>
-
-              {stage === "email" && (
-                <form className="si-email-form" onSubmit={onEmailSubmit} style={{ marginTop: 10 }}>
-                  <input
-                    className="si-input"
-                    type="email"
-                    placeholder="you@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    autoFocus
-                  />
-                  <button type="submit" className="si-cta-primary">CONTINUE →</button>
-                </form>
-              )}
 
               <div className="si-foot">
                 還沒帳號？<a href="app.html?role=client&step=0">用發案表單試一次（不需註冊）→</a><br/>

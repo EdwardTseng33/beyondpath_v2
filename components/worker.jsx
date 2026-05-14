@@ -972,17 +972,11 @@ function WorkerEmptyState() {
 
             {/* SUBMIT */}
             <div style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 14, alignItems: "center" }}>
-              <button
-                className="bp-btn primary"
-                style={{ minWidth: 280, padding: "14px 28px" }}
-                onClick={() => {
-                  try { window.history.replaceState(null, "", "app.html?role=worker&onboarding=1&submitted=1"); } catch (e) {}
-                  setSubmitted(true);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-              >
-                → Submit · 送交 Edward 24h 內覆核
-              </button>
+              <SubmitToSupabaseBtn parsed={parsed} onDone={() => {
+                try { window.history.replaceState(null, "", "app.html?role=worker&onboarding=1&submitted=1"); } catch (e) {}
+                setSubmitted(true);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }} />
               <button type="button" onClick={() => setStep("paste")} style={{ ...btnGhostStyle, padding: "8px 18px" }}>← 回去改 AI 結果</button>
             </div>
           </div>
@@ -996,6 +990,62 @@ function WorkerEmptyState() {
 // ============================================================
 // SUB-COMPONENTS · WORKER APPLY FLOW
 // ============================================================
+
+function SubmitToSupabaseBtn({ parsed, onDone }) {
+  const [email, setEmail] = uSW("");
+  const [status, setStatus] = uSW("idle"); // idle | loading | error | success
+  const [errMsg, setErrMsg] = uSW("");
+
+  async function doSubmit() {
+    setErrMsg("");
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      setErrMsg("先填一個有效 email · Edward 24h 內回覆要寄到這裡");
+      return;
+    }
+    if (!window.bpWorkerApply) {
+      setErrMsg("Supabase 還沒載入完成、過幾秒再試");
+      return;
+    }
+    setStatus("loading");
+    try {
+      const { data, error } = await window.bpWorkerApply.submit({
+        email,
+        displayName: parsed?.name,
+        aiProof: parsed,
+      });
+      if (error) throw error;
+      setStatus("success");
+      setTimeout(() => onDone && onDone(), 600);
+    } catch (e) {
+      setStatus("error");
+      setErrMsg("送出失敗：" + (e?.message || "未知錯誤") + "。先複製能力卡截圖、寄到 edwardt0303@gmail.com 也可以。");
+    }
+  }
+
+  return (
+    <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", gap: 12, alignItems: "stretch" }}>
+      <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em", textTransform: "uppercase" }}>SUBMIT · 留下 email Edward 親自覆核</div>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => { setEmail(e.target.value); setErrMsg(""); }}
+        placeholder="your@email.com"
+        disabled={status === "loading" || status === "success"}
+        style={{ width: "100%", padding: "12px 14px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--line-soft)", color: "var(--text)", fontFamily: "var(--zh)", fontSize: 15 }}
+      />
+      {errMsg && <div style={{ padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {errMsg}</div>}
+      <button
+        type="button"
+        onClick={doSubmit}
+        disabled={status === "loading" || status === "success"}
+        className="bp-btn primary"
+        style={{ padding: "14px 28px", opacity: status === "loading" || status === "success" ? 0.5 : 1, cursor: status === "loading" || status === "success" ? "wait" : "pointer" }}
+      >
+        {status === "loading" ? "送出中…" : status === "success" ? "✓ 已送出" : "→ Submit · 送交 Edward 24h 內覆核"}
+      </button>
+    </div>
+  );
+}
 
 function ApplyProgress({ current, setStep }) {
   const steps = [

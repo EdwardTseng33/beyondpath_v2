@@ -38,6 +38,16 @@ Last updated: 2026-05-11
 - Added an irreplaceability section to the landing page: LLMs can recommend names, but BeyondPath compounds delivery evidence, workflow proof, NPS, and acceptance records into a trust data layer.
 - Removed the founder letter section from the landing page; future credibility should come from client and worker feedback instead of founder narrative.
 - Replaced the worker Tier B certification page (`app.html?role=worker&onboarding=1`) from a static 4-step description into a 5-step interactive apply flow: basic info → 3 portfolio cases → AI brief generator (prefilled prompt + open Claude/ChatGPT/Gemini buttons) → paste back AI's JSON result → preview an ability card with L score, 6-axis skill matrix, layer-2 objective assessment (scenario test + continuous NPS + future pilot case), and layer-3 education routing keyed to the L score. Submit still routes to the existing mailto-based submitted state. All state is client-side; no real submission, no backend.
+- Slimmed the worker apply flow from 5 steps to 3 (get brief / paste back / preview card). All interview-heavy lifting now happens in the worker's own AI; the platform only generates a prompt, parses the JSON returned, and renders the ability card.
+- Wired up Supabase as the live backend (BeyondPath beta launch path):
+  - Project: `beyondpath-poc` at https://iacwmkcloxjffghrweie.supabase.co
+  - Google OAuth provider enabled via Google Cloud project `moving-castle-488905` (OAuth client `BeyondPath Web`). Redirect URI: `https://iacwmkcloxjffghrweie.supabase.co/auth/v1/callback`.
+  - Schema (`supabase/migrations/001_initial_schema.sql`): `profiles`, `worker_applications`, `client_intakes`. RLS is currently DISABLED on worker_applications + client_intakes for the prototype phase to allow anonymous submits; harden with explicit `to anon, authenticated` policies before production.
+  - `components/supabase.js` initializes the client and exposes `window.bpAuth`, `window.bpWorkerApply`, `window.bpClientIntake` helpers. Loaded via CDN supabase-js@2.
+  - Worker apply flow Step 3 (Preview) now collects an email and submits the ability card (parsed JSON) directly into `worker_applications` instead of `mailto:`. Submitted state still shown as a fallback for confirmation.
+  - `sign-in.html` swapped from fake-auth simulation to real Supabase `signInWithGoogle` + role persistence + redirect to `app.html?role=…&signedin=1`. Already-signed-in users auto-redirect.
+  - Client intake submit-to-Supabase wiring is set up via `window.bpClientIntake.submit({...})` but not yet hooked into the existing 12-step intake UI (next step).
+  - Cache-bust components to `worker.jsx?v=0.7.0` + `supabase.js?v=0.1.0`.
 
 ## Known Constraints
 
