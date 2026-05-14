@@ -696,10 +696,10 @@ function WorkerEmptyState() {
             </div>
             <div style={{ padding: "18px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
               {[
-                `請先把申請信寄到 ${APPLICATION_EMAIL}`,
-                "Edward 收到後，會在 7 天內回覆是否進入初步 review",
+                `Supabase 已收到你的申請（能力卡 + email）`,
+                `Edward 會在 24h 內親自覆核、回信到你留的 email`,
                 "通過 → 進首案池（保留 20% slot 給新人）→ 第一個案最快 2 週",
-                "沒通過 → 我們會給回饋說明哪裡需要補強 · 6 個月後可重申",
+                "沒通過 → 我們會給具體補強方向 · 6 個月後可重申",
               ].map((t, i) => (
                 <div key={i} style={{ display: "flex", gap: 14, alignItems: "start" }}>
                   <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#c7e84a", fontWeight: 700, minWidth: 18 }}>0{i+1}</span>
@@ -710,8 +710,8 @@ function WorkerEmptyState() {
           </div>
 
           <div style={{ background: "rgba(199,232,74,0.05)", border: "1px solid rgba(199,232,74,0.4)", padding: "14px 18px", marginBottom: 28, fontSize: 13, color: "#c8c6c0", textAlign: "left" }}>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#c7e84a", display: "block", marginBottom: 6 }}>◆ PROTOTYPE NOTE</span>
-            這是 prototype demo · 目前不會自動送出或儲存個資。若你要正式申請，請把作品、AI workflow 與可聯絡方式手動寄到 Edward 的信箱。
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#c7e84a", display: "block", marginBottom: 6 }}>● EARLY BETA · 申請已送出</span>
+            你的能力卡與 email 已存入 BeyondPath 後台。Edward 會在 24h 內親自審閱並回信。想額外補資料或自我介紹，可寄到下方 email。
           </div>
 
           <div style={{ border: "1px dashed rgba(255,255,255,0.16)", padding: "14px 16px", marginBottom: 22, textAlign: "left", background: "rgba(255,255,255,0.018)" }}>

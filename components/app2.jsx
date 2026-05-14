@@ -18,8 +18,8 @@ const Badge = ({ children }) => <span className="bp-badge">{children}</span>;
 function Topbar({ step, device, hideStepper }) {
   const labels = [
     { n: "01", en: "Pre-intake", zh: "選領域 + 上傳需求" },
-    { n: "02", en: "AI Parse", zh: "AI 拆解需求" },
-    { n: "03", en: "Confirm", zh: "確認期待" },
+    { n: "02", en: "Confirm", zh: "確認期待" },
+    { n: "03", en: "AI Parse", zh: "AI 拆解需求" },
     { n: "04", en: "Match", zh: "AI 自動配對" },
   ];
   return (

@@ -24,14 +24,21 @@ function BP_AppShell() {
     return () => document.removeEventListener("mousedown", onDoc);
   }, [menuOpen]);
   const u = BP_USERS[role];
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    setMenuOpen(false);
+    try {
+      if (window.bpAuth && window.bpAuth.signOut) {
+        await window.bpAuth.signOut();
+      }
+    } catch (e) {
+      console.warn("[BP] signOut error", e);
+    }
     try {
       localStorage.removeItem(BP_ROLE_KEY);
       localStorage.removeItem("bp-worker-onboarding");
       localStorage.removeItem("bp-journey-step");
       sessionStorage.removeItem("bp-disc-closed");
     } catch (e) {}
-    setMenuOpen(false);
     window.location.href = "landing.html";
   };
 
