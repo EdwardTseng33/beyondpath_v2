@@ -46,7 +46,8 @@ Last updated: 2026-05-11
   - `components/supabase.js` initializes the client and exposes `window.bpAuth`, `window.bpWorkerApply`, `window.bpClientIntake` helpers. Loaded via CDN supabase-js@2.
   - Worker apply flow Step 3 (Preview) now collects an email and submits the ability card (parsed JSON) directly into `worker_applications` instead of `mailto:`. Submitted state still shown as a fallback for confirmation.
   - `sign-in.html` swapped from fake-auth simulation to real Supabase `signInWithGoogle` + role persistence + redirect to `app.html?role=…&signedin=1`. Already-signed-in users auto-redirect.
-  - Client intake submit-to-Supabase wiring is set up via `window.bpClientIntake.submit({...})` but not yet hooked into the existing 12-step intake UI (next step).
+  - Client intake (`app.html?role=client&step=0`) Step 04 Match now opens an `IntakeSubmitModal` (email + optional company name) before advancing to contract. Modal submits the full intake state into `client_intakes` and only then unlocks the contract CTA. Modal lives inside `ClientIntakeApp` itself so the same flow works on desktop AppShell, mobile IOSDevice frame, and the journey wrapper.
+  - End-to-end verified locally: client and worker flows both write rows into Supabase (rows then cleaned via `delete ... where email like '%@beyondpath.local'`).
   - Cache-bust components to `worker.jsx?v=0.7.0` + `supabase.js?v=0.1.0`.
 
 ## Known Constraints

@@ -1018,7 +1018,59 @@ function Rail({ step, state }) {
 
 // ---------- Main App ----------
 
+function IntakeSubmitModal({ state, onCancel, onDone }) {
+  const [email, setEmail] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  const doSubmit = async () => {
+    setError("");
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      setError("請填一個有效 email · Edward 24h 內回覆配對結果");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      if (window.bpClientIntake) {
+        const { error: sbError } = await window.bpClientIntake.submit({
+          email,
+          companyName: companyName || null,
+          intakeData: state || {},
+        });
+        if (sbError) throw sbError;
+      }
+      onDone && onDone();
+    } catch (e) {
+      setSubmitting(false);
+      setError("送出失敗：" + (e?.message || "未知錯誤") + "。先複製 brief 寄到 edwardt0303@gmail.com 也行。");
+    }
+  };
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div style={{ width: "100%", maxWidth: 480, background: "#0a0a0b", border: "1px solid rgba(199,232,74,0.4)", padding: "32px 28px", color: "#f0eee8" }}>
+        <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, letterSpacing: "0.14em", color: "#c7e84a", textTransform: "uppercase", marginBottom: 10 }}>◆ 留下你的聯絡方式</div>
+        <h2 style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 22, fontWeight: 700, margin: "0 0 8px", lineHeight: 1.3 }}>送出需求 · 進入合約 stage</h2>
+        <p style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 14, color: "#9a9aa3", margin: "0 0 22px", lineHeight: 1.6 }}>Edward 會在 24h 內親自跟你確認 brief、配對方案與時程。</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <input type="email" placeholder="your@email.com（必填）" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
+          <input type="text" placeholder="公司 / 品牌名（可選）" value={companyName} onChange={(e) => setCompanyName(e.target.value)} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
+          {error && <div style={{ padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {error}</div>}
+          <div style={{ display: "flex", gap: 10, marginTop: 6 }}>
+            <button type="button" onClick={onCancel} disabled={submitting} style={{ padding: "12px 18px", background: "transparent", color: "#c8c6c0", border: "1px solid rgba(255,255,255,0.12)", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", textTransform: "uppercase" }}>取消</button>
+            <button type="button" onClick={doSubmit} disabled={submitting} style={{ flex: 1, padding: "12px 18px", background: "#c7e84a", color: "#0a0a0b", border: "1px solid #c7e84a", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.1em", fontWeight: 700, cursor: submitting ? "wait" : "pointer", textTransform: "uppercase", opacity: submitting ? 0.5 : 1 }}>{submitting ? "送出中…" : "→ Submit · 送交 Edward"}</button>
+          </div>
+        </div>
+        <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px dashed rgba(255,255,255,0.08)", fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6a6a78", letterSpacing: "0.06em", lineHeight: 1.7 }}>BeyondPath POC · 你的 brief + 配對結果會送到 Edward 信箱 · 不會公開</div>
+      </div>
+    </div>
+  );
+}
+
 function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = false, step: controlledStep, onStep, onAdvanceBeyond, hideStepper = false, hideTopbar = false }) {
+  const [submitModalOpen, setSubmitModalOpen] = useState(false);
+  const [submitDone, setSubmitDone] = useState(false);
   const [uStep, setUStep] = useState(initialStep);
   const step = controlledStep != null ? controlledStep : uStep;
   const setStep = (next) => {
@@ -1060,7 +1112,7 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
     if (step === 0) return "Confirm expectations →";
     if (step === 1) return "Run AI parse →";
     if (step === 2) return "Find matches →";
-    return "Continue to contract →";
+    return submitDone ? "Continue to contract →" : "Submit · 送交 Edward →";
   };
 
   return (
@@ -1104,8 +1156,10 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
                   className="bp-btn primary"
                   disabled={!canContinue()}
                   onClick={() => {
-                    if (step === 3 && onAdvanceBeyond) onAdvanceBeyond();
-                    else setStep((s) => Math.min(3, s + 1));
+                    if (step === 3) {
+                      if (submitDone && onAdvanceBeyond) onAdvanceBeyond(state);
+                      else setSubmitModalOpen(true);
+                    } else setStep((s) => Math.min(3, s + 1));
                   }}
                 >
                   {ctaLabel()} <span className="arrow">→</span>
@@ -1133,16 +1187,31 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
             className="bp-btn primary"
             disabled={!canContinue()}
             onClick={() => {
-              if (step === 3 && onAdvanceBeyond) onAdvanceBeyond();
-              else setStep((s) => Math.min(3, s + 1));
+              if (step === 3) {
+                if (submitDone && onAdvanceBeyond) onAdvanceBeyond(state);
+                else setSubmitModalOpen(true);
+              } else setStep((s) => Math.min(3, s + 1));
             }}
           >
-            {step === 3 ? "contract →" : "next →"}
+            {step === 3 ? (submitDone ? "contract →" : "submit →") : "next →"}
           </button>
         </div>
+      )}
+
+      {submitModalOpen && (
+        <IntakeSubmitModal
+          state={state}
+          onCancel={() => setSubmitModalOpen(false)}
+          onDone={() => {
+            setSubmitModalOpen(false);
+            setSubmitDone(true);
+            if (onAdvanceBeyond) onAdvanceBeyond(state);
+          }}
+        />
       )}
     </div>
   );
 }
 
 window.ClientIntakeApp = ClientIntakeApp;
+window.IntakeSubmitModal = IntakeSubmitModal;
