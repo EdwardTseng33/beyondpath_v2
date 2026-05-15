@@ -84,7 +84,7 @@ const SYSTEM_PROMPT = `你是 BeyondPath worker 入會訪談員。
 {
   "status": "complete",
   "step": 7,
-  "message": "感謝完成訪談 · 看你的能力卡 + Edward 24h 內覆核",
+  "message": "感謝完成訪談 · 看你的能力卡 + BeyondPath 系統 24h 內完成評估",
   "ai_proof": {
     "name": "用戶自稱（中文或英文）",
     "L_score": 0-10,

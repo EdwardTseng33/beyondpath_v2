@@ -82,7 +82,7 @@ function WorkerDashboard({ inShell = false }) {
               <div style={{ flex: "1 1 280px", minWidth: 0 }}>
                 <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.12em", marginBottom: 6, textTransform: "uppercase" }}>◆ 首次進入 · TIER B APPLY</div>
                 <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", marginBottom: 4, lineHeight: 1.3 }}>先做你的 AI 認證評估、生成能力卡</div>
-                <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.55 }}>5 步 · 30-45 分鐘 · 用你自己的 AI 整理工作證據 · 24h 內 Edward 親自覆核</div>
+                <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.55 }}>5 步 · 30-45 分鐘 · 用你自己的 AI 整理工作證據 · 24h 內 BeyondPath 系統評估完成</div>
               </div>
               <a href="app.html?role=worker&onboarding=1" style={{
                 padding: "14px 24px",
@@ -581,7 +581,7 @@ function WorkerDashboard({ inShell = false }) {
 // 兩個 prompt schema 對齊 (同樣 7 段 + 同樣 ai_proof JSON output) · 雙軌都通 preview
 const AI_BRIEF = `你是 BeyondPath 認證 AI 整理員。我正在申請台灣 AI 交付網路 BeyondPath 的 Tier B / B+ 認證。
 
-請帶我跑一段 30 分鐘訪談、按下面 7 段順序問。每段具體追問、不接受空泛回答（例「我會用 ChatGPT」要追問「用在什麼任務？哪個案件？拿什麼成果？」）。最後產出一段結構化 JSON、我會貼回 BeyondPath 平台、由平台 render 成能力卡 + AI 初審 + Edward 親自覆核。
+請帶我跑一段 30 分鐘訪談、按下面 7 段順序問。每段具體追問、不接受空泛回答（例「我會用 ChatGPT」要追問「用在什麼任務？哪個案件？拿什麼成果？」）。最後產出一段結構化 JSON、我會貼回 BeyondPath 平台、由平台 render 成能力卡 + BeyondPath 系統評估。
 
 【訪談 7 段】
 
@@ -883,7 +883,7 @@ function WorkerEmptyState() {
             <div style={{ padding: "18px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
               {[
                 `Supabase 已收到你的申請（能力卡 + email）`,
-                `Edward 會在 24h 內親自覆核、回信到你留的 email`,
+                `BeyondPath 系統會在 24h 內完成評估、回信到你留的 email`,
                 "通過 → 進首案池（保留 20% slot 給新人）→ 第一個案最快 2 週",
                 "沒通過 → 我們會給具體補強方向 · 6 個月後可重申",
               ].map((t, i) => (
@@ -897,7 +897,7 @@ function WorkerEmptyState() {
 
           <div style={{ background: "rgba(199,232,74,0.05)", border: "1px solid rgba(199,232,74,0.4)", padding: "14px 18px", marginBottom: 28, fontSize: 13, color: "#c8c6c0", textAlign: "left" }}>
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#c7e84a", display: "block", marginBottom: 6 }}>● EARLY BETA · 申請已送出</span>
-            你的能力卡與 email 已存入 BeyondPath 後台。Edward 會在 24h 內親自審閱並回信。想額外補資料或自我介紹，可寄到下方 email。
+            你的能力卡與 email 已存入 BeyondPath 後台。BeyondPath 系統會在 24h 內完成評估並回信。想額外補資料或自我介紹，可寄到下方 email。
           </div>
 
           <div style={{ border: "1px dashed rgba(255,255,255,0.16)", padding: "14px 16px", marginBottom: 22, textAlign: "left", background: "rgba(255,255,255,0.018)" }}>
@@ -1158,7 +1158,7 @@ function WorkerEmptyState() {
                     <li>BeyondPath AI 會帶你跑 7 段訪談、共 15-25 分鐘</li>
                     <li>段順序：領域 / 年資 → AI 工具棧 → 案件數量 + 3 例 → 最自豪 workflow → L-Score 自評 → 6 維技能 → 接案偏好</li>
                     <li>答得越具體（客戶名 / 數字 / 工具串接細節）、評分越準</li>
-                    <li>答完 AI 自動產能力卡、Edward 24h 內人審</li>
+                    <li>答完 AI 自動產能力卡、BeyondPath 系統 24h 內完成評估</li>
                   </ol>
                   <div style={{ marginTop: 14, padding: "10px 12px", background: "rgba(0,0,0,0.2)", borderLeft: "2px solid var(--accent)", fontSize: 13, color: "var(--text-2)" }}>
                     後端 Claude Sonnet 4.6 · 每段答完 AI 會追問具體例子、別怕「答得太簡單」。
@@ -1452,7 +1452,7 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
   async function doSubmit() {
     setErrMsg("");
     if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      setErrMsg("先填一個有效 email · Edward 24h 內回覆要寄到這裡");
+      setErrMsg("先填一個有效 email · BeyondPath 24h 內回覆要寄到這裡");
       return;
     }
     if (!window.bpWorkerApply) {
@@ -1477,7 +1477,7 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
 
   return (
     <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", gap: 12, alignItems: "stretch" }}>
-      <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em", textTransform: "uppercase" }}>SUBMIT · 留下 email Edward 親自覆核</div>
+      <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em", textTransform: "uppercase" }}>SUBMIT · 留下 email 收 BeyondPath 系統評估結果</div>
       <input
         type="email"
         value={email}
@@ -1494,7 +1494,7 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
         className="bp-btn primary"
         style={{ padding: "14px 28px", opacity: status === "loading" || status === "success" ? 0.5 : 1, cursor: status === "loading" || status === "success" ? "wait" : "pointer" }}
       >
-        {status === "loading" ? "送出中…" : status === "success" ? "✓ 已送出" : "→ Submit · 送交 Edward 24h 內覆核"}
+        {status === "loading" ? "送出中…" : status === "success" ? "✓ 已送出" : "→ Submit · 送交評估、24h 內回覆"}
       </button>
     </div>
   );

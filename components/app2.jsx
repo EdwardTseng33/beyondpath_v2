@@ -274,7 +274,7 @@ function Step1({ state, set, device }) {
           <span style={{ fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)" }}>optional · 選填</span>
         </div>
         <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 4, marginBottom: 12, lineHeight: 1.6 }}>
-          B2B / 大型企業案、勾選後 Edward 會在 24h 回信時一併處理 NDA / 發票 / 合約 / 預約視訊。不勾沒關係、預設走個人案流程。
+          B2B / 大型企業案、勾選後 BeyondPath 24h 內回信時一併處理 NDA / 發票 / 合約 / 預約視訊。不勾沒關係、預設走個人案流程。
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
           {[
@@ -782,10 +782,10 @@ function Step4({ state, set, device }) {
         lineHeight: 1.7,
       }}>
         <div style={{ marginBottom: 6 }}>
-          🎯 <b style={{ color: "var(--accent)" }}>Edward 親自配對 · 24h 內 email 給你 3 個最匹配的 worker</b>
+          🎯 <b style={{ color: "var(--accent)" }}>BeyondPath 配對演算法 · 24h 內 email 給你 3 個最匹配的 worker</b>
         </div>
         <div style={{ fontSize: 12.5, color: "var(--muted)" }}>
-          下方為 demo workers 視覺示意 · BeyondPath 真實 pipeline 累積中、實際配對 Edward 看完整 brief（你剛填的）+ 真實 worker portfolio 雙向匹配、附帶 Claude AI 顧問建議（應接 / Tier / 報價 / risk）。submit 後請查 email、被拒絕也會通知。
+          下方為 demo workers 視覺示意 · BeyondPath 真實 pipeline 累積中、實際配對由 AI 評估 + 多維演算法依完整 brief（你剛填的）跟 worker portfolio 雙向匹配、附 AI 顧問建議（應接 / Tier / 報價 / risk）。submit 後請查 email、不符也會通知。
         </div>
       </div>
 
@@ -1142,7 +1142,7 @@ function IntakeSubmitModal({ state, onCancel, onDone }) {
   const doSubmit = async () => {
     setError("");
     if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      setError("請填一個有效 email · Edward 24h 內回覆配對結果");
+      setError("請填一個有效 email · BeyondPath 24h 內回覆配對結果");
       return;
     }
     setSubmitting(true);
@@ -1167,7 +1167,7 @@ function IntakeSubmitModal({ state, onCancel, onDone }) {
       <div style={{ width: "100%", maxWidth: 480, background: "#0a0a0b", border: "1px solid rgba(199,232,74,0.4)", padding: "32px 28px", color: "#f0eee8" }}>
         <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, letterSpacing: "0.14em", color: "#c7e84a", textTransform: "uppercase", marginBottom: 10 }}>◆ 留下你的聯絡方式</div>
         <h2 style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 22, fontWeight: 700, margin: "0 0 8px", lineHeight: 1.3 }}>送出需求 · 進入合約 stage</h2>
-        <p style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 14, color: "#9a9aa3", margin: "0 0 22px", lineHeight: 1.6 }}>Edward 會在 24h 內親自跟你確認 brief、配對方案與時程。</p>
+        <p style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 14, color: "#9a9aa3", margin: "0 0 22px", lineHeight: 1.6 }}>BeyondPath 會在 24h 內回信確認 brief、配對方案與時程。</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <input type="email" placeholder="your@email.com（必填）" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
           <input type="text" placeholder="公司 / 品牌名（可選）" value={companyName} onChange={(e) => setCompanyName(e.target.value)} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
