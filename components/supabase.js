@@ -126,8 +126,33 @@
       if (vertical) body.vertical = vertical;
       if (company_name) body.company_name = company_name;
 
-      const { data, error } = await client.functions.invoke('client-brief-parse', { body });
-      return { data, error };
+      // Note: supabase-js v2 client.functions.invoke() 跟新版 sb_publishable_ key 兼容性 issue
+      // → 改 raw fetch 帶 apikey + Bearer header (用 session JWT 或 publishable key fallback)
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        const jwt = session?.access_token || SUPABASE_PUBLISHABLE_KEY;
+
+        const res = await fetch(SUPABASE_URL + '/functions/v1/client-brief-parse', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + jwt,
+            'apikey': SUPABASE_PUBLISHABLE_KEY,
+          },
+          body: JSON.stringify(body),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          return {
+            data: null,
+            error: { message: data.message || data.error || ('HTTP ' + res.status), status: res.status, details: data },
+          };
+        }
+        return { data, error: null };
+      } catch (e) {
+        return { data: null, error: { message: e?.message || String(e) } };
+      }
     },
   };
 
