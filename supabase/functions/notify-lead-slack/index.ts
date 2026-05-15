@@ -17,6 +17,118 @@ const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const ANTHROPIC_MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-sonnet-4-6";
 const LEADS_CHANNEL_ID = "C0B3RRKGQCD"; // #beyondpath-leads (private)
 
+// Resend 寄申請確認信 (2026-05-15 v4) · Edward 給 RESEND_API_KEY 後 enable
+// 解 5/15 synthetic testing P0-3 anxiety「不知道有沒有送到」
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_FROM = Deno.env.get("RESEND_FROM") ?? "BeyondPath <hello@beyondpath.tw>";
+const PUBLIC_HOMEPAGE = "https://beyondpath.tw";
+
+function buildWorkerConfirmEmail(row: Record<string, unknown>): { subject: string; html: string; text: string } {
+  const name = (row.display_name as string) || "創作者";
+  const lScore = row.l_score ?? "?";
+  const tier = (row.tier_suggestion as string) || "B / B+";
+  const subject = `已收到你的 BeyondPath 認證申請 · ${name}`;
+  const text = [
+    `${name} 你好，`,
+    ``,
+    `BeyondPath 已收到你的 ${tier} 認證申請。`,
+    `AI 自動評估 L-Score: ${lScore}`,
+    ``,
+    `Edward 會在 24 小時內親自覆核、並回信到這個 email。`,
+    `通過後你會進入首案池、最快 2 週內接到第一個案件 (BeyondPath 保留 20% slot 給新人)。`,
+    `沒通過我們會給具體補強方向、6 個月後可重新申請。`,
+    ``,
+    `想額外補資料 (case 截圖 / 客戶 testimonial) 直接回信給 Edward。`,
+    ``,
+    `— BeyondPath`,
+    `${PUBLIC_HOMEPAGE}`,
+  ].join("\n");
+  const html = `<!DOCTYPE html><html><body style="font-family:'IBM Plex Sans','Noto Sans TC',system-ui,sans-serif;background:#0a0a0b;color:#f0eee8;margin:0;padding:40px 20px;">
+<div style="max-width:560px;margin:0 auto;background:#141416;border:1px solid #2a2a2e;padding:36px 32px;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.14em;color:#c7e84a;margin-bottom:18px;">● BEYONDPATH · APPLICATION RECEIVED</div>
+  <h1 style="font-size:22px;font-weight:700;margin:0 0 16px;color:#f0eee8;">${name} 你好，</h1>
+  <p style="color:#c8c6c0;line-height:1.7;margin:0 0 16px;">BeyondPath 已收到你的 <b style="color:#c7e84a;">${tier} 認證</b>申請。</p>
+  <p style="color:#9a9aa3;font-family:'JetBrains Mono',monospace;font-size:13px;margin:0 0 24px;">AI 自動評估 L-Score: <b style="color:#c7e84a;">${lScore}</b></p>
+  <div style="background:rgba(199,232,74,0.04);border-left:2px solid #c7e84a;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.7;">
+    Edward 會在 <b>24 小時內</b>親自覆核、回信到這個 email。<br/>
+    通過後進首案池、最快 2 週內接到第一個案件。
+  </div>
+  <p style="color:#c8c6c0;line-height:1.7;margin:0 0 16px;">想額外補資料 (case 截圖 / testimonial) 直接回這封信給 Edward。</p>
+  <hr style="border:none;border-top:1px solid #2a2a2e;margin:28px 0;"/>
+  <p style="color:#9a9aa3;font-size:12px;margin:0;">— BeyondPath · <a href="${PUBLIC_HOMEPAGE}" style="color:#c7e84a;text-decoration:none;">${PUBLIC_HOMEPAGE}</a></p>
+</div>
+</body></html>`;
+  return { subject, html, text };
+}
+
+function buildClientConfirmEmail(row: Record<string, unknown>): { subject: string; html: string; text: string } {
+  const company = (row.company_name as string) || "團隊";
+  const budget = (row.budget_range as string) || "(未填預算)";
+  const subject = `已收到你的 BeyondPath 需求 brief · ${company}`;
+  const text = [
+    `${company} 你好，`,
+    ``,
+    `BeyondPath 已收到你的需求 brief。`,
+    `預算範圍: ${budget}`,
+    ``,
+    `Edward 會在 24 小時內親自看過、配對 1-3 位適合的 Tier B+ / A worker、回信給你具體名單 + 報價 + 試做案建議。`,
+    `若需求需要視訊聊深、Edward 會在回信內附他的行事曆 link。`,
+    ``,
+    `急的話直接回信給 Edward (edward@beyondpath.io)。`,
+    ``,
+    `— BeyondPath`,
+    `${PUBLIC_HOMEPAGE}`,
+  ].join("\n");
+  const html = `<!DOCTYPE html><html><body style="font-family:'IBM Plex Sans','Noto Sans TC',system-ui,sans-serif;background:#0a0a0b;color:#f0eee8;margin:0;padding:40px 20px;">
+<div style="max-width:560px;margin:0 auto;background:#141416;border:1px solid #2a2a2e;padding:36px 32px;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.14em;color:#c7e84a;margin-bottom:18px;">● BEYONDPATH · BRIEF RECEIVED</div>
+  <h1 style="font-size:22px;font-weight:700;margin:0 0 16px;color:#f0eee8;">${company} 你好，</h1>
+  <p style="color:#c8c6c0;line-height:1.7;margin:0 0 16px;">BeyondPath 已收到你的需求 brief。</p>
+  <p style="color:#9a9aa3;font-family:'JetBrains Mono',monospace;font-size:13px;margin:0 0 24px;">預算: <b style="color:#c7e84a;">${budget}</b></p>
+  <div style="background:rgba(199,232,74,0.04);border-left:2px solid #c7e84a;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.7;">
+    Edward 會在 <b>24 小時內</b>親自看過、配對 1-3 位 Tier B+ / A worker、回信給你具體名單 + 報價 + 試做案建議。
+  </div>
+  <p style="color:#c8c6c0;line-height:1.7;margin:0 0 16px;">急的話直接回信給 Edward。</p>
+  <hr style="border:none;border-top:1px solid #2a2a2e;margin:28px 0;"/>
+  <p style="color:#9a9aa3;font-size:12px;margin:0;">— BeyondPath · <a href="${PUBLIC_HOMEPAGE}" style="color:#c7e84a;text-decoration:none;">${PUBLIC_HOMEPAGE}</a></p>
+</div>
+</body></html>`;
+  return { subject, html, text };
+}
+
+async function sendConfirmationEmail(toEmail: string, subject: string, html: string, text: string): Promise<{ ok: boolean; error?: string }> {
+  if (!RESEND_API_KEY) {
+    // Resend 未設、silent skip (不阻塞 Slack 通知)
+    return { ok: false, error: "resend-not-configured" };
+  }
+  if (!toEmail || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(toEmail)) {
+    return { ok: false, error: "invalid-email" };
+  }
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: RESEND_FROM,
+        to: [toEmail],
+        subject,
+        html,
+        text,
+      }),
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      return { ok: false, error: errData.message || `HTTP ${res.status}` };
+    }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+}
+
 interface WebhookPayload {
   type: "INSERT" | "UPDATE" | "DELETE";
   table: string;
@@ -189,11 +301,17 @@ serve(async (req: Request) => {
 
   let text = "";
   let claudeAdvice: string | null = null;
+  let emailTemplate: { subject: string; html: string; text: string } | null = null;
+  let toEmail = "";
 
   if (payload.table === "worker_applications") {
     text = formatWorker(payload.record);
+    toEmail = (payload.record.email as string) || "";
+    emailTemplate = buildWorkerConfirmEmail(payload.record);
   } else if (payload.table === "client_intakes") {
     text = formatClient(payload.record);
+    toEmail = (payload.record.email as string) || "";
+    emailTemplate = buildClientConfirmEmail(payload.record);
     // 額外 call Claude 給 Edward decision support
     const intakeData = payload.record.intake_data as Record<string, unknown> | null;
     const brief = (intakeData && typeof intakeData === "object")
@@ -215,8 +333,20 @@ serve(async (req: Request) => {
     text += `\n\n✨ *Edward AI 顧問建議*\n${claudeAdvice}`;
   }
 
-  const slackResult = await postToSlack(text);
-  return new Response(JSON.stringify({ ...slackResult, claude_advice_attached: !!claudeAdvice }), {
+  // Parallel: Slack 通知 + 寄申請確認信 (Resend 沒設就 silent skip · 不阻塞 Slack)
+  const [slackResult, emailResult] = await Promise.all([
+    postToSlack(text),
+    emailTemplate && toEmail
+      ? sendConfirmationEmail(toEmail, emailTemplate.subject, emailTemplate.html, emailTemplate.text)
+      : Promise.resolve({ ok: false, error: "no-email-template-or-recipient" }),
+  ]);
+
+  return new Response(JSON.stringify({
+    ...slackResult,
+    claude_advice_attached: !!claudeAdvice,
+    confirmation_email_sent: emailResult.ok,
+    confirmation_email_error: emailResult.ok ? undefined : emailResult.error,
+  }), {
     status: slackResult.ok ? 200 : 500,
     headers: { "Content-Type": "application/json" },
   });
