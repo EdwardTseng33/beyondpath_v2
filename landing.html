@@ -234,11 +234,14 @@
   .le-cta-secondary .sub { font-size: 11px; color: var(--muted); }
   @media (max-width: 900px) { .le-cta-primary, .le-cta-secondary { padding: 16px 18px; font-size: 12px; min-height: 48px; } }
 
-  .le-stream { padding: 18px 22px; display: flex; align-items: center; gap: 18px; margin-bottom: 24px; background: var(--surface); border: 1px solid var(--line); flex-wrap: wrap; }
-  .le-stream .label { font-family: var(--mono); font-size: 10px; color: var(--accent-dim); letter-spacing: 0.18em; flex: 0 0 auto; }
-  .le-stream .tokens { font-family: var(--mono); font-size: 13px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 0; }
-  .le-stream .meta { font-family: var(--mono); font-size: 10px; color: var(--muted); }
-  @media (max-width: 900px) { .le-stream { padding: 12px 14px; flex-direction: column; align-items: flex-start; gap: 8px; } .le-stream .tokens { font-size: 11px; } .le-stream .meta { display: none; } }
+  /* AGENT STREAM · fixed height + nowrap (2026-05-15 fix: 動畫導致 hero 排版跳動 Edward audit) */
+  .le-stream { padding: 16px 22px; display: flex; align-items: center; gap: 18px; margin-bottom: 24px; background: var(--surface); border: 1px solid var(--line); flex-wrap: nowrap; height: 56px; box-sizing: border-box; overflow: hidden; }
+  .le-stream .label { font-family: var(--mono); font-size: 10px; color: var(--accent-dim); letter-spacing: 0.18em; flex: 0 0 auto; white-space: nowrap; }
+  .le-stream .tokens { font-family: var(--mono); font-size: 13px; color: var(--muted); display: flex; gap: 8px; flex-wrap: nowrap; flex: 1; min-width: 0; overflow: hidden; align-items: center; height: 100%; mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%); -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%); }
+  .le-stream .tokens > span { white-space: nowrap; flex: 0 0 auto; }
+  .le-stream .meta { font-family: var(--mono); font-size: 10px; color: var(--muted); flex: 0 0 auto; white-space: nowrap; }
+  @media (max-width: 900px) { .le-stream { padding: 10px 14px; flex-direction: row; align-items: center; gap: 10px; height: 44px; } .le-stream .tokens { font-size: 11px; gap: 6px; } .le-stream .meta { display: none; } .le-stream .label { font-size: 9px; } }
+  @media (max-width: 480px) { .le-stream .label { display: none; } }
 
   .le-telemetry { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); }
   .le-telemetry .cell { padding: 22px 24px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
