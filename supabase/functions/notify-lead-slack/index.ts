@@ -204,6 +204,516 @@ function buildClientConfirmEmail(row: Record<string, unknown>): { subject: strin
   return { subject, html, text };
 }
 
+// ============================================================
+// Decision email templates v1 (2026-05-15 · Phase 1b2)
+// Worker × 3: pass / hold / reject
+// Client × 4: match / need-more / video-invite / not-fit
+// 等 Phase 2 Slack interactive button or web admin UI 觸發
+// ============================================================
+
+function emailWrapper(opts: { header: string; titleTo: string; openLine: string; bodyHtml: string }): string {
+  return `<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BeyondPath</title></head><body style="font-family:'IBM Plex Sans','Noto Sans TC',system-ui,sans-serif;background:#0a0a0b;color:#f0eee8;margin:0;padding:40px 20px;">
+<div style="max-width:580px;margin:0 auto;background:#141416;border:1px solid #2a2a2e;padding:40px 36px;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.18em;color:#c7e84a;margin-bottom:20px;">${opts.header}</div>
+  <h1 style="font-family:Georgia,'Noto Serif TC',serif;font-style:italic;font-size:30px;font-weight:400;line-height:1.25;margin:0 0 8px;color:#f0eee8;">${opts.titleTo}</h1>
+  <p style="color:#c8c6c0;line-height:1.75;font-size:16px;margin:0 0 28px;">${opts.openLine}</p>
+  ${opts.bodyHtml}
+  <hr style="border:none;border-top:1px solid #2a2a2e;margin:24px 0;"/>
+  <p style="color:#9a9aa3;font-size:12px;margin:0 0 8px;">— BeyondPath · <a href="${PUBLIC_HOMEPAGE}" style="color:#c7e84a;text-decoration:none;">${PUBLIC_HOMEPAGE}</a></p>
+  <p style="color:#6a6a72;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;margin:8px 0 0;">prototype 階段 · 不簽法律效力文件 · 不收平台費 · 正式服務於 2026 Q3 啟動</p>
+</div>
+</body></html>`;
+}
+
+// ============ Worker × 3 ============
+
+function buildWorkerPassEmail(row: Record<string, unknown>, opts?: { firstCaseHint?: string }): { subject: string; html: string; text: string } {
+  const name = (row.display_name as string) || "創作者";
+  const tier = (row.tier_suggestion as string) || "B+";
+  const lScore = row.l_score ?? "?";
+  const firstCaseHint = opts?.firstCaseHint || "你的第一個案件方向會在 1-2 週內透過 BeyondPath 系統媒合配對、屆時系統會主動通知。";
+
+  const subject = `BeyondPath 認證通過 · 歡迎進首案池 · ${name}`;
+  const text = [
+    `${name} 你好，`,
+    ``,
+    `恭喜 — BeyondPath 系統評估通過、你正式進入 Tier ${tier} 認證 worker 池。`,
+    `AI L-Score: ${lScore} / 10`,
+    ``,
+    `▍接下來`,
+    firstCaseHint,
+    ``,
+    `▍你會收到的`,
+    `  · 客戶 brief 進來時、系統會配對你 + 主動通知`,
+    `  · 你決定是否接、24h 內回覆即可`,
+    `  · 接案後雙方直接溝通 + 用 BeyondPath 工具（SOW / 報價單 / 驗收 checklist）`,
+    ``,
+    `▍founding worker 福利`,
+    `  · POC 階段不收平台費（Q3 上線後 success fee 8-12%）`,
+    `  · 公開 portfolio 第一批上架（早鳥曝光）`,
+    `  · 累積 case study 進 BeyondPath`,
+    ``,
+    `→ 有疑問寫信到 hello@beyondpath.tw`,
+    ``,
+    `— BeyondPath`,
+    PUBLIC_HOMEPAGE,
+  ].join("\n");
+
+  const bodyHtml = `
+  <div style="background:rgba(199,232,74,0.04);border-left:2px solid #c7e84a;padding:16px 20px;margin:0 0 24px;color:#c8c6c0;line-height:1.75;font-size:15px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;color:#c7e84a;margin-bottom:8px;text-transform:uppercase;">✓ 認證通過 / TIER ${tier}</div>
+    AI L-Score: <b style="color:#c7e84a;">${lScore} / 10</b> · 你正式進入 Tier ${tier} 認證 worker 池。
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ 接下來 / NEXT STEP</div>
+  <p style="color:#c8c6c0;line-height:1.75;font-size:14px;margin:0 0 24px;">${firstCaseHint}</p>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ 你會收到的 / WHAT YOU&#39;LL GET</div>
+  <ul style="color:#c8c6c0;line-height:1.85;font-size:14px;margin:0 0 24px;padding-left:20px;">
+    <li>客戶 brief 進來時、系統配對你 + 主動通知</li>
+    <li>你決定是否接、24h 內回覆即可</li>
+    <li>接案後直接溝通 + 用 BeyondPath 工具（SOW / 報價單 / 驗收 checklist）</li>
+  </ul>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ FOUNDING WORKER 福利</div>
+  <ul style="color:#c8c6c0;line-height:1.85;font-size:14px;margin:0 0 24px;padding-left:20px;">
+    <li>POC 階段不收平台費（Q3 後 success fee 8-12%）</li>
+    <li>公開 portfolio 第一批上架（早鳥曝光）</li>
+    <li>累積 case study 進 BeyondPath</li>
+  </ul>
+  <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.6;font-size:13px;">
+    → 有疑問寫信到 <b style="color:#c7e84a;">hello@beyondpath.tw</b>
+  </div>`;
+
+  const html = emailWrapper({
+    header: "● BEYONDPATH · APPLICATION APPROVED",
+    titleTo: `${name}，`,
+    openLine: `恭喜 — BeyondPath 系統評估通過、你正式進入 <b style="color:#c7e84a;">Tier ${tier}</b> 認證 worker 池。`,
+    bodyHtml,
+  });
+
+  return { subject, html, text };
+}
+
+function buildWorkerHoldEmail(row: Record<string, unknown>, opts?: { missingItems?: string[]; reReviewDays?: number }): { subject: string; html: string; text: string } {
+  const name = (row.display_name as string) || "創作者";
+  const tier = (row.tier_suggestion as string) || "B+";
+  const missingItems = opts?.missingItems || [
+    "近 12 個月實際 AI 案件 2-3 件具體證據（截圖 / 客戶 testimonial / 結案 invoice）",
+    "至少 1 個完整 AI workflow 細節（工具串接 + 判斷力 + 失敗 fallback）",
+  ];
+  const reReviewDays = opts?.reReviewDays || 7;
+
+  const subject = `BeyondPath 認證需補資料 · ${name}`;
+  const text = [
+    `${name} 你好，`,
+    ``,
+    `BeyondPath 系統初評：你的申請有潛力進 Tier ${tier}、但目前證據強度不足、需補資料再評。`,
+    ``,
+    `▍需補的具體項目`,
+    ...missingItems.map(item => `  · ${item}`),
+    ``,
+    `▍補件方式`,
+    `1. 回信到此 thread、附上具體 case 截圖 / testimonial / workflow 細節`,
+    `2. 系統 ${reReviewDays} 工作日內完成重新評估、回信告知結果`,
+    `3. 補件後評估可能：通過 / 仍需補 / 不適合（最多再 1 輪補）`,
+    ``,
+    `▍為什麼這樣設計`,
+    `BeyondPath 的價值在於 worker 池品質可信、client 端能信任 Tier 分級。`,
+    `補件不是刁難、是讓你的 portfolio 證據更扎實、案件配對更準。`,
+    ``,
+    `→ 有疑問寫信到 hello@beyondpath.tw`,
+    ``,
+    `— BeyondPath`,
+    PUBLIC_HOMEPAGE,
+  ].join("\n");
+
+  const missingHtml = missingItems.map(item => `<li>${item}</li>`).join("");
+  const bodyHtml = `
+  <div style="background:rgba(212,113,42,0.06);border-left:2px solid #d4712a;padding:16px 20px;margin:0 0 24px;color:#c8c6c0;line-height:1.75;font-size:15px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;color:#d4712a;margin-bottom:8px;text-transform:uppercase;">◐ 需補資料 / TIER ${tier} POTENTIAL</div>
+    系統初評：你有潛力進 Tier ${tier}、但證據強度不足、需補資料再評估。
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ 需補的具體項目 / WHAT TO ADD</div>
+  <ul style="color:#c8c6c0;line-height:1.85;font-size:14px;margin:0 0 24px;padding-left:20px;">
+    ${missingHtml}
+  </ul>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ 補件方式 / HOW TO RESUBMIT</div>
+  <ol style="color:#c8c6c0;line-height:1.85;font-size:14px;margin:0 0 24px;padding-left:20px;">
+    <li>回信此 thread、附上具體 case 截圖 / testimonial / workflow 細節</li>
+    <li>系統 ${reReviewDays} 工作日內完成重新評估、回信告知結果</li>
+    <li>補件後評估可能：通過 / 仍需補 / 不適合（最多再 1 輪補）</li>
+  </ol>
+  <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.6;font-size:13px;">
+    補件不是刁難、是讓你的 portfolio 證據扎實、案件配對更準。<br/>
+    → 有疑問寫信到 <b style="color:#c7e84a;">hello@beyondpath.tw</b>
+  </div>`;
+
+  const html = emailWrapper({
+    header: "● BEYONDPATH · APPLICATION ON HOLD",
+    titleTo: `${name}，`,
+    openLine: `BeyondPath 系統初評：你的申請有潛力進 <b style="color:#c7e84a;">Tier ${tier}</b>、需補資料再評。`,
+    bodyHtml,
+  });
+
+  return { subject, html, text };
+}
+
+function buildWorkerRejectEmail(row: Record<string, unknown>, opts?: { gapAreas?: string[]; reapplyMonths?: number }): { subject: string; html: string; text: string } {
+  const name = (row.display_name as string) || "創作者";
+  const gapAreas = opts?.gapAreas || [
+    "AI 工具實戰時數不足（建議累積 ≥ 100 hr Claude / ChatGPT / Cursor / Midjourney 等付費工具實際 client 案件）",
+    "Workflow 系統化程度（建議發展 1-2 個可重複的 multi-tool workflow、附判斷力 + 失敗 fallback）",
+    "案件證據強度（建議補 ≥ 3 個完整案件含客戶 testimonial 或結案 invoice）",
+  ];
+  const reapplyMonths = opts?.reapplyMonths || 6;
+
+  const subject = `BeyondPath 認證評估結果 · ${name}`;
+  const text = [
+    `${name} 你好，`,
+    ``,
+    `謝謝你申請 BeyondPath 認證。`,
+    ``,
+    `BeyondPath 系統評估後：你目前的 AI 實戰程度跟 BP 當前 Tier B 起跳的 worker 池仍有 gap、暫不通過認證。`,
+    ``,
+    `▍主要 gap`,
+    ...gapAreas.map(item => `  · ${item}`),
+    ``,
+    `▍重新申請時機`,
+    `${reapplyMonths} 個月後可重新申請、累積具體案件證據後再走一次評估流程。`,
+    ``,
+    `▍我們不適合對方的時候`,
+    `BeyondPath 的 worker 池服務 client 對「AI 落地有實戰經驗」的 worker 的需求。`,
+    `這次評估不通過、不代表你的能力不足、可能只是 BP 目前的 vertical / Tier 跟你的工作型態不對齊。`,
+    `你還是可以繼續累積你的 AI 工作流跟 case、未來重新申請會更扎實。`,
+    ``,
+    `→ 有疑問寫信到 hello@beyondpath.tw`,
+    ``,
+    `— BeyondPath`,
+    PUBLIC_HOMEPAGE,
+  ].join("\n");
+
+  const gapHtml = gapAreas.map(item => `<li>${item}</li>`).join("");
+  const bodyHtml = `
+  <div style="background:rgba(255,255,255,0.025);border-left:2px solid #9a9aa3;padding:16px 20px;margin:0 0 24px;color:#c8c6c0;line-height:1.75;font-size:15px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;color:#9a9aa3;margin-bottom:8px;text-transform:uppercase;">✗ 暫不通過 / ${reapplyMonths} 個月可重申</div>
+    系統評估後：你目前的 AI 實戰程度跟 BP Tier B 起跳的 worker 池仍有 gap、暫不通過。
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ 主要 GAP / KEY GAPS</div>
+  <ul style="color:#c8c6c0;line-height:1.85;font-size:14px;margin:0 0 24px;padding-left:20px;">
+    ${gapHtml}
+  </ul>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ 重新申請 / REAPPLY</div>
+  <p style="color:#c8c6c0;line-height:1.75;font-size:14px;margin:0 0 24px;"><b style="color:#c7e84a;">${reapplyMonths} 個月後</b>可重新申請、累積具體案件證據後再走一次評估流程。</p>
+  <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.65;font-size:13px;">
+    這次不通過不代表你能力不足、可能只是 BP 目前的 vertical / Tier 跟你的工作型態不對齊。<br/>
+    你可以繼續累積 AI workflow 跟 case、未來重新申請會更扎實。<br/>
+    → 有疑問寫信到 <b style="color:#c7e84a;">hello@beyondpath.tw</b>
+  </div>`;
+
+  const html = emailWrapper({
+    header: "● BEYONDPATH · EVALUATION RESULT",
+    titleTo: `${name}，`,
+    openLine: `謝謝你申請 BeyondPath 認證。系統評估後、目前認證暫不通過、<b style="color:#c7e84a;">${reapplyMonths} 個月</b>後可重申。`,
+    bodyHtml,
+  });
+
+  return { subject, html, text };
+}
+
+// ============ Client × 4 ============
+
+interface WorkerCandidate {
+  name: string;
+  tier: string;
+  lScore: number;
+  verticals: string[];
+  strengths: string[];
+  hourlyRate: string;
+  trialQuote: string;
+}
+
+function buildClientMatchEmail(row: Record<string, unknown>, opts: { candidates: WorkerCandidate[]; trialBudget?: string }): { subject: string; html: string; text: string } {
+  const company = (row.company_name as string) || "團隊";
+  const candidates = opts.candidates || [];
+  const trialBudget = opts.trialBudget || "NT$30k-100k";
+
+  const subject = `BeyondPath 配對結果 · ${candidates.length} 位 worker 為 ${company} 媒合中`;
+
+  const candidateText = candidates.map((c, i) => [
+    ``,
+    `【候選 ${i + 1}】 ${c.name} · Tier ${c.tier} · L-Score ${c.lScore} / 10`,
+    `  領域：${c.verticals.join(" · ")}`,
+    `  強項：${c.strengths.join(" / ")}`,
+    `  報價：${c.hourlyRate} hourly · 試做案 ${c.trialQuote}`,
+  ].join("\n")).join("\n");
+
+  const text = [
+    `${company} 你好，`,
+    ``,
+    `BeyondPath 配對演算法已完成媒合、為你準備 ${candidates.length} 位 Tier B+ 以上 worker 名單：`,
+    candidateText,
+    ``,
+    `▍下一步`,
+    `1. 看完三位 candidate、回信告訴我們你最想先聊哪 1-2 位`,
+    `2. BeyondPath 會 wire 你跟該 worker 直接 email（雙方獨立溝通、平台不介入）`,
+    `3. Worker 給你完整 SOW + 報價單（用 BeyondPath 範本、雙方對齊 deliverable）`,
+    `4. 試做案 ${trialBudget} 啟動、雙方直接結算（BeyondPath 不碰錢）`,
+    `5. 滿意 → retainer / 不滿意 → 結束、可換 worker`,
+    ``,
+    `▍試做案怎麼運作`,
+    `  · 小額試水（${trialBudget}）降低首次合作風險`,
+    `  · 2-4 週內完成 deliverable + 雙方驗收`,
+    `  · 滿意才升級 retainer（80-120% 試做案費率 / 月）`,
+    `  · 不滿意可結束、不綁定`,
+    ``,
+    `→ 24h 內回信告訴我們你的選擇`,
+    ``,
+    `— BeyondPath`,
+    PUBLIC_HOMEPAGE,
+  ].join("\n");
+
+  const candidateCards = candidates.map((c, i) => `
+  <div style="border:1px solid #2a2a2e;padding:20px;margin-bottom:16px;background:rgba(255,255,255,0.02);">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <div>
+        <div style="font-size:18px;font-weight:700;color:#f0eee8;font-family:Georgia,'Noto Serif TC',serif;">${c.name}</div>
+        <div style="font-size:12px;color:#9a9aa3;font-family:'JetBrains Mono',monospace;margin-top:4px;">候選 ${i + 1} · ${c.verticals.join(" · ")}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px;color:#9a9aa3;font-family:'JetBrains Mono',monospace;text-transform:uppercase;">Tier · L-Score</div>
+        <div style="font-size:18px;color:#c7e84a;font-weight:700;font-family:'JetBrains Mono',monospace;">${c.tier} · ${c.lScore}/10</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:#c8c6c0;line-height:1.7;margin-bottom:12px;">
+      <b style="color:#9a9aa3;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">強項</b><br/>
+      ${c.strengths.map(s => `<span style="display:inline-block;background:rgba(199,232,74,0.06);border:1px solid rgba(199,232,74,0.2);padding:3px 10px;margin:4px 6px 0 0;font-size:12px;color:#c8c6c0;">${s}</span>`).join("")}
+    </div>
+    <div style="border-top:1px dashed #2a2a2e;padding-top:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;font-family:'JetBrains Mono',monospace;">
+      <span style="color:#9a9aa3;">Hourly: <b style="color:#c8c6c0;">${c.hourlyRate}</b></span>
+      <span style="color:#9a9aa3;">試做案: <b style="color:#c7e84a;">${c.trialQuote}</b></span>
+    </div>
+  </div>`).join("");
+
+  const bodyHtml = `
+  <div style="background:rgba(199,232,74,0.04);border-left:2px solid #c7e84a;padding:16px 20px;margin:0 0 24px;color:#c8c6c0;line-height:1.75;font-size:15px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;color:#c7e84a;margin-bottom:8px;text-transform:uppercase;">✓ 配對完成 / ${candidates.length} CANDIDATES</div>
+    為你媒合 <b style="color:#c7e84a;">${candidates.length} 位</b> Tier B+ 以上 worker、試做案範圍 <b style="color:#c7e84a;">${trialBudget}</b>。
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ 候選名單 / CANDIDATES</div>
+  ${candidateCards}
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin:24px 0 12px;">▍ 下一步 / NEXT STEP</div>
+  <ol style="color:#c8c6c0;line-height:1.85;font-size:14px;margin:0 0 24px;padding-left:20px;">
+    <li>回信告訴我們你最想先聊哪 1-2 位</li>
+    <li>BeyondPath 會 wire 你跟該 worker 直接 email（雙方獨立溝通）</li>
+    <li>Worker 給你完整 SOW + 報價單（BP 範本對齊 deliverable）</li>
+    <li>試做案啟動、雙方直接結算（BP 不碰錢）</li>
+    <li>滿意 → retainer / 不滿意 → 結束、可換 worker</li>
+  </ol>
+  <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.65;font-size:13px;">
+    試做案小額（${trialBudget}）降首次合作風險、2-4 週交付、滿意才升級 retainer。<br/>
+    → <b style="color:#c7e84a;">24h 內</b>回信告訴我們你的選擇
+  </div>`;
+
+  const html = emailWrapper({
+    header: "● BEYONDPATH · MATCHED",
+    titleTo: `${company}，`,
+    openLine: `BeyondPath 配對演算法已完成媒合、為你準備 <b style="color:#c7e84a;">${candidates.length} 位</b> Tier B+ 以上 worker 名單。`,
+    bodyHtml,
+  });
+
+  return { subject, html, text };
+}
+
+function buildClientNeedMoreEmail(row: Record<string, unknown>, opts?: { gapItems?: string[] }): { subject: string; html: string; text: string } {
+  const company = (row.company_name as string) || "團隊";
+  const gapItems = opts?.gapItems || [
+    "預算範圍：目前只填 'NT$30-50k'、請告知期望總預算 + 試做案 vs retainer 預算分配",
+    "時程：請告知期望交付日期、是否有硬 deadline（例：上線日 / 活動日）",
+    "Deliverable 細節：請列具體要產出什麼（KV 數量 / 文案字數 / 影片秒數）",
+  ];
+
+  const subject = `BeyondPath 配對需補資料 · ${company}`;
+  const text = [
+    `${company} 你好，`,
+    ``,
+    `BeyondPath 配對演算法初評你的 brief：方向清楚、但有幾個細節需要補足、才能配出真正適合的 worker。`,
+    ``,
+    `▍需補資料`,
+    ...gapItems.map(item => `  · ${item}`),
+    ``,
+    `▍補件方式`,
+    `直接回信此 thread、補上面項目。`,
+    `BeyondPath 24h 內完成補評估、回信給你完整配對名單（1-3 位 Tier B+ worker）。`,
+    ``,
+    `▍為什麼補`,
+    `預算 / 時程 / deliverable 不清楚、配出的 worker 可能：`,
+    `  · 過度資深（超出預算）`,
+    `  · 不夠資深（撐不住規模）`,
+    `  · 時程不對齊（worker 滿檔）`,
+    `補完這幾項、配對精準度大幅提高、不必你後來自己換 worker。`,
+    ``,
+    `→ 急的話寫信到 hello@beyondpath.tw`,
+    ``,
+    `— BeyondPath`,
+    PUBLIC_HOMEPAGE,
+  ].join("\n");
+
+  const gapHtml = gapItems.map(item => `<li>${item}</li>`).join("");
+  const bodyHtml = `
+  <div style="background:rgba(212,113,42,0.06);border-left:2px solid #d4712a;padding:16px 20px;margin:0 0 24px;color:#c8c6c0;line-height:1.75;font-size:15px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;color:#d4712a;margin-bottom:8px;text-transform:uppercase;">◐ 需補資料 / GAPS DETECTED</div>
+    BeyondPath 配對演算法初評：方向清楚、但有幾個細節需補、才能配真正適合的 worker。
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ 需補資料 / WHAT TO ADD</div>
+  <ul style="color:#c8c6c0;line-height:1.85;font-size:14px;margin:0 0 24px;padding-left:20px;">
+    ${gapHtml}
+  </ul>
+  <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.65;font-size:13px;">
+    直接回信此 thread、補上面項目。<br/>
+    BeyondPath <b style="color:#c7e84a;">24h 內</b>完成補評估、回信給你完整配對名單。<br/>
+    → 急的話寫信到 <b style="color:#c7e84a;">hello@beyondpath.tw</b>
+  </div>`;
+
+  const html = emailWrapper({
+    header: "● BEYONDPATH · BRIEF NEEDS MORE",
+    titleTo: `${company}，`,
+    openLine: `BeyondPath 配對演算法初評：方向清楚、但有幾個細節需補、才能配真正適合的 worker。`,
+    bodyHtml,
+  });
+
+  return { subject, html, text };
+}
+
+function buildClientVideoInviteEmail(row: Record<string, unknown>, opts?: { calendarLink?: string; videoReason?: string }): { subject: string; html: string; text: string } {
+  const company = (row.company_name as string) || "團隊";
+  const calendarLink = opts?.calendarLink || "https://cal.com/beyondpath/30min";
+  const videoReason = opts?.videoReason || "你的 brief 涉及多個 vertical / 跨領域配對 / 旗艦案規模、用 30 min 視訊聊深、配對精準度會比 email 來回高很多。";
+
+  const subject = `BeyondPath 建議深聊 30 min · ${company}`;
+  const text = [
+    `${company} 你好，`,
+    ``,
+    `BeyondPath 收到你的 brief、配對演算法初評後、建議我們先做 30 min 視訊深聊、再正式配對 worker。`,
+    ``,
+    `▍為什麼建議視訊`,
+    videoReason,
+    ``,
+    `▍視訊會聊什麼`,
+    `  · 你的真實需求 vs brief 寫的（通常有 30% 差距）`,
+    `  · 預算 / 時程 / scope 的彈性區間`,
+    `  · 適合 retainer 還是試做案 + 試做案怎麼設計`,
+    `  · BeyondPath worker 池目前有哪些 candidate（即時討論）`,
+    `  · 你的 brand DNA / 品牌調性、配對的 worker 是否對齊`,
+    ``,
+    `▍預約連結`,
+    calendarLink,
+    ``,
+    `▍如果不方便視訊`,
+    `回信補答下面幾個問題、BeyondPath 配對演算法可以用 email 完成配對：`,
+    `  · 真實預算總額（含試做案 + 後續 retainer）`,
+    `  · 硬 deadline（活動日 / 上線日）`,
+    `  · 過去合作過類似 worker 嗎？覺得最匹配的是什麼風格？`,
+    ``,
+    `→ 急的話寫信到 hello@beyondpath.tw`,
+    ``,
+    `— BeyondPath`,
+    PUBLIC_HOMEPAGE,
+  ].join("\n");
+
+  const bodyHtml = `
+  <div style="background:rgba(126,182,255,0.08);border-left:2px solid #7eb6ff;padding:16px 20px;margin:0 0 24px;color:#c8c6c0;line-height:1.75;font-size:15px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;color:#7eb6ff;margin-bottom:8px;text-transform:uppercase;">◑ 建議深聊 / 30 MIN VIDEO</div>
+    ${videoReason}
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ 視訊會聊什麼 / AGENDA</div>
+  <ul style="color:#c8c6c0;line-height:1.85;font-size:14px;margin:0 0 24px;padding-left:20px;">
+    <li>你的真實需求 vs brief 寫的（通常有 30% 差距）</li>
+    <li>預算 / 時程 / scope 的彈性區間</li>
+    <li>適合 retainer 還是試做案 + 試做案怎麼設計</li>
+    <li>BeyondPath worker 池目前有哪些 candidate（即時討論）</li>
+    <li>你的 brand DNA / 品牌調性、配對的 worker 是否對齊</li>
+  </ul>
+  <div style="background:rgba(199,232,74,0.04);border:1px solid rgba(199,232,74,0.2);padding:18px 20px;margin:0 0 24px;text-align:center;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;margin-bottom:10px;text-transform:uppercase;">預約 30 min 視訊</div>
+    <a href="${calendarLink}" style="display:inline-block;background:#c7e84a;color:#0a0a0b;padding:12px 28px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;">→ 點此預約</a>
+  </div>
+  <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.65;font-size:13px;">
+    <b style="color:#c7e84a;">如果不方便視訊</b>、回信補答這幾個問題、BeyondPath 用 email 完成配對：<br/>
+    · 真實預算總額（含試做案 + 後續 retainer）<br/>
+    · 硬 deadline<br/>
+    · 過去合作過類似 worker 嗎？覺得最匹配的是什麼風格？
+  </div>`;
+
+  const html = emailWrapper({
+    header: "● BEYONDPATH · VIDEO RECOMMENDED",
+    titleTo: `${company}，`,
+    openLine: `BeyondPath 收到你的 brief、配對演算法初評後、建議我們先做 <b style="color:#c7e84a;">30 min 視訊深聊</b>、再正式配對 worker。`,
+    bodyHtml,
+  });
+
+  return { subject, html, text };
+}
+
+function buildClientNotFitEmail(row: Record<string, unknown>, opts?: { reason?: string; suggestions?: string[] }): { subject: string; html: string; text: string } {
+  const company = (row.company_name as string) || "團隊";
+  const reason = opts?.reason || "你的 vertical 目前不在 BeyondPath 主場（DTC 內容 / B2B SaaS GTM / 設計品牌）、worker 池暫不適合你的需求。";
+  const suggestions = opts?.suggestions || [
+    "104 接案網（一般綜合接案、無 AI 認證、但 pool 廣）",
+    "Tasker 出任務（B2C 服務類）",
+    "Upwork / Fiverr（國際接案、含 AI 領域、但需英文溝通）",
+    "你 vertical 的專屬社群（垂直論壇 / FB 社團、找該領域熟人）",
+  ];
+
+  const subject = `BeyondPath 暫不適合配對 · ${company}`;
+  const text = [
+    `${company} 你好，`,
+    ``,
+    `謝謝你把 brief 交給 BeyondPath、誠實告訴你：`,
+    reason,
+    ``,
+    `▍為什麼這樣回`,
+    `BeyondPath worker 池目前 100% 集中在 DTC 內容 / B2B SaaS GTM / 設計品牌三個 vertical 的 AI 認證 worker。`,
+    `配出不對的 worker 你也不滿意、worker 也接不好、不如直接告訴你「不是我們的主場」、節省你時間。`,
+    ``,
+    `▍建議方向`,
+    ...suggestions.map(item => `  · ${item}`),
+    ``,
+    `▍未來歡迎回來`,
+    `BeyondPath 預計 2026 Q3 正式上線、會逐步擴 vertical。你的 brief 我們有留檔、未來開新 vertical 時主動通知你。`,
+    `若你的需求其實有對齊 BP 主場、只是 brief 沒寫清楚、可回信補資料、我們重新評估。`,
+    ``,
+    `→ 有疑問寫信到 hello@beyondpath.tw`,
+    ``,
+    `— BeyondPath`,
+    PUBLIC_HOMEPAGE,
+  ].join("\n");
+
+  const suggestionHtml = suggestions.map(item => `<li>${item}</li>`).join("");
+  const bodyHtml = `
+  <div style="background:rgba(255,255,255,0.025);border-left:2px solid #9a9aa3;padding:16px 20px;margin:0 0 24px;color:#c8c6c0;line-height:1.75;font-size:15px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;color:#9a9aa3;margin-bottom:8px;text-transform:uppercase;">✗ 暫不適合 / NOT IN VERTICAL</div>
+    ${reason}
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ 建議方向 / SUGGESTIONS</div>
+  <ul style="color:#c8c6c0;line-height:1.85;font-size:14px;margin:0 0 24px;padding-left:20px;">
+    ${suggestionHtml}
+  </ul>
+  <div style="background:rgba(199,232,74,0.04);border-left:2px solid #c7e84a;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.65;font-size:13px;">
+    <b style="color:#c7e84a;">未來歡迎回來</b><br/>
+    BeyondPath 預計 <b>2026 Q3</b> 正式上線、會逐步擴 vertical。你的 brief 我們有留檔、未來開新 vertical 時主動通知你。<br/>
+    若你的需求其實有對齊 BP 主場、只是 brief 沒寫清楚、可回信補資料、我們重新評估。
+  </div>`;
+
+  const html = emailWrapper({
+    header: "● BEYONDPATH · NOT IN CURRENT VERTICAL",
+    titleTo: `${company}，`,
+    openLine: `謝謝你把 brief 交給 BeyondPath、誠實告訴你：${reason}`,
+    bodyHtml,
+  });
+
+  return { subject, html, text };
+}
+
+// ============ end decision templates ============
+
 async function sendConfirmationEmail(toEmail: string, subject: string, html: string, text: string): Promise<{ ok: boolean; error?: string }> {
   if (!RESEND_API_KEY) {
     // Resend 未設、silent skip (不阻塞 Slack 通知)
