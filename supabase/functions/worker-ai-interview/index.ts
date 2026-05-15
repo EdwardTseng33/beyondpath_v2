@@ -12,6 +12,31 @@ import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const ANTHROPIC_MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-sonnet-4-6";
 
+// Slack alert (2026-05-15 v0.3) · 後端 5xx error 主動推 Slack 給 Edward
+const SLACK_BOT_TOKEN = Deno.env.get("SLACK_BOT_TOKEN") ?? "";
+const SLACK_ALERT_CHANNEL = Deno.env.get("SLACK_ALERT_CHANNEL") ?? "C0B3RRKGQCD"; // #beyondpath-leads
+
+async function alertSlackOnError(context: string, errorMsg: string, statusCode?: number, messagesCount?: number) {
+  if (!SLACK_BOT_TOKEN) return;
+  try {
+    const lines = [
+      `⚠ *Edge Function ALERT* · \`${context}\``,
+      statusCode ? `HTTP: ${statusCode}` : null,
+      `Error: \`${String(errorMsg).slice(0, 280)}\``,
+      typeof messagesCount === "number" ? `Messages count: ${messagesCount}` : null,
+      `Time: ${new Date().toISOString()}`,
+      `Action: 看 Supabase Logs · 確認 Claude API quota / key / 5xx pattern`,
+    ].filter(Boolean).join("\n");
+    await fetch("https://slack.com/api/chat.postMessage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${SLACK_BOT_TOKEN}` },
+      body: JSON.stringify({ channel: SLACK_ALERT_CHANNEL, text: lines, unfurl_links: false }),
+    });
+  } catch {
+    // Slack alert 失敗 silent
+  }
+}
+
 const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -122,6 +147,7 @@ serve(async (req: Request) => {
   }
 
   if (!ANTHROPIC_API_KEY) {
+    await alertSlackOnError("worker-ai-interview · missing-anthropic-api-key", "ANTHROPIC_API_KEY not set in Supabase secrets", 500);
     return new Response(
       JSON.stringify({ ok: false, error: "missing-anthropic-api-key" }),
       { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } },
@@ -168,6 +194,7 @@ serve(async (req: Request) => {
       }),
     });
   } catch (e) {
+    await alertSlackOnError("worker-ai-interview · anthropic-fetch-fail", String(e), 502, messages.length);
     return new Response(
       JSON.stringify({ ok: false, error: "anthropic-fetch-fail", details: String(e) }),
       { status: 502, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } },
@@ -176,6 +203,12 @@ serve(async (req: Request) => {
 
   const claudeData = (await claudeRes.json()) as ClaudeResponse;
   if (!claudeRes.ok || claudeData.error) {
+    await alertSlackOnError(
+      "worker-ai-interview · anthropic-api-error",
+      `HTTP ${claudeRes.status} · ${claudeData.error?.message || "unknown"}`,
+      claudeRes.status,
+      messages.length,
+    );
     return new Response(
       JSON.stringify({
         ok: false,
@@ -191,6 +224,12 @@ serve(async (req: Request) => {
   const parsed = tryParseJSON(text);
 
   if (!parsed || typeof parsed !== "object") {
+    await alertSlackOnError(
+      "worker-ai-interview · claude-non-json",
+      `Claude returned non-JSON: ${text.slice(0, 200)}`,
+      500,
+      messages.length,
+    );
     return new Response(
       JSON.stringify({
         ok: false,

@@ -575,9 +575,10 @@ function WorkerDashboard({ inShell = false }) {
 // Edge Function: worker-ai-interview · helper: bpAiInterview.sendMessage(messages)
 // ============================================================
 
-// [DEPRECATED 2026-05-15 v0.2] 外部 ChatGPT/Claude paste-back 流程的 brief prompt
-// 已被 supabase/functions/worker-ai-interview/index.ts SYSTEM_PROMPT 取代（server-side 7 段訪談）
-// 保留以便 fallback rollback + 對照 Edge Function system prompt 設計（語氣 / 結構 / JSON schema）
+// [2026-05-15 v0.3 雙軌] Route A (自帶 AI · 主流) 用的 brief prompt
+// 給有 ChatGPT / Claude / Gemini 付費工具的 worker copy + 貼進外部 AI 對話跑訪談
+// Route B (BP 內建 · 保底) 用 supabase/functions/worker-ai-interview/index.ts 的 SYSTEM_PROMPT (server-side)
+// 兩個 prompt schema 對齊 (同樣 7 段 + 同樣 ai_proof JSON output) · 雙軌都通 preview
 const AI_BRIEF = `你是 BeyondPath 認證 AI 整理員。我正在申請台灣 AI 交付網路 BeyondPath 的 Tier B / B+ 認證。
 
 請帶我跑一段 30 分鐘訪談、按下面 7 段順序問。每段具體追問、不接受空泛回答（例「我會用 ChatGPT」要追問「用在什麼任務？哪個案件？拿什麼成果？」）。最後產出一段結構化 JSON、我會貼回 BeyondPath 平台、由平台 render 成能力卡 + AI 初審 + Edward 親自覆核。
@@ -780,7 +781,89 @@ function WorkerEmptyState() {
     interviewStartedRef.current = false;
   }
 
+  // ====== localStorage 進度暫存 (2026-05-15 v0.3) ======
+  // 答到一半 reload 不丟進度 · 24h 過期 · submit 成功或回首頁清除
+  const STORAGE_KEY = "bp_worker_apply_state_v1";
+  const STORAGE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24h
+  const restoredRef = React.useRef(false);
+
+  // Mount: restore 進度
+  React.useEffect(() => {
+    if (restoredRef.current || submitted) return;
+    restoredRef.current = true;
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (!saved || saved.version !== 1) return;
+      if (!saved.savedAt || Date.now() - saved.savedAt > STORAGE_MAX_AGE_MS) {
+        localStorage.removeItem(STORAGE_KEY);
+        return;
+      }
+      // 只 restore "中間" step (paste / chat / preview 有進度)、intro / generate 不必
+      const validRestoreSteps = ["paste", "chat", "preview"];
+      if (!validRestoreSteps.includes(saved.step)) return;
+
+      if (saved.route) setRoute(saved.route);
+      if (saved.pasteRaw) setPasteRaw(saved.pasteRaw);
+      if (Array.isArray(saved.interviewMessages) && saved.interviewMessages.length > 0) {
+        setInterviewMessages(saved.interviewMessages);
+        interviewStartedRef.current = true; // 已開始過、避免 auto re-trigger
+      }
+      if (typeof saved.interviewStep === "number") setInterviewStep(saved.interviewStep);
+      if (saved.interviewProgress) setInterviewProgress(saved.interviewProgress);
+      if (saved.parsed && typeof saved.parsed === "object") setParsed(saved.parsed);
+      setStep(saved.step);
+    } catch (e) {
+      // localStorage 壞 / disabled / quota / JSON parse error → silent fail (clean slate)
+      try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    }
+  }, [submitted]);
+
+  // State change: save 進度 (debounce ish · 直接每次 effect)
+  React.useEffect(() => {
+    if (submitted) return;
+    // intro / generate 沒進度可存
+    if (step === "intro" || step === "generate") return;
+    try {
+      const payload = {
+        version: 1,
+        savedAt: Date.now(),
+        step,
+        route,
+        pasteRaw: pasteRaw || "",
+        interviewMessages: interviewMessages || [],
+        interviewStep: interviewStep || 0,
+        interviewProgress: interviewProgress || "",
+        parsed: parsed || null,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // quota exceeded / disabled → silent skip
+    }
+  }, [step, route, pasteRaw, interviewMessages, interviewStep, interviewProgress, parsed, submitted]);
+
+  // submit 成功 / 回首頁 → clear (resetInterview + setRoute("") 不夠、明確清 storage)
+  const clearProgressStorage = React.useCallback(() => {
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  }, []);
+
+  // ====== Chat auto-scroll 到底 (2026-05-15 v0.3) ======
+  const chatScrollRef = React.useRef(null);
+  React.useEffect(() => {
+    if (step !== "chat") return;
+    const el = chatScrollRef.current;
+    if (el) {
+      // 微延遲讓 DOM 渲完
+      requestAnimationFrame(() => {
+        el.scrollTop = el.scrollHeight;
+      });
+    }
+  }, [interviewMessages, interviewAsking, step]);
+
   if (submitted) {
+    // 提交後清進度 storage (放這裡確保 submitted=1 URL 進來時也清)
+    clearProgressStorage();
     // v0.5.2 · 簡化 confirmation view：不重複 wrap bp-root/bp-topbar（避免跟 BP_AppShell 雙 frame conflict）
     // 直接用 plain section、加 min-height + 明確 background 防禦
     return (
@@ -1005,7 +1088,7 @@ function WorkerEmptyState() {
           {/* ====== ROUTE A · STEP 1 · GENERATE BRIEF + OPEN AI (自帶 AI · 主流路徑) ====== */}
           {step === "generate" && (
           <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
-            <ApplyProgress current={1} setStep={setStep} route="self" onRouteReset={() => setRoute("")} />
+            <ApplyProgress current={1} setStep={setStep} route="self" onRouteReset={() => { setRoute(""); setPasteRaw(""); clearProgressStorage(); }} />
             <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>用你自己的 AI 整理工作證據。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 1 · 30 分鐘 · 一鍵打開你常用的 AI</span></h1>
             <div className="bp-panel" style={{ marginTop: 22, border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)" }}>
               <div className="bp-panel-h"><span>怎麼用</span></div>
@@ -1038,7 +1121,7 @@ function WorkerEmptyState() {
           {/* ====== ROUTE A · STEP 2 · PASTE BACK (自帶 AI · 主流路徑) ====== */}
           {step === "paste" && (
           <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
-            <ApplyProgress current={2} setStep={setStep} route="self" onRouteReset={() => setRoute("")} />
+            <ApplyProgress current={2} setStep={setStep} route="self" onRouteReset={() => { setRoute(""); setPasteRaw(""); clearProgressStorage(); }} />
             <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>貼回 AI 整理的結果。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 2 · 1 分鐘 · 把 AI 給的 JSON 整段貼進來</span></h1>
             <div className="bp-panel" style={{ marginTop: 22 }}>
               <div className="bp-panel-h"><span>PASTE · AI 整理結果</span></div>
@@ -1058,7 +1141,7 @@ function WorkerEmptyState() {
           {/* ====== ROUTE B · STEP 1 · AI INTERVIEW (server-side · BP 內建 · 保底路徑) ====== */}
           {step === "chat" && (
           <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
-            <ApplyProgress current={1} setStep={setStep} route="internal" onRouteReset={() => { resetInterview(); setRoute(""); }} />
+            <ApplyProgress current={1} setStep={setStep} route="internal" onRouteReset={() => { resetInterview(); setRoute(""); clearProgressStorage(); }} />
             <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>
               AI 訪談你的工作流。
               <span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>
@@ -1103,7 +1186,7 @@ function WorkerEmptyState() {
                   )}
                 </div>
                 <div className="bp-panel-b" style={{ padding: 0 }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 14, padding: "18px 20px", maxHeight: 480, overflowY: "auto" }}>
+                  <div ref={chatScrollRef} style={{ display: "flex", flexDirection: "column", gap: 14, padding: "18px 20px", maxHeight: 480, overflowY: "auto" }}>
                     {interviewMessages.map((msg, i) => (
                       <div key={i} style={{ display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}>
                         <div style={{
@@ -1217,7 +1300,7 @@ function WorkerEmptyState() {
             <div style={{ marginTop: 18, display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
               <button
                 type="button"
-                onClick={() => { resetInterview(); setRoute(""); setStep("intro"); }}
+                onClick={() => { resetInterview(); setRoute(""); clearProgressStorage(); setStep("intro"); }}
                 style={{ ...btnGhostStyle, padding: "8px 18px", fontSize: 12 }}
               >
                 ← 取消、回首頁
@@ -1243,7 +1326,7 @@ function WorkerEmptyState() {
           {/* ====== STEP 2 · PREVIEW CARD + LAYER 2 + LAYER 3 ====== */}
           {step === "preview" && parsed && (
           <div style={{ maxWidth: 880, margin: "32px auto", padding: "0 24px" }}>
-            <ApplyProgress current={route === "internal" ? 2 : 3} setStep={setStep} route={route || "self"} onRouteReset={() => { resetInterview(); setRoute(""); setPasteRaw(""); }} />
+            <ApplyProgress current={route === "internal" ? 2 : 3} setStep={setStep} route={route || "self"} onRouteReset={() => { resetInterview(); setRoute(""); setPasteRaw(""); clearProgressStorage(); }} />
             <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>這就是你即將出現在客戶面前的樣子。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>預覽你的能力卡 + 送出申請</span></h1>
 
             {/* ABILITY CARD */}
@@ -1540,9 +1623,9 @@ const fieldStyle = { width: "100%", padding: "10px 12px", background: "rgba(0,0,
 const btnPrimaryStyle = { padding: "10px 18px", background: "var(--accent)", color: "var(--bg)", border: "1px solid var(--accent)", fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", fontWeight: 700, textTransform: "uppercase" };
 const btnGhostStyle = { padding: "10px 16px", background: "transparent", color: "var(--text)", border: "1px solid var(--line-soft)", fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", textDecoration: "none", display: "inline-block" };
 
-// [DEPRECATED 2026-05-15 v0.2] paste-back flow 的範例 JSON、外部 AI 訪談 fallback 用
-// 已被 server-side AI 訪談（worker-ai-interview Edge Function）取代
-// 保留作為 ai_proof JSON schema 對照範例（preview card render 對齊）
+// [2026-05-15 v0.3 雙軌] Route A paste-back flow 的範例 JSON
+// worker 點「用範例試試」button 時 setPasteRaw(SAMPLE_PASTE) · 給 user 看正確格式
+// schema 對齊 Route B 的 ai_proof output (skill_matrix 6 維 + L_score + tier_suggestion 等)
 const SAMPLE_PASTE = `{
   "name": "Arc",
   "verticals": ["DTC 內容"],
