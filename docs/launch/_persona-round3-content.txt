@@ -1,0 +1,133 @@
+[
+  {
+    "persona_id": "W01",
+    "iter2_fix_relevant": [
+      "Fix6-Senior"
+    ],
+    "pain_resolved_this_round": "資深 worker 不用走 30 min AI 訪談、可直接跟 Edward 視訊談策略合作",
+    "submit_round2": "yes",
+    "submit_round3": "yes",
+    "submit_lift_why": "本來就 yes、Fix 6 進一步強化資深 worker 受重視的感覺、conversion confidence 提升",
+    "residual_blocker": "none（fast-track CTA 解掉了被當成一般 applicant 的疑慮）"
+  },
+  {
+    "persona_id": "W02",
+    "iter2_fix_relevant": [
+      "Fix6-Senior"
+    ],
+    "pain_resolved_this_round": "Tier A+ 資深 worker 終於有明確 fast-track 路徑、不用懷疑自己被 AI 訪談低估",
+    "submit_round2": "unsure",
+    "submit_round3": "yes",
+    "submit_lift_why": "Fix 6 黃色 panel 直接 address 她 round 2 的核心疑慮（AI 30 min 太淺）、視訊預約讓她願意 commit",
+    "residual_blocker": "視訊後 Edward 回覆速度 + 是否真能 match 到對等案件（產品外無法解）"
+  },
+  {
+    "persona_id": "W03",
+    "iter2_fix_relevant": [],
+    "pain_resolved_this_round": "無直接相關 fix、但整體 enterprise/senior signal 提升讓他更信任平台 positioning",
+    "submit_round2": "yes",
+    "submit_round3": "yes",
+    "submit_lift_why": "decision 不變、但對平台 seriousness 信心增加",
+    "residual_blocker": "none"
+  },
+  {
+    "persona_id": "W04",
+    "iter2_fix_relevant": [
+      "Fix6-Senior"
+    ],
+    "pain_resolved_this_round": "Fix 6 部分回應他 round 2「我不要被當 applicant」的反感、給了 senior 一條繞道",
+    "submit_round2": "no",
+    "submit_round3": "unsure",
+    "submit_lift_why": "從 no → unsure：fast-track CTA 讓他願意考慮視訊聊一次、但對 closed club gamification 文案仍反感",
+    "residual_blocker": "「You're 1 step away from the closed club」整體 framing 對他仍像獵頭話術、需要更 B2B 語氣的 senior entry"
+  },
+  {
+    "persona_id": "W05",
+    "iter2_fix_relevant": [
+      "Fix6-Senior"
+    ],
+    "pain_resolved_this_round": "中階偏資深 worker 看到 senior fast-track 存在、反推一般流程也是被認真看待",
+    "submit_round2": "unsure",
+    "submit_round3": "yes",
+    "submit_lift_why": "Fix 6 雖然不是給她用、但 senior track 存在讓她相信 Tier 分級是真的、願意 submit 一般流程",
+    "residual_blocker": "AI 訪談實際品質仍是未知數、要實際走完才知道"
+  },
+  {
+    "persona_id": "W06",
+    "iter2_fix_relevant": [],
+    "pain_resolved_this_round": "無直接相關 fix、原本就 yes",
+    "submit_round2": "yes",
+    "submit_round3": "yes",
+    "submit_lift_why": "decision 不變、無新增摩擦",
+    "residual_blocker": "none"
+  },
+  {
+    "persona_id": "C01",
+    "iter2_fix_relevant": [
+      "Fix5-Price"
+    ],
+    "pain_resolved_this_round": "Tier 預算區間 hint 讓他事前知道大概落點、不用怕填完才發現超預算",
+    "submit_round2": "yes",
+    "submit_round3": "yes",
+    "submit_lift_why": "decision 不變、但 Fix 5 讓 submit 後的等待焦慮降低、conversion friction 更低",
+    "residual_blocker": "none"
+  },
+  {
+    "persona_id": "C02",
+    "iter2_fix_relevant": [
+      "Fix4-Enterprise",
+      "Fix5-Price"
+    ],
+    "pain_resolved_this_round": "NDA toggle 直接解掉他 round 2 的最大 blocker、Edward 一眼看到不用來回 email",
+    "submit_round2": "yes",
+    "submit_round3": "yes",
+    "submit_lift_why": "從 yes (但 NDA blocker) → yes (blocker 已解)、commitment 強度大幅提升、實際會 submit 機率變高",
+    "residual_blocker": "none（NDA 流程從產品內就 surface 給 Edward）"
+  },
+  {
+    "persona_id": "C03",
+    "iter2_fix_relevant": [
+      "Fix5-Price",
+      "Fix4-Enterprise"
+    ],
+    "pain_resolved_this_round": "Tier 預算區間讓中型企業採購可預先抓預算、+15% 平台溢價說明也透明",
+    "submit_round2": "unsure",
+    "submit_round3": "yes",
+    "submit_lift_why": "Fix 5 價格透明 + Fix 4 公司簽約 toggle 兩個一起解掉她 round 2「不知道能不能跑公司流程」的猶豫",
+    "residual_blocker": "需要試跑一單才知道實際交付品質、但 submit 意願已成"
+  },
+  {
+    "persona_id": "C04",
+    "iter2_fix_relevant": [
+      "Fix5-Price"
+    ],
+    "pain_resolved_this_round": "價格區間部分回應、但 vertical depth (supply 端 worker 是否真在他的垂直領域) 仍未解",
+    "submit_round2": "yes",
+    "submit_round3": "yes",
+    "submit_lift_why": "decision 不變、Fix 5 略提升信心、但核心 vertical supply 疑慮 iteration 2 沒碰",
+    "residual_blocker": "垂直領域 worker 池深度仍是 supply 側問題、產品改 UI 無法解、需要 Edward 實際媒合驗證"
+  },
+  {
+    "persona_id": "C05",
+    "iter2_fix_relevant": [
+      "Fix4-Enterprise",
+      "Fix5-Price"
+    ],
+    "pain_resolved_this_round": "公司對公司簽約 + 視訊先聊 toggle 解掉她 round 2「不確定能不能正式合約」的疑慮",
+    "submit_round2": "unsure",
+    "submit_round3": "yes",
+    "submit_lift_why": "Fix 4 的 4 個 toggle 把 enterprise buyer 的隱性需求顯性化、她從 unsure → yes",
+    "residual_blocker": "視訊後 Edward bandwidth 是否能 cover 所有 enterprise lead（scale issue）"
+  },
+  {
+    "persona_id": "C06",
+    "iter2_fix_relevant": [
+      "Fix4-Enterprise"
+    ],
+    "pain_resolved_this_round": "🧾 公司發票 toggle 直接解掉他 round 2 的發票 blocker、Slack 直接 flag 給 Edward",
+    "submit_round2": "yes",
+    "submit_round3": "yes",
+    "submit_lift_why": "從 yes (但發票 blocker) → yes (blocker 已解)、實際 submit 機率大幅提升、財務流程疑慮消除",
+    "residual_blocker": "none（發票需求從 intake 端就傳給 Edward、後續開立屬營運流程）"
+  }
+]
