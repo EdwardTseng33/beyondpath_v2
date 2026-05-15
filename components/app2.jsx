@@ -266,6 +266,58 @@ function Step1({ state, set, device }) {
           </div>
         )}
       </div>
+
+      {/* Enterprise needs (optional) · 企業 / B2B 流程選項 */}
+      <div style={{ marginTop: 28 }}>
+        <div className="bp-h2" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span>Enterprise needs · 企業流程</span>
+          <span style={{ fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)" }}>optional · 選填</span>
+        </div>
+        <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 4, marginBottom: 12, lineHeight: 1.6 }}>
+          B2B / 大型企業案、勾選後 Edward 會在 24h 回信時一併處理 NDA / 發票 / 合約 / 預約視訊。不勾沒關係、預設走個人案流程。
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
+          {[
+            { id: "nda", label: "需要 NDA", sub: "簽保密協議才能談" },
+            { id: "invoice", label: "需要公司發票", sub: "三聯式 / 含統編" },
+            { id: "contract", label: "公司對公司簽約", sub: "正式服務合約 · 不接受 PayPal" },
+            { id: "talkToEdward", label: "想先跟 Edward 聊 30 min", sub: "大金額 / 複雜案 · 視訊預約" },
+          ].map((f) => {
+            const active = state.enterprise && state.enterprise[f.id];
+            return (
+              <button
+                key={f.id}
+                onClick={() => set({ enterprise: { ...(state.enterprise || {}), [f.id]: !active } })}
+                style={{
+                  textAlign: "left",
+                  padding: "12px 14px",
+                  background: active ? "var(--accent-soft)" : "rgba(255,255,255,0.02)",
+                  border: "1px solid " + (active ? "var(--accent-line)" : "var(--line-soft)"),
+                  borderRadius: "var(--r-md)",
+                  color: "var(--text)",
+                  cursor: "pointer",
+                  transition: "all 0.15s",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600, marginBottom: 4 }}>
+                  <span style={{
+                    display: "inline-flex",
+                    width: 16, height: 16,
+                    border: "1px solid " + (active ? "var(--accent)" : "var(--muted)"),
+                    background: active ? "var(--accent)" : "transparent",
+                    color: "var(--bg)",
+                    fontSize: 11,
+                    alignItems: "center", justifyContent: "center",
+                    borderRadius: 3,
+                  }}>{active ? "✓" : ""}</span>
+                  <span>{f.label}</span>
+                </div>
+                <div style={{ fontSize: 11.5, color: "var(--muted)", paddingLeft: 24, lineHeight: 1.5 }}>{f.sub}</div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
@@ -529,11 +581,11 @@ function Step3({ state, set, device }) {
           </div>
           <div className="bp-seg bp-seg-tier">
             {[
-              { v: "B",   id: "B",   zh: "實踐者" },
-              { v: "A",   id: "A",   zh: "專家" },
-              { v: "A+",  id: "A+",  zh: "大師" },
-              { v: "S",   id: "S",   zh: "典範" },
-              { v: "any", id: "Any", zh: "" },
+              { v: "B",   id: "B",   zh: "實踐者", price: "NT$30-80k" },
+              { v: "A",   id: "A",   zh: "專家",   price: "NT$80-200k" },
+              { v: "A+",  id: "A+",  zh: "大師",   price: "NT$200-500k" },
+              { v: "S",   id: "S",   zh: "典範",   price: "NT$500k+" },
+              { v: "any", id: "Any", zh: "",       price: "看 AI 拆解" },
             ].map((o) => (
               <button
                 key={o.v}
@@ -542,8 +594,12 @@ function Step3({ state, set, device }) {
               >
                 <span className="tid">{o.id}</span>
                 {o.zh && <span className="zh">{o.zh}</span>}
+                <span style={{ display: "block", fontSize: 10, color: "var(--muted)", marginTop: 2, fontFamily: "var(--mono)", letterSpacing: "0.02em" }}>{o.price}</span>
               </button>
             ))}
+          </div>
+          <div style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 6, fontFamily: "var(--mono)" }}>
+            ※ 價格區間為平台統計、實際報價依案件複雜度 + Claude AI 顧問建議調整（含 +15% 平台溢價）
           </div>
         </div>
 
@@ -1152,6 +1208,12 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
       bonus: ["voice", "local"],
     },
     selectedWorkers: ["w-arc", "w-mei"],
+    enterprise: {
+      nda: false,
+      invoice: false,
+      contract: false,
+      talkToEdward: false,
+    },
   });
 
   const set = (patch) => setState((s) => ({ ...s, ...patch }));

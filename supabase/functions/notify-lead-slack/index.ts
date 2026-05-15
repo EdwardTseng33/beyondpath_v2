@@ -59,11 +59,24 @@ function formatClient(row: Record<string, unknown>): string {
     ? truncate((intakeData.brief as string) || (intakeData.description as string) || (intakeData.project_brief as string) || "", 140)
     : "";
 
+  // v3 (2026-05-15) · Enterprise flags from intake_data.enterprise
+  const enterprise = (intakeData && typeof intakeData === "object" && intakeData.enterprise && typeof intakeData.enterprise === "object")
+    ? intakeData.enterprise as Record<string, unknown>
+    : null;
+  const enterpriseFlags: string[] = [];
+  if (enterprise?.nda) enterpriseFlags.push("📑 NDA");
+  if (enterprise?.invoice) enterpriseFlags.push("🧾 公司發票");
+  if (enterprise?.contract) enterpriseFlags.push("📝 公司對公司簽約");
+  if (enterprise?.talkToEdward) enterpriseFlags.push("📞 想視訊聊");
+
   const lines = [
     `📋 *新 Client Intake* · _${company}_`,
     `\`${email}\` · 預算 *${budget}*${timeline ? ` · 時程 ${timeline}` : ""}`,
   ];
   if (vertical) lines.push(`領域：${vertical}`);
+  if (enterpriseFlags.length > 0) {
+    lines.push(`⚠ *Enterprise needs*：${enterpriseFlags.join(" · ")}`);
+  }
   if (brief) lines.push(`> ${brief}`);
   return lines.join("\n");
 }

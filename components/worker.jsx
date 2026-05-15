@@ -783,6 +783,44 @@ function WorkerEmptyState() {
               <br/><span className="zh" style={{ color: "var(--muted)" }}>還差一步加入 &lt; 10%</span>
             </h1>
 
+            {/* Senior fast-track · 資深 worker 跳過 4 步、直接跟 Edward 30 min 聊 */}
+            <div style={{
+              marginTop: 22,
+              padding: "14px 18px",
+              background: "rgba(255,200,80,0.06)",
+              border: "1px solid rgba(255,200,80,0.25)",
+              borderRadius: "var(--r-md)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <span style={{ fontSize: 16 }}>👔</span>
+                <b style={{ color: "#ffc850", fontSize: 13.5 }}>資深 worker（10+ 年 / Tier A+ 以上）</b>
+                <span style={{ fontSize: 12, color: "var(--muted)", fontFamily: "var(--mono)" }}>fast-track</span>
+              </div>
+              <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.6 }}>
+                30 分鐘 AI 訪談對你的職涯太短。直接跟 Edward 預約 30 min 視訊聊策略合作、跳過下方 4 步、直接進 Tier A+ pipeline。
+              </div>
+              <a
+                href="mailto:edwardt0303@gmail.com?subject=BeyondPath%20Senior%20Worker%20Fast-Track%20%E7%94%B3%E8%AB%8B&body=Edward%20%E5%A5%BD%EF%BC%8C%0A%0A%E6%88%91%E6%98%AF%E8%B3%87%E6%B7%B1%20worker%EF%BC%88_____%20%E5%B9%B4%E7%B6%93%E9%A9%97%EF%BC%89%E3%80%81%E6%83%B3%E8%B7%B3%E9%81%8E%204%20%E6%AD%A5%E7%B0%A1%E5%8C%96%E8%A8%AA%E8%AB%87%E3%80%81%E7%9B%B4%E6%8E%A5%E8%B7%9F%E4%BD%A0%E9%A0%90%E7%B4%84%2030%20min%20%E8%A6%96%E8%A8%8A%E8%81%8A%E7%AD%96%E7%95%A5%E5%90%88%E4%BD%9C%E3%80%82%0A%0A%E4%B8%BB%E5%8A%9B%E9%A0%98%E5%9F%9F%EF%BC%9A_____%0A%E4%B8%BB%E8%A6%81%E5%85%AC%E5%8F%B8%20%2F%20%E4%BD%9C%E5%93%81%EF%BC%9A_____%0A%E5%8F%AF%E9%A0%90%E7%B4%84%E6%99%82%E6%AE%B5%EF%BC%9A_____%0A%0A%E8%AC%9D%E8%AC%9D"
+                style={{
+                  alignSelf: "flex-start",
+                  marginTop: 4,
+                  padding: "8px 16px",
+                  background: "#ffc850",
+                  color: "#0a0a0b",
+                  borderRadius: "var(--r-sm)",
+                  textDecoration: "none",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  fontFamily: "var(--sans)",
+                }}
+              >
+                → 預約 Edward 30 min 視訊
+              </a>
+            </div>
+
             <div className="bp-panel bp-onb-card" style={{ marginTop: 26 }}>
               <div className="bp-panel-h">
                 <span>Tier B Certification · 4 步</span>
