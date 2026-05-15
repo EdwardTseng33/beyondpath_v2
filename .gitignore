@@ -15,3 +15,5 @@ index-offline.html
 landing-v0.*.html
 
 .vercel
+.tmp/
+supabase/.temp/
