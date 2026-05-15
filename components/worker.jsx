@@ -744,8 +744,8 @@ function WorkerEmptyState() {
   }
 
   return (
-    <div style={{ width: "100%", minHeight: "80vh", background: "var(--bg, #0a0a0b)", color: "var(--text, #f0eee8)" }}>
-      <div style={{ padding: "32px 24px 80px" }}>
+    <div style={{ width: "100%", height: "100%", overflowY: "auto", overflowX: "hidden", background: "var(--bg, #0a0a0b)", color: "var(--text, #f0eee8)" }}>
+      <div style={{ minHeight: "100%", padding: "32px 24px 80px" }}>
         <div>
           {step === "intro" && (
           <div className="bp-onboarding">
