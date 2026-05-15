@@ -663,17 +663,30 @@ function WorkerEmptyState() {
   function tryParsePaste() {
     setParseError("");
     setParsed(null);
-    if (!pasteRaw.trim()) { setParseError("貼上 AI 整理的 JSON"); return; }
+    if (!pasteRaw.trim()) {
+      setParseError("把 AI 整理出來的內容整段貼進來就好（含中文說明 OK · 我們會自動抓出 JSON 部分）。");
+      return;
+    }
     try {
       const m = pasteRaw.match(/\{[\s\S]*\}/);
-      if (!m) throw new Error("找不到 JSON");
+      if (!m) {
+        throw new Error("貼進來的內容找不到 JSON 區塊（要含 { } 大括號）。請回 ChatGPT/Claude 確認最後有產出 JSON、整段複製貼上。");
+      }
       const obj = JSON.parse(m[0]);
-      if (typeof obj.L_score !== "number") throw new Error("缺 L_score");
-      if (!obj.skill_matrix) throw new Error("缺 skill_matrix");
+      if (typeof obj.L_score !== "number") {
+        throw new Error("JSON 裡缺 `L_score`（一個 0-10 的數字）。可能是 AI 沒走完訪談、回去看是否漏了 L 分評估那段。");
+      }
+      if (!obj.skill_matrix) {
+        throw new Error("JSON 裡缺 `skill_matrix`（6 維能力評分）。回 ChatGPT/Claude 補完 6 維評分後重貼。");
+      }
       setParsed(obj);
       setStep("preview");
     } catch (e) {
-      setParseError(`格式有問題：${e.message}。請確認貼的是完整 JSON、含 L_score 和 skill_matrix。`);
+      // JSON.parse 拋的 syntax error 會在這、其他自定 throw 也在這
+      const friendly = e.message.includes("Unexpected") || e.message.includes("Unterminated")
+        ? `JSON 格式不完整（${e.message.slice(0, 60)}…）。常見原因：複製時漏了結尾 } 或多了句點。再貼一次試試、或點下方「用範例試試」看正確格式長怎樣。`
+        : e.message;
+      setParseError(friendly);
     }
   }
 

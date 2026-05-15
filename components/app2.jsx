@@ -656,10 +656,10 @@ function Step3({ state, set, device }) {
           </div>
           <div className="bp-seg">
             {[
-              { id: "voice", en: "自帶聲量", zh: "IG / Threads" },
-              { id: "local", en: "在地經驗", zh: "TW market" },
-              { id: "loyalty", en: "舊合作", zh: "loyalty +5" },
-              { id: "mercy", en: "新人加成", zh: "反馬太" },
+              { id: "voice", en: "Worker has voice", zh: "希望 worker 自帶 IG/Threads 聲量" },
+              { id: "local", en: "TW market savvy", zh: "希望 worker 熟台灣市場文化" },
+              { id: "loyalty", en: "Prior collaborator", zh: "優先曾合作過的 worker" },
+              { id: "mercy", en: "Open to newcomer", zh: "願意給新銳 worker 機會（非主流選項加分）" },
             ].map((b) => (
               <button
                 key={b.id}
@@ -717,15 +717,20 @@ function Step4({ state, set, device }) {
       </h1>
       <div style={{
         marginTop: 16,
-        padding: "12px 16px",
-        background: "rgba(255,200,80,0.06)",
-        border: "1px solid rgba(255,200,80,0.25)",
+        padding: "14px 18px",
+        background: "rgba(199,232,74,0.06)",
+        border: "1px solid rgba(199,232,74,0.25)",
         borderRadius: "var(--r-md)",
         fontSize: 13,
         color: "var(--text-2)",
-        lineHeight: 1.6,
+        lineHeight: 1.7,
       }}>
-        ⚠️ <b style={{ color: "#ffc850" }}>Beta 階段 demo</b> · BeyondPath worker pool 仍在累積、實際配對由創辦人 Edward 線下人工處理 + AI 輔助分析。下方 worker 卡為示意參考、首批用戶請等 Edward email 回覆配對結果（24h 內）。
+        <div style={{ marginBottom: 6 }}>
+          🎯 <b style={{ color: "var(--accent)" }}>Edward 親自配對 · 24h 內 email 給你 3 個最匹配的 worker</b>
+        </div>
+        <div style={{ fontSize: 12.5, color: "var(--muted)" }}>
+          下方為 demo workers 視覺示意 · BeyondPath 真實 pipeline 累積中、實際配對 Edward 看完整 brief（你剛填的）+ 真實 worker portfolio 雙向匹配、附帶 Claude AI 顧問建議（應接 / Tier / 報價 / risk）。submit 後請查 email、被拒絕也會通知。
+        </div>
       </div>
 
       <div className="bp-match-head" style={{ marginTop: 22 }}>
