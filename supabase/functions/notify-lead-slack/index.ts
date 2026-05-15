@@ -43,7 +43,7 @@ function buildWorkerConfirmEmail(row: Record<string, unknown>): { subject: strin
     `— BeyondPath`,
     `${PUBLIC_HOMEPAGE}`,
   ].join("\n");
-  const html = `<!DOCTYPE html><html><body style="font-family:'IBM Plex Sans','Noto Sans TC',system-ui,sans-serif;background:#0a0a0b;color:#f0eee8;margin:0;padding:40px 20px;">
+  const html = `<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BeyondPath</title></head><body style="font-family:'IBM Plex Sans','Noto Sans TC',system-ui,sans-serif;background:#0a0a0b;color:#f0eee8;margin:0;padding:40px 20px;">
 <div style="max-width:560px;margin:0 auto;background:#141416;border:1px solid #2a2a2e;padding:36px 32px;">
   <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.14em;color:#c7e84a;margin-bottom:18px;">● BEYONDPATH · APPLICATION RECEIVED</div>
   <h1 style="font-size:22px;font-weight:700;margin:0 0 16px;color:#f0eee8;">${name} 你好，</h1>
@@ -79,7 +79,7 @@ function buildClientConfirmEmail(row: Record<string, unknown>): { subject: strin
     `— BeyondPath`,
     `${PUBLIC_HOMEPAGE}`,
   ].join("\n");
-  const html = `<!DOCTYPE html><html><body style="font-family:'IBM Plex Sans','Noto Sans TC',system-ui,sans-serif;background:#0a0a0b;color:#f0eee8;margin:0;padding:40px 20px;">
+  const html = `<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BeyondPath</title></head><body style="font-family:'IBM Plex Sans','Noto Sans TC',system-ui,sans-serif;background:#0a0a0b;color:#f0eee8;margin:0;padding:40px 20px;">
 <div style="max-width:560px;margin:0 auto;background:#141416;border:1px solid #2a2a2e;padding:36px 32px;">
   <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.14em;color:#c7e84a;margin-bottom:18px;">● BEYONDPATH · BRIEF RECEIVED</div>
   <h1 style="font-size:22px;font-weight:700;margin:0 0 16px;color:#f0eee8;">${company} 你好，</h1>
