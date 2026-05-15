@@ -366,6 +366,48 @@
       border-radius: 0 !important; box-shadow: none !important;
     }
   }
+
+  /* ============================================================
+     2026-05-15 Worker apply mobile responsive fix (Edward audit)
+     Worker entry mobile 仍走 BP_AppShell desktop shell (by design)、
+     但加 mobile-aware: body 可 scroll、nav 壓縮、avatar 縮、role pill 簡化
+     ============================================================ */
+  @media (max-width: 768px) {
+    html, body { overflow-x: hidden; max-width: 100vw; }
+
+    /* Shell root · 允許 scroll (mobile 不 lock viewport) */
+    #root, .bp-shell { height: auto !important; min-height: 100vh !important; }
+    .bp-shell-body { overflow-y: auto !important; overflow-x: hidden !important; min-height: 70vh !important; flex-direction: column; }
+    .bp-shell-body > * { width: 100% !important; min-width: 0 !important; }
+
+    /* Top nav · 壓縮 padding + 簡化內容 */
+    .bp-shell-top { padding: 8px 12px !important; gap: 8px !important; flex-wrap: wrap; }
+    .bp-shell-brand { font-size: 11px !important; }
+    .bp-shell-brand small { font-size: 9px !important; padding-left: 6px !important; }
+    .bp-shell-roles { display: none !important; } /* 中間 role pill 隱藏、mobile 從 menu 切換 */
+    .bp-shell-meta { gap: 6px !important; margin-left: auto; }
+    .bp-shell-ver { font-size: 9px !important; padding: 2px 5px !important; }
+    .bp-shell-name { display: none !important; } /* email 太長隱藏、avatar 留 */
+    .bp-shell-avatar { width: 24px !important; height: 24px !important; }
+
+    /* Worker onboarding container · 收 padding */
+    .bp-onboarding { max-width: 100% !important; margin: 24px 0 !important; padding: 0 16px !important; }
+
+    /* Onboarding step list 縮緊 */
+    .bp-onb-stat { grid-template-columns: 1fr !important; gap: 8px !important; }
+    .bp-onb-cta { font-size: 13px !important; padding: 12px !important; }
+
+    /* Hero h1 · 統一縮 */
+    .bp-h1 { font-size: 26px !important; line-height: 1.25 !important; }
+    .bp-h2 { font-size: 20px !important; line-height: 1.3 !important; }
+
+    /* Panel · 收 padding */
+    .bp-panel-h { padding: 10px 14px !important; font-size: 11px !important; }
+    .bp-panel-b { padding: 16px !important; }
+
+    /* eyebrow · 縮 font */
+    .bp-eyebrow { font-size: 10px !important; gap: 8px !important; flex-wrap: wrap; }
+  }
 </style>
 
 <script type="text/babel" data-presets="env,react">

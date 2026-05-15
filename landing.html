@@ -76,15 +76,21 @@
   #root { flex: 1; min-height: 0; }
 
   /* ========= Disclaimer banner ========= */
-  .bp-disclaimer-top { flex: 0 0 auto; background: #1a1a08; background-image: repeating-linear-gradient(45deg, rgba(255,248,212,0.04) 0 8px, transparent 8px 16px); color: #fff8d4; padding: 8px 18px; font: 500 11px/1.5 var(--mono); display: flex; align-items: center; gap: 14px; border-bottom: 1px solid rgba(255,248,212,0.12); position: relative; z-index: 100; }
+  .bp-disclaimer-top { flex: 0 0 auto; background: #1a1a08; background-image: repeating-linear-gradient(45deg, rgba(255,248,212,0.04) 0 8px, transparent 8px 16px); color: #fff8d4; padding: 8px 18px; font: 500 11px/1.5 var(--mono); display: flex; align-items: center; gap: 14px; border-bottom: 1px solid rgba(255,248,212,0.12); position: relative; z-index: 100; box-sizing: border-box; max-width: 100vw; }
   .bp-disclaimer-top .icon { font-size: 14px; flex: 0 0 auto; }
   .bp-disclaimer-top .label { font-weight: 700; letter-spacing: 0.08em; flex: 0 0 auto; }
-  .bp-disclaimer-top .body { flex: 1; min-width: 0; opacity: 0.88; font-family: var(--zh); font-weight: 400; font-size: 11.5px; }
+  .bp-disclaimer-top .body { flex: 1; min-width: 0; opacity: 0.88; font-family: var(--zh); font-weight: 400; font-size: 11.5px; word-break: break-word; }
   .bp-disclaimer-top a { color: #c7e84a; text-decoration: none; border-bottom: 1px solid rgba(199,232,74,0.4); padding-bottom: 1px; }
   .bp-disclaimer-top a:hover { border-bottom-color: #c7e84a; }
   .bp-disclaimer-top .close { background: transparent; border: 0; color: #fff8d4; font-size: 16px; cursor: pointer; padding: 4px 8px; opacity: 0.6; flex: 0 0 auto; }
   .bp-disclaimer-top .close:hover { opacity: 1; }
-  @media (max-width: 768px) { .bp-disclaimer-top { flex-wrap: wrap; padding: 6px 12px; gap: 6px; font-size: 10.5px; } .bp-disclaimer-top .body { font-size: 10.5px; flex-basis: 100%; order: 3; } .bp-disclaimer-top .close { order: 2; } }
+  @media (max-width: 768px) {
+    .bp-disclaimer-top { flex-wrap: wrap; padding: 6px 12px; gap: 6px 10px; font-size: 10.5px; }
+    .bp-disclaimer-top .icon { order: 1; }
+    .bp-disclaimer-top .label { order: 2; flex: 1 1 auto; min-width: 0; font-size: 10px; letter-spacing: 0.06em; word-break: break-word; }
+    .bp-disclaimer-top .close { order: 3; padding: 2px 6px; font-size: 14px; }
+    .bp-disclaimer-top .body { font-size: 10.5px; flex-basis: 100%; order: 4; line-height: 1.5; }
+  }
   .bp-disclaimer-foot { flex: 0 0 auto; background: #050507; color: #6a6a6c; padding: 14px 18px; font: 500 11px/1.6 var(--mono); text-align: center; border-top: 1px solid rgba(255,255,255,0.04); }
   .bp-disclaimer-foot a { color: #9a9aa3; text-decoration: none; border-bottom: 1px solid rgba(199,232,74,0.3); padding-bottom: 1px; }
   .bp-disclaimer-foot a:hover { color: #c7e84a; border-bottom-color: #c7e84a; }
@@ -462,13 +468,56 @@
   .le-footer-bar .center { text-align: center; }
   .le-footer-bar .right { text-align: right; color: var(--accent); display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
   @media (max-width: 900px) { .le-footer-bar { grid-template-columns: 1fr; gap: 8px; } .le-footer-bar .center, .le-footer-bar .right { text-align: left; justify-content: flex-start; } }
+
+  /* ============================================================
+     2026-05-15 Mobile responsive comprehensive fix (Edward audit)
+     Cover: statbar / CTA / hero / section padding / nav / typography
+     ============================================================ */
+  @media (max-width: 768px) {
+    /* Global container safety - prevent horizontal overflow */
+    html, body { overflow-x: hidden; max-width: 100vw; }
+
+    /* le-staticbar · 4 item 改 2x2 grid 不橫滑 */
+    .le-staticbar { display: grid !important; grid-template-columns: 1fr 1fr; gap: 0; overflow: hidden; white-space: normal; }
+    .le-staticbar .item { padding: 10px 12px; font-size: 9.5px; letter-spacing: 0.1em; flex: unset; gap: 8px; border-bottom: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); }
+    .le-staticbar .item:nth-child(even) { border-right: none; }
+    .le-staticbar .item:nth-last-child(-n+2) { border-bottom: none; }
+
+    /* CTA buttons · flex column + smaller text · prevent overflow */
+    .le-cta-primary, .le-cta-secondary { flex-direction: column !important; align-items: flex-start !important; gap: 6px; padding: 14px 16px !important; font-size: 12px !important; min-height: auto !important; }
+    .le-cta-primary span:last-child, .le-cta-secondary span:last-child, .le-cta-secondary .sub { font-size: 10.5px !important; line-height: 1.4; opacity: 0.7; }
+
+    /* Hero h1 / h2 · 縮 font + 收 padding */
+    .bp-h1, .bp-h2 { word-break: break-word; }
+
+    /* Section padding 收 */
+    .bp-section, .bp-onboarding { padding-left: 16px !important; padding-right: 16px !important; }
+
+    /* Grid 多欄 → 單欄 default fallback */
+    .bp-grid-3 { grid-template-columns: 1fr !important; gap: 14px !important; }
+    .bp-grid-2 { grid-template-columns: 1fr !important; gap: 14px !important; }
+
+    /* Trust card grid · already covered by max-900 but 768 確保單欄 */
+    .bp-trust-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .bp-trust-card { min-height: auto !important; padding: 16px !important; }
+    .bp-trust-card:nth-child(5) { grid-column: span 1 !important; }
+
+    /* Panel padding 收 */
+    .bp-panel-b { padding: 16px !important; }
+
+    /* Footer-nav 收 padding */
+    .le-footer-nav { padding-left: 16px !important; padding-right: 16px !important; }
+
+    /* 圖片防溢 */
+    img, svg, canvas { max-width: 100%; height: auto; }
+  }
 </style>
 </head>
 <body>
 <div class="bp-disclaimer-top" id="bp-disc-top">
   <span class="icon">●</span>
-  <span class="label">EARLY BETA · 邀請制 · 創辦人親自把關</span>
-  <span class="body">首批案件由 Edward 與認證 worker 親自跑、24h 內回覆 · <a href="waitlist.html">加入 waitlist →</a></span>
+  <span class="label">EARLY BETA · 邀請制</span>
+  <span class="body">首批案件 BeyondPath 認證 worker 配對、24h 內系統回覆 · <a href="waitlist.html">加入 waitlist →</a></span>
   <button class="close" onclick="document.getElementById('bp-disc-top').style.display='none'; sessionStorage.setItem('bp-disc-closed','1');" aria-label="關閉提醒">×</button>
 </div>
 <script>
