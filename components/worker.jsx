@@ -651,7 +651,13 @@ const AI_BRIEF = `你是 BeyondPath 認證 AI 整理員。我正在申請台灣 
 function WorkerEmptyState() {
   const APPLICATION_EMAIL = "edwardt0303@gmail.com";
   const [copiedEmail, setCopiedEmail] = uSW(false);
-  const [step, setStep] = uSW("intro"); // intro | chat | preview
+  const [copiedBrief, setCopiedBrief] = uSW(false);
+  // step: intro | generate | paste | chat | preview
+  //   Route A (自帶 AI · 主流): intro → generate → paste → preview
+  //   Route B (BP 內建 · 保底): intro → chat → preview
+  // 2026-05-15 v0.3 雙軌:Edward 拍板「給對方內容讓對方 AI 跑」是主流 · 未來 MCP 直推延伸這條
+  const [step, setStep] = uSW("intro");
+  const [route, setRoute] = uSW(""); // "self" (自帶 AI) | "internal" (BP 內建) · 用來 routing ApplyProgress + back behavior
   const [parsed, setParsed] = uSW(null);
   const [submitted, setSubmitted] = uSW(() => {
     try {
@@ -661,7 +667,40 @@ function WorkerEmptyState() {
     }
   });
 
-  // ====== server-side AI interview state (取代外部 paste-back) ======
+  // ====== Route A · 自帶 AI paste-back state ======
+  const [pasteRaw, setPasteRaw] = uSW("");
+  const [parseError, setParseError] = uSW("");
+
+  function tryParsePaste() {
+    setParseError("");
+    setParsed(null);
+    if (!pasteRaw.trim()) {
+      setParseError("把 AI 整理出來的內容整段貼進來就好（含中文說明 OK · 我們會自動抓出 JSON 部分）。");
+      return;
+    }
+    try {
+      const m = pasteRaw.match(/\{[\s\S]*\}/);
+      if (!m) {
+        throw new Error("貼進來的內容找不到 JSON 區塊（要含 { } 大括號）。請回 ChatGPT/Claude 確認最後有產出 JSON、整段複製貼上。");
+      }
+      const obj = JSON.parse(m[0]);
+      if (typeof obj.L_score !== "number") {
+        throw new Error("JSON 裡缺 `L_score`（一個 0-10 的數字）。可能是 AI 沒走完訪談、回去看是否漏了 L 分評估那段。");
+      }
+      if (!obj.skill_matrix) {
+        throw new Error("JSON 裡缺 `skill_matrix`（6 維能力評分）。回 ChatGPT/Claude 補完 6 維評分後重貼。");
+      }
+      setParsed(obj);
+      setStep("preview");
+    } catch (e) {
+      const friendly = e.message.includes("Unexpected") || e.message.includes("Unterminated")
+        ? `JSON 格式不完整（${e.message.slice(0, 60)}…）。常見原因：複製時漏了結尾 } 或多了句點。再貼一次試試、或點下方「用範例試試」看正確格式長怎樣。`
+        : e.message;
+      setParseError(friendly);
+    }
+  }
+
+  // ====== Route B · server-side AI interview state ======
   const [interviewMessages, setInterviewMessages] = uSW([]); // [{ role: 'user'|'assistant', content }]
   const [interviewInput, setInterviewInput] = uSW("");
   const [interviewAsking, setInterviewAsking] = uSW(false); // AI thinking indicator
@@ -904,18 +943,54 @@ function WorkerEmptyState() {
               </div>
             </div>
 
-            <button
-              className="bp-btn primary bp-onb-cta"
-              onClick={() => {
-                setStep("chat");
-                window.scrollTo({ top: 0, behavior: "smooth" });
-                // 自動觸發第一段問題 (短延遲讓 step UI render 完)
-                setTimeout(() => startInterview(), 80);
-              }}
-            >
-              → 開始申請 Tier B 認證
-            </button>
-            <div style={{ marginTop: 14, display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+            {/* 雙軌 CTA · 2026-05-15 v0.3 ·  Edward「給對方內容讓對方 AI 跑」是主流、BP 內建作保底 */}
+            <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 12 }}>
+              {/* Route A · 主推：自帶 AI */}
+              <button
+                className="bp-btn primary bp-onb-cta"
+                onClick={() => {
+                  setRoute("self");
+                  setStep("generate");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                style={{ width: "100%" }}
+              >
+                → 我有 ChatGPT / Claude / Gemini · 自己跑訪談
+              </button>
+              <div style={{ fontSize: 12, color: "var(--muted)", textAlign: "center", fontFamily: "var(--mono)", letterSpacing: "0.04em", marginTop: -4 }}>
+                推薦 · 用你已付費的 AI · 整理好的證據貼回來
+              </div>
+
+              {/* Route B · 保底：BP 內建 */}
+              <button
+                type="button"
+                onClick={() => {
+                  setRoute("internal");
+                  setStep("chat");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  setTimeout(() => startInterview(), 80);
+                }}
+                style={{
+                  width: "100%",
+                  padding: "12px 18px",
+                  background: "transparent",
+                  color: "var(--text)",
+                  border: "1px solid var(--line-soft)",
+                  fontFamily: "var(--mono)",
+                  fontSize: 13,
+                  letterSpacing: "0.06em",
+                  cursor: "pointer",
+                  marginTop: 6,
+                }}
+              >
+                沒付費 AI · 用 BeyondPath 內建訪談 →
+              </button>
+              <div style={{ fontSize: 12, color: "var(--muted)", textAlign: "center", fontFamily: "var(--mono)", letterSpacing: "0.04em", marginTop: -4 }}>
+                保底選項 · BeyondPath AI 直接帶你跑 7 段 · 15-25 min
+              </div>
+            </div>
+
+            <div style={{ marginTop: 18, display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
               <a href="app.html?role=worker&view=worker-demo" className="bp-btn ghost" style={{ textDecoration: "none" }}>先看通過後 Worker Console →</a>
             </div>
             <div className="bp-onb-ghost"><a href="#" onClick={(e) => e.preventDefault()}>Read terms &amp; DPA →</a></div>
@@ -927,10 +1002,63 @@ function WorkerEmptyState() {
           )}
 
 
-          {/* ====== STEP 1 · AI INTERVIEW (server-side · 2026-05-15 v0.2 取代外部 paste-back) ====== */}
+          {/* ====== ROUTE A · STEP 1 · GENERATE BRIEF + OPEN AI (自帶 AI · 主流路徑) ====== */}
+          {step === "generate" && (
+          <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
+            <ApplyProgress current={1} setStep={setStep} route="self" onRouteReset={() => setRoute("")} />
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>用你自己的 AI 整理工作證據。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 1 · 30 分鐘 · 一鍵打開你常用的 AI</span></h1>
+            <div className="bp-panel" style={{ marginTop: 22, border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)" }}>
+              <div className="bp-panel-h"><span>怎麼用</span></div>
+              <div className="bp-panel-b" style={{ fontSize: 14, lineHeight: 1.75 }}>
+                <ol style={{ paddingLeft: 22, margin: 0 }}>
+                  <li>下方 brief 是<b>對 AI 的訪談指引</b>、含 7 段問題（基本資料 / 工具棧 / workflow / 案例證據 / 判斷力 / 報價 / L 分自評）</li>
+                  <li>點「複製 Brief」→ 再點「打開 Claude / ChatGPT / Gemini」其中一個</li>
+                  <li>到 AI 對話框貼上、AI 會帶你跑 30 分鐘訪談、有不懂的 AI 會追問</li>
+                  <li>AI 最後產出一段 JSON、回來這裡<b>貼回 BeyondPath</b></li>
+                </ol>
+                <div style={{ marginTop: 14, padding: "10px 12px", background: "rgba(0,0,0,0.2)", borderLeft: "2px solid var(--accent)", fontSize: 13, color: "var(--text-2)" }}>不收費、不傳資料、純用你自己付費的 AI 跑。未來會支援 MCP 直接讓你的 AI 把證據推進 BeyondPath、跳過複製貼上。</div>
+              </div>
+            </div>
+            <div className="bp-panel" style={{ marginTop: 16 }}>
+              <div className="bp-panel-h"><span>BRIEF · 對 AI 的指示</span><span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{AI_BRIEF.length} chars</span></div>
+              <div className="bp-panel-b">
+                <textarea readOnly value={AI_BRIEF} style={{ width: "100%", minHeight: 280, background: "rgba(0,0,0,0.3)", color: "var(--text-2)", border: "1px solid var(--line-soft)", padding: "12px 14px", fontFamily: "var(--mono)", fontSize: 12, lineHeight: 1.7, resize: "vertical" }} />
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
+                  <button type="button" onClick={() => { try { navigator.clipboard.writeText(AI_BRIEF); setCopiedBrief(true); setTimeout(() => setCopiedBrief(false), 1600); } catch (e) {} }} style={btnPrimaryStyle}>{copiedBrief ? "✓ 已複製" : "複製 Brief"}</button>
+                  <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 Claude →</a>
+                  <a href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 ChatGPT →</a>
+                  <a href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 Gemini →</a>
+                </div>
+              </div>
+            </div>
+            <StepNav onBack={() => { setRoute(""); setStep("intro"); }} onNext={() => setStep("paste")} nextLabel="AI 跑完了、貼回來 →" />
+          </div>
+          )}
+
+          {/* ====== ROUTE A · STEP 2 · PASTE BACK (自帶 AI · 主流路徑) ====== */}
+          {step === "paste" && (
+          <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
+            <ApplyProgress current={2} setStep={setStep} route="self" onRouteReset={() => setRoute("")} />
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>貼回 AI 整理的結果。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 2 · 1 分鐘 · 把 AI 給的 JSON 整段貼進來</span></h1>
+            <div className="bp-panel" style={{ marginTop: 22 }}>
+              <div className="bp-panel-h"><span>PASTE · AI 整理結果</span></div>
+              <div className="bp-panel-b">
+                <textarea value={pasteRaw} onChange={(e) => { setPasteRaw(e.target.value); setParseError(""); }} placeholder='{ "L_score": 7, "L_confidence": "L6-L7", "tier_suggestion": "Tier B", "skill_matrix": { ... }, "strengths": [...], "growth": [...], "evidence_quality": "深" }' style={{ width: "100%", minHeight: 280, background: "rgba(0,0,0,0.3)", color: "var(--text)", border: "1px solid var(--line-soft)", padding: "12px 14px", fontFamily: "var(--mono)", fontSize: 12, lineHeight: 1.7, resize: "vertical" }} />
+                {parseError && <div style={{ marginTop: 10, padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {parseError}</div>}
+                <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <button type="button" onClick={tryParsePaste} style={btnPrimaryStyle}>檢查格式 + 生成能力卡 →</button>
+                  <button type="button" onClick={() => { setPasteRaw(SAMPLE_PASTE); setParseError(""); }} style={btnGhostStyle}>用範例試試</button>
+                </div>
+              </div>
+            </div>
+            <StepNav onBack={() => setStep("generate")} onNext={tryParsePaste} nextLabel="生成能力卡 →" />
+          </div>
+          )}
+
+          {/* ====== ROUTE B · STEP 1 · AI INTERVIEW (server-side · BP 內建 · 保底路徑) ====== */}
           {step === "chat" && (
           <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
-            <ApplyProgress current={1} setStep={setStep} />
+            <ApplyProgress current={1} setStep={setStep} route="internal" onRouteReset={() => { resetInterview(); setRoute(""); }} />
             <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>
               AI 訪談你的工作流。
               <span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>
@@ -1089,7 +1217,7 @@ function WorkerEmptyState() {
             <div style={{ marginTop: 18, display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
               <button
                 type="button"
-                onClick={() => { resetInterview(); setStep("intro"); }}
+                onClick={() => { resetInterview(); setRoute(""); setStep("intro"); }}
                 style={{ ...btnGhostStyle, padding: "8px 18px", fontSize: 12 }}
               >
                 ← 取消、回首頁
@@ -1115,8 +1243,8 @@ function WorkerEmptyState() {
           {/* ====== STEP 2 · PREVIEW CARD + LAYER 2 + LAYER 3 ====== */}
           {step === "preview" && parsed && (
           <div style={{ maxWidth: 880, margin: "32px auto", padding: "0 24px" }}>
-            <ApplyProgress current={2} setStep={setStep} />
-            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>這就是你即將出現在客戶面前的樣子。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 2 · 預覽你的能力卡 + 送出申請</span></h1>
+            <ApplyProgress current={route === "internal" ? 2 : 3} setStep={setStep} route={route || "self"} onRouteReset={() => { resetInterview(); setRoute(""); setPasteRaw(""); }} />
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>這就是你即將出現在客戶面前的樣子。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>預覽你的能力卡 + 送出申請</span></h1>
 
             {/* ABILITY CARD */}
             <div className="bp-panel" style={{ marginTop: 22, borderColor: "var(--accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 32px rgba(199,232,74,0.08)" }}>
@@ -1213,7 +1341,13 @@ function WorkerEmptyState() {
                 setSubmitted(true);
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }} />
-              <button type="button" onClick={() => setStep("chat")} style={{ ...btnGhostStyle, padding: "8px 18px" }}>← 回去訪談（補答案）</button>
+              <button
+                type="button"
+                onClick={() => setStep(route === "internal" ? "chat" : "paste")}
+                style={{ ...btnGhostStyle, padding: "8px 18px" }}
+              >
+                {route === "internal" ? "← 回去訪談（補答案）" : "← 回去改 AI 結果"}
+              </button>
             </div>
           </div>
           )}
@@ -1283,14 +1417,25 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
   );
 }
 
-function ApplyProgress({ current, setStep }) {
-  const steps = [
-    { n: 1, label: "AI 訪談", key: "chat" },
-    { n: 2, label: "預覽能力卡", key: "preview" },
-  ];
+function ApplyProgress({ current, setStep, route, onRouteReset }) {
+  // 2026-05-15 v0.3 雙軌:Route A (self · 自帶 AI · 3 step) vs Route B (internal · BP 內建 · 2 step)
+  const steps = route === "internal"
+    ? [
+        { n: 1, label: "AI 訪談", key: "chat" },
+        { n: 2, label: "預覽能力卡", key: "preview" },
+      ]
+    : [
+        { n: 1, label: "取 Brief", key: "generate" },
+        { n: 2, label: "貼回結果", key: "paste" },
+        { n: 3, label: "預覽能力卡", key: "preview" },
+      ];
   return (
     <div style={{ display: "flex", gap: 0, alignItems: "center", flexWrap: "wrap", padding: "12px 0", borderBottom: "1px solid var(--line-soft)" }}>
-      <button type="button" onClick={() => setStep("intro")} style={{ background: "transparent", border: "none", color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", cursor: "pointer", marginRight: 14, textTransform: "uppercase" }}>← 回 intro</button>
+      <button
+        type="button"
+        onClick={() => { if (onRouteReset) onRouteReset(); setStep("intro"); }}
+        style={{ background: "transparent", border: "none", color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", cursor: "pointer", marginRight: 14, textTransform: "uppercase" }}
+      >← 回 intro</button>
       {steps.map((s, i) => (
         <React.Fragment key={s.n}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, opacity: current >= s.n ? 1 : 0.4 }}>
