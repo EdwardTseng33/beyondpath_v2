@@ -113,5 +113,23 @@
     },
   };
 
+  // ============================================================
+  // AI PARSE · 真接 Anthropic Claude API (Edge Function client-brief-parse)
+  // 2026-05-15 立 · 取代 app2.jsx Step2 原 fake animation
+  // ============================================================
+
+  window.bpAiParse = {
+    async parseBrief({ brief, budget_range, timeline, vertical, company_name }) {
+      const body = { brief };
+      if (budget_range) body.budget_range = budget_range;
+      if (timeline) body.timeline = timeline;
+      if (vertical) body.vertical = vertical;
+      if (company_name) body.company_name = company_name;
+
+      const { data, error } = await client.functions.invoke('client-brief-parse', { body });
+      return { data, error };
+    },
+  };
+
   console.log('[BeyondPath] Supabase client ready · ' + SUPABASE_URL);
 })();

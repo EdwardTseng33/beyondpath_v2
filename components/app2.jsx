@@ -270,61 +270,80 @@ function Step1({ state, set, device }) {
   );
 }
 
-// ---------- STEP 2 · AI Parse ----------
-
-const PARSE_LOG = [
-  { t: "00.04", lvl: "task", en: "ingest", msg: "brief.md · 4.2KB · zh-Hant detected" },
-  { t: "00.18", lvl: "ok", en: "scrub", msg: "PII scan → 0 hits, 0 redactions" },
-  { t: "00.41", lvl: "ok", en: "industry", msg: "→ D2C Skincare · conf 0.94" },
-  { t: "00.62", lvl: "task", en: "tokenize", msg: "2,041 tokens · 5 sections · 12 entities" },
-  { t: "01.02", lvl: "task", en: "decompose", msg: "splitting deliverables → 5 task primitives" },
-  { t: "01.34", lvl: "ok", en: "task[1]", msg: "Visual KV × 2 → 18h · Visual · Tier A+" },
-  { t: "01.51", lvl: "ok", en: "task[2]", msg: "Reels Script × 6 → 22h · Copy · Tier A+" },
-  { t: "01.66", lvl: "ok", en: "task[3]", msg: "Product Copy × 3 → 14h · Copy · Tier A" },
-  { t: "01.80", lvl: "ok", en: "task[4]", msg: "Channel Scheduling → 8h · Ops · Tier A" },
-  { t: "01.94", lvl: "ok", en: "task[5]", msg: "ROAS Read-out → 6h · Ops · Tier A" },
-  { t: "02.11", lvl: "info", en: "tier", msg: "推薦 Tier A+ · 因品牌 DNA × Reels 涉及策略性視覺" },
-  { t: "02.40", lvl: "info", en: "budget", msg: "市場行情 NT$160-210K · +15% 平台溢價 → 184-241K" },
-  { t: "02.62", lvl: "warn", en: "schedule", msg: "8 週 / 68h → 建議 multi-expert 共案 (DAG attached)" },
-  { t: "02.88", lvl: "ok", en: "contract", msg: "推薦首案交付 · ROAS 階段可轉 retainer" },
-  { t: "03.12", lvl: "ok", en: "ready", msg: "B1 → handoff to expectation form" },
-];
+// ---------- STEP 2 · AI Parse (real Claude API · 2026-05-15 取代 fake animation) ----------
 
 function Step2({ state, set }) {
-  const [phase, setPhase] = useState("running"); // running | done
-  const [shown, setShown] = useState(0);
-  const intervalRef = useRef();
+  const [phase, setPhase] = useState("running"); // running | done | error
+  const [error, setError] = useState(null);
+  const [tokens, setTokens] = useState({ input: null, output: null });
+  const calledRef = useRef(false);
+
+  async function runParse() {
+    setPhase("running");
+    setError(null);
+
+    const brief = (state.brief || "").trim();
+    if (brief.length < 20) {
+      setError("brief 內容太短（< 20 字）、無法 AI 拆解。請回 Step 01 補充。");
+      setPhase("error");
+      return;
+    }
+
+    if (!window.bpAiParse) {
+      setError("Supabase client 尚未載入、請重整頁面。");
+      setPhase("error");
+      return;
+    }
+
+    try {
+      const { data, error: invokeError } = await window.bpAiParse.parseBrief({
+        brief,
+        budget_range: state.budgetRange,
+        timeline: state.timeline,
+        vertical: state.vertical,
+        company_name: state.companyName,
+      });
+
+      if (invokeError) {
+        setError("呼叫失敗：" + (invokeError.message || "未知錯誤"));
+        setPhase("error");
+        return;
+      }
+      if (!data || !data.ok) {
+        setError("AI 拆解失敗：" + (data?.error || "未知錯誤"));
+        setPhase("error");
+        return;
+      }
+
+      setTokens({
+        input: data.usage?.input_tokens ?? null,
+        output: data.usage?.output_tokens ?? null,
+      });
+      setPhase("done");
+      set({ parseDone: true, parsed: data.parsed });
+    } catch (e) {
+      setError(e?.message || "網路錯誤、請重試");
+      setPhase("error");
+    }
+  }
 
   useEffect(() => {
     if (state.parseDone) {
       setPhase("done");
-      setShown(PARSE_LOG.length);
       return;
     }
-    setShown(0);
-    setPhase("running");
-    intervalRef.current = setInterval(() => {
-      setShown((s) => {
-        if (s >= PARSE_LOG.length) {
-          clearInterval(intervalRef.current);
-          setPhase("done");
-          set({ parseDone: true, parsed: AI_PARSE_RESULT });
-          return s;
-        }
-        return s + 1;
-      });
-    }, 240);
-    return () => clearInterval(intervalRef.current);
+    if (calledRef.current) return;
+    calledRef.current = true;
+    runParse();
   }, []);
 
-  const result = state.parsed || AI_PARSE_RESULT;
-  const visibleLog = PARSE_LOG.slice(0, shown);
+  const result = state.parsed;
 
   return (
     <div>
       <div className="bp-eyebrow">
         <span>Step 03 / AI Parse · AI 拆解需求</span>
-        <span className="pill">{phase === "running" ? "parsing…" : "complete"}</span>
+        <span className="pill">{phase === "running" ? "Claude thinking…" : phase === "error" ? "error" : "complete"}</span>
       </div>
       <h1 className="bp-h1">
         AI is reading your brief.
@@ -337,56 +356,79 @@ function Step2({ state, set }) {
       <div className="bp-parse-grid" style={{ marginTop: 22 }}>
         <div>
           <div className="bp-h2" style={{ marginBottom: 8 }}>Trace · 推理日誌</div>
-          <div className="bp-log">
-            {visibleLog.map((r, i) => (
-              <div className="row" key={i}>
-                <span className="t">[{r.t}]</span>
-                <span className={"lvl " + r.lvl}>{r.en}</span>
-                <span className="msg">
-                  <span className={/[\u4e00-\u9fff]/.test(r.msg) ? "zh" : ""}>
-                    {r.msg}
-                  </span>
-                </span>
-              </div>
-            ))}
-            {phase === "running" && (
-              <div className="row">
-                <span className="t">[--.--]</span>
-                <span className="lvl">_</span>
-                <span className="msg cursor"></span>
-              </div>
-            )}
+          <div className="bp-log" style={{ padding: 18 }}>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--muted)", lineHeight: 1.8 }}>
+              <div>[init] Claude Sonnet 4.6 \u00b7 max_tokens=3000</div>
+              <div>[brief] {(state.brief || "").length} chars \u00b7 ~{Math.max(1, Math.round((state.brief || "").length / 4))} tokens</div>
+              {phase === "running" && (
+                <>
+                  <div>[anthropic] POST /v1/messages \u2026</div>
+                  <div style={{ marginTop: 10, color: "var(--accent)" }}>\u25cf \u7b49\u5f85 Claude \u771f\u5be6\u62c6\u89e3\u4e2d\uff08\u9810\u4f30 5-15 \u79d2\uff09</div>
+                  <div style={{ marginTop: 6 }}>
+                    <span className="cursor"></span>
+                  </div>
+                </>
+              )}
+              {phase === "done" && (
+                <>
+                  <div>[claude] sonnet-4-6 returned</div>
+                  {tokens.input != null && <div>[usage] input {tokens.input} \u00b7 output {tokens.output} tokens</div>}
+                  <div style={{ marginTop: 8, color: "var(--accent)" }}>\u25cf parse complete \u00b7 \u7d50\u679c\u898b\u53f3\u65b9</div>
+                </>
+              )}
+              {phase === "error" && (
+                <>
+                  <div style={{ color: "#e57373" }}>[error] {error}</div>
+                  <button
+                    onClick={runParse}
+                    style={{
+                      marginTop: 14,
+                      padding: "8px 16px",
+                      fontFamily: "var(--mono)",
+                      fontSize: 12,
+                      color: "var(--text)",
+                      background: "var(--accent)",
+                      border: 0,
+                      borderRadius: "var(--r-sm)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    \u21bb Retry \u00b7 \u91cd\u65b0\u62c6\u89e3
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
         <div>
           <div className="bp-h2" style={{ marginBottom: 8 }}>Result · 結構化卡片</div>
-          {phase === "done" ? (
+          {phase === "done" && result ? (
             <div className="bp-result-grid">
               <div className="bp-rcard bp-rise bp-rise-1">
                 <div className="lbl">Industry</div>
                 <div className="val">
-                  {result.industry.en}{" "}
+                  {result.industry?.en || "—"}{" "}
                   <span className="zh" style={{ color: "var(--muted)", fontSize: 14 }}>
-                    {result.industry.zh}
+                    {result.industry?.zh || ""}
                   </span>
                 </div>
-                <div className="sub">conf {result.industry.confidence}</div>
+                <div className="sub">conf {result.industry?.confidence ?? "—"}</div>
               </div>
               <div className="bp-rcard bp-rise bp-rise-1">
                 <div className="lbl">Recommended Tier</div>
                 <div className="val">
-                  Tier <span className="accent">{result.recommendedTier}</span>{" "}
+                  Tier <span className="accent">{result.recommendedTier || "—"}</span>{" "}
                   <span className="zh" style={{ color: "var(--muted)", fontSize: 14 }}>
-                    DTC / Brand DNA × AI
+                    {result.vertical || ""}
                   </span>
                 </div>
-                <div className="sub">{result.vertical}</div>
+                <div className="sub">{result.vertical || ""}</div>
               </div>
               <div className="bp-rcard span2 bp-rise bp-rise-2">
                 <div className="lbl">Tasks · 任務拆解</div>
                 <div className="bp-tasklist">
-                  {result.tasks.map((t) => (
+                  {(result.tasks || []).map((t) => (
                     <div className="row" key={t.id}>
                       <div className="name">
                         <span className="en">{t.en}</span>
@@ -450,7 +492,7 @@ function Step2({ state, set }) {
                 justifyContent: "center",
               }}
             >
-              awaiting trace · cards will materialise
+              {phase === "error" ? "↻ 修正後重試、cards 才會出現" : "awaiting trace · cards will materialise"}
             </div>
           )}
         </div>
