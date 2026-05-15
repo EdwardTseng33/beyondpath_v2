@@ -706,7 +706,7 @@ function Step4({ state, set, device }) {
     <div>
       <div className="bp-eyebrow">
         <span>Step 04 / Match · AI 自動配對</span>
-        <span className="pill green">● 5 candidates · 3 recommended</span>
+        <span className="pill" style={{ background: "rgba(255,200,80,0.1)", color: "#ffc850", borderColor: "rgba(255,200,80,0.3)" }}>● Beta · demo workers</span>
       </div>
       <h1 className="bp-h1">
         Top matches, ranked by ADR-006.
@@ -715,6 +715,18 @@ function Step4({ state, set, device }) {
           AI 已套用權重 algorithm，依 100 分加權排序。
         </span>
       </h1>
+      <div style={{
+        marginTop: 16,
+        padding: "12px 16px",
+        background: "rgba(255,200,80,0.06)",
+        border: "1px solid rgba(255,200,80,0.25)",
+        borderRadius: "var(--r-md)",
+        fontSize: 13,
+        color: "var(--text-2)",
+        lineHeight: 1.6,
+      }}>
+        ⚠️ <b style={{ color: "#ffc850" }}>Beta 階段 demo</b> · BeyondPath worker pool 仍在累積、實際配對由創辦人 Edward 線下人工處理 + AI 輔助分析。下方 worker 卡為示意參考、首批用戶請等 Edward email 回覆配對結果（24h 內）。
+      </div>
 
       <div className="bp-match-head" style={{ marginTop: 22 }}>
         <div>
