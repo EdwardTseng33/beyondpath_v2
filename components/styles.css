@@ -1012,3 +1012,10 @@
 @media (max-width: 768px) {
   .bp-onboarding { margin: 32px auto; padding: 0 16px; }
 }
+
+/* AI thinking indicator · worker chat UI (2026-05-15 v0.2) */
+@keyframes bpDotPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+

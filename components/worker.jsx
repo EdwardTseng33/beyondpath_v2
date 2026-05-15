@@ -570,10 +570,14 @@ function WorkerDashboard({ inShell = false }) {
 
 // ============================================================
 // WORKER EMPTY STATE · Tier B Certification Apply Flow
-// 3-step flow · all interview heavy lifting offloaded to the worker's own AI
-// step 'intro' → 'generate' (copy brief, open AI) → 'paste' (paste JSON) → 'preview' (ability card) → submitted=1
+// 2026-05-15 v0.2 · server-side AI interview (取代外部 ChatGPT/Claude paste-back)
+// step 'intro' → 'chat' (server-side Claude 7 段訪談) → 'preview' (ability card) → submitted=1
+// Edge Function: worker-ai-interview · helper: bpAiInterview.sendMessage(messages)
 // ============================================================
 
+// [DEPRECATED 2026-05-15 v0.2] 外部 ChatGPT/Claude paste-back 流程的 brief prompt
+// 已被 supabase/functions/worker-ai-interview/index.ts SYSTEM_PROMPT 取代（server-side 7 段訪談）
+// 保留以便 fallback rollback + 對照 Edge Function system prompt 設計（語氣 / 結構 / JSON schema）
 const AI_BRIEF = `你是 BeyondPath 認證 AI 整理員。我正在申請台灣 AI 交付網路 BeyondPath 的 Tier B / B+ 認證。
 
 請帶我跑一段 30 分鐘訪談、按下面 7 段順序問。每段具體追問、不接受空泛回答（例「我會用 ChatGPT」要追問「用在什麼任務？哪個案件？拿什麼成果？」）。最後產出一段結構化 JSON、我會貼回 BeyondPath 平台、由平台 render 成能力卡 + AI 初審 + Edward 親自覆核。
@@ -647,10 +651,7 @@ const AI_BRIEF = `你是 BeyondPath 認證 AI 整理員。我正在申請台灣 
 function WorkerEmptyState() {
   const APPLICATION_EMAIL = "edwardt0303@gmail.com";
   const [copiedEmail, setCopiedEmail] = uSW(false);
-  const [copiedBrief, setCopiedBrief] = uSW(false);
-  const [step, setStep] = uSW("intro"); // intro | generate | paste | preview
-  const [pasteRaw, setPasteRaw] = uSW("");
-  const [parseError, setParseError] = uSW("");
+  const [step, setStep] = uSW("intro"); // intro | chat | preview
   const [parsed, setParsed] = uSW(null);
   const [submitted, setSubmitted] = uSW(() => {
     try {
@@ -660,34 +661,84 @@ function WorkerEmptyState() {
     }
   });
 
-  function tryParsePaste() {
-    setParseError("");
-    setParsed(null);
-    if (!pasteRaw.trim()) {
-      setParseError("把 AI 整理出來的內容整段貼進來就好（含中文說明 OK · 我們會自動抓出 JSON 部分）。");
+  // ====== server-side AI interview state (取代外部 paste-back) ======
+  const [interviewMessages, setInterviewMessages] = uSW([]); // [{ role: 'user'|'assistant', content }]
+  const [interviewInput, setInterviewInput] = uSW("");
+  const [interviewAsking, setInterviewAsking] = uSW(false); // AI thinking indicator
+  const [interviewError, setInterviewError] = uSW("");
+  const [interviewStep, setInterviewStep] = uSW(0); // 1-7 from AI's step field
+  const [interviewProgress, setInterviewProgress] = uSW(""); // 例 "Step 3 / 7"
+  const interviewStartedRef = React.useRef(false);
+
+  async function sendInterviewTurn(userText) {
+    if (interviewAsking) return; // 防 double submit
+    setInterviewError("");
+
+    // 組新 messages: 既有 + 本次 user input (空 = 第一次 seed)
+    const trimmed = (userText || "").trim();
+    const nextMessages = trimmed
+      ? [...interviewMessages, { role: "user", content: trimmed }]
+      : interviewMessages;
+
+    setInterviewMessages(nextMessages);
+    setInterviewInput("");
+    setInterviewAsking(true);
+
+    if (!window.bpAiInterview) {
+      setInterviewAsking(false);
+      setInterviewError("AI 訪談模組沒載入（bpAiInterview undefined）。檢查 supabase.js 是否在頁面上。");
       return;
     }
-    try {
-      const m = pasteRaw.match(/\{[\s\S]*\}/);
-      if (!m) {
-        throw new Error("貼進來的內容找不到 JSON 區塊（要含 { } 大括號）。請回 ChatGPT/Claude 確認最後有產出 JSON、整段複製貼上。");
-      }
-      const obj = JSON.parse(m[0]);
-      if (typeof obj.L_score !== "number") {
-        throw new Error("JSON 裡缺 `L_score`（一個 0-10 的數字）。可能是 AI 沒走完訪談、回去看是否漏了 L 分評估那段。");
-      }
-      if (!obj.skill_matrix) {
-        throw new Error("JSON 裡缺 `skill_matrix`（6 維能力評分）。回 ChatGPT/Claude 補完 6 維評分後重貼。");
-      }
-      setParsed(obj);
-      setStep("preview");
-    } catch (e) {
-      // JSON.parse 拋的 syntax error 會在這、其他自定 throw 也在這
-      const friendly = e.message.includes("Unexpected") || e.message.includes("Unterminated")
-        ? `JSON 格式不完整（${e.message.slice(0, 60)}…）。常見原因：複製時漏了結尾 } 或多了句點。再貼一次試試、或點下方「用範例試試」看正確格式長怎樣。`
-        : e.message;
-      setParseError(friendly);
+
+    const { data, error } = await window.bpAiInterview.sendMessage(nextMessages);
+    setInterviewAsking(false);
+
+    if (error || !data?.ok) {
+      const msg = error?.message || data?.error || "AI 訪談呼叫失敗、請稍後再試。";
+      const hint = data?.hint ? ` · ${data.hint}` : "";
+      setInterviewError(msg + hint);
+      return;
     }
+
+    // AI 回應 append 進 messages
+    const aiContent = data.message || "";
+    if (aiContent) {
+      setInterviewMessages([...nextMessages, { role: "assistant", content: aiContent }]);
+    }
+
+    if (typeof data.step === "number") setInterviewStep(data.step);
+    if (data.progress_hint) setInterviewProgress(data.progress_hint);
+
+    // status: 'complete' → 自動切 preview
+    if (data.status === "complete" && data.ai_proof) {
+      setParsed(data.ai_proof);
+      // 短延遲讓 user 看到最後一句感謝再切（300ms）
+      setTimeout(() => setStep("preview"), 600);
+    }
+  }
+
+  function startInterview() {
+    if (interviewStartedRef.current) return;
+    interviewStartedRef.current = true;
+    // 空 messages 觸發第一段問題 (Edge Function seed [INTERVIEW_START])
+    sendInterviewTurn("");
+  }
+
+  function handleInterviewSubmit(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const text = interviewInput.trim();
+    if (!text || interviewAsking) return;
+    sendInterviewTurn(text);
+  }
+
+  function resetInterview() {
+    setInterviewMessages([]);
+    setInterviewInput("");
+    setInterviewAsking(false);
+    setInterviewError("");
+    setInterviewStep(0);
+    setInterviewProgress("");
+    interviewStartedRef.current = false;
   }
 
   if (submitted) {
@@ -856,8 +907,10 @@ function WorkerEmptyState() {
             <button
               className="bp-btn primary bp-onb-cta"
               onClick={() => {
-                setStep("generate");
+                setStep("chat");
                 window.scrollTo({ top: 0, behavior: "smooth" });
+                // 自動觸發第一段問題 (短延遲讓 step UI render 完)
+                setTimeout(() => startInterview(), 80);
               }}
             >
               → 開始申請 Tier B 認證
@@ -874,64 +927,196 @@ function WorkerEmptyState() {
           )}
 
 
-          {/* ====== STEP 1 · GENERATE BRIEF + OPEN AI ====== */}
-          {step === "generate" && (
+          {/* ====== STEP 1 · AI INTERVIEW (server-side · 2026-05-15 v0.2 取代外部 paste-back) ====== */}
+          {step === "chat" && (
           <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
             <ApplyProgress current={1} setStep={setStep} />
-            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>用你自己的 AI 整理工作證據。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 1 · 30 分鐘 · 一鍵打開你常用的 AI</span></h1>
-            <div className="bp-panel" style={{ marginTop: 22, border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)" }}>
-              <div className="bp-panel-h"><span>怎麼用</span></div>
-              <div className="bp-panel-b" style={{ fontSize: 14, lineHeight: 1.75 }}>
-                <ol style={{ paddingLeft: 22, margin: 0 }}>
-                  <li>下方 brief 是<b>對 AI 的訪談指引</b>、含 7 段問題（基本資料 / 工具棧 / workflow / 案例證據 / 判斷力 / 報價 / L 分自評）</li>
-                  <li>點「複製 Brief」→ 再點「打開 Claude / ChatGPT / Gemini」其中一個</li>
-                  <li>到 AI 對話框貼上、AI 會帶你跑 30 分鐘訪談、有不懂的 AI 會追問</li>
-                  <li>AI 最後產出一段 JSON、回來這裡<b>貼回 BeyondPath</b></li>
-                </ol>
-                <div style={{ marginTop: 14, padding: "10px 12px", background: "rgba(0,0,0,0.2)", borderLeft: "2px solid var(--accent)", fontSize: 13, color: "var(--text-2)" }}>不收費、不傳資料、純用你自己付費的 AI 跑。</div>
-              </div>
-            </div>
-            <div className="bp-panel" style={{ marginTop: 16 }}>
-              <div className="bp-panel-h"><span>BRIEF · 對 AI 的指示</span><span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{AI_BRIEF.length} chars</span></div>
-              <div className="bp-panel-b">
-                <textarea readOnly value={AI_BRIEF} style={{ width: "100%", minHeight: 280, background: "rgba(0,0,0,0.3)", color: "var(--text-2)", border: "1px solid var(--line-soft)", padding: "12px 14px", fontFamily: "var(--mono)", fontSize: 12, lineHeight: 1.7, resize: "vertical" }} />
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
-                  <button type="button" onClick={() => { try { navigator.clipboard.writeText(AI_BRIEF); setCopiedBrief(true); setTimeout(() => setCopiedBrief(false), 1600); } catch (e) {} }} style={btnPrimaryStyle}>{copiedBrief ? "✓ 已複製" : "複製 Brief"}</button>
-                  <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 Claude →</a>
-                  <a href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 ChatGPT →</a>
-                  <a href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 Gemini →</a>
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>
+              AI 訪談你的工作流。
+              <span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>
+                Step 1 · 15-25 分鐘 · BeyondPath AI 帶你跑 7 段問題
+              </span>
+            </h1>
+
+            {/* 進入訪談前的引導（messages 空 + 還沒在 ask）*/}
+            {interviewMessages.length === 0 && !interviewAsking && !interviewError && (
+              <div className="bp-panel" style={{ marginTop: 22, border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)" }}>
+                <div className="bp-panel-h"><span>怎麼進行</span></div>
+                <div className="bp-panel-b" style={{ fontSize: 14, lineHeight: 1.75 }}>
+                  <ol style={{ paddingLeft: 22, margin: 0 }}>
+                    <li>BeyondPath AI 會帶你跑 7 段訪談、共 15-25 分鐘</li>
+                    <li>段順序：領域 / 年資 → AI 工具棧 → 案件數量 + 3 例 → 最自豪 workflow → L-Score 自評 → 6 維技能 → 接案偏好</li>
+                    <li>答得越具體（客戶名 / 數字 / 工具串接細節）、評分越準</li>
+                    <li>答完 AI 自動產能力卡、Edward 24h 內人審</li>
+                  </ol>
+                  <div style={{ marginTop: 14, padding: "10px 12px", background: "rgba(0,0,0,0.2)", borderLeft: "2px solid var(--accent)", fontSize: 13, color: "var(--text-2)" }}>
+                    後端 Claude Sonnet 4.6 · 每段答完 AI 會追問具體例子、別怕「答得太簡單」。
+                  </div>
+                  <button
+                    type="button"
+                    onClick={startInterview}
+                    style={{ ...btnPrimaryStyle, marginTop: 18 }}
+                  >
+                    → 開始訪談
+                  </button>
                 </div>
               </div>
+            )}
+
+            {/* Chat messages list - 訪談進行中或已開始 */}
+            {(interviewMessages.length > 0 || interviewAsking || interviewError) && (
+              <div className="bp-panel" style={{ marginTop: 22 }}>
+                <div className="bp-panel-h">
+                  <span>AI INTERVIEW · 訪談中</span>
+                  {interviewProgress && (
+                    <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)" }}>
+                      {interviewProgress}
+                    </span>
+                  )}
+                </div>
+                <div className="bp-panel-b" style={{ padding: 0 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 14, padding: "18px 20px", maxHeight: 480, overflowY: "auto" }}>
+                    {interviewMessages.map((msg, i) => (
+                      <div key={i} style={{ display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}>
+                        <div style={{
+                          maxWidth: "82%",
+                          padding: "10px 14px",
+                          background: msg.role === "user" ? "var(--accent-soft)" : "rgba(255,255,255,0.04)",
+                          border: msg.role === "user" ? "1px solid var(--accent-line)" : "1px solid var(--line-soft)",
+                          color: msg.role === "user" ? "var(--accent)" : "var(--text)",
+                          fontSize: 14,
+                          lineHeight: 1.65,
+                          whiteSpace: "pre-wrap",
+                          wordBreak: "break-word",
+                        }}>
+                          {msg.content}
+                        </div>
+                      </div>
+                    ))}
+                    {interviewAsking && (
+                      <div style={{ display: "flex", justifyContent: "flex-start" }}>
+                        <div style={{
+                          padding: "10px 14px",
+                          background: "rgba(255,255,255,0.04)",
+                          border: "1px solid var(--line-soft)",
+                          color: "var(--muted)",
+                          fontSize: 13,
+                          fontFamily: "var(--mono)",
+                        }}>
+                          AI 思考中<span style={{ animation: "bpDotPulse 1.4s infinite" }}>...</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Error display + retry */}
+                  {interviewError && (
+                    <div style={{ margin: "0 20px 14px", padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                      <span style={{ flex: 1 }}>⚠ {interviewError}</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setInterviewError("");
+                          // retry：若有 input 拿 input 重送、否則 seed 重啟
+                          if (interviewInput.trim()) {
+                            sendInterviewTurn(interviewInput);
+                          } else if (interviewMessages.length === 0) {
+                            startInterview();
+                          } else {
+                            // 重送最後一次 user message
+                            const lastUser = [...interviewMessages].reverse().find(m => m.role === "user");
+                            if (lastUser) {
+                              // 從 messages 移掉最後 assistant（如果有）重送
+                              const cleaned = interviewMessages[interviewMessages.length - 1]?.role === "assistant"
+                                ? interviewMessages.slice(0, -1)
+                                : interviewMessages;
+                              setInterviewMessages(cleaned);
+                              setTimeout(() => sendInterviewTurn(""), 50);
+                            }
+                          }
+                        }}
+                        style={{ padding: "4px 10px", background: "transparent", border: "1px solid currentColor", color: "inherit", fontSize: 12, cursor: "pointer", fontFamily: "var(--mono)" }}
+                      >
+                        retry
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Input form */}
+                  <form onSubmit={handleInterviewSubmit} style={{ display: "flex", gap: 10, padding: "14px 20px", borderTop: "1px solid var(--line-soft)" }}>
+                    <textarea
+                      value={interviewInput}
+                      onChange={(e) => setInterviewInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          handleInterviewSubmit(e);
+                        }
+                      }}
+                      placeholder={interviewAsking ? "AI 正在思考、請稍候..." : "輸入你的答案... (Enter 送出 · Shift+Enter 換行)"}
+                      disabled={interviewAsking}
+                      style={{
+                        flex: 1,
+                        minHeight: 56,
+                        background: "rgba(0,0,0,0.3)",
+                        color: "var(--text)",
+                        border: "1px solid var(--line-soft)",
+                        padding: "10px 12px",
+                        fontFamily: "var(--sans)",
+                        fontSize: 14,
+                        lineHeight: 1.6,
+                        resize: "vertical",
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={interviewAsking || !interviewInput.trim()}
+                      style={{
+                        ...btnPrimaryStyle,
+                        opacity: (interviewAsking || !interviewInput.trim()) ? 0.4 : 1,
+                        cursor: (interviewAsking || !interviewInput.trim()) ? "not-allowed" : "pointer",
+                        alignSelf: "flex-end",
+                      }}
+                    >
+                      送出
+                    </button>
+                  </form>
+                </div>
+              </div>
+            )}
+
+            {/* Cancel / restart 控制 */}
+            <div style={{ marginTop: 18, display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+              <button
+                type="button"
+                onClick={() => { resetInterview(); setStep("intro"); }}
+                style={{ ...btnGhostStyle, padding: "8px 18px", fontSize: 12 }}
+              >
+                ← 取消、回首頁
+              </button>
+              {interviewMessages.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm("確定要重新開始訪談？目前進度會丟失。")) {
+                      resetInterview();
+                      setTimeout(() => startInterview(), 80);
+                    }
+                  }}
+                  style={{ ...btnGhostStyle, padding: "8px 18px", fontSize: 12 }}
+                >
+                  重新開始訪談
+                </button>
+              )}
             </div>
-            <StepNav onBack={() => setStep("intro")} onNext={() => setStep("paste")} nextLabel="AI 跑完了、貼回來 →" />
           </div>
           )}
 
-          {/* ====== STEP 2 · PASTE BACK ====== */}
-          {step === "paste" && (
-          <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
-            <ApplyProgress current={2} setStep={setStep} />
-            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>貼回 AI 整理的結果。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 2 · 1 分鐘 · 把 AI 給的 JSON 整段貼進來</span></h1>
-            <div className="bp-panel" style={{ marginTop: 22 }}>
-              <div className="bp-panel-h"><span>PASTE · AI 整理結果</span></div>
-              <div className="bp-panel-b">
-                <textarea value={pasteRaw} onChange={(e) => { setPasteRaw(e.target.value); setParseError(""); }} placeholder='{ "L_score": 7, "L_confidence": "L6-L7", "tier_suggestion": "Tier B", "skill_matrix": { ... }, "strengths": [...], "growth": [...], "evidence_quality": "深" }' style={{ width: "100%", minHeight: 280, background: "rgba(0,0,0,0.3)", color: "var(--text)", border: "1px solid var(--line-soft)", padding: "12px 14px", fontFamily: "var(--mono)", fontSize: 12, lineHeight: 1.7, resize: "vertical" }} />
-                {parseError && <div style={{ marginTop: 10, padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {parseError}</div>}
-                <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <button type="button" onClick={tryParsePaste} style={btnPrimaryStyle}>檢查格式 + 生成能力卡 →</button>
-                  <button type="button" onClick={() => { setPasteRaw(SAMPLE_PASTE); setParseError(""); }} style={btnGhostStyle}>用範例試試</button>
-                </div>
-              </div>
-            </div>
-            <StepNav onBack={() => setStep("generate")} onNext={tryParsePaste} nextLabel="生成能力卡 →" />
-          </div>
-          )}
-
-          {/* ====== STEP 3 · PREVIEW CARD + LAYER 2 + LAYER 3 ====== */}
+          {/* ====== STEP 2 · PREVIEW CARD + LAYER 2 + LAYER 3 ====== */}
           {step === "preview" && parsed && (
           <div style={{ maxWidth: 880, margin: "32px auto", padding: "0 24px" }}>
-            <ApplyProgress current={3} setStep={setStep} />
-            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>這就是你即將出現在客戶面前的樣子。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 3 · 預覽你的能力卡 + 下一關</span></h1>
+            <ApplyProgress current={2} setStep={setStep} />
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>這就是你即將出現在客戶面前的樣子。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 2 · 預覽你的能力卡 + 送出申請</span></h1>
 
             {/* ABILITY CARD */}
             <div className="bp-panel" style={{ marginTop: 22, borderColor: "var(--accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 32px rgba(199,232,74,0.08)" }}>
@@ -1028,7 +1213,7 @@ function WorkerEmptyState() {
                 setSubmitted(true);
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }} />
-              <button type="button" onClick={() => setStep("paste")} style={{ ...btnGhostStyle, padding: "8px 18px" }}>← 回去改 AI 結果</button>
+              <button type="button" onClick={() => setStep("chat")} style={{ ...btnGhostStyle, padding: "8px 18px" }}>← 回去訪談（補答案）</button>
             </div>
           </div>
           )}
@@ -1100,9 +1285,8 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
 
 function ApplyProgress({ current, setStep }) {
   const steps = [
-    { n: 1, label: "取 Brief", key: "generate" },
-    { n: 2, label: "貼回結果", key: "paste" },
-    { n: 3, label: "預覽能力卡", key: "preview" },
+    { n: 1, label: "AI 訪談", key: "chat" },
+    { n: 2, label: "預覽能力卡", key: "preview" },
   ];
   return (
     <div style={{ display: "flex", gap: 0, alignItems: "center", flexWrap: "wrap", padding: "12px 0", borderBottom: "1px solid var(--line-soft)" }}>
@@ -1211,6 +1395,9 @@ const fieldStyle = { width: "100%", padding: "10px 12px", background: "rgba(0,0,
 const btnPrimaryStyle = { padding: "10px 18px", background: "var(--accent)", color: "var(--bg)", border: "1px solid var(--accent)", fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", fontWeight: 700, textTransform: "uppercase" };
 const btnGhostStyle = { padding: "10px 16px", background: "transparent", color: "var(--text)", border: "1px solid var(--line-soft)", fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", textDecoration: "none", display: "inline-block" };
 
+// [DEPRECATED 2026-05-15 v0.2] paste-back flow 的範例 JSON、外部 AI 訪談 fallback 用
+// 已被 server-side AI 訪談（worker-ai-interview Edge Function）取代
+// 保留作為 ai_proof JSON schema 對照範例（preview card render 對齊）
 const SAMPLE_PASTE = `{
   "name": "Arc",
   "verticals": ["DTC 內容"],

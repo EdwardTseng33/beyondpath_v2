@@ -156,5 +156,43 @@
     },
   };
 
+  // ============================================================
+  // AI INTERVIEW · server-side worker 入會訪談 (Edge Function worker-ai-interview)
+  // 2026-05-15 立 · 取代 worker.jsx Step 2 外部 ChatGPT/Claude paste-back flow
+  // 用法: messages=[] → 第一段問題 / 累積 messages 帶回追問 / status:complete 結尾附 ai_proof
+  // ============================================================
+
+  window.bpAiInterview = {
+    async sendMessage(messages) {
+      // messages: [{ role: 'user' | 'assistant', content: string }, ...] · 空陣列 = 第一次 call (seed [INTERVIEW_START])
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        const jwt = session?.access_token || SUPABASE_PUBLISHABLE_KEY;
+
+        const res = await fetch(SUPABASE_URL + '/functions/v1/worker-ai-interview', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + jwt,
+            'apikey': SUPABASE_PUBLISHABLE_KEY,
+          },
+          body: JSON.stringify({ messages: Array.isArray(messages) ? messages : [] }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          return {
+            data: null,
+            error: { message: data.message || data.error || ('HTTP ' + res.status), status: res.status, details: data },
+          };
+        }
+        // data shape: { ok: true, status: 'asking'|'complete', step, message, progress_hint?, ai_proof?, usage, model }
+        return { data, error: null };
+      } catch (e) {
+        return { data: null, error: { message: e?.message || String(e) } };
+      }
+    },
+  };
+
   console.log('[BeyondPath] Supabase client ready · ' + SUPABASE_URL);
 })();
