@@ -167,6 +167,10 @@
   .le-vert-grid .cell .name, .le-engine-card .zh, .le-whyus-card .ttl,
   .le-trust-strip .chip .ttl, .le-protocol-grid .cell .t,
   .le-story-block .h, .le-story-block .body { word-break: keep-all; line-break: strict; }
+  /* Mobile 強制 break · CJK 字串太長且容器太窄時不可 keep-all (2026-05-15 audit) */
+  @media (max-width: 768px) {
+    .le-story-block .h, .le-story-block .body { word-break: break-word !important; line-break: auto !important; overflow-wrap: anywhere !important; }
+  }
 
   /* v0.3 static-bar (replace LiveTicker) */
   .le-staticbar { display: flex; gap: 0; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.14em; border-bottom: 1px solid var(--line-soft); background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); }

@@ -380,15 +380,17 @@
     .bp-shell-body { overflow-y: auto !important; overflow-x: hidden !important; min-height: 70vh !important; flex-direction: column; }
     .bp-shell-body > * { width: 100% !important; min-width: 0 !important; }
 
-    /* Top nav · 壓縮 padding + 簡化內容 */
-    .bp-shell-top { padding: 8px 12px !important; gap: 8px !important; flex-wrap: wrap; }
-    .bp-shell-brand { font-size: 11px !important; }
-    .bp-shell-brand small { font-size: 9px !important; padding-left: 6px !important; }
-    .bp-shell-roles { display: none !important; } /* 中間 role pill 隱藏、mobile 從 menu 切換 */
-    .bp-shell-meta { gap: 6px !important; margin-left: auto; }
-    .bp-shell-ver { font-size: 9px !important; padding: 2px 5px !important; }
-    .bp-shell-name { display: none !important; } /* email 太長隱藏、avatar 留 */
-    .bp-shell-avatar { width: 24px !important; height: 24px !important; }
+    /* Top nav · 大幅壓縮、只留 brand mark + avatar */
+    .bp-shell-top { padding: 8px 10px !important; gap: 6px !important; flex-wrap: nowrap !important; overflow: hidden; }
+    .bp-shell-brand { font-size: 11px !important; flex: 0 1 auto; min-width: 0; overflow: hidden; }
+    .bp-shell-brand small { display: none !important; } /* WORKER · CONSOLE 標籤 mobile 隱藏 */
+    .bp-shell-roles { display: none !important; } /* 中間 role pill 隱藏 */
+    .bp-shell-meta { gap: 4px !important; margin-left: auto; flex: 0 0 auto; max-width: 60px !important; overflow: hidden !important; }
+    .bp-shell-ver { display: none !important; } /* v1.0.0 標籤 mobile 隱藏 */
+    .bp-shell-name { display: none !important; } /* name + email 隱藏 */
+    .bp-shell-avatar { width: 24px !important; height: 24px !important; flex: 0 0 24px !important; }
+    .bp-shell-acct { padding: 2px 4px !important; }
+    .bp-shell-acct .caret { display: none !important; }
 
     /* Worker onboarding container · 收 padding */
     .bp-onboarding { max-width: 100% !important; margin: 24px 0 !important; padding: 0 16px !important; }
