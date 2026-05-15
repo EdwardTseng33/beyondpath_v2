@@ -1,0 +1,130 @@
+[
+  {
+    "persona_id": "W01",
+    "fix_relevant": [
+      "P2-1"
+    ],
+    "pain_resolved": "JSON 中間夾中文解釋怕壞掉的焦慮被解掉、新文案明說『含中文說明 OK · 會自動抓』",
+    "pain_remaining": "Step 2 跳出去 ChatGPT 30 min 訪談本身仍中斷流程、沒整合進站內",
+    "submit_before": "yes",
+    "submit_after": "yes",
+    "submit_changed_why": "本來就會 submit、fix 讓貼 JSON 環節更安心、但核心流程體驗未變"
+  },
+  {
+    "persona_id": "W02",
+    "fix_relevant": [],
+    "pain_resolved": "none——三個 fix 都沒打到 Tier/L-Score 看不懂、複製 Brief 沒提示、submit 後不知接下來的痛點",
+    "pain_remaining": "Tier/L-Score 解釋滾上滾下、submit 後黑箱、Brief 區塊缺指引仍存在",
+    "submit_before": "unsure",
+    "submit_after": "unsure",
+    "submit_changed_why": "她的核心痛點完全沒被這輪 fix 處理、submit 猶豫理由不變"
+  },
+  {
+    "persona_id": "W03",
+    "fix_relevant": [
+      "P2-1"
+    ],
+    "pain_resolved": "JSON parse 失敗 error 不友善被解、4 種錯具體 hint + 範例按鈕對工程腦很受用",
+    "pain_remaining": "Step 2 跳出 ChatGPT 體驗斷裂、站內未整合 LLM 訪談仍是缺口",
+    "submit_before": "yes",
+    "submit_after": "yes",
+    "submit_changed_why": "工程背景本來就 submit、error message 改善反而加強信任、pilot 試水案期待不變"
+  },
+  {
+    "persona_id": "W04",
+    "fix_relevant": [
+      "P2-1"
+    ],
+    "pain_resolved": "貼 JSON 那關文案變親切、『整段貼進來就好』+ 範例按鈕降低新手焦慮",
+    "pain_remaining": "Step 2 跳出去 ChatGPT 30 min 訪談對轉職新手仍是直接迷路關閉的點、JSON 概念本身仍陌生、被打回票丟臉感未解",
+    "submit_before": "no",
+    "submit_after": "no",
+    "submit_changed_why": "真正讓他關閉的是 Step 2 整個跳站外、fix 3 只救到貼回來那一步、上游沒救等於沒救"
+  },
+  {
+    "persona_id": "W05",
+    "fix_relevant": [],
+    "pain_resolved": "none——三個 fix 都針對 junior/middle worker 或 client、senior 專屬 onboarding 沒動",
+    "pain_remaining": "30 min AI 訪談對 20 年資深設計總監仍不尊重、高 tier 需要差異化路徑",
+    "submit_before": "unsure",
+    "submit_after": "unsure",
+    "submit_changed_why": "senior tier 的尊嚴痛點沒被處理、她仍會 email Edward 而不是走標準流程"
+  },
+  {
+    "persona_id": "W06",
+    "fix_relevant": [],
+    "pain_resolved": "none——7 段問題透明度、客戶端能否勾 RevOps 兩個需求都沒被本輪 fix 觸及",
+    "pain_remaining": "想看 7 段訪談題目清單、想確認 client side 有 RevOps 選項",
+    "submit_before": "yes",
+    "submit_after": "yes",
+    "submit_changed_why": "本來就 yes、痛點屬於 nice-to-have 不是 blocker、decision 穩定"
+  },
+  {
+    "persona_id": "C01",
+    "fix_relevant": [
+      "P0-2"
+    ],
+    "pain_resolved": "demo workers banner 改寫直接打到她的痛點、綠色 accent + 『Edward 親自配對 24h』從『冷掉一半』變成『被認真對待』的感覺",
+    "pain_remaining": "none",
+    "submit_before": "yes",
+    "submit_after": "yes",
+    "submit_changed_why": "原本就 yes、但 fix 後信心更強、不再會想繞過去 email Edward"
+  },
+  {
+    "persona_id": "C02",
+    "fix_relevant": [
+      "P1-2"
+    ],
+    "pain_resolved": "Bonus Signals 改 client 視角『希望 worker 自帶聲量』『優先曾合作過的』，B2B 行銷長一看就懂",
+    "pain_remaining": "NDA / 發票 / 合約機制對 B2B SaaS 仍是 blocker、Claude advisor 還沒看到實品",
+    "submit_before": "yes",
+    "submit_after": "yes",
+    "submit_changed_why": "submit 不變但 NDA/發票未解、實際導入企業流程仍卡關"
+  },
+  {
+    "persona_id": "C03",
+    "fix_relevant": [
+      "P0-2",
+      "P1-2"
+    ],
+    "pain_resolved": "demo banner 焦慮解掉（知道 24h 內 Edward 回信）、Bonus Signals 白話化讓非數位背景餐飲老闆讀得懂",
+    "pain_remaining": "Tier 制度看不懂、看不到價格區間仍讓他想 LINE 朋友問再下單",
+    "submit_before": "unsure",
+    "submit_after": "unsure",
+    "submit_changed_why": "兩個 fix 改善體驗、但價格透明度是他下單最後一哩、未解前仍猶豫"
+  },
+  {
+    "persona_id": "C04",
+    "fix_relevant": [
+      "P0-2",
+      "P1-2"
+    ],
+    "pain_resolved": "Bonus Signals『希望 worker 自帶 IG/Threads 聲量』方向終於對了、banner 24h timeline 明確",
+    "pain_remaining": "24h 對 YouTuber 節奏仍太慢、worker pool 不夠 vertical 深（短影音剪輯專才）",
+    "submit_before": "yes",
+    "submit_after": "yes",
+    "submit_changed_why": "submit 不變、但 vertical depth 是 supply side 問題、fix 救不到"
+  },
+  {
+    "persona_id": "C05",
+    "fix_relevant": [
+      "P0-2"
+    ],
+    "pain_resolved": "banner 改寫明說 Edward 親自看完整 brief + Claude 顧問建議、傳產二代對『有人親自把關』的需求被回應",
+    "pain_remaining": "NT$500k 大金額仍不放心走 4 步表單、想要實體會面 / 合約 / 履約保證",
+    "submit_before": "unsure",
+    "submit_after": "unsure",
+    "submit_changed_why": "fix 把信任度提一格但金額門檻仍在、大客戶需要線下對接路徑、submit 仍猶豫"
+  },
+  {
+    "persona_id": "C06",
+    "fix_relevant": [
+      "P1-2"
+    ],
+    "pain_resolved": "『新人加成 反馬太』改成『願意給新銳 worker 機會』、施捨感被白話化稀釋、NPO 角度讀起來舒服",
+    "pain_remaining": "發票/收據流程對 NPO 報帳仍是硬需求、議題/公益 tag 沒加",
+    "submit_before": "yes",
+    "submit_after": "yes",
+    "submit_changed_why": "submit 不變、文案改善讓她更願意推薦給同溫層、但發票機制未解仍會卡核銷"
+  }
+]
