@@ -874,7 +874,7 @@ function WorkerEmptyState() {
             <path d="M24 40 l12 12 l22 -22" fill="none" stroke="#c7e84a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
           <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.2, margin: "0 0 14px", color: "#f0eee8" }}>申請草稿已準備好。</h1>
-          <p style={{ color: "#9a9aa3", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.08em", marginBottom: 28 }}>EMAIL APPLICATION · SEND TO EDWARD</p>
+          <p style={{ color: "#9a9aa3", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.08em", marginBottom: 28 }}>EMAIL APPLICATION · SEND TO REVIEW</p>
 
           <div style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.08)", marginBottom: 28, textAlign: "left" }}>
             <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.14em", color: "#9a9aa3", textTransform: "uppercase" }}>

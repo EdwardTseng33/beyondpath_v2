@@ -1174,10 +1174,10 @@ function IntakeSubmitModal({ state, onCancel, onDone }) {
           {error && <div style={{ padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {error}</div>}
           <div style={{ display: "flex", gap: 10, marginTop: 6 }}>
             <button type="button" onClick={onCancel} disabled={submitting} style={{ padding: "12px 18px", background: "transparent", color: "#c8c6c0", border: "1px solid rgba(255,255,255,0.12)", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", textTransform: "uppercase" }}>取消</button>
-            <button type="button" onClick={doSubmit} disabled={submitting} style={{ flex: 1, padding: "12px 18px", background: "#c7e84a", color: "#0a0a0b", border: "1px solid #c7e84a", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.1em", fontWeight: 700, cursor: submitting ? "wait" : "pointer", textTransform: "uppercase", opacity: submitting ? 0.5 : 1 }}>{submitting ? "送出中…" : "→ Submit · 送交 Edward"}</button>
+            <button type="button" onClick={doSubmit} disabled={submitting} style={{ flex: 1, padding: "12px 18px", background: "#c7e84a", color: "#0a0a0b", border: "1px solid #c7e84a", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.1em", fontWeight: 700, cursor: submitting ? "wait" : "pointer", textTransform: "uppercase", opacity: submitting ? 0.5 : 1 }}>{submitting ? "送出中…" : "→ Submit · 送出申請"}</button>
           </div>
         </div>
-        <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px dashed rgba(255,255,255,0.08)", fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6a6a78", letterSpacing: "0.06em", lineHeight: 1.7 }}>BeyondPath POC · 你的 brief + 配對結果會送到 Edward 信箱 · 不會公開</div>
+        <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px dashed rgba(255,255,255,0.08)", fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6a6a78", letterSpacing: "0.06em", lineHeight: 1.7 }}>BeyondPath POC · 你的 brief + 配對結果會進入 BeyondPath 後台、不會公開</div>
       </div>
     </div>
   );
@@ -1233,7 +1233,7 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
     if (step === 0) return "Confirm expectations →";
     if (step === 1) return "Run AI parse →";
     if (step === 2) return "Find matches →";
-    return submitDone ? "Continue to contract →" : "Submit · 送交 Edward →";
+    return submitDone ? "Continue to contract →" : "Submit · 送出申請 →";
   };
 
   return (
