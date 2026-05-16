@@ -26,7 +26,7 @@ function WorkerDashboard({ inShell = false }) {
         {!inShell && (
           <div className="bp-logo">
             <span className="bp-logo-mark"></span>BEYONDPATH
-            <small>WORKER · @edward</small>
+            <small>WORKER · DEMO</small>
           </div>
         )}
         <div className="bp-stepper" style={{ marginLeft: inShell ? 0 : 24 }}>
@@ -106,7 +106,7 @@ function WorkerDashboard({ inShell = false }) {
             <div>
               <div className="bp-eyebrow"><span>Welcome back</span><span className="pill green">● tier up unlocked</span></div>
               <h1 className="bp-h1" style={{ marginTop: 6 }}>
-                Hi, Edward.
+                Welcome back.
                 <br/><span className="zh" style={{ color: "var(--muted)" }}>3 個案在跑、1 個提案待回。</span>
               </h1>
             </div>
@@ -436,7 +436,7 @@ function WorkerDashboard({ inShell = false }) {
               <div className="bp-h2" style={{ marginTop: 22 }}>recommended · 補足學習路徑（個人化）</div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
                 {[
-                  { tag: "COURSE", t: "Reels 60s storytelling", who: "by Edward · BeyondPath original", time: "2h 40m · 8 modules", lift: "+9 score", paid: "平台補貼 100%" },
+                  { tag: "COURSE", t: "Reels 60s storytelling", who: "BeyondPath original", time: "2h 40m · 8 modules", lift: "+9 score", paid: "平台補貼 100%" },
                   { tag: "COURSE", t: "Performance copy fundamentals", who: "Maven cohort · imported", time: "4 weeks · live", lift: "+14 score", paid: "平台補貼 NT$4,800 / 6,000" },
                   { tag: "PRACTICE", t: "Reels rapid drill", who: "AI 模擬客戶 brief × 6", time: "self-paced · 6h", lift: "+6 score", paid: "免費 · Tier A+ 福利" },
                 ].map((c, i) => (
@@ -883,7 +883,7 @@ function WorkerEmptyState() {
             <div style={{ padding: "18px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
               {[
                 `Supabase 已收到你的申請（能力卡 + email）`,
-                `BeyondPath 系統會在 24h 內完成評估、回信到你留的 email`,
+                `24h 內：AI 初審 + 人工覆核 → 結果回信到你留的 email`,
                 "通過 → 進首案池（保留 20% slot 給新人）→ 第一個案最快 2 週",
                 "沒通過 → 我們會給具體補強方向 · 6 個月後可重申",
               ].map((t, i) => (
@@ -897,7 +897,7 @@ function WorkerEmptyState() {
 
           <div style={{ background: "rgba(199,232,74,0.05)", border: "1px solid rgba(199,232,74,0.4)", padding: "14px 18px", marginBottom: 28, fontSize: 13, color: "#c8c6c0", textAlign: "left" }}>
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#c7e84a", display: "block", marginBottom: 6 }}>● EARLY BETA · 申請已送出</span>
-            你的能力卡與 email 已存入 BeyondPath 後台。BeyondPath 系統會在 24h 內完成評估並回信。想額外補資料或自我介紹，可寄到下方 email。
+            你的能力卡與 email 已存入 BeyondPath 後台。24h 內 AI 初審 + 人工覆核完成後、結果寄到你的 email。想額外補資料或自我介紹，可寄到下方 email。
           </div>
 
           <div style={{ border: "1px dashed rgba(255,255,255,0.16)", padding: "14px 16px", marginBottom: 22, textAlign: "left", background: "rgba(255,255,255,0.018)" }}>
@@ -973,7 +973,7 @@ function WorkerEmptyState() {
                 <span style={{ fontSize: 12, color: "var(--muted)", fontFamily: "var(--mono)" }}>fast-track</span>
               </div>
               <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.6 }}>
-                30 分鐘 AI 訪談對你的職涯太短。直接跟 Edward 預約 30 min 視訊聊策略合作、跳過下方 4 步、直接進 Tier A+ pipeline。
+                30 分鐘 AI 訪談對你的職涯太短。直接跟 BeyondPath 團隊預約 30 min 視訊聊策略合作、跳過下方 4 步、直接進 Tier A+ pipeline。
               </div>
               <a
                 href="mailto:edwardt0303@gmail.com?subject=BeyondPath%20Senior%20Worker%20Fast-Track%20%E7%94%B3%E8%AB%8B&body=Edward%20%E5%A5%BD%EF%BC%8C%0A%0A%E6%88%91%E6%98%AF%E8%B3%87%E6%B7%B1%20worker%EF%BC%88_____%20%E5%B9%B4%E7%B6%93%E9%A9%97%EF%BC%89%E3%80%81%E6%83%B3%E8%B7%B3%E9%81%8E%204%20%E6%AD%A5%E7%B0%A1%E5%8C%96%E8%A8%AA%E8%AB%87%E3%80%81%E7%9B%B4%E6%8E%A5%E8%B7%9F%E4%BD%A0%E9%A0%90%E7%B4%84%2030%20min%20%E8%A6%96%E8%A8%8A%E8%81%8A%E7%AD%96%E7%95%A5%E5%90%88%E4%BD%9C%E3%80%82%0A%0A%E4%B8%BB%E5%8A%9B%E9%A0%98%E5%9F%9F%EF%BC%9A_____%0A%E4%B8%BB%E8%A6%81%E5%85%AC%E5%8F%B8%20%2F%20%E4%BD%9C%E5%93%81%EF%BC%9A_____%0A%E5%8F%AF%E9%A0%90%E7%B4%84%E6%99%82%E6%AE%B5%EF%BC%9A_____%0A%0A%E8%AC%9D%E8%AC%9D"
@@ -990,7 +990,7 @@ function WorkerEmptyState() {
                   fontFamily: "var(--sans)",
                 }}
               >
-                → 預約 Edward 30 min 視訊
+                → 預約團隊 30 min 視訊
               </a>
             </div>
 

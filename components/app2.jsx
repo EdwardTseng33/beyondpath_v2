@@ -281,7 +281,7 @@ function Step1({ state, set, device }) {
             { id: "nda", label: "需要 NDA", sub: "簽保密協議才能談" },
             { id: "invoice", label: "需要公司發票", sub: "三聯式 / 含統編" },
             { id: "contract", label: "公司對公司簽約", sub: "正式服務合約 · 不接受 PayPal" },
-            { id: "talkToEdward", label: "想先跟 Edward 聊 30 min", sub: "大金額 / 複雜案 · 視訊預約" },
+            { id: "talkToEdward", label: "想先跟 BeyondPath 團隊聊 30 min", sub: "大金額 / 複雜案 · 視訊預約" },
           ].map((f) => {
             const active = state.enterprise && state.enterprise[f.id];
             return (
@@ -793,9 +793,9 @@ function Step4({ state, set, device }) {
         <div>
           <div className="ttl-en">SUGGESTED PAIR · 2-EXPERT DAG</div>
           <div className="ttl-zh">
-            Edward <span style={{ color: "var(--muted)" }}>(視覺 · 50%)</span> +
-            Edward <span style={{ color: "var(--muted)" }}>(文案 · 30%)</span> +
-            Edward <span style={{ color: "var(--muted)" }}>(排程 · 20%)</span>
+            Tier A+ 領域專家 <span style={{ color: "var(--muted)" }}>(視覺 · 50%)</span> +
+            Tier A+ 領域專家 <span style={{ color: "var(--muted)" }}>(文案 · 30%)</span> +
+            Tier A+ 領域專家 <span style={{ color: "var(--muted)" }}>(排程 · 20%)</span>
           </div>
         </div>
         <div className="stats">
@@ -1167,7 +1167,7 @@ function IntakeSubmitModal({ state, onCancel, onDone }) {
       <div style={{ width: "100%", maxWidth: 480, background: "#0a0a0b", border: "1px solid rgba(199,232,74,0.4)", padding: "32px 28px", color: "#f0eee8" }}>
         <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, letterSpacing: "0.14em", color: "#c7e84a", textTransform: "uppercase", marginBottom: 10 }}>◆ 留下你的聯絡方式</div>
         <h2 style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 22, fontWeight: 700, margin: "0 0 8px", lineHeight: 1.3 }}>送出需求 · 進入合約 stage</h2>
-        <p style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 14, color: "#9a9aa3", margin: "0 0 22px", lineHeight: 1.6 }}>BeyondPath 會在 24h 內回信確認 brief、配對方案與時程。</p>
+        <p style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 14, color: "#9a9aa3", margin: "0 0 22px", lineHeight: 1.6 }}>24h 內：AI 初審 + 人工覆核 → 配對方案、時程寄到你的 email。</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <input type="email" placeholder="your@email.com（必填）" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
           <input type="text" placeholder="公司 / 品牌名（可選）" value={companyName} onChange={(e) => setCompanyName(e.target.value)} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
