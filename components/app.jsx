@@ -663,14 +663,14 @@ function Step4({ state, set, device }) {
   return (
     <div>
       <div className="bp-eyebrow">
-        <span>Step 04 / B1 · 自動配對</span>
-        <span className="pill green">● 5 candidates · 3 recommended</span>
+        <span>Step 04 / B1 · 過往案例參考</span>
+        <span className="pill green">● 早期合作 · 實際配對 24h 內 email</span>
       </div>
       <h1 className="bp-h1">
-        Top matches, ranked by ADR-006.
+        Top examples in your vertical.
         <br />
         <span className="zh" style={{ color: "var(--muted)" }}>
-          AI 已套用權重 algorithm，依 100 分加權排序。
+          下方為你選領域過往合作案例參考、實際配對 24h 內以 email 寄出。
         </span>
       </h1>
 

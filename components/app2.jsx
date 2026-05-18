@@ -777,10 +777,10 @@ function Step4({ state, set, device }) {
         <span className="pill" style={{ background: "rgba(255,200,80,0.1)", color: "#ffc850", borderColor: "rgba(255,200,80,0.3)" }}>● POC · 早期合作</span>
       </div>
       <h1 className="bp-h1">
-        Top matches, ranked by ADR-006.
+        Top examples in your vertical.
         <br />
         <span className="zh" style={{ color: "var(--muted)" }}>
-          AI 已套用權重 algorithm，依 100 分加權排序。
+          下方為「{verticalZh}」領域過往合作案例參考、實際配對 24h 內以 email 寄出。
         </span>
       </h1>
       <div style={{
