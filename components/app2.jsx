@@ -2,7 +2,7 @@
 // Mounts into both desktop and mobile artboards via window.BPApp({device}).
 
 const { useState, useEffect, useRef, useMemo } = React;
-const { VERTICALS, VERTICAL_CATS, SAMPLE_BRIEF, AI_PARSE_RESULT, WORKERS, SUGGESTED_PAIR } = window.BP_DATA;
+const { VERTICALS, VERTICAL_CATS, VERTICAL_DEMO_MAP, getDemoForVertical, SAMPLE_BRIEF, AI_PARSE_RESULT, WORKERS, SUGGESTED_PAIR } = window.BP_DATA;
 
 const fmtNT = (n) => "NT$" + n.toLocaleString();
 
@@ -89,13 +89,21 @@ function Step1({ state, set, device }) {
 
   const useSample = () => {
     setTab("sample");
-    setText(SAMPLE_BRIEF);
-    set({ brief: SAMPLE_BRIEF, briefSource: "sample" });
+    const demo = getDemoForVertical(state.vertical);
+    setText(demo.brief);
+    set({ brief: demo.brief, briefSource: "sample" });
   };
 
   useEffect(() => {
     if (tab === "sample" && !text) useSample();
   }, []);
+
+  // 當 state.brief 從 parent (ClientIntakeApp useEffect) 更新時、同步本地 textarea text
+  useEffect(() => {
+    if (tab === "sample" && state.brief && state.brief !== text) {
+      setText(state.brief);
+    }
+  }, [state.brief, tab]);
 
   return (
     <div>
@@ -237,7 +245,7 @@ function Step1({ state, set, device }) {
             style={{ marginTop: 12, overflow: "hidden" }}
           >
             <div className="bp-panel-h">
-              <span>{tab === "sample" ? "demo · LUMINE.md" : "brief.md"}</span>
+              <span>{tab === "sample" ? `sample · ${(VERTICALS.find((v) => v.id === state.vertical)?.zh || "brief")}.md` : "brief.md"}</span>
               <span style={{ marginLeft: "auto" }}>
                 {text.length.toLocaleString()} chars · ~
                 {Math.max(1, Math.round(text.length / 4))} tok
@@ -741,15 +749,19 @@ function Step3({ state, set, device }) {
 
 function Step4({ state, set, device }) {
   const [filter, setFilter] = useState("all"); // all | tierA+ | mercy
-  const [expanded, setExpanded] = useState(state.selectedWorkers[0] || "w-arc");
+  const demo = getDemoForVertical(state.vertical);
+  const verticalWorkers = demo.workers;
+  const verticalSuggestedPair = demo.suggestedPair;
+  const verticalZh = VERTICALS.find((v) => v.id === state.vertical)?.zh || "你選的領域";
+  const [expanded, setExpanded] = useState(state.selectedWorkers[0] || verticalSuggestedPair[0]);
   const selected = state.selectedWorkers;
 
   const filtered = useMemo(() => {
-    let list = WORKERS.slice().sort((a, b) => b.score - a.score);
+    let list = verticalWorkers.slice().sort((a, b) => b.score - a.score);
     if (filter === "tierA+") list = list.filter((w) => w.tier === "A+");
     if (filter === "mercy") list = list.filter((w) => w.boost.mercy > 0);
     return list;
-  }, [filter]);
+  }, [filter, verticalWorkers]);
 
   const toggleSel = (id) => {
     const has = selected.includes(id);
@@ -761,8 +773,8 @@ function Step4({ state, set, device }) {
   return (
     <div>
       <div className="bp-eyebrow">
-        <span>Step 04 / Match · AI 自動配對</span>
-        <span className="pill" style={{ background: "rgba(255,200,80,0.1)", color: "#ffc850", borderColor: "rgba(255,200,80,0.3)" }}>● Beta · demo workers</span>
+        <span>Step 04 / Match · AI 配對 + 人工覆核</span>
+        <span className="pill" style={{ background: "rgba(255,200,80,0.1)", color: "#ffc850", borderColor: "rgba(255,200,80,0.3)" }}>● POC · 早期合作</span>
       </div>
       <h1 className="bp-h1">
         Top matches, ranked by ADR-006.
@@ -782,10 +794,10 @@ function Step4({ state, set, device }) {
         lineHeight: 1.7,
       }}>
         <div style={{ marginBottom: 6 }}>
-          🎯 <b style={{ color: "var(--accent)" }}>BeyondPath 配對演算法 · 24h 內 email 給你 3 個最匹配的 worker</b>
+          ✨ <b style={{ color: "var(--accent)" }}>已收到你的「{verticalZh}」需求、進入後台</b>
         </div>
         <div style={{ fontSize: 12.5, color: "var(--muted)" }}>
-          下方為 demo workers 視覺示意 · BeyondPath 真實 pipeline 累積中、實際配對由 AI 評估 + 多維演算法依完整 brief（你剛填的）跟 worker portfolio 雙向匹配、附 AI 顧問建議（應接 / Tier / 報價 / risk）。submit 後請查 email、不符也會通知。
+          下方為「{verticalZh}」領域過往合作案例參考。<b style={{ color: "var(--text-2)" }}>實際配對方案 24h 內寄到你的 email</b>：含 AI 初審 + 團隊人工覆核 + 候選 worker + 報價區間。早期合作 · 第一批一對一處理。
         </div>
       </div>
 
@@ -846,7 +858,7 @@ function Step4({ state, set, device }) {
       {filtered.map((w, i) => {
         const isSel = selected.includes(w.id);
         const isExp = expanded === w.id;
-        const isSuggested = SUGGESTED_PAIR.includes(w.id);
+        const isSuggested = verticalSuggestedPair.includes(w.id);
         return (
           <div
             key={w.id}
@@ -1192,12 +1204,14 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
     const v = typeof next === "function" ? next(step) : next;
     if (onStep) onStep(v); else setUStep(v);
   };
+  const initialVertical = "dtc";
+  const initialDemo = getDemoForVertical(initialVertical);
   const [state, setState] = useState({
-    vertical: "dtc",
-    brief: SAMPLE_BRIEF,
+    vertical: initialVertical,
+    brief: initialDemo.brief,
     briefSource: "sample",
     parseDone: presetParsed || initialStep > 1,
-    parsed: (presetParsed || initialStep > 1) ? AI_PARSE_RESULT : null,
+    parsed: (presetParsed || initialStep > 1) ? initialDemo.parse : null,
     expect: {
       tier: "A+",
       badges: ["KV 主視覺", "Reels 腳本"],
@@ -1207,7 +1221,7 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
       nps: 4.5,
       bonus: ["voice", "local"],
     },
-    selectedWorkers: ["w-arc", "w-mei"],
+    selectedWorkers: initialDemo.suggestedPair.slice(0, 2),
     enterprise: {
       nda: false,
       invoice: false,
@@ -1222,6 +1236,22 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
   useEffect(() => {
     if (contentRef.current) contentRef.current.scrollTop = 0;
   }, [step]);
+
+  // vertical-aware demo data · 當 vertical 變且 briefSource === "sample"
+  // → 重置 brief / parsed / selectedWorkers 為對應 vertical 的 demo
+  // (用戶手動 paste / upload 的 brief 不會被覆蓋)
+  useEffect(() => {
+    setState((s) => {
+      if (s.briefSource !== "sample") return s;
+      const demo = getDemoForVertical(s.vertical);
+      return {
+        ...s,
+        brief: demo.brief,
+        parsed: s.parsed ? demo.parse : s.parsed,
+        selectedWorkers: demo.suggestedPair.slice(0, 2),
+      };
+    });
+  }, [state.vertical]);
 
   const canContinue = () => {
     if (step === 0) return state.vertical && state.brief && state.brief.trim().length > 30;
