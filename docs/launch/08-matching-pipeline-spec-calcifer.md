@@ -72,25 +72,30 @@ EDWARD_ADVISOR_PROMPT (真跑)    額外 query worker pool
 
 **Goal**：把 worker AI 對談萃取的 `ai_proof` JSON + 前端 Step 4 worker shape 合併成單一 contract。
 
-**現況**：
+**現況**（2026-05-18 T1.1 align：以 `worker-ai-interview/index.ts:90-97` production schema 為準 · spec 早先草稿假設已 deprecate）：
 - `ai_proof` 來自 worker-ai-interview Edge Function、Claude 萃取
   ```json
   {
-    "L_score": 7.8,
-    "skill_matrix": {
-      "discover_problem": 8,
-      "structure_brief": 7,
-      "tools_proficiency": 9,
-      "delivery_quality": 8,
-      "review_iteration": 7,
-      "knowledge_transfer": 6
-    },
-    "tier_suggestion": "A",
+    "name": "Edward Tseng",
+    "L_score": 7.8,                                // 0-10
+    "L_confidence": "高",                           // "高" | "中" | "低"
+    "tier_suggestion": "B+",                        // 真實 enum: "B" | "B+" only（A / A+ / S 暫不存在 · 累積 case 後升級）
+    "evidence_quality": "高",                       // "高" | "中" | "低"
     "verticals": ["software", "agent"],
-    "capacity": 3,
-    "rate_range": { "lo": 50000, "hi": 120000 }
+    "case_count": "5+",                             // 字串 bucket: "0" | "1-2" | "3-5" | "5+" | "10+"
+    "skill_matrix": {                               // 真實 6 維（跟 spec 早期假設不同）
+      "workflow_design": 8,
+      "tool_orchestration": 9,
+      "judgment": 7,
+      "domain_depth": 8,
+      "client_communication": 7,
+      "delivery_reliability": 8
+    },
+    "strengths": ["...", "..."],
+    "growth": ["...", "..."]
   }
   ```
+  > **真實 ai_proof 不含 `capacity` / `rate_range`**（spec 早期假設、Edge Function 沒問、worker 沒填）。T1.3 DB schema 階段需決策：(a) 加 Step 3 input field 讓 worker 自填、或 (b) 用 default + 未來 Admin UI 設定。
 - 前端 Step 4 worker shape（`data.standalone.jsx`）
   ```javascript
   {
@@ -114,7 +119,7 @@ EDWARD_ADVISOR_PROMPT (真跑)    額外 query worker pool
   }
   ```
 
-**Mapping function spec**（寫進 `supabase/functions/_shared/worker-schema.ts`）：
+**Mapping function spec**（已 ship 於 2026-05-18 T1.1 + T1.2 · 詳見 `supabase/functions/_shared/worker-schema.ts` 252 行 + `worker-schema.test.ts` 173 行 / 45 assertion PASS · 以下為早期 spec 草稿、實際 schema 以 worker-schema.ts 為 source of truth）：
 
 ```typescript
 // Worker unified shape (single contract for ai_proof + Step 4 display)
@@ -174,11 +179,11 @@ interface PortfolioItem {
 ```
 
 **Tasks**：
-- T1.1 寫 `supabase/functions/_shared/worker-schema.ts` 定義 UnifiedWorker
-- T1.2 寫 mapping function `aiProofToUnifiedWorker(workerRow, aiProof)` 跑轉換
-- T1.3 寫 DB view `worker_unified_v` SELECT 含轉換邏輯（PostgreSQL view）
-- T1.4 改 `worker-ai-interview/index.ts` 結束時、加 mapping pre-compute 寫進 worker_applications.unified_card
-- T1.5 改 前端 Step 4 抓 `unified_card` 而不是 hardcoded demo（fallback: demo if no unified_card）
+- ✅ T1.1 寫 `supabase/functions/_shared/worker-schema.ts` 定義 UnifiedWorker（**2026-05-18 calcifer ship · 252 行**）
+- ✅ T1.2 寫 mapping function `aiProofToUnifiedWorker(workerRow, aiProof)`（**同 ship · runtime test 45/45 PASS**）
+- ⏳ T1.3 寫 DB view `worker_unified_v` SELECT 含轉換邏輯（PostgreSQL view）—— **blocker：先決策 capacity / rate_range / portfolio 是否加 Step 3 input field**
+- ⏳ T1.4 改 `worker-ai-interview/index.ts` 結束時、加 mapping pre-compute 寫進 worker_applications.unified_card
+- ⏳ T1.5 改 前端 Step 4 抓 `unified_card` 而不是 hardcoded demo（fallback: demo if no unified_card）—— **blocker：Tier B / B+ 視覺 hierarchy 需女巫 Gate 2 補設計**
 
 **Files affected**：
 - `supabase/functions/_shared/worker-schema.ts`（new）
