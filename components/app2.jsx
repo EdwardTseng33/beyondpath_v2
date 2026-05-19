@@ -1177,19 +1177,19 @@ function IntakeSubmitModal({ state, onCancel, onDone }) {
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
       <div style={{ width: "100%", maxWidth: 480, background: "#0a0a0b", border: "1px solid rgba(199,232,74,0.4)", padding: "32px 28px", color: "#f0eee8" }}>
-        <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, letterSpacing: "0.14em", color: "#c7e84a", textTransform: "uppercase", marginBottom: 10 }}>◆ 留下你的聯絡方式</div>
-        <h2 style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 22, fontWeight: 700, margin: "0 0 8px", lineHeight: 1.3 }}>送出需求 · 進入合約 stage</h2>
-        <p style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 14, color: "#9a9aa3", margin: "0 0 22px", lineHeight: 1.6 }}>24h 內：AI 初審 + 人工覆核 → 配對方案、時程寄到你的 email。</p>
+        <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, letterSpacing: "0.14em", color: "#c7e84a", textTransform: "uppercase", marginBottom: 10 }}>◆ 取得 24h 配對方案</div>
+        <h2 style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 22, fontWeight: 700, margin: "0 0 8px", lineHeight: 1.3 }}>送出需求 · 取得 24h 配對方案</h2>
+        <p style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 14, color: "#9a9aa3", margin: "0 0 22px", lineHeight: 1.6 }}>24h 內：AI 初審 + 人工覆核 → 配對方案、候選人與時程寄到你的 email。Early Beta · 送出進人工審核、不代表正式合約或付款。</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <input type="email" placeholder="your@email.com（必填）" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
           <input type="text" placeholder="公司 / 品牌名（可選）" value={companyName} onChange={(e) => setCompanyName(e.target.value)} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
           {error && <div style={{ padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {error}</div>}
           <div style={{ display: "flex", gap: 10, marginTop: 6 }}>
             <button type="button" onClick={onCancel} disabled={submitting} style={{ padding: "12px 18px", background: "transparent", color: "#c8c6c0", border: "1px solid rgba(255,255,255,0.12)", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", textTransform: "uppercase" }}>取消</button>
-            <button type="button" onClick={doSubmit} disabled={submitting} style={{ flex: 1, padding: "12px 18px", background: "#c7e84a", color: "#0a0a0b", border: "1px solid #c7e84a", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.1em", fontWeight: 700, cursor: submitting ? "wait" : "pointer", textTransform: "uppercase", opacity: submitting ? 0.5 : 1 }}>{submitting ? "送出中…" : "→ Submit · 送出申請"}</button>
+            <button type="button" onClick={doSubmit} disabled={submitting} style={{ flex: 1, padding: "12px 18px", background: "#c7e84a", color: "#0a0a0b", border: "1px solid #c7e84a", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.1em", fontWeight: 700, cursor: submitting ? "wait" : "pointer", textTransform: "uppercase", opacity: submitting ? 0.5 : 1 }}>{submitting ? "送出中…" : "→ 取得 24h 配對方案"}</button>
           </div>
         </div>
-        <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px dashed rgba(255,255,255,0.08)", fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6a6a78", letterSpacing: "0.06em", lineHeight: 1.7 }}>BeyondPath POC · 你的 brief + 配對結果會進入 BeyondPath 後台、不會公開</div>
+        <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px dashed rgba(255,255,255,0.08)", fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6a6a78", letterSpacing: "0.06em", lineHeight: 1.7 }}>Early Beta · 你的 brief + 配對結果進入 BeyondPath 後台、不會公開 · 24h 內 email 回覆 · 第一次送出僅取得配對方案、不代表正式合約或付款</div>
       </div>
     </div>
   );
@@ -1263,7 +1263,7 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
     if (step === 0) return "Confirm expectations →";
     if (step === 1) return "Run AI parse →";
     if (step === 2) return "Find matches →";
-    return submitDone ? "Continue to contract →" : "Submit · 送出申請 →";
+    return submitDone ? "合約草稿預覽 →" : "Submit · 取得 24h 配對方案 →";
   };
 
   return (

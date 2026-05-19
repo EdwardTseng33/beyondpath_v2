@@ -1513,7 +1513,7 @@ const FAQS = [
   { n: "02", tag: "發案者", q: "做不出來 / 品質不對怎麼辦？", a: "POC 階段先不把你丟進全自動黑箱。我們會先用 AI 拆需求、判斷領域與風險，再由人工覆核 milestone、交付標準與候選人。早期不做平台代收代付；付款與合約由雙方自行處理。BeyondPath 先把需求、候選人與驗收紀錄跑穩。" },
   { n: "03", tag: "發案者", q: "如果 LLM 以後也能媒合人選，BeyondPath 還必要嗎？", a: "如果只是推薦名單，確實會被 LLM 商品化。BeyondPath 要累積的是 LLM 很難直接擁有的交付信任資料：worker 的 AI workflow、真實交付物、驗收紀錄、雙邊 NPS、適合的產業情境與失敗風險。名單只是起點，真正有價值的是「這個人為什麼值得被信任」的證據。" },
   { n: "04", tag: "發案者", q: "這個比 Fiverr 貴 / 比工作室便宜嗎？怎麼定價？", a: "我們在 Fiverr 跟月費代理之間。早期會先測試需求診斷、候選短名單、認證服務或媒合服務費等模式，不在平台上代收專案款。你付費買的不是名單，而是需求拆解、候選理由、驗收框架與降低找錯人的判斷成本。" },
-  { n: "05", tag: "接案者", q: "我想接案、要怎麼申請？真的通過率 < 10%？", a: "對。4 階段認證：（1）技能測驗——你的領域基本功、（2）同儕 review——已認證 worker 評分、（3）客戶模擬案件——平台給一個假需求、你交一份成果、（4）主審委員會——通過前三關才進。整個流程約 2-3 週。沒過可以 6 個月後重申、平台會給回饋說明哪裡需要補強。" },
+  { n: "05", tag: "接案者", q: "我想接案、要怎麼申請？真的通過率 < 10%？", a: "兩段式：Stage 1（Tier B 入會、AI 初評 + 簡易驗證）目前約 28% 通過、Stage 2（Tier A 正式認證）才是 < 10%。完整 4 階段認證：（1）技能測驗——你的領域基本功、（2）同儕 review——已認證 worker 評分、（3）客戶模擬案件——平台給一個假需求、你交一份成果、（4）主審委員會——通過前三關才進。整個流程約 2-3 週。沒過可以 6 個月後重申、平台會給回饋說明哪裡需要補強。" },
   { n: "06", tag: "接案者", q: "平台怎麼收費？我需要先付費嗎？", a: "beta 前期先不在平台上代收專案款，也不做抽佣承諾。BeyondPath 會先測試需求診斷、候選短名單、認證服務或媒合服務費等模式；目前你申請認證不用付費，也不需要先承諾排他。" },
   { n: "07", tag: "接案者", q: "如果一段時間沒接到案、平台會幫忙嗎？", a: "會。我們有「反馬太 +10」機制——3 個月內無接案的 worker、配對排序自動 +10 加權；新認證 < 30 天 +5；首案池保留 20% slot 給新人。前提是你已通過 < 10% 認證——這不是降門檻、是讓已被驗證的人有持續接案機會。同時 AI 教練會主動提示「升 Tier 還差什麼」「哪些領域最近需求高」。" }
 ];
@@ -1573,13 +1573,13 @@ function EFinalCta() {
                 先看 Worker Console demo →
               </a>
             </div>
-            <div className="input-row">
-              <input placeholder="you@company.com" />
-              <button>JOIN BETA →</button>
-            </div>
-            <div className="meta">
-              <span>BETA COHORT</span>
-              <span className="le-acc">OPEN · MANUAL REVIEW</span>
+            <a href="waitlist.html" className="le-cta-secondary" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "13px 16px", textDecoration: "none", marginTop: 4 }}>
+              <span>加入 Beta waitlist →</span>
+              <span style={{ fontSize: 10, opacity: 0.6 }}>手動覆核</span>
+            </a>
+            <div className="meta" style={{ marginTop: 10 }}>
+              <span>EARLY BETA</span>
+              <span className="le-acc">送出進人工審核 · 不代表正式合約或付款</span>
             </div>
           </div>
         </div>

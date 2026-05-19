@@ -1021,7 +1021,7 @@ function WorkerEmptyState() {
                 ))}
                 <div className="bp-onb-stat">
                   <div><span className="lbl">avg approval</span><span className="v">7 days</span></div>
-                  <div><span className="lbl">pass rate</span><span className="v">28% (live)</span></div>
+                  <div><span className="lbl">pass rate</span><span className="v">stage 1 ~28% · Tier A &lt; 10%</span></div>
                 </div>
               </div>
             </div>
