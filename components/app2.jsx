@@ -121,6 +121,8 @@ function Step1({ state, set, device }) {
       <p className="bp-sub">
         BeyondPath 用領域分流，每個領域有自己的需求模板與專屬 worker pool。先選領域，
         再用平台 AI 模板整理你的需求 — 或直接貼進來，我們幫你拆。
+        <br /><br />
+        <span style={{ color: "var(--accent)", fontWeight: 600 }}>◆ Early Beta · 不代收專案款</span> ：平台只做需求拆解、候選推薦、驗收紀錄；合約與付款由雙方確認。
       </p>
 
       <div style={{ marginTop: 26 }}>
@@ -1055,7 +1057,7 @@ function Rail({ step, state }) {
           <span>
             <code>parse</code>{" "}
             <span className="zh">
-              AI 拆解結果 = 合約附件 A，會直接綁進 Step 6 電子合約服務範圍。
+              AI 拆解結果 = 合約附件 A，會直接綁進 Step 6 合約草稿預覽範圍。
             </span>
           </span>
         )}
@@ -1124,7 +1126,7 @@ function Rail({ step, state }) {
             { n: "03", t: "tune plan" },
             { n: "04", t: "match expert" },
             { n: "05", t: "worker accept" },
-            { n: "06", t: "e-contract sign" },
+            { n: "06", t: "contract draft preview" },
             { n: "07", t: "acceptance framework" },
             { n: "08", t: "kickoff dashboard" },
             { n: "09", t: "milestone review" },

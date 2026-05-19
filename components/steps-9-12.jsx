@@ -31,7 +31,7 @@ function Step9() {
         <div className="bp-content">
           <div className="bp-eyebrow"><span>Step 09 / Milestone · Milestone 驗收</span><span className="pill green">● mid milestone submitted</span></div>
           <h1 className="bp-h1">Mid-stage delivery from Arc + Mei.<br/>
-            <span className="zh" style={{ color: "var(--muted)" }}>確認 7 日內回覆，BeyondPath 只記錄驗收狀態，不處理款項。</span>
+            <span className="zh" style={{ color: "var(--muted)" }}>請於 7 日內回覆。逾期未回、BeyondPath 主動 ping 提醒；再 3 日無回應視為接受。平台只記錄驗收狀態、不處理款項。</span>
           </h1>
           <div style={{ marginTop: 22, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             {[

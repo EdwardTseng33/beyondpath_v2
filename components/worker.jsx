@@ -101,6 +101,21 @@ function WorkerDashboard({ inShell = false }) {
             </div>
           )}
 
+          {/* DEMO PREVIEW BANNER · v0.4 加 · 解 service-flow review「角色混亂」finding · 2026-05-19 */}
+          <div style={{
+            margin: "0 0 18px",
+            padding: "10px 14px",
+            border: "1px dashed rgba(199,232,74,0.35)",
+            background: "rgba(199,232,74,0.04)",
+            fontFamily: "JetBrains Mono, monospace",
+            fontSize: 11,
+            letterSpacing: "0.06em",
+            color: "var(--text-2)",
+            lineHeight: 1.6,
+          }}>
+            ◆ <b style={{ color: "var(--accent)" }}>通過後預覽</b> · 下方是通過 Tier B 認證後你會看到的 Worker Console · 目前是 demo 樣態、實際數據以你通過後為準
+          </div>
+
           {/* HERO · greeting + score */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 24, alignItems: "flex-end", paddingBottom: 22, borderBottom: "1px solid var(--line-soft)" }}>
             <div>
