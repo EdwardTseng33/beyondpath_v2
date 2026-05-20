@@ -95,6 +95,29 @@ function WorkerCard({ worker, onApprove, onReject, onArchive }) {
           </div>
         )}
 
+        {/* Audit Flags · Phase 0 #3 (2026-05-21 · spec docs/launch/12-audit-flags-spec.md) · ai_proof 警示燈 server-side audit */}
+        {ai.audit_flags && Array.isArray(ai.audit_flags) && ai.audit_flags.length > 0 && (() => {
+          const severityOrder = { high: 0, medium: 1, low: 2 };
+          const sorted = [...ai.audit_flags].sort((a, b) => (severityOrder[a.severity] ?? 9) - (severityOrder[b.severity] ?? 9));
+          const sevToColor = (sev) => sev === "high" ? "var(--danger)" : sev === "medium" ? "var(--warn)" : "var(--muted)";
+          const sevToGlyph = (sev) => sev === "high" ? "⚠" : sev === "medium" ? "△" : "◯";
+          return (
+            <div className="admin-audit-flags" style={{ marginTop: 12, padding: "10px 12px", background: "rgba(255,255,255,0.03)", border: "1px solid var(--line-soft)", borderRadius: 4 }}>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.12em", marginBottom: 8, textTransform: "uppercase" }}>◆ Audit Flags · 訪談證據偵測</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, fontFamily: "var(--mono)" }}>
+                {sorted.map((f, i) => (
+                  <div key={(f.id || "flag") + "-" + i} style={{ color: sevToColor(f.severity), display: "flex", gap: 8, alignItems: "baseline" }}>
+                    <span style={{ fontWeight: 700 }}>{sevToGlyph(f.severity)}</span>
+                    <span style={{ fontWeight: 700 }}>{f.id}</span>
+                    <span style={{ color: "var(--muted)" }}>·</span>
+                    <span style={{ color: "var(--muted)" }}>{f.detail}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+
         {expanded && (
           <div className="admin-expand">
             <div style={{ fontWeight: 700, color: "var(--accent)", marginBottom: 8 }}>◆ ai_proof (raw)</div>

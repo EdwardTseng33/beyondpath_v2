@@ -9,6 +9,7 @@
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { aiProofToUnifiedWorker, type AiProof, type WorkerApplicationRow } from "../_shared/worker-schema.ts";
+import { computeAuditFlags } from "../_shared/audit-flags.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const ANTHROPIC_MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-sonnet-4-6";
@@ -267,6 +268,26 @@ serve(async (req: Request) => {
         messages.length,
       );
       unifiedCard = null;  // fallback · 不阻擋訪談 complete flow
+    }
+  }
+
+  // 2026-05-21 audit_flags · Phase 0 #3 · ai_proof 警示燈 (spec docs/launch/12-audit-flags-spec.md)
+  //   - 完成訪談時跑 6 條偵測規則 · 結果寫進 parsedObj.ai_proof.audit_flags
+  //   - admin.jsx WorkerCard 讀此欄位顯示警示 · 不影響 unified_card / match-workers
+  //   - fail-soft: compute throw → flags=[] · 不阻擋 response
+  let auditFlags: ReturnType<typeof computeAuditFlags> = [];
+  if (parsedObj.status === "complete" && parsedObj.ai_proof && typeof parsedObj.ai_proof === "object") {
+    try {
+      auditFlags = computeAuditFlags(parsedObj.ai_proof as AiProof);
+      (parsedObj.ai_proof as Record<string, unknown>).audit_flags = auditFlags;
+    } catch (e) {
+      await alertSlackOnError(
+        "worker-ai-interview · audit-flag-compute-fail",
+        String(e),
+        500,
+        messages.length,
+      );
+      // fail-soft · audit_flags stays []
     }
   }
 
