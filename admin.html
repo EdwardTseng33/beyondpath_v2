@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin · BeyondPath（內部後台）</title>
+<meta name="description" content="BeyondPath POC 後台。內部使用、無公開連結。" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#0a0a0b" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="components/styles.css">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --surface: #131316;
+    --surface-2: #1a1a1f;
+    --line: rgba(255,255,255,0.08);
+    --line-soft: rgba(255,255,255,0.04);
+    --text: #f0eee8;
+    --text-2: #c8c6c0;
+    --muted: #9a9aa3;
+    --accent: oklch(0.88 0.22 128);
+    --accent-soft: oklch(0.88 0.22 128 / 0.12);
+    --accent-line: oklch(0.88 0.22 128 / 0.4);
+    --info: oklch(0.78 0.10 230);
+    --warn: oklch(0.82 0.16 75);
+    --err: oklch(0.7 0.18 25);
+    --err-soft: oklch(0.7 0.18 25 / 0.12);
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', 'Noto Sans TC', system-ui, sans-serif;
+    --zh: 'Noto Sans TC', 'IBM Plex Sans', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); }
+  .admin-shell { max-width: 1280px; margin: 0 auto; padding: 24px 28px 80px; }
+  .admin-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+  .admin-brand { display: flex; align-items: center; gap: 12px; }
+  .admin-mark { width: 18px; height: 18px; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .admin-title { font-weight: 800; letter-spacing: -0.02em; font-size: 18px; }
+  .admin-title span { color: var(--accent); }
+  .admin-meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+  .admin-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+  .admin-tab { background: transparent; border: 0; padding: 12px 20px; color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; border-bottom: 2px solid transparent; }
+  .admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .admin-tab .count { display: inline-block; margin-left: 8px; padding: 2px 8px; background: var(--surface); border-radius: 999px; font-size: 10px; color: var(--text-2); }
+  .admin-tab.active .count { background: var(--accent-soft); color: var(--accent); }
+  .admin-card { background: var(--surface); border: 1px solid var(--line); padding: 18px 20px; margin-bottom: 14px; }
+  .admin-card.selected { border-color: var(--accent); }
+  .admin-card-h { display: flex; justify-content: space-between; align-items: start; gap: 14px; padding-bottom: 12px; border-bottom: 1px dashed var(--line-soft); margin-bottom: 12px; }
+  .admin-card-h .title { font-size: 16px; font-weight: 700; line-height: 1.4; color: var(--text); }
+  .admin-card-h .sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
+  .admin-card-h .pill { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; padding: 4px 10px; border: 1px solid var(--line); border-radius: 2px; text-transform: uppercase; white-space: nowrap; }
+  .admin-card-h .pill.accent { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+  .admin-card-h .pill.info { color: var(--info); border-color: oklch(0.78 0.10 230 / 0.4); background: oklch(0.78 0.10 230 / 0.1); }
+  .admin-card-h .pill.warn { color: var(--warn); border-color: oklch(0.82 0.16 75 / 0.4); background: oklch(0.82 0.16 75 / 0.1); }
+  .admin-card-body { font-family: var(--zh); font-size: 13px; line-height: 1.7; color: var(--text-2); }
+  .admin-card-actions { display: flex; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line-soft); flex-wrap: wrap; }
+  .admin-btn { padding: 8px 14px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--line); background: transparent; color: var(--text); cursor: pointer; transition: all 120ms; }
+  .admin-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .admin-btn.primary { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 700; }
+  .admin-btn.primary:hover { color: var(--bg); filter: brightness(1.08); }
+  .admin-btn.danger { color: var(--err); border-color: oklch(0.7 0.18 25 / 0.4); }
+  .admin-btn.danger:hover { background: var(--err-soft); color: var(--err); }
+  .admin-btn:disabled { opacity: 0.5; cursor: wait; }
+  .admin-empty { padding: 60px 20px; text-align: center; color: var(--muted); font-size: 13px; }
+  .admin-loading { padding: 40px 20px; text-align: center; color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; }
+  .admin-error { padding: 14px 18px; background: var(--err-soft); border: 1px solid oklch(0.7 0.18 25 / 0.4); color: var(--err); font-size: 13px; margin-bottom: 14px; }
+  .admin-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; font-family: var(--mono); font-size: 11px; }
+  .admin-detail .k { color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .admin-detail .v { color: var(--text); margin-top: 2px; word-break: break-word; }
+  .admin-expand { background: var(--surface-2); border: 1px solid var(--line-soft); padding: 14px 16px; margin-top: 12px; font-family: var(--mono); font-size: 11px; color: var(--text-2); line-height: 1.6; max-height: 280px; overflow: auto; white-space: pre-wrap; }
+  .admin-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .admin-modal { width: 100%; max-width: 720px; max-height: 86vh; overflow: auto; background: var(--surface); border: 1px solid var(--accent-line); padding: 28px 26px; }
+  .admin-modal h3 { margin: 0 0 6px; font-size: 18px; }
+  .admin-modal-actions { display: flex; gap: 10px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+  .admin-textarea { width: 100%; min-height: 80px; padding: 10px 12px; background: var(--surface-2); border: 1px solid var(--line); color: var(--text); font-family: var(--zh); font-size: 13px; resize: vertical; }
+  .match-result-card { background: var(--surface-2); border: 1px solid var(--line); padding: 12px 14px; margin: 8px 0; display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; }
+  .match-result-card .score { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+  .match-result-card .meta { font-size: 13px; color: var(--text); }
+  .match-result-card .meta .sub { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.08em; margin-top: 2px; }
+  .match-result-card label { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--text-2); cursor: pointer; }
+  @media (max-width: 720px) {
+    .admin-shell { padding: 16px 14px 60px; }
+    .admin-detail { grid-template-columns: 1fr; }
+    .admin-tabs { overflow-x: auto; }
+    .admin-card-h { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="components/supabase.js?v=2026-05-19-admin"></script>
+<script type="text/babel" src="components/admin.jsx?v=2026-05-19-admin"></script>
+</body>
+</html>

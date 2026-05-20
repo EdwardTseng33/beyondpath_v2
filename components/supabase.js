@@ -233,5 +233,150 @@
     },
   };
 
+  // ============================================================
+  // ADMIN · 後台配對介面 (Q3 Task 5 · 2026-05-19)
+  // POC 階段、無 auth gate · 不要在 robots.txt 揭露 admin.html
+  // ============================================================
+
+  window.bpAdmin = {
+    /**
+     * List worker_applications by status (default: pending + tier_b + tier_b_plus)
+     * @param {string[]} statuses - array of status values
+     * @param {number} limit - default 50
+     */
+    async listWorkers(statuses, limit) {
+      const cap = typeof limit === 'number' && limit > 0 ? limit : 50;
+      const wantedStatuses = Array.isArray(statuses) && statuses.length ? statuses : ['pending', 'tier_b', 'tier_b_plus'];
+      try {
+        const { data, error } = await client
+          .from('worker_applications')
+          .select('id, email, display_name, ai_proof, unified_card, verticals, tier_suggestion, l_score, case_count, status, admin_notes, created_at, updated_at')
+          .in('status', wantedStatuses)
+          .order('created_at', { ascending: false })
+          .limit(cap);
+        if (error) return { data: [], error };
+        return { data: data || [], error: null };
+      } catch (e) {
+        return { data: [], error: { message: e?.message || String(e) } };
+      }
+    },
+
+    /**
+     * Update worker_applications.status (approve / reject / archive)
+     * @param {string} workerId - uuid
+     * @param {string} newStatus - 'approved' | 'rejected' | 'archived' | 'tier_b' | 'tier_b_plus'
+     * @param {string} adminNotes - optional reason
+     */
+    async updateWorkerStatus(workerId, newStatus, adminNotes) {
+      try {
+        const patch = { status: newStatus, updated_at: new Date().toISOString() };
+        if (adminNotes != null) patch.admin_notes = adminNotes;
+        const { data, error } = await client
+          .from('worker_applications')
+          .update(patch)
+          .eq('id', workerId)
+          .select()
+          .single();
+        return { data, error };
+      } catch (e) {
+        return { data: null, error: { message: e?.message || String(e) } };
+      }
+    },
+
+    /**
+     * List client_intakes by status
+     * @param {string[]} statuses - default ['new', 'reviewing']
+     * @param {number} limit - default 50
+     */
+    async listClientIntakes(statuses, limit) {
+      const cap = typeof limit === 'number' && limit > 0 ? limit : 50;
+      const wantedStatuses = Array.isArray(statuses) && statuses.length ? statuses : ['new', 'reviewing'];
+      try {
+        const { data, error } = await client
+          .from('client_intakes')
+          .select('id, email, company_name, intake_data, vertical, budget_range, timeline, status, created_at')
+          .in('status', wantedStatuses)
+          .order('created_at', { ascending: false })
+          .limit(cap);
+        if (error) return { data: [], error };
+        return { data: data || [], error: null };
+      } catch (e) {
+        return { data: [], error: { message: e?.message || String(e) } };
+      }
+    },
+
+    /**
+     * Trigger match-workers Edge Function for a client_intake (P1-3 · calcifer Q3 backend)
+     * Returns Top 5 worker recommendations with score + breakdown.
+     */
+    async runMatch(clientIntakeId) {
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        const jwt = session?.access_token || SUPABASE_PUBLISHABLE_KEY;
+        const res = await fetch(SUPABASE_URL + '/functions/v1/match-workers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + jwt,
+            'apikey': SUPABASE_PUBLISHABLE_KEY,
+          },
+          body: JSON.stringify({ client_intake_id: clientIntakeId }),
+        });
+        const data = await res.json();
+        if (!res.ok) return { data: null, error: { message: data.message || data.error || ('HTTP ' + res.status) } };
+        return { data, error: null };
+      } catch (e) {
+        return { data: null, error: { message: e?.message || String(e) } };
+      }
+    },
+
+    /**
+     * Trigger send-decision-email for invited workers (Q3 Task 4 · calcifer Q3 backend)
+     */
+    async sendDecisionEmail({ clientIntakeId, workerApplicationIds, decision, message }) {
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        const jwt = session?.access_token || SUPABASE_PUBLISHABLE_KEY;
+        const res = await fetch(SUPABASE_URL + '/functions/v1/send-decision-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + jwt,
+            'apikey': SUPABASE_PUBLISHABLE_KEY,
+          },
+          body: JSON.stringify({
+            client_intake_id: clientIntakeId,
+            worker_application_ids: workerApplicationIds,
+            decision: decision || 'invite',
+            message: message || '',
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) return { data: null, error: { message: data.message || data.error || ('HTTP ' + res.status) } };
+        return { data, error: null };
+      } catch (e) {
+        return { data: null, error: { message: e?.message || String(e) } };
+      }
+    },
+
+    /**
+     * List worker_decisions audit log (Q3 Task 4 · 配對歷史)
+     */
+    async listDecisions(limit) {
+      const cap = typeof limit === 'number' && limit > 0 ? limit : 50;
+      try {
+        const { data, error } = await client
+          .from('worker_decisions')
+          .select('id, client_intake_id, worker_application_id, decision, created_at, decided_at')
+          .order('created_at', { ascending: false })
+          .limit(cap);
+        if (error) return { data: [], error };
+        return { data: data || [], error: null };
+      } catch (e) {
+        return { data: [], error: { message: e?.message || String(e) } };
+      }
+    },
+  };
+
   console.log('[BeyondPath] Supabase client ready · ' + SUPABASE_URL);
 })();
