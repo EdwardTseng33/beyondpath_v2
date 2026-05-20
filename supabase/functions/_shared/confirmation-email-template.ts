@@ -103,8 +103,7 @@ export function buildClientAckEmail(input: ClientAckInput): BuiltEmail {
     homepage,
   ];
 
-  const text = textLines.filter(function (l) { return l !== null; }).join("
-");
+  const text = textLines.filter(function (l) { return l !== null; }).join("\n");
 
   const briefRows = [
     vertical ? "<tr><td style=\"padding:8px 0;color:#9a9aa3;border-bottom:1px dashed #2a2a2e;width:100px;\">領域</td><td style=\"padding:8px 0;color:#c8c6c0;border-bottom:1px dashed #2a2a2e;\">" + escapeHtml(vertical) + "</td></tr>" : "",
@@ -195,8 +194,7 @@ export function buildWorkerAckEmail(input: WorkerAckInput): BuiltEmail {
     homepage,
   ];
 
-  const text = textLines.filter(function (l) { return l !== null; }).join("
-");
+  const text = textLines.filter(function (l) { return l !== null; }).join("\n");
 
   const evalRows = [
     "<tr><td style=\"padding:8px 0;color:#9a9aa3;border-bottom:1px dashed #2a2a2e;width:120px;\">AI L-Score</td><td style=\"padding:8px 0;color:#c7e84a;border-bottom:1px dashed #2a2a2e;font-family:monospace;font-weight:700;\">" + escapeHtml(lScore) + " / 10</td></tr>",
