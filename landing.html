@@ -1132,13 +1132,13 @@ function ECaseStudies() {
                 <span style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em", color: "var(--accent)", padding: "3px 6px", border: "1px solid var(--accent-line)", borderRadius: 2, whiteSpace: "nowrap" }}>{c.badge}</span>
               </div>
               <div className="le-zh" style={{ fontSize: 13, lineHeight: 1.7, color: "var(--text-2)" }}>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ BRIEF</b>{c.brief}</div>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ MATCH</b>{c.matched}</div>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ DELIVER</b>{c.delivered}</div>
-                <div><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>◆ PROOF</b>{c.proof}</div>
+                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>① BRIEF · 需求</b>{c.brief}</div>
+                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>② MATCH · 配對</b>{c.matched}</div>
+                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>③ DELIVER · 交付</b>{c.delivered}</div>
+                <div><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>④ ACCEPT · 驗收</b>{c.proof}</div>
               </div>
               <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
-                {c.state}
+                ⑤ RESULT · {c.state}
               </div>
             </article>
           ))}
@@ -1507,6 +1507,52 @@ function EIrreplaceable() {
   );
 }
 
+// Services & Pricing · v0.5 (2026-05-19) 加 · 解 service-flow review「信任證據」P2 finding · 4 個可接案 + Tier 對應價格 reference + 資料處理透明
+function EServicesPricing() {
+  const services = [
+    { n: "01", en: "AI WORKFLOW", zh: "AI workflow 顧問 + 落地", desc: "從需求拆解到工具流 setup、含 handoff 文件。常見：客服自動化、內容 pipeline、內部 agent。", tiers: "Tier B+ / A+", range: "NT$ 15–80 萬" },
+    { n: "02", en: "BRAND CONTENT", zh: "DTC 品牌內容", desc: "視覺 KV、brand DNA、社群內容操盤。常見：保養品 / 食品 / 設計品牌 launch + 持續經營。", tiers: "Tier B / B+ / A+", range: "NT$ 5–60 萬" },
+    { n: "03", en: "REELS · VIDEO", zh: "短影音 + reels", desc: "腳本 + 拍攝 + 剪輯 一條龍。常見：品牌敘事、UGC 風格、產品 demo、教學影片。", tiers: "Tier B / B+", range: "NT$ 3–25 萬" },
+    { n: "04", en: "CUSTOM DEV", zh: "客製軟體 / AI agent / 工具流", desc: "從 prototype 到 production：API 整合、bot、內部工具。常見：Slack agent、CRM 自動化、Make/n8n flow。", tiers: "Tier B+ / A+", range: "NT$ 10–120 萬" },
+  ];
+  return (
+    <section className="le-section" id="services" style={{ padding: "56px 56px", borderTop: "1px solid var(--line-soft)" }}>
+      <div className="inner">
+        <div className="le-cap le-acc" style={{ marginBottom: 16 }}>◆ SERVICES · 目前可接案 + 價格 reference</div>
+        <h2 className="le-h2" style={{ fontSize: 32 }}>4 個主要交付類型、<span className="le-acc">每案有適配 Tier 與預算 reference</span>。</h2>
+        <p className="le-zh" style={{ color: "var(--muted)", fontSize: 14, marginTop: 12, maxWidth: 720, lineHeight: 1.7 }}>
+          以下價格區間是 reference、不是固定報價。實際依需求複雜度、交付物範圍、時程而定。送出 brief 後、24h 內你會收到含建議預算的配對方案。
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14, marginTop: 28 }}>
+          {services.map((s, i) => (
+            <div key={i} style={{ padding: "20px 18px", border: "1px solid var(--line)", background: "rgba(255,255,255,0.018)", display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.12em" }}>{s.n} · {s.en}</span>
+                <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--muted)" }}>{s.tiers}</span>
+              </div>
+              <div className="le-zh" style={{ fontSize: 17, fontWeight: 600, color: "var(--text)", lineHeight: 1.4 }}>{s.zh}</div>
+              <p className="le-zh" style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.65, margin: 0, flex: 1 }}>{s.desc}</p>
+              <div style={{ paddingTop: 8, borderTop: "1px dashed rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--muted)", letterSpacing: "0.06em" }}>RANGE</span>
+                <span style={{ fontFamily: "var(--mono)", fontSize: 13, fontWeight: 700, color: "var(--accent)" }}>{s.range}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Data handling note · v0.5 加 · 解 service-flow review「資料處理說明」finding */}
+        <div style={{ marginTop: 32, padding: "18px 20px", border: "1px dashed rgba(199,232,74,0.3)", background: "rgba(199,232,74,0.03)", display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center", justifyContent: "space-between" }}>
+          <div className="le-zh" style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.7, flex: 1, minWidth: 280 }}>
+            <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>◆ DATA HANDLING · 你的資料怎麼處理</span>
+            送出的 brief / email / portfolio 進 BeyondPath 後台、僅平台團隊 + AI 初審工具看得到、不公開、不轉售。Early Beta 階段資料保留期最長 12 個月、可隨時要求刪除。
+          </div>
+          <a href="legal/privacy.html" style={{ display: "inline-flex", alignItems: "center", padding: "10px 16px", border: "1px solid var(--accent-line)", color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.12em", textDecoration: "none", textTransform: "uppercase" }}>查看完整隱私政策 →</a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // FAQ · v0.4.6 (2026-05-10) 改寫為發案/接案者真問題、不再是投資人 FAQ
 const FAQS = [
   { n: "01", tag: "發案者", q: "我已經有合作的接案者 / 設計師了，為什麼要換 BeyondPath？", a: "你不用換、你可以平行用。BeyondPath 解的是「現有人脈池外、突然要新類型 AI 交付」這個場景——例如你平常合作的設計師不會剪短影音、你又不想為了一支 reels 重新發 30 封 brief。留下需求後，24 小時內先得到適配領域、預算與候選方向；進入短名單後再看 Top 3 配對與理由。首案合不合適你自己判斷、平台不綁約、不收訂閱。" },
@@ -1735,6 +1781,7 @@ function LandingRoot() {
       <ECaseStudies />
       <ETier />
       <EVerticals />
+      <EServicesPricing />
       <EFaq />
       <EFinalCta />
     </div>
