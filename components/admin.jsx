@@ -68,6 +68,33 @@ function WorkerCard({ worker, onApprove, onReject, onArchive }) {
           <div><span className="k">Growth</span><div className="v">{(ai.growth || []).slice(0, 2).join(" / ") || "—"}</div></div>
         </div>
 
+        {/* Skill Matrix · 6 維 (Phase 0 #2 2026-05-21 補 · admin 之前看不到 skill_matrix · 能力矩陣斷裂修補) */}
+        {ai.skill_matrix && typeof ai.skill_matrix === 'object' && (
+          <div className="admin-skill-matrix" style={{ marginTop: 12, padding: "10px 12px", background: "rgba(255,255,255,0.03)", border: "1px solid var(--line-soft)", borderRadius: 4 }}>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.12em", marginBottom: 8, textTransform: "uppercase" }}>◆ Skill Matrix · 6 維 (1-10)</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px 14px", fontSize: 12 }}>
+              {[
+                { k: "workflow_design", l: "Workflow" },
+                { k: "tool_orchestration", l: "Tools" },
+                { k: "judgment", l: "Judgment" },
+                { k: "domain_depth", l: "Domain" },
+                { k: "client_communication", l: "Comm" },
+                { k: "delivery_reliability", l: "Delivery" },
+              ].map(({ k, l }) => {
+                const v = ai.skill_matrix[k];
+                const isNum = typeof v === "number";
+                const color = isNum ? (v >= 8 ? "var(--accent)" : v >= 6 ? "var(--text)" : "var(--muted)") : "var(--muted-2)";
+                return (
+                  <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                    <span style={{ color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11 }}>{l}</span>
+                    <span style={{ color, fontWeight: 700, fontFamily: "var(--mono)" }}>{isNum ? v : "—"}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {expanded && (
           <div className="admin-expand">
             <div style={{ fontWeight: 700, color: "var(--accent)", marginBottom: 8 }}>◆ ai_proof (raw)</div>

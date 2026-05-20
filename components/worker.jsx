@@ -82,7 +82,7 @@ function WorkerDashboard({ inShell = false }) {
               <div style={{ flex: "1 1 280px", minWidth: 0 }}>
                 <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.12em", marginBottom: 6, textTransform: "uppercase" }}>◆ 首次進入 · TIER B APPLY</div>
                 <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", marginBottom: 4, lineHeight: 1.3 }}>先做你的 AI 認證評估、生成能力卡</div>
-                <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.55 }}>5 步 · 30-45 分鐘 · 用你自己的 AI 整理工作證據 · 24h 內 BeyondPath 系統評估完成</div>
+                <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.55 }}>5 步 · 30-45 分鐘 · 用你自己的 AI 整理工作證據 · 24h 內 AI 初步回覆、3-7 天人工覆核</div>
               </div>
               <a href="app.html?role=worker&onboarding=1" style={{
                 padding: "14px 24px",
@@ -904,8 +904,8 @@ function WorkerEmptyState() {
             <div style={{ padding: "18px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
               {[
                 `Supabase 已收到你的申請（能力卡 + email）· 你應該幾分鐘內收到一封自動確認信`,
-                `24-72h 內：AI 初審 + 人工覆核 → 結果用 email 寄到你留的信箱（正式 Tier 認證委員會另有時程）`,
-                "通過 → 進首案池（保留 20% slot 給新人）→ 第一個案最快 2 週",
+                `24h 內 AI 初步回覆 · 3-7 天人工覆核 → 結果用 email 寄到你留的信箱（正式 Tier 認證委員會另有時程）`,
+                "通過 → 進首案池（保留 20% slot 給新人）→ 第一個案最快 2 週、首案後才進 Tier 升降",
                 "沒通過 → 我們會給具體補強方向 · 6 個月後可重申",
                 "若 72h 內沒收到任何信、寄到下方信箱提醒、不會掉案",
               ].map((t, i) => (
@@ -919,7 +919,7 @@ function WorkerEmptyState() {
 
           <div style={{ background: "rgba(199,232,74,0.05)", border: "1px solid rgba(199,232,74,0.4)", padding: "14px 18px", marginBottom: 28, fontSize: 13, color: "#c8c6c0", textAlign: "left" }}>
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#c7e84a", display: "block", marginBottom: 6 }}>● EARLY BETA · 申請已送出</span>
-            你的能力卡與 email 已存入 BeyondPath 後台。24h 內 AI 初審 + 人工覆核完成後、結果寄到你的 email。想額外補資料或自我介紹，可寄到下方 email。
+            你的能力卡與 email 已存入 BeyondPath 後台。24h 內 AI 先給初步回覆、3-7 天人工覆核完成後、結果寄到你的 email。想額外補資料或自我介紹，可寄到下方 email。
           </div>
 
           <div style={{ border: "1px dashed rgba(255,255,255,0.16)", padding: "14px 16px", marginBottom: 22, textAlign: "left", background: "rgba(255,255,255,0.018)" }}>
@@ -1180,7 +1180,7 @@ function WorkerEmptyState() {
                     <li>BeyondPath AI 會帶你跑 7 段訪談、共 15-25 分鐘</li>
                     <li>段順序：領域 / 年資 → AI 工具棧 → 案件數量 + 3 例 → 最自豪 workflow → L-Score 自評 → 6 維技能 → 接案偏好</li>
                     <li>答得越具體（客戶名 / 數字 / 工具串接細節）、評分越準</li>
-                    <li>答完 AI 自動產能力卡、BeyondPath 系統 24h 內完成評估</li>
+                    <li>答完 AI 自動產能力卡 · 24h 內 AI 給初步回覆 · 3-7 天人工覆核完成寄 email</li>
                   </ol>
                   <div style={{ marginTop: 14, padding: "10px 12px", background: "rgba(0,0,0,0.2)", borderLeft: "2px solid var(--accent)", fontSize: 13, color: "var(--text-2)" }}>
                     後端 Claude Sonnet 4.6 · 每段答完 AI 會追問具體例子、別怕「答得太簡單」。

@@ -61,12 +61,24 @@
   // WORKER APPLICATIONS
   // ============================================================
 
+  // ----- shared: handle derivation (mirrors supabase/functions/_shared/worker-schema.ts deriveHandle) -----
+  // 2026-05-21 Phase 0 #1+#4 (霍爾 CPO 規劃) · Edge Function 算 unified_card 時 email 是 stub ""
+  //   → handle 落成 @anon · 入庫 client 端必須用真實 email override
+  function deriveHandleFromEmail(email, displayName) {
+    if (displayName) {
+      return '@' + String(displayName).replace(/\s+/g, '').toLowerCase();
+    }
+    const local = (email || '').split('@')[0];
+    return '@' + (local || 'anon');
+  }
+
   window.bpWorkerApply = {
     async submit({ email, displayName, aiProof, unifiedCard }) {
       // aiProof = parsed JSON from worker AI interview (worker-ai-interview Edge Function or paste-back)
       // unifiedCard = optional pre-computed UnifiedWorker shape from Edge Function response (T1.4 · P0-1)
       //   · 若 server 端 pre-compute 過 → unifiedCard 帶過來
       //   · 若沒有 → 留 null, DB 端後續可以 retro-compute 或 Admin re-sync
+      // 2026-05-21 Phase 0 #1+#4 fix · 確保 unified_card.handle 用真實 email/displayName 算、不是 server stub 的 @anon
       const verticals = Array.isArray(aiProof?.verticals) ? aiProof.verticals : [];
       const lScore = typeof aiProof?.L_score === 'number' ? aiProof.L_score : null;
       const caseCount = aiProof?.case_count || null;
@@ -74,12 +86,19 @@
 
       const { user } = await window.bpAuth.getUser();
 
+      // Patch unified_card with real email-derived handle (override server stub)
+      let fixedCard = null;
+      if (unifiedCard && typeof unifiedCard === 'object') {
+        const realHandle = deriveHandleFromEmail(email, displayName || aiProof?.name || null);
+        fixedCard = { ...unifiedCard, handle: realHandle };
+      }
+
       const payload = {
         user_id: user?.id || null,
         email,
         display_name: displayName || aiProof?.name || null,
         ai_proof: aiProof,
-        unified_card: unifiedCard || null,
+        unified_card: fixedCard,
         l_score: lScore,
         verticals: verticals.length ? verticals : null,
         case_count: caseCount,
@@ -346,9 +365,33 @@
      * @param {string} workerId - uuid
      * @param {string} newStatus - 'approved' | 'rejected' | 'archived' | 'tier_b' | 'tier_b_plus'
      * @param {string} adminNotes - optional reason
+     *
+     * 2026-05-21 Phase 0 #4 guard · approved 系列 status 必須 row 有 unified_card、否則 reject 升級
+     *   - 防止 admin 不小心把沒 unified_card 的 row approve → 配對池會 break
+     *   - reject / archive 不擋（沒卡也能封存）
      */
     async updateWorkerStatus(workerId, newStatus, adminNotes) {
       try {
+        const APPROVED_STATUSES = ['approved', 'tier_b', 'tier_b_plus'];
+        if (APPROVED_STATUSES.indexOf(newStatus) !== -1) {
+          const { data: row, error: readErr } = await client
+            .from('worker_applications')
+            .select('id, unified_card, display_name, email')
+            .eq('id', workerId)
+            .single();
+          if (readErr) return { data: null, error: readErr };
+          if (!row || !row.unified_card) {
+            return {
+              data: null,
+              error: {
+                message: '此工作者 row 還沒有 unified_card 能力卡、不能直接 approve。' +
+                        '請先在 Admin Console 跑「retro-compute unified_card」（或回去 worker 重跑 AI 訪談）再 approve。' +
+                        ' worker: ' + (row?.display_name || row?.email || workerId),
+                code: 'missing_unified_card',
+              },
+            };
+          }
+        }
         const patch = { status: newStatus, updated_at: new Date().toISOString() };
         if (adminNotes != null) patch.admin_notes = adminNotes;
         const { data, error } = await client
