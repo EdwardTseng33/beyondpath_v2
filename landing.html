@@ -1776,7 +1776,7 @@ function EWorkerDecisionBanner() {
       if (!decision) return;
       let next;
       if (decision === "success" && action === "accept") {
-        next = { kind: "ok", title: "已接受配對邀請", body: "感謝你接案。BeyondPath 將在 24 小時內安排合約草稿與後續流程、寄到你的 email。" };
+        next = { kind: "ok", title: "已接受配對邀請", body: "BeyondPath 24-72 小時內準備合約草稿與案件初始 milestone、寄到你的 email。客戶端也會收到「worker 已確認接案」通知。若 72 小時無收信、請聯絡 hello@beyondpath.tw。" };
       } else if (decision === "success" && action === "decline") {
         next = { kind: "neutral", title: "已記錄你婉拒這次配對", body: "謝謝告知。下次有適配案件、BeyondPath 仍會優先推薦。" };
       } else if (decision === "error") {

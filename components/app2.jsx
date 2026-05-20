@@ -14,7 +14,7 @@ const TIER_META = {
   "B":     { cls: "b",     label: "Tier B · 起步" },
   "Bplus": { cls: "bplus", label: "Tier B+ · 累積" },
   "B+":    { cls: "bplus", label: "Tier B+ · 累積" },
-  "A":     { cls: "a",     label: "Tier A" },
+  "A":     { cls: "a",     label: "Tier A · 進階" },
   "A+":    { cls: "aplus", label: "Tier A+ · 資深" },
   "S":     { cls: "s",     label: "Tier S · 大師" },
 };
@@ -934,9 +934,9 @@ function Step4({ state, set, device }) {
               ? { background: "var(--accent-soft)", color: "var(--accent)", borderColor: "var(--accent-line)" }
               : { background: "rgba(154,154,163,0.08)", color: "var(--muted)", borderColor: "var(--line)" }
           }
-          title={poolState.source === "real" ? "Pool sourced from approved BeyondPath workers" : "Demo sample · real pool < 3 · fallback"}
+          title={poolState.source === "real" ? "已通過認證的真實 worker pool" : "目前該領域認證 worker 累積中、以下為過往合作案例展示"}
         >
-          {poolState.loading ? "● loading…" : poolState.source === "real" ? "● real pool" : "● sample"}
+          {poolState.loading ? "● 載入中…" : poolState.source === "real" ? "● 真實配對池" : "● 案例展示"}
         </span>
       </div>
       <h1 className="bp-h1">

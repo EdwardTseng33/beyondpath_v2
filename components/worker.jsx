@@ -903,10 +903,11 @@ function WorkerEmptyState() {
             </div>
             <div style={{ padding: "18px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
               {[
-                `Supabase 已收到你的申請（能力卡 + email）`,
-                `24h 內：AI 初審 + 人工覆核 → 結果回信到你留的 email`,
+                `Supabase 已收到你的申請（能力卡 + email）· 你應該幾分鐘內收到一封自動確認信`,
+                `24-72h 內：AI 初審 + 人工覆核 → 結果用 email 寄到你留的信箱（正式 Tier 認證委員會另有時程）`,
                 "通過 → 進首案池（保留 20% slot 給新人）→ 第一個案最快 2 週",
                 "沒通過 → 我們會給具體補強方向 · 6 個月後可重申",
+                "若 72h 內沒收到任何信、寄到下方信箱提醒、不會掉案",
               ].map((t, i) => (
                 <div key={i} style={{ display: "flex", gap: 14, alignItems: "start" }}>
                   <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#c7e84a", fontWeight: 700, minWidth: 18 }}>0{i+1}</span>
