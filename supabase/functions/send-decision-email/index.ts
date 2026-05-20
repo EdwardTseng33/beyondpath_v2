@@ -14,7 +14,11 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const RESEND_FROM = Deno.env.get("RESEND_FROM") ?? "BeyondPath <hello@beyondpath.tw>";
 const JWT_SECRET = Deno.env.get("JWT_SECRET") ?? "";
 const PUBLIC_FUNCTIONS_BASE_ENV = Deno.env.get("PUBLIC_FUNCTIONS_BASE") ?? "";
-const TOKEN_TTL_DAYS = 7;
+// brief #4 (2026-05-21 calcifer): TTL 7 days -> 24 hours (sulima H1)
+//   . tighter accept-window . worker must accept within 1 day or token expires
+//   . old links sent before this change still work until their own 7d window ends (kid v1 compat)
+const TOKEN_TTL_HOURS = 24;
+const TOKEN_TTL_DAYS = TOKEN_TTL_HOURS / 24;
 
 function trimTrailingSlash(s: string): string {
   if (!s) return s;
@@ -237,7 +241,7 @@ serve(async function (req: Request) {
         worker_application_id: workerId,
         client_intake_id: intake.id,
         worker_decision_id: decision.id,
-      }, JWT_SECRET, TOKEN_TTL_DAYS * 86400);
+      }, JWT_SECRET, TOKEN_TTL_HOURS * 3600);
 
       const tokenHash = await sha256Hex(token);
       await updateDecisionTokenHash(decision.id, tokenHash);

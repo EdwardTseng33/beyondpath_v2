@@ -93,6 +93,40 @@
   };
 
   // ============================================================
+  // WORKER ACK EMAIL (brief #2 . 2026-05-20 calcifer)
+  // ============================================================
+  // Triggered by worker.jsx after bpWorkerApply.submit success.
+  // Sends refined acknowledgement email (Stage 1 ~28% framing . Tier B/B+ outcomes . 72h fallback mailto).
+  // Best-effort: failures do NOT block submit flow (worker already INSERTed OK).
+
+  window.bpWorkerAck = {
+    async send({ worker_application_id, email, displayName }) {
+      if (!worker_application_id) {
+        return { data: null, error: { message: 'missing-worker_application_id' } };
+      }
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        const jwt = session?.access_token || SUPABASE_PUBLISHABLE_KEY;
+        const res = await fetch(SUPABASE_URL + '/functions/v1/worker-ack-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + jwt,
+            'apikey': SUPABASE_PUBLISHABLE_KEY,
+          },
+          body: JSON.stringify({ worker_application_id, email, display_name: displayName }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) return { data, error: { message: data.error || ('HTTP ' + res.status) } };
+        return { data, error: null };
+      } catch (e) {
+        // best-effort . do not surface error
+        return { data: null, error: { message: e?.message || String(e) } };
+      }
+    },
+  };
+
+  // ============================================================
   // WORKER POOL QUERY (P0-2 · T1.5)
   // ============================================================
   // 給 Step 4 抓真實 approved worker pool, fallback to demo if empty.
@@ -123,6 +157,52 @@
         return { data: data || [], error: null };
       } catch (e) {
         return { data: [], error: { message: e?.message || String(e) } };
+      }
+    },
+  };
+
+  // ============================================================
+  // MATCH (brief #6 . 2026-05-20 calcifer)
+  // ============================================================
+  // Calls match-workers Edge Function with an inline client payload (no client_intake_id needed).
+  // Returns real 5-dim algorithm scoring per worker for Step 4 display.
+  // Used by Step 4 useEffect to replace the placeholder 75 + L_score*2 formula.
+
+  window.bpMatch = {
+    async runForVertical({ vertical, parsedBrief, topN }) {
+      if (!vertical || typeof vertical !== 'string') {
+        return { data: null, error: { message: 'vertical-required' } };
+      }
+      const tasks = Array.isArray(parsedBrief?.tasks) ? parsedBrief.tasks : [];
+      const requiredTier = parsedBrief?.required_tier || parsedBrief?.requiredTier;
+      const payload = {
+        client: {
+          vertical: vertical,
+          tasks: tasks,
+          budget_range: parsedBrief?.budget_range || parsedBrief?.budgetRange,
+          timeline: parsedBrief?.timeline,
+          required_tier: requiredTier,
+        },
+        top_n: typeof topN === 'number' && topN > 0 ? topN : 5,
+        persist: false,
+      };
+      try {
+        const { data: { session } } = await client.auth.getSession();
+        const jwt = session?.access_token || SUPABASE_PUBLISHABLE_KEY;
+        const res = await fetch(SUPABASE_URL + '/functions/v1/match-workers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + jwt,
+            'apikey': SUPABASE_PUBLISHABLE_KEY,
+          },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) return { data: null, error: { message: data.error || ('HTTP ' + res.status) } };
+        return { data: data.results || [], error: null };
+      } catch (e) {
+        return { data: null, error: { message: e?.message || String(e) } };
       }
     },
   };

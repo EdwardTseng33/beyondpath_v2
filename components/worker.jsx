@@ -1491,6 +1491,14 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
       });
       if (error) throw error;
       setStatus("success");
+      // brief #2 (2026-05-20 calcifer) . best-effort ack email (does NOT block submit success)
+      if (data && data.id && window.bpWorkerAck) {
+        window.bpWorkerAck.send({
+          worker_application_id: data.id,
+          email: email,
+          displayName: parsed?.name,
+        }).catch(function () { /* silent best-effort */ });
+      }
       setTimeout(() => onDone && onDone(), 600);
     } catch (e) {
       setStatus("error");

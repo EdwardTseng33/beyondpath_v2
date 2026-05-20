@@ -11,6 +11,10 @@
 //   ANTHROPIC_API_KEY — Claude API key (for Edward decision support analysis)
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { buildClientAckEmail } from "../_shared/confirmation-email-template.ts";
+import { rankWorkers, type ClientIntakeForMatch } from "../_shared/match-algorithm.ts";
+import type { UnifiedWorker } from "../_shared/worker-schema.ts";
+import { VERTICAL_ADJACENCY } from "../_shared/vertical-adjacency.ts";
 
 const SLACK_BOT_TOKEN = Deno.env.get("SLACK_BOT_TOKEN") ?? "";
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
@@ -835,25 +839,95 @@ function _pickServiceKey(): string {
   return SUPABASE_SERVICE_ROLE_KEY || SUPABASE_ANON_KEY;
 }
 
-async function callMatchWorkers(clientIntakeId: string): Promise<Array<{
+// brief #5 (2026-05-20 calcifer): replaced HTTP self-call to match-workers with in-process rank
+// Why: avoid deadlock when this function (notify-lead-slack) is at concurrency cap and self-call queues.
+// Result: same ranking outcome + same client_intakes.match_result persistence + zero extra HTTP hop.
+async function buildVerticalListNotify(primary: string): Promise<string[]> {
+  const list: string[] = [primary];
+  const neighbors = VERTICAL_ADJACENCY[primary] || [];
+  for (const n of neighbors) if (list.indexOf(n) === -1) list.push(n);
+  return list;
+}
+
+async function _loadWorkerPoolNotify(primaryVertical: string): Promise<UnifiedWorker[]> {
+  if (!SUPABASE_URL || !primaryVertical) return [];
+  const verticals = await buildVerticalListNotify(primaryVertical);
+  const quoted = verticals.map(function (v) { return JSON.stringify(v); }).join(",");
+  const verticalParam = "{" + quoted + "}";
+  const url = SUPABASE_URL + "/rest/v1/worker_unified_v?select=id,email,display_name,unified_card,verticals,tier_suggestion,updated_at" +
+    "&verticals=ov." + encodeURIComponent(verticalParam) + "&unified_card=not.is.null&limit=100";
+  try {
+    const key = _pickServiceKey();
+    const res = await fetch(url, { headers: { "apikey": key, "Authorization": "Bearer " + key } });
+    if (!res.ok) return [];
+    const rows = await res.json() as Array<Record<string, unknown>>;
+    if (!Array.isArray(rows)) return [];
+    const workers: UnifiedWorker[] = [];
+    for (const row of rows) {
+      const card = row.unified_card as UnifiedWorker | null;
+      if (!card || typeof card !== "object") continue;
+      if (!card.last_active && row.updated_at) card.last_active = row.updated_at as string;
+      if (!card.id && row.id) card.id = row.id as string;
+      workers.push(card);
+    }
+    return workers;
+  } catch {
+    return [];
+  }
+}
+
+async function _persistMatchResultNotify(clientIntakeId: string, results: Array<{
+  worker_id: string; handle: string; name: string; tier: string;
+  L_score: number; verticals: string[]; score: number; breakdown: Record<string, number>; why: string;
+}>): Promise<boolean> {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !clientIntakeId) return false;
+  const url = SUPABASE_URL + "/rest/v1/client_intakes?id=eq." + encodeURIComponent(clientIntakeId);
+  const body = JSON.stringify({
+    match_result: { results, generated_at: new Date().toISOString(), version: "v0.1-inproc" },
+    matched_at: new Date().toISOString(),
+  });
+  try {
+    const res = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "apikey": SUPABASE_SERVICE_ROLE_KEY,
+        "Authorization": "Bearer " + SUPABASE_SERVICE_ROLE_KEY,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal",
+      },
+      body,
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function callMatchWorkers(clientIntakeId: string, clientRecord?: Record<string, unknown>): Promise<Array<{
   worker_id: string; handle: string; name: string; tier: string;
   L_score: number; score: number; why: string; verticals: string[];
 }>> {
   if (!SUPABASE_URL || !clientIntakeId) return [];
-  const url = SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/match-workers";
   try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + _pickServiceKey(),
-      },
-      body: JSON.stringify({ client_intake_id: clientIntakeId, top_n: 5, persist: true }),
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    if (!data || !data.ok || !Array.isArray(data.results)) return [];
-    return data.results;
+    const rec = clientRecord || {};
+    const intakeData = rec.intake_data as Record<string, unknown> | null;
+    const data = (intakeData && typeof intakeData === "object") ? intakeData : {};
+    const rawTasks = (data as Record<string, unknown>).tasks;
+    const tasks: string[] = Array.isArray(rawTasks) ? (rawTasks as unknown[]).map(function (t) { return String(t); }) : [];
+    const client: ClientIntakeForMatch = {
+      id: clientIntakeId,
+      vertical: (rec.vertical as string) || "",
+      tasks,
+      budget_range: (rec.budget_range as string) || undefined,
+      timeline: (rec.timeline as string) || undefined,
+      required_tier: (data as Record<string, unknown>).required_tier as string | undefined,
+    };
+    if (!client.vertical) return [];
+    const workers = await _loadWorkerPoolNotify(client.vertical);
+    const ranked = rankWorkers(client, workers, 5);
+    // best-effort persist (non-blocking on Slack notification)
+    _persistMatchResultNotify(clientIntakeId, ranked).catch(function () {});
+    return ranked;
   } catch {
     return [];
   }
@@ -997,7 +1071,24 @@ serve(async (req: Request) => {
   } else if (payload.table === "client_intakes") {
     text = formatClient(payload.record);
     toEmail = (payload.record.email as string) || "";
-    emailTemplate = buildClientConfirmEmail(payload.record);
+    // brief #1 (2026-05-20 calcifer) . refined ack template aligned with decision-email style
+    //   + 24h response framing + AI 拆解 + 人工覆核並行 + Early Beta fallback mailto
+    //   buildClientConfirmEmail (legacy) still defined above for back-compat, but unused on new path.
+    const _intakeData = payload.record.intake_data as Record<string, unknown> | null;
+    const _enterprise = (_intakeData && typeof _intakeData === "object" && _intakeData.enterprise && typeof _intakeData.enterprise === "object")
+      ? _intakeData.enterprise as Record<string, unknown> : null;
+    const _entFlags: string[] = [];
+    if (_enterprise?.nda) _entFlags.push("NDA");
+    if (_enterprise?.invoice) _entFlags.push("公司發票");
+    if (_enterprise?.contract) _entFlags.push("公司簽約");
+    if (_enterprise?.talkToEdward) _entFlags.push("視訊聊");
+    emailTemplate = buildClientAckEmail({
+      company_name: (payload.record.company_name as string) || "",
+      vertical: (payload.record.vertical as string) || undefined,
+      budget_range: (payload.record.budget_range as string) || undefined,
+      timeline: (payload.record.timeline as string) || undefined,
+      enterprise_flags: _entFlags,
+    });
     // 額外 call Claude 給 Edward decision support
     const intakeData = payload.record.intake_data as Record<string, unknown> | null;
     const brief = (intakeData && typeof intakeData === "object")
@@ -1005,7 +1096,7 @@ serve(async (req: Request) => {
       : "";
     // P1-3 / P1-4 (2026-05-20) call match-workers internally for Top 5 + pass to advisor
     const clientIntakeId = payload.record.id as string;
-    const matchResults = await callMatchWorkers(clientIntakeId);
+    const matchResults = await callMatchWorkers(clientIntakeId, payload.record);
     claudeAdvice = await getEdwardAdvisorAnalysis({
       brief,
       budget_range: payload.record.budget_range as string | undefined,

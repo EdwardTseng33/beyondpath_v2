@@ -862,47 +862,102 @@ function Step4({ state, set, device }) {
     }
     let cancelled = false;
     setPoolState((prev) => ({ ...prev, loading: true }));
-    window.bpWorkers.queryByVertical(vid, 5).then(({ data, error }) => {
+
+    // brief #6 (2026-05-20 calcifer): real match-workers algo + placeholder fallback
+    function buildPlaceholderEntry(row) {
+      const card = row.unified_card || {};
+      return {
+        id: card.id || row.id,
+        handle: card.handle || ("@" + (row.email || "worker").split("@")[0]),
+        name: card.name || row.display_name || "anonymous",
+        role: card.role || "Worker",
+        tier: card.tier || row.tier_suggestion || "B",
+        badges: Array.isArray(card.badges) ? card.badges : [],
+        nps: typeof card.nps === "number" ? card.nps : null,
+        cases: card.cases_completed || 0,
+        capacity: card.capacity || 3,
+        voice: 0,
+        voiceCh: "-",
+        domainMatch: 0.75,
+        score: 75 + Math.max(0, Math.min(20, (card.L_score || 5) * 2)),
+        breakdown: { load: 15, calendar: 12, tier: 10, nps: 8, domain: 10, voice: 2, boost: 5 },
+        boost: { mercy: 0, vertical: 0 },
+        blurb: card.blurb || "",
+        works: Array.isArray(card.works) ? card.works : [],
+        portfolio: Array.isArray(card.portfolio) ? card.portfolio : null,
+        avatar: null,
+        last: "new",
+      };
+    }
+    function applyRealScore(entry, rankedResult, row) {
+      if (!rankedResult) return entry;
+      return {
+        ...entry,
+        score: rankedResult.score,
+        breakdown: {
+          load: Math.round((rankedResult.breakdown.capacity_match || 0)),
+          calendar: 0,
+          tier: Math.round((rankedResult.breakdown.tier_match || 0)),
+          nps: 0,
+          domain: Math.round((rankedResult.breakdown.domain_match || 0)),
+          voice: 0,
+          boost: Math.round((rankedResult.breakdown.mercy_boost || 0) + (rankedResult.breakdown.L_score_bonus || 0)),
+        },
+        boost: {
+          mercy: rankedResult.breakdown.mercy_boost > 0 ? 1 : 0,
+          vertical: rankedResult.breakdown.domain_match >= 25 ? 1 : 0,
+        },
+        blurb: rankedResult.why || entry.blurb,
+      };
+    }
+
+    window.bpWorkers.queryByVertical(vid, 5).then(function (pr) {
       if (cancelled) return;
+      const data = pr.data;
+      const error = pr.error;
       const REAL_MIN = 3;
       if (error || !Array.isArray(data) || data.length < REAL_MIN) {
         setPoolState({ workers: demoWorkers, source: "sample", loading: false, error: error || null });
         return;
       }
-      // Map worker_unified_v rows -> Step 4 display shape using unified_card.
-      // Placeholder score/breakdown/boost until real scoring algo lands in P1-3.
-      const mapped = data.map(function (row) {
-        const card = row.unified_card || {};
-        return {
-          id: card.id || row.id,
-          handle: card.handle || ("@" + (row.email || "worker").split("@")[0]),
-          name: card.name || row.display_name || "anonymous",
-          role: card.role || "Worker",
-          tier: card.tier || row.tier_suggestion || "B",
-          badges: Array.isArray(card.badges) ? card.badges : [],
-          nps: typeof card.nps === "number" ? card.nps : null,
-          cases: card.cases_completed || 0,
-          capacity: card.capacity || 3,
-          voice: 0,
-          voiceCh: "-",
-          domainMatch: 0.75,
-          score: 75 + Math.max(0, Math.min(20, (card.L_score || 5) * 2)),
-          breakdown: { load: 15, calendar: 12, tier: 10, nps: 8, domain: 10, voice: 2, boost: 5 },
-          boost: { mercy: 0, vertical: 0 },
-          blurb: card.blurb || "",
-          works: Array.isArray(card.works) ? card.works : [],
-          portfolio: Array.isArray(card.portfolio) ? card.portfolio : null,
-          avatar: null,
-          last: "new",
-        };
-      });
-      setPoolState({ workers: mapped, source: "real", loading: false, error: null });
+      const baseMapped = data.map(buildPlaceholderEntry);
+
+      const parsed = state.parsed;
+      if (parsed && window.bpMatch && typeof window.bpMatch.runForVertical === "function") {
+        window.bpMatch.runForVertical({
+          vertical: vid,
+          parsedBrief: parsed,
+          topN: 5,
+        }).then(function (mr) {
+          if (cancelled) return;
+          if (mr.error || !Array.isArray(mr.data)) {
+            setPoolState({ workers: baseMapped, source: "real", loading: false, error: null });
+            return;
+          }
+          const byId = {};
+          for (const r of mr.data) {
+            if (r && r.worker_id) byId[r.worker_id] = r;
+          }
+          const augmented = baseMapped.map(function (entry, i) {
+            const row = data[i];
+            const ranked = byId[entry.id] || byId[row.id];
+            return ranked ? applyRealScore(entry, ranked, row) : entry;
+          });
+          augmented.sort(function (a, b) { return b.score - a.score; });
+          setPoolState({ workers: augmented, source: "real", loading: false, error: null });
+        }).catch(function () {
+          if (cancelled) return;
+          setPoolState({ workers: baseMapped, source: "real", loading: false, error: null });
+        });
+      } else {
+        setPoolState({ workers: baseMapped, source: "real", loading: false, error: null });
+      }
     }).catch(function (e) {
       if (cancelled) return;
       setPoolState({ workers: demoWorkers, source: "sample", loading: false, error: { message: String(e) } });
     });
     return function () { cancelled = true; };
-  }, [state.vertical, demoWorkers]);
+  }, [state.vertical, state.parsed, demoWorkers]);
 
   const verticalWorkers = poolState.workers;
   const [expanded, setExpanded] = useState(state.selectedWorkers[0] || verticalSuggestedPair[0]);
