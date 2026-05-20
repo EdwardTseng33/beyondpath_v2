@@ -1765,10 +1765,78 @@ function EStory() {
   );
 }
 
+// Worker Decision Banner · v0.5 (2026-05-19) · Q3 Task 4 配套 · 處理 worker-accept-decline Edge Function redirect 後的 ?worker_decision=...&action=... query string
+function EWorkerDecisionBanner() {
+  const [info, setInfo] = React.useState(null);
+  React.useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const decision = params.get("worker_decision");
+      const action = params.get("action");
+      if (!decision) return;
+      let next;
+      if (decision === "success" && action === "accept") {
+        next = { kind: "ok", title: "已接受配對邀請", body: "感謝你接案。BeyondPath 將在 24 小時內安排合約草稿與後續流程、寄到你的 email。" };
+      } else if (decision === "success" && action === "decline") {
+        next = { kind: "neutral", title: "已記錄你婉拒這次配對", body: "謝謝告知。下次有適配案件、BeyondPath 仍會優先推薦。" };
+      } else if (decision === "error") {
+        next = { kind: "warn", title: "配對連結已過期或無效", body: "邀請信連結有 7 天效期。請聯絡 BeyondPath：hello@beyondpath.tw" };
+      } else {
+        next = { kind: "neutral", title: "感謝你的回應", body: "若有疑問請聯絡 BeyondPath：hello@beyondpath.tw" };
+      }
+      setInfo(next);
+      // 清掉 URL query、避免 reload 重複顯示
+      window.history.replaceState({}, "", window.location.pathname);
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
+  if (!info) return null;
+
+  const color = info.kind === "ok" ? "var(--accent)" : info.kind === "warn" ? "oklch(0.82 0.16 75)" : "var(--text-2)";
+
+  return (
+    <div style={{
+      position: "fixed",
+      top: 16,
+      left: "50%",
+      transform: "translateX(-50%)",
+      maxWidth: 520,
+      width: "calc(100% - 32px)",
+      zIndex: 9999,
+      padding: "14px 18px",
+      background: "var(--bg)",
+      border: "1px solid " + color,
+      boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+    }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 14 }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.12em", color: color, marginBottom: 6 }}>
+            ◆ WORKER DECISION
+          </div>
+          <div className="le-zh" style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", marginBottom: 4 }}>
+            {info.title}
+          </div>
+          <div className="le-zh" style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.6 }}>
+            {info.body}
+          </div>
+        </div>
+        <button
+          onClick={() => setInfo(null)}
+          style={{ background: "transparent", border: 0, color: "var(--muted)", cursor: "pointer", fontSize: 22, padding: 0, lineHeight: 1 }}
+          aria-label="關閉"
+        >×</button>
+      </div>
+    </div>
+  );
+}
+
 // Root · v0.4.7 (2026-05-10) wave 4 · Trust 前移到 Engines 後（霍爾 + 蘇菲三方共識最大 ROI · mid-funnel +15-25%）
 function LandingRoot() {
   return (
     <div className="le-root">
+      <EWorkerDecisionBanner />
       <EStaticBar />
       <ENav />
       <EHero />
