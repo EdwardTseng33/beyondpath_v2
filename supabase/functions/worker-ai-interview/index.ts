@@ -8,6 +8,7 @@
 // Cost (Sonnet 4.6): ~14 turns × 1k input + 800 output ≈ NT$2-3 / completed interview
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { aiProofToUnifiedWorker, type AiProof, type WorkerApplicationRow } from "../_shared/worker-schema.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const ANTHROPIC_MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-sonnet-4-6";
@@ -241,8 +242,42 @@ serve(async (req: Request) => {
     );
   }
 
+  // T1.4 · 訪談完成時 pre-compute unified_card (P0-1 stage 2)
+  //   - parsed.ai_proof 存在 → 跑 aiProofToUnifiedWorker · 結果塞進 response.unified_card
+  //   - client (bpWorkerApply.submit) 收到後一併寫進 worker_applications row
+  //   - 失敗 fallback: unified_card = null · 不阻擋既有 ai_proof 寫入流程
+  let unifiedCard: ReturnType<typeof aiProofToUnifiedWorker> | null = null;
+  const parsedObj = parsed as Record<string, unknown>;
+  if (parsedObj.status === "complete" && parsedObj.ai_proof && typeof parsedObj.ai_proof === "object") {
+    try {
+      const proof = parsedObj.ai_proof as AiProof;
+      // Edge Function 不知 worker_applications row id / created_at · 由 client 補 (insert .select())
+      // 此處 row 只塞 email + display_name (從 ai_proof.name 推) · 其他 null
+      const stubRow: WorkerApplicationRow = {
+        email: "",            // client 端會 override
+        display_name: proof.name || null,
+        ai_proof: proof,
+      };
+      unifiedCard = aiProofToUnifiedWorker(stubRow, proof);
+    } catch (e) {
+      await alertSlackOnError(
+        "worker-ai-interview · unified-card-compute-fail",
+        String(e),
+        500,
+        messages.length,
+      );
+      unifiedCard = null;  // fallback · 不阻擋訪談 complete flow
+    }
+  }
+
   return new Response(
-    JSON.stringify({ ok: true, ...parsed, usage: claudeData.usage, model: ANTHROPIC_MODEL }),
+    JSON.stringify({
+      ok: true,
+      ...parsed,
+      unified_card: unifiedCard,
+      usage: claudeData.usage,
+      model: ANTHROPIC_MODEL,
+    }),
     { status: 200, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } },
   );
 });

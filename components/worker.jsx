@@ -675,6 +675,10 @@ function WorkerEmptyState() {
   const [step, setStep] = uSW("intro");
   const [route, setRoute] = uSW(""); // "self" (自帶 AI) | "internal" (BP 內建) · 用來 routing ApplyProgress + back behavior
   const [parsed, setParsed] = uSW(null);
+  // T1.4 . unified_card pre-computed by worker-ai-interview Edge Function (P0-1 . 2026-05-20)
+  //   . Edge Function on status:complete pre-computes UnifiedWorker shape from ai_proof
+  //   . If null (compute failed / paste-back route) -> bpWorkerApply.submit passes null . admin can later re-sync
+  const [unifiedCard, setUnifiedCard] = uSW(null);
   const [submitted, setSubmitted] = uSW(() => {
     try {
       return new URLSearchParams(window.location.search).get("submitted") === "1";
@@ -767,6 +771,7 @@ function WorkerEmptyState() {
     // status: 'complete' → 自動切 preview
     if (data.status === "complete" && data.ai_proof) {
       setParsed(data.ai_proof);
+      if (data.unified_card) setUnifiedCard(data.unified_card);
       // 短延遲讓 user 看到最後一句感謝再切（300ms）
       setTimeout(() => setStep("preview"), 600);
     }
@@ -793,6 +798,7 @@ function WorkerEmptyState() {
     setInterviewError("");
     setInterviewStep(0);
     setInterviewProgress("");
+    setUnifiedCard(null);
     interviewStartedRef.current = false;
   }
 
@@ -1480,6 +1486,7 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
         email,
         displayName: parsed?.name,
         aiProof: parsed,
+        unifiedCard: unifiedCard,
       });
       if (error) throw error;
       setStatus("success");

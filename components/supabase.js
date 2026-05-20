@@ -62,8 +62,11 @@
   // ============================================================
 
   window.bpWorkerApply = {
-    async submit({ email, displayName, aiProof }) {
-      // aiProof = parsed JSON from worker's AI (Step 2 paste-back)
+    async submit({ email, displayName, aiProof, unifiedCard }) {
+      // aiProof = parsed JSON from worker AI interview (worker-ai-interview Edge Function or paste-back)
+      // unifiedCard = optional pre-computed UnifiedWorker shape from Edge Function response (T1.4 · P0-1)
+      //   · 若 server 端 pre-compute 過 → unifiedCard 帶過來
+      //   · 若沒有 → 留 null, DB 端後續可以 retro-compute 或 Admin re-sync
       const verticals = Array.isArray(aiProof?.verticals) ? aiProof.verticals : [];
       const lScore = typeof aiProof?.L_score === 'number' ? aiProof.L_score : null;
       const caseCount = aiProof?.case_count || null;
@@ -76,6 +79,7 @@
         email,
         display_name: displayName || aiProof?.name || null,
         ai_proof: aiProof,
+        unified_card: unifiedCard || null,
         l_score: lScore,
         verticals: verticals.length ? verticals : null,
         case_count: caseCount,
@@ -85,6 +89,41 @@
 
       const { data, error } = await client.from('worker_applications').insert(payload).select().single();
       return { data, error };
+    },
+  };
+
+  // ============================================================
+  // WORKER POOL QUERY (P0-2 · T1.5)
+  // ============================================================
+  // 給 Step 4 抓真實 approved worker pool, fallback to demo if empty.
+  // Uses worker_unified_v view (RLS-safe, only approved + has unified_card).
+
+  window.bpWorkers = {
+    /**
+     * Query approved workers matching a vertical (e.g. 'dtc' / 'software').
+     * Returns up to `limit` workers ordered by created_at desc.
+     * @returns {Promise<{ data: Array<{id, email, display_name, unified_card, verticals, tier_suggestion}>, error }>}
+     */
+    async queryByVertical(verticalId, limit) {
+      const cap = typeof limit === 'number' && limit > 0 ? limit : 5;
+      if (!verticalId || typeof verticalId !== 'string') {
+        return { data: [], error: { message: 'vertical-id-required' } };
+      }
+      try {
+        const { data, error } = await client
+          .from('worker_unified_v')
+          .select('id, email, display_name, unified_card, verticals, tier_suggestion, created_at')
+          .contains('verticals', [verticalId])
+          .not('unified_card', 'is', null)
+          .order('created_at', { ascending: false })
+          .limit(cap);
+        if (error) {
+          return { data: [], error };
+        }
+        return { data: data || [], error: null };
+      } catch (e) {
+        return { data: [], error: { message: e?.message || String(e) } };
+      }
     },
   };
 

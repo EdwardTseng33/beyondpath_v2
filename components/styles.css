@@ -19,6 +19,19 @@
   --danger: oklch(0.72 0.18 28);
   --info: oklch(0.78 0.10 230);
 
+  /* === Tier hue system (2026-05-18 女巫 spec v0.1 · T1.5 calcifer 2026-05-20 ship) ===
+     B = info 藍 (起步) | B+ = chartreuse dim (累積) | A+ = chartreuse 飽和 (資深) | S = warm gold (大師 · 預留)
+     全部沿 prototype-v0.2 既有 oklch palette · 零外來色入侵 */
+  --tier-b: oklch(0.78 0.10 230);
+  --tier-b-soft: oklch(0.78 0.10 230 / 0.12);
+  --tier-b-line: oklch(0.78 0.10 230 / 0.35);
+  --tier-bplus: oklch(0.78 0.18 128);
+  --tier-bplus-soft: oklch(0.78 0.18 128 / 0.12);
+  --tier-bplus-line: oklch(0.78 0.18 128 / 0.35);
+  --tier-s: oklch(0.82 0.16 75);
+  --tier-s-soft: oklch(0.82 0.16 75 / 0.12);
+  --tier-s-line: oklch(0.82 0.16 75 / 0.35);
+
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --sans: "IBM Plex Sans", "Noto Sans TC", system-ui, sans-serif;
   --zh: "Noto Sans TC", "IBM Plex Sans", system-ui, sans-serif;
@@ -547,6 +560,21 @@
 }
 .bp-tier.a { color: var(--text-2); background: transparent; border-color: var(--line); }
 .bp-tier.aplus {}
+.bp-tier.b {
+  color: var(--tier-b);
+  background: var(--tier-b-soft);
+  border-color: var(--tier-b-line);
+}
+.bp-tier.bplus {
+  color: var(--tier-bplus);
+  background: var(--tier-bplus-soft);
+  border-color: var(--tier-bplus-line);
+}
+.bp-tier.s {
+  color: var(--tier-s);
+  background: var(--tier-s-soft);
+  border-color: var(--tier-s-line);
+}
 
 .bp-badge {
   display: inline-block;
@@ -783,6 +811,50 @@
   white-space: nowrap;
 }
 .bp-mobile .bp-worker .mercy { align-self: flex-start; }
+
+/* ---------- Tier parent modifier (T1.5 · 2026-05-20 calcifer · spec 09 §6.1) ---------- */
+/* B / B+ / S 用 hue 切換、不降級、不變 dimensions */
+
+.bp-worker.tier-b.selected {
+  border-color: var(--tier-b);
+  background: linear-gradient(180deg, var(--tier-b-soft), transparent 50%), var(--surface);
+}
+.bp-worker.tier-b.selected .av { border-color: var(--tier-b); }
+.bp-worker.tier-b .av::after {
+  background: linear-gradient(160deg, transparent 50%, var(--tier-b-soft));
+}
+.bp-worker.tier-b.selected .av::after {
+  background: linear-gradient(160deg, transparent 40%, oklch(0.78 0.10 230 / 0.22));
+}
+.bp-worker.tier-b .score { color: var(--tier-b); }
+.bp-worker.tier-b .av { color: var(--tier-b); }
+
+.bp-worker.tier-bplus.selected {
+  border-color: var(--tier-bplus);
+  background: linear-gradient(180deg, var(--tier-bplus-soft), transparent 50%), var(--surface);
+}
+.bp-worker.tier-bplus.selected .av { border-color: var(--tier-bplus); }
+.bp-worker.tier-bplus .av::after {
+  background: linear-gradient(160deg, transparent 50%, var(--tier-bplus-soft));
+}
+.bp-worker.tier-bplus.selected .av::after {
+  background: linear-gradient(160deg, transparent 40%, oklch(0.78 0.18 128 / 0.22));
+}
+.bp-worker.tier-bplus .score { color: var(--tier-bplus); }
+.bp-worker.tier-bplus .av { color: var(--tier-bplus); }
+
+.bp-worker.tier-s.selected {
+  border-color: var(--tier-s);
+  background: linear-gradient(180deg, var(--tier-s-soft), transparent 40%), var(--surface);
+  box-shadow: inset 0 0 0 1px var(--tier-s-line);
+}
+.bp-worker.tier-s.selected .av { border-color: var(--tier-s); box-shadow: 0 0 0 2px var(--tier-s-soft); }
+.bp-worker.tier-s .av::after {
+  background: linear-gradient(160deg, transparent 40%, var(--tier-s-soft));
+}
+.bp-worker.tier-s .score { color: var(--tier-s); font-size: 32px; font-weight: 500; }
+.bp-worker.tier-s .av { color: var(--tier-s); }
+
 
 .bp-mobile .bp-worker { grid-template-columns: auto 1fr; gap: 12px; padding: 12px; }
 .bp-mobile .bp-worker .score-col {

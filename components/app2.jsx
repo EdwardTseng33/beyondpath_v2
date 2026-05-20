@@ -8,9 +8,23 @@ const fmtNT = (n) => "NT$" + n.toLocaleString();
 
 // ---------- Tiny atoms ----------
 
-const Tier = ({ t }) => (
-  <span className={"bp-tier " + (t === "A+" ? "aplus" : "a")}>Tier {t}</span>
-);
+// Tier atom (T1.5 . 2026-05-20 calcifer . spec 09)
+// Maps tier_suggestion -> CSS modifier + zh narrative label.
+const TIER_META = {
+  "B":     { cls: "b",     label: "Tier B · 起步" },
+  "Bplus": { cls: "bplus", label: "Tier B+ · 累積" },
+  "B+":    { cls: "bplus", label: "Tier B+ · 累積" },
+  "A":     { cls: "a",     label: "Tier A" },
+  "A+":    { cls: "aplus", label: "Tier A+ · 資深" },
+  "S":     { cls: "s",     label: "Tier S · 大師" },
+};
+const Tier = ({ t }) => {
+  const meta = TIER_META[t] || { cls: "a", label: "Tier " + (t || "?") };
+  return <span className={"bp-tier " + meta.cls}>{meta.label}</span>;
+};
+function tierClassFor(t) {
+  return (TIER_META[t] && TIER_META[t].cls) || "a";
+}
 const Badge = ({ children }) => <span className="bp-badge">{children}</span>;
 
 // ---------- Topbar ----------
@@ -752,16 +766,78 @@ function Step3({ state, set, device }) {
 function Step4({ state, set, device }) {
   const [filter, setFilter] = useState("all"); // all | tierA+ | mercy
   const demo = getDemoForVertical(state.vertical);
-  const verticalWorkers = demo.workers;
+  const demoWorkers = demo.workers;
   const verticalSuggestedPair = demo.suggestedPair;
   const verticalZh = VERTICALS.find((v) => v.id === state.vertical)?.zh || "你選的領域";
+
+  // T1.5 . Supabase real worker pool (P0-2 . 2026-05-20 calcifer)
+  //   real >= 3 -> use real pool (badge real pool)
+  //   real < 3 / error / loading -> fallback to demo (badge sample)
+  const [poolState, setPoolState] = useState({
+    workers: demoWorkers,
+    source: "sample",
+    loading: false,
+    error: null,
+  });
+
+  useEffect(() => {
+    const vid = state.vertical;
+    if (!vid || !window.bpWorkers || typeof window.bpWorkers.queryByVertical !== "function") {
+      setPoolState({ workers: demoWorkers, source: "sample", loading: false, error: null });
+      return;
+    }
+    let cancelled = false;
+    setPoolState((prev) => ({ ...prev, loading: true }));
+    window.bpWorkers.queryByVertical(vid, 5).then(({ data, error }) => {
+      if (cancelled) return;
+      const REAL_MIN = 3;
+      if (error || !Array.isArray(data) || data.length < REAL_MIN) {
+        setPoolState({ workers: demoWorkers, source: "sample", loading: false, error: error || null });
+        return;
+      }
+      // Map worker_unified_v rows -> Step 4 display shape using unified_card.
+      // Placeholder score/breakdown/boost until real scoring algo lands in P1-3.
+      const mapped = data.map(function (row) {
+        const card = row.unified_card || {};
+        return {
+          id: card.id || row.id,
+          handle: card.handle || ("@" + (row.email || "worker").split("@")[0]),
+          name: card.name || row.display_name || "anonymous",
+          role: card.role || "Worker",
+          tier: card.tier || row.tier_suggestion || "B",
+          badges: Array.isArray(card.badges) ? card.badges : [],
+          nps: typeof card.nps === "number" ? card.nps : null,
+          cases: card.cases_completed || 0,
+          capacity: card.capacity || 3,
+          voice: 0,
+          voiceCh: "-",
+          domainMatch: 0.75,
+          score: 75 + Math.max(0, Math.min(20, (card.L_score || 5) * 2)),
+          breakdown: { load: 15, calendar: 12, tier: 10, nps: 8, domain: 10, voice: 2, boost: 5 },
+          boost: { mercy: 0, vertical: 0 },
+          blurb: card.blurb || "",
+          works: Array.isArray(card.works) ? card.works : [],
+          portfolio: Array.isArray(card.portfolio) ? card.portfolio : null,
+          avatar: null,
+          last: "new",
+        };
+      });
+      setPoolState({ workers: mapped, source: "real", loading: false, error: null });
+    }).catch(function (e) {
+      if (cancelled) return;
+      setPoolState({ workers: demoWorkers, source: "sample", loading: false, error: { message: String(e) } });
+    });
+    return function () { cancelled = true; };
+  }, [state.vertical, demoWorkers]);
+
+  const verticalWorkers = poolState.workers;
   const [expanded, setExpanded] = useState(state.selectedWorkers[0] || verticalSuggestedPair[0]);
   const selected = state.selectedWorkers;
 
   const filtered = useMemo(() => {
     let list = verticalWorkers.slice().sort((a, b) => b.score - a.score);
     if (filter === "tierA+") list = list.filter((w) => w.tier === "A+");
-    if (filter === "mercy") list = list.filter((w) => w.boost.mercy > 0);
+    if (filter === "mercy") list = list.filter((w) => w.boost && w.boost.mercy > 0);
     return list;
   }, [filter, verticalWorkers]);
 
@@ -777,6 +853,17 @@ function Step4({ state, set, device }) {
       <div className="bp-eyebrow">
         <span>Step 04 / Match · AI 配對 + 人工覆核</span>
         <span className="pill" style={{ background: "rgba(255,200,80,0.1)", color: "#ffc850", borderColor: "rgba(255,200,80,0.3)" }}>● POC · 早期合作</span>
+        <span
+          className="pill"
+          style={
+            poolState.source === "real"
+              ? { background: "var(--accent-soft)", color: "var(--accent)", borderColor: "var(--accent-line)" }
+              : { background: "rgba(154,154,163,0.08)", color: "var(--muted)", borderColor: "var(--line)" }
+          }
+          title={poolState.source === "real" ? "Pool sourced from approved BeyondPath workers" : "Demo sample · real pool < 3 · fallback"}
+        >
+          {poolState.loading ? "● loading…" : poolState.source === "real" ? "● real pool" : "● sample"}
+        </span>
       </div>
       <h1 className="bp-h1">
         Top examples in your vertical.
@@ -864,7 +951,7 @@ function Step4({ state, set, device }) {
         return (
           <div
             key={w.id}
-            className={"bp-worker " + (isSel ? "selected" : "") + " bp-rise"}
+            className={"bp-worker tier-" + tierClassFor(w.tier) + " " + (isSel ? "selected" : "") + " bp-rise"}
             style={{ animationDelay: `${i * 80}ms` }}
             onClick={() => setExpanded(isExp ? null : w.id)}
           >
@@ -931,7 +1018,7 @@ function Step4({ state, set, device }) {
               )}
               {isExp && (!w.portfolio || w.portfolio.length === 0) && (
                 <div className="bp-portfolio-empty bp-rise bp-rise-1">
-                  Portfolio sealed · Tier B 新人 · 等首案完成解鎖
+                  首案進行中 · 完成後解鎖 portfolio · 可從 voice / 領域 match 評估
                 </div>
               )}
               <div className="stats-grid">
