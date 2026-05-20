@@ -342,6 +342,80 @@ function Step1({ state, set, device }) {
           })}
         </div>
       </div>
+
+      {/* Client Vetting · Q3 Task 2 · 2026-05-19 · 身分 + Early Beta 規則確認 */}
+      <div style={{ marginTop: 28 }}>
+        <div className="bp-h2" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span>About you · 關於你</span>
+          <span style={{ fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)" }}>optional · 選填</span>
+        </div>
+        <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 4, marginBottom: 12, lineHeight: 1.6 }}>
+          讓我們更了解你的身分。資料只用於配對、不對外公開。
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
+          {[
+            { id: "company", label: "公司 / 品牌主", sub: "有正式登記、發案做 B2B / B2C" },
+            { id: "individual", label: "個人 / 自由業", sub: "freelancer / soloist · 個人專案" },
+            { id: "studio", label: "工作室 / 創辦人", sub: "2-10 人團隊、想擴 capacity" },
+            { id: "student", label: "學生 / 學習中", sub: "校內專案 / 投資組合 / 練手" },
+          ].map((f) => {
+            const active = state.clientType === f.id;
+            return (
+              <button
+                key={f.id}
+                onClick={() => set({ clientType: active ? null : f.id })}
+                style={{
+                  textAlign: "left",
+                  padding: "12px 14px",
+                  background: active ? "var(--accent-soft)" : "rgba(255,255,255,0.02)",
+                  border: "1px solid " + (active ? "var(--accent-line)" : "var(--line-soft)"),
+                  borderRadius: "var(--r-md)",
+                  color: "var(--text)",
+                  cursor: "pointer",
+                  transition: "all 0.15s",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600, marginBottom: 4 }}>
+                  <span style={{
+                    display: "inline-flex",
+                    width: 16, height: 16,
+                    border: "1px solid " + (active ? "var(--accent)" : "var(--muted)"),
+                    background: active ? "var(--accent)" : "transparent",
+                    color: "var(--bg)",
+                    fontSize: 11,
+                    alignItems: "center", justifyContent: "center",
+                    borderRadius: 3,
+                  }}>{active ? "✓" : ""}</span>
+                  <span>{f.label}</span>
+                </div>
+                <div style={{ fontSize: 11.5, color: "var(--muted)", paddingLeft: 24, lineHeight: 1.5 }}>{f.sub}</div>
+              </button>
+            );
+          })}
+        </div>
+        {/* Beta acknowledgment · 確認用戶理解 Early Beta 階段規則 */}
+        <div style={{
+          marginTop: 14,
+          padding: "10px 14px",
+          border: "1px dashed rgba(199,232,74,0.25)",
+          background: "rgba(199,232,74,0.02)",
+          fontSize: 12,
+          color: "var(--text-2)",
+          lineHeight: 1.6,
+        }}>
+          <label style={{ display: "flex", gap: 10, cursor: "pointer", alignItems: "flex-start" }}>
+            <input
+              type="checkbox"
+              checked={!!state.betaAck}
+              onChange={(e) => set({ betaAck: e.target.checked })}
+              style={{ marginTop: 3, flexShrink: 0 }}
+            />
+            <span>
+              <b style={{ color: "var(--accent)" }}>我了解 Early Beta 階段規則</b>：BeyondPath 不代收專案款、合約由雙方確認；送出 brief 進人工審核、不代表正式承諾或付款。
+            </span>
+          </label>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1317,6 +1391,8 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
       contract: false,
       talkToEdward: false,
     },
+    clientType: null, // Q3 Task 2 · 'company' | 'individual' | 'studio' | 'student'
+    betaAck: false,   // Q3 Task 2 · Early Beta 規則確認 (寫進 intake_data)
   });
 
   const set = (patch) => setState((s) => ({ ...s, ...patch }));
