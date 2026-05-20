@@ -813,17 +813,75 @@ function formatClient(row: Record<string, unknown>): string {
 
 const EDWARD_ADVISOR_PROMPT = `你是 BeyondPath 創辦人 Edward 的 AI 顧問。剛收到一筆 client lead 進來、Edward 要決定怎麼接。
 
-請給 Edward 三件事（總長 ≤ 100 字、Slack mrkdwn 格式、用繁體中文）：
+請給 Edward 四件事（總長 ≤ 160 字、Slack mrkdwn 格式、用繁體中文）：
 
 1. *接 / 不接 / 看情況* + 一句直白理由（避免客套、給 actionable）
 2. *Tier 建議*（B / B+ / A / A+）+ 一句 why（看複雜度與品牌等級）
 3. *報價建議*（NT$ 區間、含 +15% 平台溢價）+ 適合契約類型（試做案 / 月費 retainer）
+4. *推薦 3 位 worker* · 從下方候選池挑最匹配 3 位、每位附 1 句 why（≤ 20 字 · 例「設計領域對位 + L-score 9 高」）。候選池為空時、寫「無 approved worker 可推、建議擴池」
 
 注意：
 - 純 Slack mrkdwn、用 *粗體* 標 key info、不要 markdown code block
 - 不灑空話（「值得進一步討論」「需要更多資訊」這種無資訊量的話禁止）
 - 若預算太低或 brief 太模糊、直接說「不接」並建議 Edward 推回去
-- 對應預算粗判：< 50k → B、50-150k → B+/A、150-300k → A、> 300k → A+`;
+- 對應預算粗判：< 50k → B、50-150k → B+/A、150-300k → A、> 300k → A+
+- worker 推薦排序按平台 match_score、不要重排`;
+
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? Deno.env.get("NEXT_PUBLIC_SUPABASE_URL") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+
+function _pickServiceKey(): string {
+  return SUPABASE_SERVICE_ROLE_KEY || SUPABASE_ANON_KEY;
+}
+
+async function callMatchWorkers(clientIntakeId: string): Promise<Array<{
+  worker_id: string; handle: string; name: string; tier: string;
+  L_score: number; score: number; why: string; verticals: string[];
+}>> {
+  if (!SUPABASE_URL || !clientIntakeId) return [];
+  const url = SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/match-workers";
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + _pickServiceKey(),
+      },
+      body: JSON.stringify({ client_intake_id: clientIntakeId, top_n: 5, persist: true }),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    if (!data || !data.ok || !Array.isArray(data.results)) return [];
+    return data.results;
+  } catch {
+    return [];
+  }
+}
+
+function formatWorkerCandidates(results: Array<{
+  handle: string; name: string; tier: string; L_score: number; score: number; why: string;
+}>): string {
+  if (!results || results.length === 0) return "";
+  const top = results.slice(0, 3);
+  const lines = ["", "*[Top " + top.length + " match]*"];
+  for (let i = 0; i < top.length; i++) {
+    const w = top[i];
+    lines.push("  " + (i + 1) + ". `" + w.handle + "` " + w.name +
+      " . Tier *" + w.tier + "* . L " + w.L_score + " . score *" + w.score + "* . " + w.why);
+  }
+  return lines.join("\n");
+}
+
+interface MatchPoolEntry {
+  handle: string;
+  name: string;
+  tier: string;
+  L_score: number;
+  score: number;
+  why: string;
+  verticals: string[];
+}
 
 async function getEdwardAdvisorAnalysis(briefData: {
   brief: string;
@@ -831,10 +889,19 @@ async function getEdwardAdvisorAnalysis(briefData: {
   timeline?: string;
   vertical?: string;
   company_name?: string;
+  workerPool?: MatchPoolEntry[];
 }): Promise<string | null> {
   if (!ANTHROPIC_API_KEY || !briefData.brief || briefData.brief.trim().length < 20) {
     return null;
   }
+
+  const pool = briefData.workerPool || [];
+  const poolBlock = pool.length === 0
+    ? "WorkerPool: empty (no approved worker in this vertical)"
+    : "WorkerPool (sorted by match_score desc):\n" + pool.map(function (w, i) {
+        return (i + 1) + ". " + w.handle + " " + w.name + " . Tier " + w.tier +
+          " . L " + w.L_score + " . score " + w.score + " . " + w.why;
+      }).join("\n");
 
   const userMsg = [
     `Brief：\n${briefData.brief.trim()}`,
@@ -842,6 +909,7 @@ async function getEdwardAdvisorAnalysis(briefData: {
     briefData.budget_range ? `預算：${briefData.budget_range}` : null,
     briefData.timeline ? `時程：${briefData.timeline}` : null,
     briefData.vertical ? `領域：${briefData.vertical}` : null,
+    poolBlock,
   ].filter(Boolean).join("\n");
 
   try {
@@ -935,13 +1003,23 @@ serve(async (req: Request) => {
     const brief = (intakeData && typeof intakeData === "object")
       ? ((intakeData.brief as string) || (intakeData.description as string) || (intakeData.project_brief as string) || "")
       : "";
+    // P1-3 / P1-4 (2026-05-20) call match-workers internally for Top 5 + pass to advisor
+    const clientIntakeId = payload.record.id as string;
+    const matchResults = await callMatchWorkers(clientIntakeId);
     claudeAdvice = await getEdwardAdvisorAnalysis({
       brief,
       budget_range: payload.record.budget_range as string | undefined,
       timeline: payload.record.timeline as string | undefined,
       vertical: payload.record.vertical as string | undefined,
       company_name: payload.record.company_name as string | undefined,
+      workerPool: matchResults.map(function (r) { return {
+        handle: r.handle, name: r.name, tier: r.tier, L_score: r.L_score,
+        score: r.score, why: r.why, verticals: r.verticals,
+      }; }),
     });
+    // Append candidate list to Slack body (rendered below)
+    const candidateBlock = formatWorkerCandidates(matchResults);
+    if (candidateBlock) text += candidateBlock;
   } else {
     text = `📥 *新 Lead* (${payload.table}) · row id: \`${payload.record.id ?? "?"}\``;
   }
