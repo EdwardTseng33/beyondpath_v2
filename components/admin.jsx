@@ -326,10 +326,112 @@ function DecisionsTab() {
   );
 }
 
+// ---------- Settings Tab · 5 維權重編輯 (2026-05-21 A3) ----------
+
+function SettingsTab() {
+  const DEFAULT = window.bpAdmin?.DEFAULT_MATCH_WEIGHTS || { tier: 25, capacity: 20, domain: 30, L_score: 15, mercy: 10 };
+  const [weights, setWeights] = useState(() => window.bpAdmin?.getMatchWeights() || { ...DEFAULT });
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState(null);
+
+  const sum = weights.tier + weights.capacity + weights.domain + weights.L_score + weights.mercy;
+  const isDefault = weights.tier === DEFAULT.tier && weights.capacity === DEFAULT.capacity &&
+                    weights.domain === DEFAULT.domain && weights.L_score === DEFAULT.L_score &&
+                    weights.mercy === DEFAULT.mercy;
+
+  function updateWeight(key, val) {
+    const n = parseInt(val, 10);
+    if (Number.isNaN(n) || n < 0 || n > 100) return;
+    setWeights((w) => ({ ...w, [key]: n }));
+    setSaved(false);
+  }
+  function handleSave() {
+    setError(null);
+    const r = window.bpAdmin.setMatchWeights(weights);
+    if (r.ok) {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2400);
+    } else {
+      setError(r.error?.message || "儲存失敗");
+    }
+  }
+  function handleReset() {
+    const r = window.bpAdmin.resetMatchWeights();
+    if (r.ok) {
+      setWeights({ ...DEFAULT });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2400);
+    } else {
+      setError(r.error?.message || "重置失敗");
+    }
+  }
+
+  const DIMENSIONS = [
+    { k: "tier", label: "Tier 對位", hint: "client required_tier 跟 worker 當前 Tier 的吻合度" },
+    { k: "capacity", label: "容量", hint: "worker 當前接案餘力 · timeline rush 加權" },
+    { k: "domain", label: "領域吻合", hint: "client.vertical 跟 worker.verticals 主／鄰近 + 任務 → skill_matrix 對應" },
+    { k: "L_score", label: "L-score", hint: "worker 自評 AI 使用 leverage 程度 0-10" },
+    { k: "mercy", label: "反馬太效應", hint: "> 90 天沒接案的 worker 補一個 boost · 防新人凍結" },
+  ];
+
+  return (
+    <div className="admin-card" style={{ maxWidth: 760 }}>
+      <div className="admin-card-h">
+        <div style={{ flex: 1 }}>
+          <div className="title">5 維配對權重</div>
+          <div className="sub">改完按「儲存」、下次 runMatch 自動帶 · 儲存在你瀏覽器 localStorage</div>
+        </div>
+        <span className={"pill " + (isDefault ? "info" : "accent")}>{isDefault ? "default" : "customized"}</span>
+      </div>
+
+      <div className="admin-card-body">
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {DIMENSIONS.map(({ k, label, hint }) => (
+            <div key={k} style={{ display: "grid", gridTemplateColumns: "120px 60px 1fr", gap: 12, alignItems: "center" }}>
+              <label style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--text)", letterSpacing: "0.08em" }}>{label}</label>
+              <input
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                value={weights[k]}
+                onChange={(e) => updateWeight(k, e.target.value)}
+                className="admin-textarea"
+                style={{ width: 60, padding: "8px 10px", fontFamily: "var(--mono)", fontSize: 14, textAlign: "center" }}
+              />
+              <span style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.5 }}>{hint}</span>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginTop: 18, padding: "10px 14px", background: "rgba(255,255,255,0.03)", border: "1px solid var(--line-soft)", borderRadius: 4, fontSize: 12 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+            <span style={{ color: "var(--muted)" }}>Sum</span>
+            <span style={{ color: sum === 100 ? "var(--accent)" : "var(--warn)", fontWeight: 700, fontFamily: "var(--mono)" }}>{sum}</span>
+          </div>
+          <div style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.55 }}>
+            sum 100 = 平衡配置（每維權重 / 100 = 影響力百分比）· 大於 100 等於相對放大、小於 100 等於相對縮小。
+            <br />
+            目前 default：tier 25 / capacity 20 / domain 30 / L_score 15 / mercy 10 = 100
+          </div>
+        </div>
+
+        {error && <div className="admin-error" style={{ marginTop: 12 }}>{error}</div>}
+        {saved && <div style={{ marginTop: 12, padding: "8px 12px", background: "rgba(199,232,74,0.08)", border: "1px solid var(--accent-line)", color: "var(--accent)", fontSize: 12, fontFamily: "var(--mono)" }}>✓ 已儲存 · 下次配對自動帶這組權重</div>}
+      </div>
+
+      <div className="admin-card-actions">
+        <button className="admin-btn primary" onClick={handleSave}>儲存權重</button>
+        <button className="admin-btn" onClick={handleReset}>回 default</button>
+      </div>
+    </div>
+  );
+}
+
 // ---------- Main App ----------
 
 function AdminApp() {
-  const [tab, setTab] = useState("workers"); // workers | intakes | decisions
+  const [tab, setTab] = useState("workers"); // workers | intakes | decisions | settings
   const [workers, setWorkers] = useState([]);
   const [intakes, setIntakes] = useState([]);
   const [loading, setLoading] = useState({ workers: true, intakes: true });
@@ -389,6 +491,9 @@ function AdminApp() {
         <button className={"admin-tab " + (tab === "decisions" ? "active" : "")} onClick={() => setTab("decisions")}>
           Decisions History
         </button>
+        <button className={"admin-tab " + (tab === "settings" ? "active" : "")} onClick={() => setTab("settings")}>
+          ⚙ Settings
+        </button>
       </div>
 
       {actionError && <div className="admin-error">操作失敗：{actionError}</div>}
@@ -426,6 +531,8 @@ function AdminApp() {
       )}
 
       {tab === "decisions" && <DecisionsTab />}
+
+      {tab === "settings" && <SettingsTab />}
     </div>
   );
 }

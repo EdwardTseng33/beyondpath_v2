@@ -137,24 +137,77 @@ export function scoreMercyBoost(lastActive: string | undefined): number {
   return daysSince(lastActive) > 90 ? 10 : 0;
 }
 
+// 2026-05-21 · A3 5 維權重編輯介面 (Phase 0 ext)
+// admin 可在 Settings tab 改 weights · runMatch 時帶進 body · 不改 default
+export interface MatchWeights {
+  tier: number;       // default 25
+  capacity: number;   // default 20
+  domain: number;     // default 30
+  L_score: number;    // default 15
+  mercy: number;      // default 10
+}
+
+export const DEFAULT_WEIGHTS: MatchWeights = {
+  tier: 25,
+  capacity: 20,
+  domain: 30,
+  L_score: 15,
+  mercy: 10,
+};
+
+// Internal max caps · 跟各 scorer fn 的最大返回值對齊 (用於 rescale)
+const SCORE_CAPS: MatchWeights = {
+  tier: 25,
+  capacity: 20,
+  domain: 30,
+  L_score: 15,
+  mercy: 10,
+};
+
+function mergeWeights(override?: Partial<MatchWeights>): MatchWeights {
+  if (!override) return { ...DEFAULT_WEIGHTS };
+  return {
+    tier: typeof override.tier === "number" ? override.tier : DEFAULT_WEIGHTS.tier,
+    capacity: typeof override.capacity === "number" ? override.capacity : DEFAULT_WEIGHTS.capacity,
+    domain: typeof override.domain === "number" ? override.domain : DEFAULT_WEIGHTS.domain,
+    L_score: typeof override.L_score === "number" ? override.L_score : DEFAULT_WEIGHTS.L_score,
+    mercy: typeof override.mercy === "number" ? override.mercy : DEFAULT_WEIGHTS.mercy,
+  };
+}
+
 export function calculateMatchScore(
   client: ClientIntakeForMatch,
   worker: UnifiedWorker,
+  weights?: Partial<MatchWeights>,
 ): { score: number; breakdown: ScoreBreakdown } {
-  const tier_match = scoreTierMatch(client.required_tier, worker.tier);
-  const capacity_match = scoreCapacity(worker.capacity, client.timeline);
-  const domain_match = scoreDomainMatch(
+  const w = mergeWeights(weights);
+  // Raw 各 scorer 返回 0..cap 範圍
+  const tier_raw = scoreTierMatch(client.required_tier, worker.tier);
+  const capacity_raw = scoreCapacity(worker.capacity, client.timeline);
+  const domain_raw = scoreDomainMatch(
     client.vertical,
     worker.verticals,
     client.tasks,
     worker.skill_matrix,
   );
-  const L_score_bonus = scoreLBonus(worker.L_score);
-  const mercy_boost = scoreMercyBoost(worker.last_active);
+  const L_raw = scoreLBonus(worker.L_score);
+  const mercy_raw = scoreMercyBoost(worker.last_active);
+  // Rescale: raw / default_cap * user_weight
+  const tier_match = (tier_raw / SCORE_CAPS.tier) * w.tier;
+  const capacity_match = (capacity_raw / SCORE_CAPS.capacity) * w.capacity;
+  const domain_match = (domain_raw / SCORE_CAPS.domain) * w.domain;
+  const L_score_bonus = (L_raw / SCORE_CAPS.L_score) * w.L_score;
+  const mercy_boost = SCORE_CAPS.mercy === 0 ? 0 : (mercy_raw / SCORE_CAPS.mercy) * w.mercy;
   const total = tier_match + capacity_match + domain_match + L_score_bonus + mercy_boost;
   return {
     score: Math.round(Math.min(100, total)),
-    breakdown: { tier_match, capacity_match, domain_match, L_score_bonus, mercy_boost },
+    breakdown: {
+      tier_match: Math.round(tier_match),
+      capacity_match: Math.round(capacity_match),
+      domain_match: Math.round(domain_match),
+      L_score_bonus: Math.round(L_score_bonus),
+      mercy_boost: Math.round(mercy_boost),
+    },
   };
 }
 
@@ -175,11 +228,12 @@ export function rankWorkers(
   client: ClientIntakeForMatch,
   workers: UnifiedWorker[],
   topN: number,
+  weights?: Partial<MatchWeights>,
 ): MatchResult[] {
   const limit = typeof topN === "number" && topN > 0 ? topN : 5;
   const results: MatchResult[] = [];
   for (const worker of workers) {
-    const { score, breakdown } = calculateMatchScore(client, worker);
+    const { score, breakdown } = calculateMatchScore(client, worker, weights);
     results.push({
       worker_id: worker.id,
       handle: worker.handle,

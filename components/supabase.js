@@ -337,6 +337,42 @@
   // POC 階段、無 auth gate · 不要在 robots.txt 揭露 admin.html
   // ============================================================
 
+  // 5 維權重 closure 常數 + helpers (2026-05-21 A3 · bpAdmin 內 reference)
+  const BP_DEFAULT_MATCH_WEIGHTS = { tier: 25, capacity: 20, domain: 30, L_score: 15, mercy: 10 };
+  const BP_LS_KEY_WEIGHTS = 'bp-admin-match-weights';
+  function bpGetMatchWeights() {
+    try {
+      const raw = localStorage.getItem(BP_LS_KEY_WEIGHTS);
+      if (!raw) return { ...BP_DEFAULT_MATCH_WEIGHTS };
+      const parsed = JSON.parse(raw);
+      return {
+        tier: typeof parsed.tier === 'number' ? parsed.tier : BP_DEFAULT_MATCH_WEIGHTS.tier,
+        capacity: typeof parsed.capacity === 'number' ? parsed.capacity : BP_DEFAULT_MATCH_WEIGHTS.capacity,
+        domain: typeof parsed.domain === 'number' ? parsed.domain : BP_DEFAULT_MATCH_WEIGHTS.domain,
+        L_score: typeof parsed.L_score === 'number' ? parsed.L_score : BP_DEFAULT_MATCH_WEIGHTS.L_score,
+        mercy: typeof parsed.mercy === 'number' ? parsed.mercy : BP_DEFAULT_MATCH_WEIGHTS.mercy,
+      };
+    } catch (e) {
+      return { ...BP_DEFAULT_MATCH_WEIGHTS };
+    }
+  }
+  function bpSetMatchWeights(w) {
+    try {
+      localStorage.setItem(BP_LS_KEY_WEIGHTS, JSON.stringify(w));
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: { message: e?.message || String(e) } };
+    }
+  }
+  function bpResetMatchWeights() {
+    try {
+      localStorage.removeItem(BP_LS_KEY_WEIGHTS);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: { message: e?.message || String(e) } };
+    }
+  }
+
   window.bpAdmin = {
     /**
      * List worker_applications by status (default: pending + tier_b + tier_b_plus)
@@ -429,13 +465,34 @@
     },
 
     /**
+     * 5 維權重 helpers · 2026-05-21 A3
+     * Per-admin localStorage · 跨 session 持久 · 不入 DB（單 admin POC 階段 OK · v2 升 DB-backed）
+     */
+    DEFAULT_MATCH_WEIGHTS: BP_DEFAULT_MATCH_WEIGHTS,
+    getMatchWeights: bpGetMatchWeights,
+    setMatchWeights: bpSetMatchWeights,
+    resetMatchWeights: bpResetMatchWeights,
+
+    /**
      * Trigger match-workers Edge Function for a client_intake (P1-3 · calcifer Q3 backend)
      * Returns Top 5 worker recommendations with score + breakdown.
+     * 2026-05-21 A3 · 自動帶 admin localStorage weights override（與 default 不同時）
      */
-    async runMatch(clientIntakeId) {
+    async runMatch(clientIntakeId, weightsOverride) {
       try {
         const { data: { session } } = await client.auth.getSession();
         const jwt = session?.access_token || SUPABASE_PUBLISHABLE_KEY;
+        // Build body · 若 caller 沒明顯 pass weights、用 localStorage 版本 override
+        const body = { client_intake_id: clientIntakeId };
+        const weights = weightsOverride || bpGetMatchWeights();
+        const d = BP_DEFAULT_MATCH_WEIGHTS;
+        // 只在 weights 跟 default 不一致時加 weights param（減少 payload）
+        const isDefault = weights.tier === d.tier &&
+                          weights.capacity === d.capacity &&
+                          weights.domain === d.domain &&
+                          weights.L_score === d.L_score &&
+                          weights.mercy === d.mercy;
+        if (!isDefault) body.weights = weights;
         const res = await fetch(SUPABASE_URL + '/functions/v1/match-workers', {
           method: 'POST',
           headers: {
@@ -443,7 +500,7 @@
             'Authorization': 'Bearer ' + jwt,
             'apikey': SUPABASE_PUBLISHABLE_KEY,
           },
-          body: JSON.stringify({ client_intake_id: clientIntakeId }),
+          body: JSON.stringify(body),
         });
         const data = await res.json();
         if (!res.ok) return { data: null, error: { message: data.message || data.error || ('HTTP ' + res.status) } };

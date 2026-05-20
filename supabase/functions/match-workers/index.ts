@@ -3,7 +3,7 @@
 // 2026-05-20 P1-3 calcifer
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
-import { rankWorkers, type ClientIntakeForMatch, type MatchResult } from "../_shared/match-algorithm.ts";
+import { rankWorkers, type ClientIntakeForMatch, type MatchResult, type MatchWeights } from "../_shared/match-algorithm.ts";
 import type { UnifiedWorker } from "../_shared/worker-schema.ts";
 import { VERTICAL_ADJACENCY } from "../_shared/vertical-adjacency.ts";
 
@@ -117,6 +117,7 @@ interface MatchRequestBody {
   client?: ClientIntakeForMatch;
   top_n?: number;
   persist?: boolean;
+  weights?: Partial<MatchWeights>;  // 2026-05-21 A3 · admin Settings tab override · 沒給用 default
 }
 
 serve(async function (req: Request) {
@@ -164,7 +165,7 @@ serve(async function (req: Request) {
     }
     const workers = await loadWorkerPool(client.vertical);
     const topN = typeof body.top_n === "number" && body.top_n > 0 ? body.top_n : 5;
-    const results = rankWorkers(client, workers, topN);
+    const results = rankWorkers(client, workers, topN, body.weights);
     let persisted = false;
     if (clientIntakeId && body.persist !== false) {
       persisted = await persistMatchResult(clientIntakeId, results);
