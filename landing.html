@@ -85,11 +85,11 @@
   .bp-disclaimer-top .close { background: transparent; border: 0; color: #fff8d4; font-size: 16px; cursor: pointer; padding: 4px 8px; opacity: 0.6; flex: 0 0 auto; }
   .bp-disclaimer-top .close:hover { opacity: 1; }
   @media (max-width: 768px) {
-    .bp-disclaimer-top { flex-wrap: wrap; padding: 6px 12px; gap: 6px 10px; font-size: 10.5px; }
+    .bp-disclaimer-top { flex-wrap: wrap; padding: 6px 12px; gap: 6px 10px; font-size: 12px; }
     .bp-disclaimer-top .icon { order: 1; }
-    .bp-disclaimer-top .label { order: 2; flex: 1 1 auto; min-width: 0; font-size: 10px; letter-spacing: 0.06em; word-break: break-word; }
-    .bp-disclaimer-top .close { order: 3; padding: 2px 6px; font-size: 14px; }
-    .bp-disclaimer-top .body { font-size: 10.5px; flex-basis: 100%; order: 4; line-height: 1.5; }
+    .bp-disclaimer-top .label { order: 2; flex: 1 1 auto; min-width: 0; font-size: 11.5px; letter-spacing: 0.06em; word-break: break-word; }
+    .bp-disclaimer-top .close { order: 3; padding: 10px 12px; font-size: 18px; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+    .bp-disclaimer-top .body { font-size: 12px; flex-basis: 100%; order: 4; line-height: 1.55; }
   }
   .bp-disclaimer-foot { flex: 0 0 auto; background: #050507; color: #6a6a6c; padding: 14px 18px; font: 500 11px/1.6 var(--mono); text-align: center; border-top: 1px solid rgba(255,255,255,0.04); }
   .bp-disclaimer-foot a { color: #9a9aa3; text-decoration: none; border-bottom: 1px solid rgba(199,232,74,0.3); padding-bottom: 1px; }
@@ -140,7 +140,7 @@
   .le-nav .actions { margin-left: auto; display: flex; gap: 12px; }
   .le-nav .btn-ghost { background: transparent; border: 1px solid var(--accent-line); color: var(--text); padding: 9px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; cursor: pointer; text-decoration: none; }
   .le-nav .btn-primary { background: var(--accent); border: 0; color: var(--bg); padding: 9px 18px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; font-weight: 700; cursor: pointer; text-decoration: none; }
-  @media (max-width: 900px) { .le-nav { padding: 12px 16px; gap: 8px; } .le-nav .links { display: none; } .le-nav .brand { font-size: 18px; } .le-nav .brand small { display: none; } .le-nav .btn-ghost { display: none; } .le-nav .btn-primary { padding: 8px 12px; font-size: 10px; } }
+  @media (max-width: 900px) { .le-nav { padding: 12px 16px; gap: 8px; } .le-nav .links { display: none; } .le-nav .brand { font-size: 18px; } .le-nav .brand small { display: none; } .le-nav .btn-ghost { display: none; } .le-nav .btn-primary { padding: 12px 16px; font-size: 11px; min-height: 44px; display: inline-flex; align-items: center; } }
 
   /* v0.3 sticky scrolled state */
   .le-nav { transition: padding 240ms ease, background 240ms ease, border-color 240ms ease; }
@@ -252,7 +252,7 @@
   .le-telemetry .cell:last-child { border-right: 0; }
   .le-telemetry .v { font-family: var(--sans); font-weight: 800; font-size: 46px; line-height: 1; letter-spacing: -0.04em; }
   .le-telemetry .l { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
-  @media (max-width: 900px) { .le-telemetry { grid-template-columns: repeat(2, 1fr); } .le-telemetry .cell { padding: 14px 12px; gap: 4px; } .le-telemetry .cell:nth-child(2) { border-right: 0; } .le-telemetry .cell:nth-child(1), .le-telemetry .cell:nth-child(2) { border-bottom: 1px solid var(--line); } .le-telemetry .v { font-size: 28px; } }
+  @media (max-width: 900px) { .le-telemetry { grid-template-columns: repeat(2, 1fr); } .le-telemetry .cell { padding: 14px 12px; gap: 4px; } .le-telemetry .cell:nth-child(2) { border-right: 0; } .le-telemetry .cell:nth-child(1), .le-telemetry .cell:nth-child(2) { border-bottom: 1px solid var(--line); } .le-telemetry .v { font-size: 28px; } .le-telemetry .l { font-size: 11px; letter-spacing: 0.18em; } }
 
   /* === Telemetry LIVE/TARGET badge === */
   .le-telemetry .cell { position: relative; }
@@ -486,7 +486,7 @@
 
     /* le-staticbar · 4 item 改 2x2 grid 不橫滑 */
     .le-staticbar { display: grid !important; grid-template-columns: 1fr 1fr; gap: 0; overflow: hidden; white-space: normal; }
-    .le-staticbar .item { padding: 10px 12px; font-size: 9.5px; letter-spacing: 0.1em; flex: unset; gap: 8px; border-bottom: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); }
+    .le-staticbar .item { padding: 12px 12px; font-size: 11px; letter-spacing: 0.08em; flex: unset; gap: 8px; border-bottom: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); }
     .le-staticbar .item:nth-child(even) { border-right: none; }
     .le-staticbar .item:nth-last-child(-n+2) { border-bottom: none; }
 
@@ -512,8 +512,10 @@
     /* Panel padding 收 */
     .bp-panel-b { padding: 16px !important; }
 
-    /* Footer-nav 收 padding */
+    /* Footer-nav 收 padding + 補觸控區（2026-05-20 mobile audit Wave A） */
     .le-footer-nav { padding-left: 16px !important; padding-right: 16px !important; }
+    .le-footer-nav ul { gap: 4px !important; }
+    .le-footer-nav ul li a { padding: 12px 0; display: inline-flex; align-items: center; min-height: 44px; }
 
     /* 圖片防溢 */
     img, svg, canvas { max-width: 100%; height: auto; }
@@ -1544,7 +1546,7 @@ function EServicesPricing() {
         <div style={{ marginTop: 32, padding: "18px 20px", border: "1px dashed rgba(199,232,74,0.3)", background: "rgba(199,232,74,0.03)", display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center", justifyContent: "space-between" }}>
           <div className="le-zh" style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.7, flex: 1, minWidth: 280 }}>
             <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>◆ DATA HANDLING · 你的資料怎麼處理</span>
-            送出的 brief / email / portfolio 進 BeyondPath 後台、僅平台團隊 + AI 初審工具看得到、不公開、不轉售。Early Beta 階段資料保留期最長 12 個月、可隨時要求刪除。
+            送出的 brief / email / portfolio 進 BeyondPath 後台、僅平台團隊 + AI 初審工具看得到、不公開、不轉售。資料保留期視業務需要而定（用於未來案件配對與 retainer 邀請）、可隨時寄信到 <a href="mailto:hello@beyondpath.tw?subject=BeyondPath%20%E5%88%AA%E9%99%A4%E8%B3%87%E6%96%99%E8%AB%8B%E6%B1%82" style={{ color: "var(--accent)", borderBottom: "1px solid var(--accent-line)" }}>hello@beyondpath.tw</a> 要求刪除你的資料。
           </div>
           <a href="legal/privacy.html" style={{ display: "inline-flex", alignItems: "center", padding: "10px 16px", border: "1px solid var(--accent-line)", color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.12em", textDecoration: "none", textTransform: "uppercase" }}>查看完整隱私政策 →</a>
         </div>

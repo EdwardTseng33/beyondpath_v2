@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "beyondpath-static",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "5859"],
+      "port": 5859
+    }
+  ]
+}
