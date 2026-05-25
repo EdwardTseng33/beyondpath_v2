@@ -1685,60 +1685,60 @@ function EStory() {
           {/* === CLIENT 卡 · 順序：1降本 2增效 3低風險 4品質保 === */}
           <div style={{ padding: "26px 28px", border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)", borderRadius: 4 }}>
             <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase", fontWeight: 700, marginBottom: 14 }}>
-              ▸ 如果你是品牌主
+              {t("story.client_eyebrow", "▸ 如果你是品牌主")}
             </div>
             <div className="le-zh" style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.7, marginBottom: 18, wordBreak: "keep-all", textWrap: "pretty" }}>
-              你的痛 · 你不是沒有預算，也不是不想導 AI。你只是怕錢花下去，最後還是自己在教、在改、在收拾。
+              {t("story.client_pain", "你的痛 · 你不是沒有預算，也不是不想導 AI。你只是怕錢花下去，最後還是自己在教、在改、在收拾。")}
             </div>
             <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", color: "var(--accent)", fontWeight: 700, marginBottom: 12 }}>
-              你來 BeyondPath 拿到 →
+              {t("story.client_get_label", "你來 BeyondPath 拿到 →")}
             </div>
             <div className="le-zh" style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 15, color: "var(--text)", lineHeight: 1.55, wordBreak: "keep-all", textWrap: "pretty" }}>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>① 先用首案驗證合作</b> · 先從 <b style={{ color: "var(--accent)" }}>NT$ 50-100K</b> 交付專案開始，不需要一次簽長約。
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.client_pt1_bold", "① 先用首案驗證合作")}</b>{t("story.client_pt1_body", " · 先從 ")}<b style={{ color: "var(--accent)" }}>{t("story.client_pt1_em", "NT$ 50-100K")}</b>{t("story.client_pt1_tail", " 交付專案開始，不需要一次簽長約。")}
               </div>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>② 少管理不確定性</b> · 留下需求、<b style={{ color: "var(--accent)" }}>24 小時</b>先知道候選方向與下一步，不用自己發 30 封訊息。
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.client_pt2_bold", "② 少管理不確定性")}</b>{t("story.client_pt2_body", " · 留下需求、")}<b style={{ color: "var(--accent)" }}>{t("story.client_pt2_em", "24 小時")}</b>{t("story.client_pt2_tail", "先知道候選方向與下一步，不用自己發 30 封訊息。")}
               </div>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>③ AI 先幫你判斷</b> · POC 階段先由 AI 拆範圍、看候選方向，再由人工覆核交付條件。
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.client_pt3_bold", "③ AI 先幫你判斷")}</b>{t("story.client_pt3_tail", " · POC 階段先由 AI 拆範圍、看候選方向，再由人工覆核交付條件。")}
               </div>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>④ 交付可驗收</b> · 每案先定 milestone 與交付標準，避免「做了很多但不知道算不算完成」。
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.client_pt4_bold", "④ 交付可驗收")}</b>{t("story.client_pt4_tail", " · 每案先定 milestone 與交付標準，避免「做了很多但不知道算不算完成」。")}
               </div>
             </div>
             <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.14em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
-              ▸ 取代「朋友介紹 + 月費代理 + Fiverr」
+              {t("story.client_replace", "▸ 取代「朋友介紹 + 月費代理 + Fiverr」")}
             </div>
           </div>
 
           {/* === WORKER 卡 · 順序：1案源 2收入 3個人品牌 4AI補貼 === */}
           <div style={{ padding: "26px 28px", border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)", borderRadius: 4 }}>
             <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase", fontWeight: 700, marginBottom: 14 }}>
-              ▸ 如果你是接案者
+              {t("story.worker_eyebrow", "▸ 如果你是接案者")}
             </div>
             <div className="le-zh" style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.7, marginBottom: 18, wordBreak: "keep-all", textWrap: "pretty" }}>
-              你的痛 · 你已經能用 AI 做出成果，但市場還是把你拿去跟普通接案者比價。客戶看不到你的 workflow、判斷力與交付品質。
+              {t("story.worker_pain", "你的痛 · 你已經能用 AI 做出成果，但市場還是把你拿去跟普通接案者比價。客戶看不到你的 workflow、判斷力與交付品質。")}
             </div>
             <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", color: "var(--accent)", fontWeight: 700, marginBottom: 12 }}>
-              你來 BeyondPath 拿到 →
+              {t("story.worker_get_label", "你來 BeyondPath 拿到 →")}
             </div>
             <div className="le-zh" style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 15, color: "var(--text)", lineHeight: 1.55, wordBreak: "keep-all", textWrap: "pretty" }}>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>① 進入首案池</b> · 通過認證後進入 beta 候選名單，第一批案件優先從名單媒合。
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.worker_pt1_bold", "① 進入首案池")}</b>{t("story.worker_pt1_tail", " · 通過認證後進入 beta 候選名單，第一批案件優先從名單媒合。")}
               </div>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>② 不靠低價比稿</b> · beta 前期逐案確認報價與分潤，先讓好交付被看見，而不是比誰便宜。
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.worker_pt2_bold", "② 不靠低價比稿")}</b>{t("story.worker_pt2_tail", " · beta 前期逐案確認報價與分潤，先讓好交付被看見，而不是比誰便宜。")}
               </div>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>③ 讓客戶看懂你貴在哪</b> · 案例、工具流、交付品質會被整理成 Tier 證據。
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.worker_pt3_bold", "③ 讓客戶看懂你貴在哪")}</b>{t("story.worker_pt3_tail", " · 案例、工具流、交付品質會被整理成 Tier 證據。")}
               </div>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>④ 累積下一案的信任</b> · 每次結案評價都會累積成下一次推薦理由，而不是每次從零開始。
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.worker_pt4_bold", "④ 累積下一案的信任")}</b>{t("story.worker_pt4_tail", " · 每次結案評價都會累積成下一次推薦理由，而不是每次從零開始。")}
               </div>
             </div>
             <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.14em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
-              ▸ 取代「跑案 + 比稿 + 接不到案」
+              {t("story.worker_replace", "▸ 取代「跑案 + 比稿 + 接不到案」")}
             </div>
           </div>
         </div>
