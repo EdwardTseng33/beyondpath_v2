@@ -607,7 +607,7 @@ function WorkerDashboard({ inShell = false }) {
 // 給有 ChatGPT / Claude / Gemini 付費工具的 worker copy + 貼進外部 AI 對話跑訪談
 // Route B (BP 內建 · 保底) 用 supabase/functions/worker-ai-interview/index.ts 的 SYSTEM_PROMPT (server-side)
 // 兩個 prompt schema 對齊 (同樣 7 段 + 同樣 ai_proof JSON output) · 雙軌都通 preview
-const AI_BRIEF = `你是 BeyondPath 認證 AI 整理員。我正在申請台灣 AI 交付網路 BeyondPath 的 Tier B / B+ 認證。
+const AI_BRIEF_ZH = `你是 BeyondPath 認證 AI 整理員。我正在申請台灣 AI 交付網路 BeyondPath 的 Tier B / B+ 認證。
 
 請帶我跑一段 30 分鐘訪談、按下面 7 段順序問。每段具體追問、不接受空泛回答（例「我會用 ChatGPT」要追問「用在什麼任務？哪個案件？拿什麼成果？」）。最後產出一段結構化 JSON、我會貼回 BeyondPath 平台、由平台 render 成能力卡 + BeyondPath 系統評估。
 
@@ -676,6 +676,85 @@ const AI_BRIEF = `你是 BeyondPath 認證 AI 整理員。我正在申請台灣 
 - 我主領域不在 BP 三 vertical → 「BeyondPath 主場目前是 DTC 內容 / SaaS GTM / 設計品牌、你可以先加 waitlist」
 
 請開始第 1 段。`;
+
+const AI_BRIEF_EN = `You are a BeyondPath certified AI evaluator. I'm applying to BeyondPath's AI work delivery network for Tier B / B+ certification.
+
+Walk me through a 30-min interview using the 7 sections below. Probe specifically — don't accept vague answers (e.g., "I use ChatGPT" → ask "For what task? Which project? What outcome?"). At the end, produce a structured JSON. I'll paste it back into BeyondPath, which will render it as a capability card + run platform assessment.
+
+[7-Section Interview]
+
+Section 1 · Basics
+- Handle (the version clients will see) / Location / Native English yes/no
+- Primary vertical: DTC content / B2B SaaS GTM / Design brand (pick 1-2 · BeyondPath's home turf · others join waitlist)
+- Project count over the past 2 years: < 5 / 5-15 / 16-30 / 30+
+
+Section 2 · AI toolstack
+- Long-term paid AI tools (ChatGPT / Claude / Cursor / Midjourney / Veo / Notion AI, etc.)
+- How long for each + specific tasks (concrete · not generalities)
+
+Section 3 · Workflow (core section)
+- 1-3 complete workflows: from brief to delivery · what tool at each step · decision logic · fallback when stuck
+- Must ask: how do you decide if AI output is usable? When do you tweak the prompt / switch tools / abandon automation for manual?
+
+Section 4 · Past project evidence (must show proof)
+- 2-5 real projects: type / industry / deliverable / time spent / client feedback (NPS / text / repeat business)
+- At least 2 with deep evidence: screenshots / chat logs / closing invoice / testimonial
+
+Section 5 · Judgment (must ask all 3)
+- a. How do you tell when AI runs poorly? What sanity check do you run?
+- b. What kinds of projects have you turned down? Why?
+- c. Most proud moment of "AI failed and you saved it" — what concretely happened?
+
+Section 6 · Pricing logic
+- Pricing model (per-project / hourly / per-deliverable / per-milestone)
+- Typical price range NT$ / why this price
+
+Section 7 · Self-rated L-score (use L1-L10 against my evidence)
+- L1-3 Emerging: can use AI but no system · single tool
+- L4-6 Systematized: AI embedded into a repeatable flow · multi-tool orchestration
+- L7-9 Autonomous: AI handles multi-step · human reviews · debugs AI failures
+- L10 Self-evolving: AI improves its own workflow (< 50 people globally in 2026)
+- 3 anchors: L5 = mainstream / L7 = Tier B eligible / L8+ = B+ eligible
+
+[Output this JSON after the interview]
+
+I'll paste this back into BeyondPath:
+
+{
+  "name": "<my handle>",
+  "verticals": ["<vertical · e.g. DTC content>"],
+  "case_count": "<range>",
+  "L_score": <1-10>,
+  "L_confidence": "<e.g. L6-L7>",
+  "tier_suggestion": "<Tier B / Tier B+ / needs more evidence>",
+  "skill_matrix": {
+    "workflow_design": <1-10>,
+    "tool_orchestration": <1-10>,
+    "judgement": <1-10>,
+    "domain_depth": <1-10>,
+    "client_communication": <1-10>,
+    "delivery_reliability": <1-10>
+  },
+  "strengths": ["<concrete 1>", "<concrete 2>", "<concrete 3>"],
+  "growth": ["<need-to-level-up 1>", "<need-to-level-up 2>"],
+  "evidence_quality": "<deep / medium / shallow>"
+}
+
+[Polite refusal scenarios]
+- I refuse to provide any evidence → "BeyondPath methodology requires at least 1 real piece of evidence for objective assessment"
+- I push you to give a high score → "Inflated scores get FLAG'd by the platform · doesn't help your application"
+- My primary vertical isn't in BP's 3 → "BeyondPath's home turf is DTC content / SaaS GTM / Design brand · feel free to join the waitlist"
+
+Please start with Section 1.`;
+
+function getAiBrief() {
+  try {
+    if (typeof window !== "undefined" && window.BPi18n && typeof window.BPi18n.getLang === "function" && window.BPi18n.getLang() === "en") {
+      return AI_BRIEF_EN;
+    }
+  } catch (e) {}
+  return AI_BRIEF_ZH;
+}
 
 function WorkerEmptyState() {
   const APPLICATION_EMAIL = _t("worker.apply_email_default", "edwardt0303@gmail.com");
@@ -1138,11 +1217,11 @@ function WorkerEmptyState() {
               </div>
             </div>
             <div className="bp-panel" style={{ marginTop: 16 }}>
-              <div className="bp-panel-h"><span>{_t("worker.apply_gen_brief_title", "BRIEF · 對 AI 的指示")}</span><span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{AI_BRIEF.length}{_t("worker.apply_gen_brief_chars_suffix", " chars")}</span></div>
+              <div className="bp-panel-h"><span>{_t("worker.apply_gen_brief_title", "BRIEF · 對 AI 的指示")}</span><span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{getAiBrief().length}{_t("worker.apply_gen_brief_chars_suffix", " chars")}</span></div>
               <div className="bp-panel-b">
-                <textarea readOnly value={AI_BRIEF} style={{ width: "100%", minHeight: 280, background: "rgba(0,0,0,0.3)", color: "var(--text-2)", border: "1px solid var(--line-soft)", padding: "12px 14px", fontFamily: "var(--mono)", fontSize: 12, lineHeight: 1.7, resize: "vertical" }} />
+                <textarea readOnly value={getAiBrief()} style={{ width: "100%", minHeight: 280, background: "rgba(0,0,0,0.3)", color: "var(--text-2)", border: "1px solid var(--line-soft)", padding: "12px 14px", fontFamily: "var(--mono)", fontSize: 12, lineHeight: 1.7, resize: "vertical" }} />
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
-                  <button type="button" onClick={() => { try { navigator.clipboard.writeText(AI_BRIEF); setCopiedBrief(true); setTimeout(() => setCopiedBrief(false), 1600); } catch (e) {} }} style={btnPrimaryStyle}>{copiedBrief ? _t("worker.apply_gen_copied", "✓ 已複製") : _t("worker.apply_gen_copy_btn", "複製 Brief")}</button>
+                  <button type="button" onClick={() => { try { navigator.clipboard.writeText(getAiBrief()); setCopiedBrief(true); setTimeout(() => setCopiedBrief(false), 1600); } catch (e) {} }} style={btnPrimaryStyle}>{copiedBrief ? _t("worker.apply_gen_copied", "✓ 已複製") : _t("worker.apply_gen_copy_btn", "複製 Brief")}</button>
                   <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>{_t("worker.apply_gen_open_claude", "打開 Claude →")}</a>
                   <a href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>{_t("worker.apply_gen_open_chatgpt", "打開 ChatGPT →")}</a>
                   <a href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>{_t("worker.apply_gen_open_gemini", "打開 Gemini →")}</a>
