@@ -290,7 +290,7 @@
   .le-h2 { font-family: var(--zh); font-weight: 800; font-size: 72px; margin: 0 0 48px; line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; word-break: keep-all; }
   @media (max-width: 1200px) { .le-h2 { font-size: 56px; } }
   @media (max-width: 900px) { .le-h2 { font-size: 36px; margin-bottom: 24px; line-height: 1.18; } }
-  @media (max-width: 900px) { #trust .le-h2 { font-size: 32px; line-height: 1.25; } #network .le-h2 { font-size: 24px; line-height: 1.25; word-break: keep-all; overflow-wrap: break-word; text-wrap: balance; } }
+  @media (max-width: 900px) { #trust .le-h2 { font-size: 28px; line-height: 1.28; word-break: keep-all; overflow-wrap: break-word; text-wrap: balance; } #network .le-h2 { font-size: 24px; line-height: 1.25; word-break: keep-all; overflow-wrap: break-word; text-wrap: balance; } }
 
   /* ========= Trust strip · 5 信號 ========= */
   .le-trust-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 28px; }
@@ -990,39 +990,10 @@ function EHero() {
   );
 }
 
-const BETA_USE_CASES = [
-  {
-    who: "DTC 品牌 / 電商品牌",
-    job: "AI 內容產線與商品頁素材",
-    deliver: "短影音腳本、社群素材、EDM、商品頁文案",
-    budget: "NT$50K-100K",
-    time: "2-6 週"
-  },
-  {
-    who: "設計工作室 / 品牌團隊",
-    job: "品牌 DNA × AI 視覺系統",
-    deliver: "視覺模板、Prompt spec、素材規格、交付檢核表",
-    budget: "NT$60K-120K",
-    time: "3-8 週"
-  },
-  {
-    who: "中小企業 / 小型營運團隊",
-    job: "官網改版與內部流程自動化",
-    deliver: "Landing page、客服 FAQ、自動化表單與 SOP",
-    budget: "NT$50K-150K",
-    time: "3-8 週"
-  },
-  {
-    who: "B2B SaaS / 顧問型服務",
-    job: "GTM 內容與銷售素材",
-    deliver: "Sales deck、demo script、案例頁、名單整理流程",
-    budget: "NT$50K-120K",
-    time: "2-6 週"
-  }
-];
-
+// v0.5.2 Step 2 i18n · BETA_USE_CASES 改從 dict 取 (usecases.cases · 4 item × 5 field)
 function EUseCases() {
   useLangRerender();
+  const cases = t("usecases.cases", []);
   return (
     <section className="le-section" id="beta-use-cases" style={{ paddingTop: 72, paddingBottom: 72 }}>
       <div className="inner">
@@ -1032,7 +1003,7 @@ function EUseCases() {
           {t("usecases.intro", "BeyondPath beta 先收「範圍清楚、交付可驗收、用 AI 能明顯加速」的交付專案。你不用先懂工具，只要知道你希望交出什麼結果。")}
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
-          {BETA_USE_CASES.map((c, i) => (
+          {cases.map((c, i) => (
             <article key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--line)", padding: "24px 22px", minHeight: 260, display: "flex", flexDirection: "column", gap: 12 }}>
               <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase" }}>CASE 0{i + 1}</div>
               <div className="le-zh" style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.5 }}>{c.who}</div>
@@ -1040,11 +1011,11 @@ function EUseCases() {
               <div className="le-zh" style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.65, flex: 1 }}>{c.deliver}</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, paddingTop: 12, borderTop: "1px dashed var(--line-soft)" }}>
                 <div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.12em", color: "var(--muted)", textTransform: "uppercase" }}>BUDGET</div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.12em", color: "var(--muted)", textTransform: "uppercase" }}>{t("usecases.label_budget", "BUDGET")}</div>
                   <div style={{ fontFamily: "var(--mono)", fontSize: 13, color: "var(--accent)", marginTop: 4 }}>{c.budget}</div>
                 </div>
                 <div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.12em", color: "var(--muted)", textTransform: "uppercase" }}>TIMELINE</div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.12em", color: "var(--muted)", textTransform: "uppercase" }}>{t("usecases.label_timeline", "TIMELINE")}</div>
                   <div style={{ fontFamily: "var(--mono)", fontSize: 13, color: "var(--text)", marginTop: 4 }}>{c.time}</div>
                 </div>
               </div>
@@ -1088,14 +1059,10 @@ function ETrustStrip() {
   );
 }
 
-// Problem · 4 path
-const PROBLEMS = [
-  { lbl: "ANXIETY 1 · 發案方", title: "不知道誰真的能交付", pain: "每個人都說自己會 AI，但你不知道他是會 demo、會做圖，還是真的能把成果交出來。", fix: "BeyondPath: 用 AI 初審、作品證據與候選理由，先把能力翻譯成可判斷的交付風險。" },
-  { lbl: "ANXIETY 2 · 接案方", title: "不知道自己如何被看見", pain: "你已經有 AI workflow，但市場還是把你放回低價比稿與人脈介紹裡。", fix: "BeyondPath: 把作品、工具流、交付品質整理成認證化證據，讓好能力有更公平的入口。" },
-  { lbl: "ANXIETY 3 · 雙邊", title: "不知道什麼算完成", pain: "AI 專案最可怕的不是開始，而是做了很多、改了很久，最後沒有人說得清楚算不算交付。", fix: "BeyondPath: 開案前先拆 milestone、交付物與驗收標準，讓合作從第一天就有共同規則。" }
-];
+// Problem · 4 path · v0.5.2 Step 2 i18n · PROBLEMS 改從 dict 取 (problem.items)
 function EProblem() {
   useLangRerender();
+  const problems = t("problem.items", []);
   return (
     <section className="le-section" id="problem">
       <div className="inner">
@@ -1105,13 +1072,13 @@ function EProblem() {
           {t("problem.intro", "發案方怕找錯人、押錯案、看不懂成果；接案方怕好能力被拿去跟低價模板比較。BeyondPath 要處理的不是工具缺口，而是 AI 工作網路裡的焦慮、不安與不確定性。")}
         </p>
         <div className="le-engines-grid le-problem-grid">
-          {PROBLEMS.map((p, i) => (
+          {problems.map((p, i) => (
             <article key={i} className="le-engine-card">
               <div className="n" style={{ color: "var(--warn)" }}>{p.lbl}</div>
               <div className="zh le-zh" style={{ fontSize: 22 }}>{p.title}</div>
               <div className="desc le-zh"><b style={{ color: "var(--warn)" }}>{p.pain}</b></div>
               <div style={{ paddingTop: 14, borderTop: "1px dashed var(--line-soft)", marginTop: "auto" }}>
-                <div className="n" style={{ color: "var(--accent)", marginBottom: 8 }}>→ BeyondPath 怎麼把它變成秩序</div>
+                <div className="n" style={{ color: "var(--accent)", marginBottom: 8 }}>{t("problem.fix_label", "→ BeyondPath 怎麼把它變成秩序")}</div>
                 <div className="desc le-zh">{p.fix}</div>
               </div>
             </article>
@@ -1152,60 +1119,30 @@ function EManifesto() {
   );
 }
 
-// Engines · 6 (v0.4.6 加「你因此 →」用戶利益句 · 蕪菁頭 must-fix #2)
-const ENGINES = [
-  { n: "01", en: "AI BRIEF PARSER", zh: "Brief 拆解引擎", d: "把一段中文需求拆成目標、交付物、時程、預算與驗收點。POC 階段會先由團隊覆核。", you: "你因此 → 不用先會寫專業 brief，也能把案子說清楚", m: "BriefMock", staticMock: null },
-  { n: "02", en: "TIER MATCH ENGINE", zh: "Tier 配對引擎", d: "根據領域、作品、工具流與交付經驗推薦 Top 3，並附上為什麼適合。", you: "你因此 → 不發 30 封信，24 小時內先知道該找哪類人", m: null, staticMock: { metric: "Top 3", label: "MATCH · TIER A+ / A / B" } },
-  { n: "03", en: "SCOPE + MILESTONE", zh: "範圍 × 驗收點", d: "POC 階段先確認交付物、時間、風險與驗收標準；付款與合約先由雙方自行處理。", you: "你因此 → 開案前先知道什麼算完成，不會把合作押在口頭共識上", m: "ContractMock", staticMock: null },
-  { n: "04", en: "PROJECT DASHBOARD", zh: "案件儀表板", d: "把進度、版本、交付物與待確認事項集中，避免案子散在 email、LINE 與雲端檔案裡。", you: "你因此 → 知道現在卡在哪，不用一直追問", m: null, staticMock: { metric: "M1-M5", label: "MILESTONE · AUDIT-READY" } },
-  { n: "05", en: "NPS FLYWHEEL", zh: "NPS 雙邊飛輪", d: "每次結案都留下客戶回饋、交付品質與合作紀錄，逐步形成推薦權重。", you: "你因此 → 好的工作者會被看見，不只靠人脈與聲量", m: null, staticMock: { metric: "+10", label: "ANTI-MATTHEW · 5-DIM NPS" } },
-  { n: "06", en: "RETAINER ENGINE", zh: "Retainer 引擎", d: "如果第一案合作順利，再把一次性需求整理成可續作的月度合作提案。", you: "你因此 → 合作好的人可以接著做，不用每次重新找人", m: null, staticMock: { metric: "M+1", label: "AUTO-PROPOSAL · MONTHLY" } }
+// Engines · 6 · v0.5.2 Step 2 i18n · 視覺資料 (m/metric) 留 by-index、文字資料走 dict (engines.items)
+// VISUAL_META: m = mock component ref · metric = 純數字徽章 · static_label 從 dict 取 (engines.items[i].static_label)
+const ENGINES_VISUAL = [
+  { m: "BriefMock",    metric: null  },
+  { m: null,           metric: "Top 3" },
+  { m: "ContractMock", metric: null  },
+  { m: null,           metric: "M1-M5" },
+  { m: null,           metric: "+10"  },
+  { m: null,           metric: "M+1"  }
 ];
-// v0.4.8 wave 5 #9 · Case Study section · 霍爾最高 ROI · 用 prototype 既有 LUMINE / HANA / Plant by Plant sample data
-const CASE_STUDIES = [
-  {
-    brand: "LUMINE",
-    sector: "DTC 保養品",
-    brief: "9 月底上新「夜修護」3 SKU、需要 2 版主視覺 KV + 6 支 IG Reels 腳本 + 3 篇官網 + EDM 文案、排程到 Meta + LINE。",
-    matched: "Tier A+ 領域專家 · Visual KV + Brand DNA × AI · 配對分數 92 / 100",
-    delivered: "2 KV × 4 alts each · 4 週交付 · NPS 4.94 / 5",
-    proof: "交付證據：brief、版本紀錄、驗收清單、NPS 4.94 / 5",
-    state: "進入 retainer · 持續 Q1 2027 上新檔",
-    badge: "已結案 · NPS 4.94"
-  },
-  {
-    brand: "HANA 香氛",
-    sector: "spring restage",
-    brief: "新香 line 2 個 SKU 春季視覺重新整理、4 週內交 2 版 KV + 8 個 social asset。",
-    matched: "同一位 Tier A+ 領域專家（已跑 LUMINE retainer）· capacity 75% · 平台優先推薦",
-    delivered: "2 KV × 4 alts · wk 2 / 4 · 進度 50%",
-    proof: "交付證據：wk 2 版本上傳、mid review 已完成 2/4",
-    state: "● 進行中 · ON TRACK",
-    badge: "進行中 · WK 2 / 4"
-  },
-  {
-    brand: "Plant by Plant",
-    sector: "包裝設計",
-    brief: "植物保養 line 包裝重設、6 週內交 brand DNA spec + 6 個 SKU packaging dieline。",
-    matched: "Tier A+ Brand DNA × AI 領域 · 配對分數 88 / 100",
-    delivered: "6 SKU dieline · brand spec 32 頁 · final review 階段",
-    proof: "交付證據：6 SKU dieline、brand spec 32 頁、final review",
-    state: "● final review · WK 6 / 6",
-    badge: "WK 6 / 6 · FINAL REVIEW"
-  }
-];
+// v0.4.8 wave 5 #9 · Case Study section · v0.5.2 Step 2 i18n · CASE_STUDIES 改 dict (cases.items)
 function ECaseStudies() {
   useLangRerender();
+  const items = t("cases.items", []);
   return (
     <section className="le-section" id="cases">
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("cases.eyebrow", "◆ CASE STUDIES · 真實案件實錄")}</div>
         <h2 className="le-h2">{t("cases.headline_part1", "看 BeyondPath 怎麼")}<span className="le-acc">{t("cases.headline_em", "真的在跑")}</span>{t("cases.headline_part2", "。")}</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
-          3 個 case 為 BeyondPath 早期合作案例樣本（DTC 領域）——展示 brief → 配對 → 交付 → 驗收紀錄的真實樣態。<span style={{ color: "var(--muted)", fontSize: 14 }}>（其他 14 領域案例累積中 · 想看你領域範例請<a href="app.html?role=client&step=0" style={{ color: "var(--accent)" }}>填 brief</a>、實際配對方案 24h 內 email）</span>
+          {t("cases.intro_before", "3 個 case 為 BeyondPath 早期合作案例樣本（DTC 領域）——展示 brief → 配對 → 交付 → 驗收紀錄的真實樣態。")}<span style={{ color: "var(--muted)", fontSize: 14 }}>{t("cases.intro_paren_before", "（其他 14 領域案例累積中 · 想看你領域範例請")}<a href="app.html?role=client&step=0" style={{ color: "var(--accent)" }}>{t("cases.intro_paren_link", "填 brief")}</a>{t("cases.intro_paren_after", "、實際配對方案 24h 內 email）")}</span>
         </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
-          {CASE_STUDIES.map((c, i) => (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
+          {items.map((c, i) => (
             <article key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--line)", padding: "20px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", borderBottom: "1px dashed var(--line-soft)", paddingBottom: 12 }}>
                 <div>
@@ -1215,19 +1152,19 @@ function ECaseStudies() {
                 <span style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em", color: "var(--accent)", padding: "3px 6px", border: "1px solid var(--accent-line)", borderRadius: 2, whiteSpace: "nowrap" }}>{c.badge}</span>
               </div>
               <div className="le-zh" style={{ fontSize: 13, lineHeight: 1.7, color: "var(--text-2)" }}>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>① BRIEF · 需求</b>{c.brief}</div>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>② MATCH · 配對</b>{c.matched}</div>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>③ DELIVER · 交付</b>{c.delivered}</div>
-                <div><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>④ ACCEPT · 驗收</b>{c.proof}</div>
+                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_brief", "① BRIEF · 需求")}</b>{c.brief}</div>
+                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_match", "② MATCH · 配對")}</b>{c.matched}</div>
+                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_deliver", "③ DELIVER · 交付")}</b>{c.delivered}</div>
+                <div><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_accept", "④ ACCEPT · 驗收")}</b>{c.proof}</div>
               </div>
               <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
-                ⑤ RESULT · {c.state}
+                {t("cases.label_result", "⑤ RESULT · ")}{c.state}
               </div>
             </article>
           ))}
         </div>
         <div style={{ marginTop: 28, textAlign: "center", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", color: "var(--muted)", textTransform: "uppercase" }}>
-          ▸ 想看更多？<a href="mailto:hello@beyondpath.tw?subject=BeyondPath%20%E6%A1%88%E4%BB%B6%E5%B7%A5%E4%BD%9C%E6%A8%A3%E5%93%81" style={{ color: "var(--accent)", textDecoration: "none", borderBottom: "1px solid var(--accent-line)" }}>寫信給 BeyondPath 拿工作樣品包</a>
+          {t("cases.footer_before", "▸ 想看更多？")}<a href="mailto:hello@beyondpath.tw?subject=BeyondPath%20%E6%A1%88%E4%BB%B6%E5%B7%A5%E4%BD%9C%E6%A8%A3%E5%93%81" style={{ color: "var(--accent)", textDecoration: "none", borderBottom: "1px solid var(--accent-line)" }}>{t("cases.footer_link", "寫信給 BeyondPath 拿工作樣品包")}</a>
         </div>
       </div>
     </section>
@@ -1247,44 +1184,43 @@ function EEpigraph() {
   );
 }
 
-// v0.4.9 wave 6 #4 · Engines + Protocol 合併（Edward 反饋「太長」· 6 卡 + Protocol 4-stage 1-row strip 收尾）
+// v0.4.9 wave 6 #4 · Engines + Protocol 合併 · v0.5.2 Step 2 i18n · engines.items + engines.stages 走 dict · 視覺 m/metric by index
 function EEnginesMerged() {
   useLangRerender();
-  const stages = [
-    { i: "I",   zh: t("engines.stages.0.zh", "進案"),   en: "INTAKE",    steps: t("engines.stages.0.steps", "01 選領域 · 02 上傳 brief · 03 確認期待") },
-    { i: "II",  zh: t("engines.stages.1.zh", "配對"),   en: "MATCH",     steps: t("engines.stages.1.steps", "04 AI 配對 · 05 接案") },
-    { i: "III", zh: t("engines.stages.2.zh", "執行"),   en: "EXECUTE",   steps: t("engines.stages.2.steps", "06 範圍確認 · 07 milestone · 08 案件儀表 · 09 交付驗收") },
-    { i: "IV",  zh: t("engines.stages.3.zh", "複利"),   en: "COMPOUND",  steps: t("engines.stages.3.steps", "10 雙邊 NPS · 11 Tier 飛輪 · 12 retainer 提案") },
-  ];
+  const engineItems = t("engines.items", []);
+  const stageItems = t("engines.stages", []);
   return (
     <section className="le-section" id="engines">
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("engines.eyebrow", "◆ HOW IT WORKS · 從模糊需求到可驗收交付")}</div>
         <h2 className="le-h2">{t("engines.headline_part1", "你只需要說結果。")}<br/>{t("engines.headline_part2", "我們把它變成可開案、可配對、可驗收。")}</h2>
         <div className="le-engines-grid">
-          {ENGINES.map((e) => (
-            <div key={e.n} className="le-engine-card">
-              {e.m
-                ? <EngineMock kind={e.m} />
-                : <div className="static-mock"><span className="metric">{e.staticMock.metric}</span>{e.staticMock.label}</div>}
-              <div className="n">{e.n} · ENG</div>
-              <div>
-                <div className="zh">{e.zh}</div>
-                <div className="en">{e.en}</div>
+          {engineItems.map((e, idx) => {
+            const v = ENGINES_VISUAL[idx] || { m: null, metric: null };
+            return (
+              <div key={e.n} className="le-engine-card">
+                {v.m
+                  ? <EngineMock kind={v.m} />
+                  : <div className="static-mock"><span className="metric">{v.metric}</span>{e.static_label}</div>}
+                <div className="n">{e.n} · ENG</div>
+                <div>
+                  <div className="zh">{e.zh}</div>
+                  <div className="en">{e.en}</div>
+                </div>
+                <div className="desc">{e.d}</div>
+                {e.you && (
+                  <div className="le-zh" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontSize: 13, color: "var(--accent)", fontWeight: 600, lineHeight: 1.5 }}>{e.you}</div>
+                )}
               </div>
-              <div className="desc">{e.d}</div>
-              {e.you && (
-                <div className="le-zh" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontSize: 13, color: "var(--accent)", fontWeight: 600, lineHeight: 1.5 }}>{e.you}</div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
         {/* Protocol 12 步壓成 4-stage 1-row strip · 在 Engines 段尾收束 */}
         <div style={{ marginTop: 32, padding: "20px 24px", border: "1px dashed var(--line)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24, position: "relative" }}>
           <div style={{ position: "absolute", top: -10, left: 18, background: "var(--bg)", padding: "0 12px", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.18em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
-            ◆ 12 步協定 · 4 階段
+            {t("engines.protocol_label", "◆ 12 步協定 · 4 階段")}
           </div>
-          {stages.map((s) => (
+          {stageItems.map((s) => (
             <div key={s.i} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               <div style={{ fontFamily: "var(--mono)", fontSize: 14, color: "var(--accent)", fontWeight: 700 }}>{s.i} · {s.en}</div>
               <div className="le-zh" style={{ fontSize: 13, color: "var(--text-2)", fontWeight: 600 }}>{s.zh}</div>
@@ -1298,28 +1234,33 @@ function EEnginesMerged() {
 }
 
 function EEngines() {
+  // v0.5.2 Step 2 i18n · legacy hidden component (display: none) · 同步改 dict 避免 ENGINES 漏 ref
+  const engineItems = t("engines.items", []);
   return (
     <section className="le-section" id="engines-old" style={{ display: "none" }}>
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ ENGINES · 平台幫你自動化的 6 件事</div>
         <h2 className="le-h2">六個引擎，把每個 <span className="le-acc">摩擦點</span> 都自動化。</h2>
         <div className="le-engines-grid">
-          {ENGINES.map((e) => (
-            <div key={e.n} className="le-engine-card">
-              {e.m
-                ? <EngineMock kind={e.m} />
-                : <div className="static-mock"><span className="metric">{e.staticMock.metric}</span>{e.staticMock.label}</div>}
-              <div className="n">{e.n} · ENG</div>
-              <div>
-                <div className="zh">{e.zh}</div>
-                <div className="en">{e.en}</div>
+          {engineItems.map((e, idx) => {
+            const v = ENGINES_VISUAL[idx] || { m: null, metric: null };
+            return (
+              <div key={e.n} className="le-engine-card">
+                {v.m
+                  ? <EngineMock kind={v.m} />
+                  : <div className="static-mock"><span className="metric">{v.metric}</span>{e.static_label}</div>}
+                <div className="n">{e.n} · ENG</div>
+                <div>
+                  <div className="zh">{e.zh}</div>
+                  <div className="en">{e.en}</div>
+                </div>
+                <div className="desc">{e.d}</div>
+                {e.you && (
+                  <div className="le-zh" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontSize: 13, color: "var(--accent)", fontWeight: 600, lineHeight: 1.5 }}>{e.you}</div>
+                )}
               </div>
-              <div className="desc">{e.d}</div>
-              {e.you && (
-                <div className="le-zh" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontSize: 13, color: "var(--accent)", fontWeight: 600, lineHeight: 1.5 }}>{e.you}</div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -1370,16 +1311,11 @@ function EProtocol() {
   );
 }
 
-// Tier · orbital + ladder · BP 真數值
-const TIERS = [
-  { id: "S",  zh: "典範",   sub: "PARAGON · 跨領域 5+ · NPS ≥ 4.7",   stat: "10+ cases · NT$ 400K+", color: "var(--accent)" },
-  { id: "A+", zh: "領域專家", sub: "MASTER · 30+ 案 · 領域 NPS ≥ 4.5", stat: "30+ cases · NT$ 220K", color: "var(--accent-dim)" },
-  { id: "A",  zh: "資深",   sub: "PRO · 30+ 案 · 客戶推薦 ≥ 3",       stat: "30+ cases · NT$ 145K", color: "var(--text)" },
-  { id: "B",  zh: "認證入門", sub: "ENTRY · 通過 4 階段認證",          stat: "5-30 cases · NT$ 78K", color: "var(--muted)" },
-  { id: "C",  zh: "受訓",   sub: "TRAINEE · 申請中 / 補件",            stat: "0-5 cases · —", color: "var(--muted-2)" }
-];
+// Tier · v0.5.2 Step 2 i18n · TIERS 改 dict (tier.items) · color by index · 內層 map 變數從 t 改 row (避免遮蔽外層 t() helper)
+const TIER_COLORS = ["var(--accent)", "var(--accent-dim)", "var(--text)", "var(--muted)", "var(--muted-2)"];
 function ETier() {
   useLangRerender();
+  const items = t("tier.items", []);
   return (
     <section className="le-section" id="tier">
       <div className="inner">
@@ -1389,26 +1325,29 @@ function ETier() {
           {t("tier.intro", "Tier 升降基於結案 NPS、領域認證、客戶推薦 + 反馬太 +10（3 個月內無接案保留 slot）。worker 看得到「升級還差什麼」、client 看得到「這個 worker 為什麼貴」。")}
         </p>
         <div className="le-tier-ladder le-tier-ladder-solo">
-          {TIERS.map((t, i) => (
-            <div key={t.id} className={"le-tier-row" + (i === 1 ? " featured" : "")}>
-              <div className="id" style={{ color: t.color }}>{t.id}</div>
-              <div className="info">
-                <div className="zh le-zh">{t.zh}</div>
-                <div className="en">{t.sub}</div>
+          {items.map((row, i) => {
+            const color = TIER_COLORS[i] || "var(--text)";
+            return (
+              <div key={row.id} className={"le-tier-row" + (i === 1 ? " featured" : "")}>
+                <div className="id" style={{ color: color }}>{row.id}</div>
+                <div className="info">
+                  <div className="zh le-zh">{row.zh}</div>
+                  <div className="en">{row.sub}</div>
+                </div>
+                <div className="stat" style={{ color: color }}>
+                  <span className="l">{t("tier.typical_label", "typical")}</span>
+                  <span className="v">{row.stat}</span>
+                </div>
               </div>
-              <div className="stat" style={{ color: t.color }}>
-                <span className="l">typical</span>
-                <span className="v">{t.stat}</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-        {/* v0.4.7 wave 4 #4 · DAY 1 callout 降階拉回 DNA · 女巫提案 · 改純左綠 hairline 對齊 Story peak motif */}
+        {/* v0.4.7 wave 4 #4 · DAY 1 callout · v0.5.2 Step 2 i18n · 走 dict */}
         <div className="le-tier-onboard" style={{ marginTop: 28, maxWidth: 560, marginLeft: "auto", marginRight: "auto", padding: "16px 0 16px 20px", borderLeft: "2px solid var(--accent)", display: "grid", gridTemplateColumns: "auto 1fr", gap: 16, alignItems: "start" }}>
-          <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase", fontWeight: 700, whiteSpace: "nowrap" }}>▸ DAY 1<br/>路徑</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase", fontWeight: 700, whiteSpace: "nowrap" }}>{t("tier.day1_label_part1", "▸ DAY 1")}<br/>{t("tier.day1_label_part2", "路徑")}</div>
           <div className="le-zh" style={{ fontSize: 13, lineHeight: 1.7, color: "var(--text-2)" }}>
-            通過認證 → 進入 beta 首案候選池 → 第一批案件優先從認證名單裡媒合。<br/>
-            <span style={{ fontSize: 12, color: "var(--muted)" }}>我們先把案例、工具流與交付品質整理成客戶看得懂的證據，再逐步累積 NPS 與推薦權重。</span>
+            {t("tier.day1_body_main", "通過認證 → 進入 beta 首案候選池 → 第一批案件優先從認證名單裡媒合。")}<br/>
+            <span style={{ fontSize: 12, color: "var(--muted)" }}>{t("tier.day1_body_sub", "我們先把案例、工具流與交付品質整理成客戶看得懂的證據，再逐步累積 NPS 與推薦權重。")}</span>
           </div>
         </div>
       </div>
@@ -1483,19 +1422,19 @@ function EVision() {
   );
 }
 
-// Verticals heat strip
-const VERTICALS = ["DTC 內容自動化", "設計品牌 × AI", "短影音 · 剪輯", "網頁設計 + 切版", "客製軟體開發", "客製系統建置", "AI Agent · Bot", "數據 · BI", "B2B SaaS GTM", "品牌市場調研", "行銷服務操盤", "SEO · 內容營運", "客服自動化", "翻譯 · 在地化", "其他"];
-// v0.4.9 wave 6 #5 · Network 從 15-cell grid 縮成 1 行 chip strip（蘇菲早就點到「dead-end catalog」· Edward「太長」拍板砍）
+// Verticals heat strip · v0.5.2 Step 2 i18n · VERTICALS 改 dict (network.verticals · 15 strings)
+// HOT index 留 component 內 (純視覺/邏輯標記)
 function EVerticals() {
   useLangRerender();
   const HOT = [0, 6];
+  const verticals = t("network.verticals", []);
   return (
     <section className="le-section" id="network" style={{ padding: "56px 56px" }}>
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 16 }}>{t("network.eyebrow", "◆ NETWORK · 15 領域、24 小時初步判斷")}</div>
         <h2 className="le-h2" style={{ fontSize: 32 }}>{t("network.headline_part1", "15 個 ")}<span className="le-acc">{t("network.headline_em", "領域")}</span>{t("network.headline_part2", "，先判斷該找哪一種人。")}</h2>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 24 }}>
-          {VERTICALS.map((v, i) => {
+          {verticals.map((v, i) => {
             const isHot = HOT.indexOf(i) >= 0;
             return (
               <span key={i} style={{
@@ -1506,82 +1445,63 @@ function EVerticals() {
                 borderRadius: 999, letterSpacing: "0.02em",
                 fontWeight: isHot ? 700 : 500,
               }}>
-                {isHot && <span style={{ marginRight: 4 }}>●</span>}{v}{isHot && <span style={{ marginLeft: 6, fontFamily: "var(--mono)", fontSize: 10 }}>HOT</span>}
+                {isHot && <span style={{ marginRight: 4 }}>●</span>}{v}{isHot && <span style={{ marginLeft: 6, fontFamily: "var(--mono)", fontSize: 10 }}>{t("network.hot_tag", "HOT")}</span>}
               </span>
             );
           })}
         </div>
         <div style={{ marginTop: 16, fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.06em" }}>
-          ▸ HOT VERTICALS · +47% MoM growth · DTC + AI Agent
+          {t("network.footer", "▸ HOT VERTICALS · +47% MoM growth · DTC + AI Agent")}
         </div>
       </div>
     </section>
   );
 }
 
-// Trust 3 metrics · BP 真數值
+// Trust 3 metrics · v0.5.2 Step 2 i18n · 文字走 dict (trust3.items) · color by index (視覺、不放 dict)
+const TRUST3_COLORS = ["var(--accent)", "var(--text)", "var(--accent-dim)"];
 function ETrust3() {
   useLangRerender();
-  const items = [
-    { v: "AI", en: "AI REVIEW", zh: "AI 初審 + 人工覆核", facts: ["先由 AI 拆 brief 與交付範圍", "再由人工覆核候選人與風險", "不讓你直接丟進平台黑箱"], color: "var(--accent)" },
-    { v: "24h", en: "MATCH DIRECTION", zh: "先給候選方向", facts: ["初判領域與預算是否合理", "中文 brief 原生理解", "先看適配，再談短名單"], color: "var(--text)" },
-    { v: "M1", en: "MILESTONE", zh: "每案先定驗收點", facts: ["交付物、時間、風險先講清楚", "付款與合約先由雙方自行處理", "避免做完才爭論算不算完成"], color: "var(--accent-dim)" }
-  ];
+  const items = t("trust3.items", []);
   return (
     <section className="le-section" id="trust">
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("trust3.eyebrow", "◆ TRUST · AI-first，但不把人丟進黑箱")}</div>
         <h2 className="le-h2">{t("trust3.headline_part1", "先用 AI 降低不確定性，")}<br/>{t("trust3.headline_part2_before", "再用覆核與驗收建立")}<span className="le-acc">{t("trust3.headline_part2_em", "信任層")}</span>{t("trust3.headline_part2_after", "。")}</h2>
         <div className="le-trust3-grid">
-          {items.map((it, i) => (
-            <div key={i} className="le-trust3-cell">
-              <div className="label" style={{ color: it.color }}>{it.en}</div>
-              <div className="v" style={{ color: it.color }}>{it.v}</div>
-              <div className="zh le-zh">{it.zh}</div>
-              <ul className="facts le-zh">
-                {it.facts.map((f, j) => (<li key={j}>{f}</li>))}
-              </ul>
-            </div>
-          ))}
+          {items.map((it, i) => {
+            const color = TRUST3_COLORS[i] || "var(--text)";
+            return (
+              <div key={i} className="le-trust3-cell">
+                <div className="label" style={{ color: color }}>{it.en}</div>
+                <div className="v" style={{ color: color }}>{it.v}</div>
+                <div className="zh le-zh">{it.zh}</div>
+                <ul className="facts le-zh">
+                  {(it.facts || []).map((f, j) => (<li key={j}>{f}</li>))}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
 
-// Irreplaceability · answer the LLM matching objection without sounding like an investor slide
-const IRREPLACEABLE = [
-  {
-    axis: "LLM 可以做",
-    ttl: "推薦看起來適合的人",
-    body: "未來任何 LLM 都能讀 brief、生成候選名單、比較作品集。這會變成基本能力，不是護城河。",
-    peer: "▸ 名單會越來越便宜"
-  },
-  {
-    axis: "BeyondPath 累積",
-    ttl: "誰真的交付過，以及怎麼交付",
-    body: "我們把 AI workflow、交付物、驗收紀錄、雙邊 NPS 與適配情境留下來，讓下一次推薦不是猜測，而是基於交付證據。",
-    peer: "▸ 信任會越用越厚"
-  },
-  {
-    axis: "不可取代性",
-    ttl: "不是媒合演算法，而是 AI 工作信任資料",
-    body: "真正稀缺的是台灣語境下的 brief、產業需求、worker workflow proof、交付品質與合作紀錄。這些資料會形成 BeyondPath 的推薦權重與認證規則。",
-    peer: "▸ 從找人，變成工作信任層"
-  }
-];
+// Irreplaceability · v0.5.2 Step 2 i18n · IRREPLACEABLE 改 dict (moat.items)
 function EIrreplaceable() {
   useLangRerender();
+  const items = t("moat.items", []);
   return (
     <section className="le-section" id="moat">
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("moat.eyebrow", "◆ WHY BEYONDPATH · 當 LLM 也會媒合，我們還剩什麼")}</div>
         <h2 className="le-h2">{t("moat.headline_part1", "LLM 可以推薦人。")}<br/>{t("moat.headline_part2_before", "但信任來自")}<span className="le-acc">{t("moat.headline_part2_em", "交付證據")}</span>{t("moat.headline_part2_after", "。")}</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 900, marginTop: -32, marginBottom: 32 }}>
-          BeyondPath 不把不可取代性押在「比 AI 更會配對」。我們真正要建立的是 AI 工作的信任資料層：誰能把哪一類需求交付出來、用了什麼 workflow、結果如何被驗收、下次為什麼值得被推薦。
+          {t("moat.intro", "BeyondPath 不把不可取代性押在「比 AI 更會配對」。我們真正要建立的是 AI 工作的信任資料層：誰能把哪一類需求交付出來、用了什麼 workflow、結果如何被驗收、下次為什麼值得被推薦。")}
         </p>
         <div className="le-whyus-grid">
-          {IRREPLACEABLE.map((w, i) => (
+          {items.map((w, i) => (
             <article key={i} className="le-whyus-card">
               <div className="axis">{w.axis}</div>
               <div className="ttl le-zh">{w.ttl}</div>
@@ -1595,22 +1515,17 @@ function EIrreplaceable() {
   );
 }
 
-// Services & Pricing · v0.5 (2026-05-19) 加 · 解 service-flow review「信任證據」P2 finding · 4 個可接案 + Tier 對應價格 reference + 資料處理透明
+// Services & Pricing · v0.5 + v0.5.2 Step 2 i18n · services 改 dict (services.items) · data-handling 段走 dict
 function EServicesPricing() {
   useLangRerender();
-  const services = [
-    { n: "01", en: "AI WORKFLOW", zh: "AI workflow 顧問 + 落地", desc: "從需求拆解到工具流 setup、含 handoff 文件。常見：客服自動化、內容 pipeline、內部 agent。", tiers: "Tier B+ / A+", range: "NT$ 15–80 萬" },
-    { n: "02", en: "BRAND CONTENT", zh: "DTC 品牌內容", desc: "視覺 KV、brand DNA、社群內容操盤。常見：保養品 / 食品 / 設計品牌 launch + 持續經營。", tiers: "Tier B / B+ / A+", range: "NT$ 5–60 萬" },
-    { n: "03", en: "REELS · VIDEO", zh: "短影音 + reels", desc: "腳本 + 拍攝 + 剪輯 一條龍。常見：品牌敘事、UGC 風格、產品 demo、教學影片。", tiers: "Tier B / B+", range: "NT$ 3–25 萬" },
-    { n: "04", en: "CUSTOM DEV", zh: "客製軟體 / AI agent / 工具流", desc: "從 prototype 到 production：API 整合、bot、內部工具。常見：Slack agent、CRM 自動化、Make/n8n flow。", tiers: "Tier B+ / A+", range: "NT$ 10–120 萬" },
-  ];
+  const services = t("services.items", []);
   return (
     <section className="le-section" id="services" style={{ padding: "56px 56px", borderTop: "1px solid var(--line-soft)" }}>
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 16 }}>{t("services.eyebrow", "◆ SERVICES · 目前可接案 + 價格 reference")}</div>
         <h2 className="le-h2" style={{ fontSize: 32 }}>{t("services.headline_part1", "4 個主要交付類型、")}<span className="le-acc">{t("services.headline_em", "每案有適配 Tier 與預算 reference")}</span>{t("services.headline_part2", "。")}</h2>
         <p className="le-zh" style={{ color: "var(--muted)", fontSize: 14, marginTop: 12, maxWidth: 720, lineHeight: 1.7 }}>
-          以下價格區間是 reference、不是固定報價。實際依需求複雜度、交付物範圍、時程而定。送出 brief 後、24h 內你會收到含建議預算的配對方案。
+          {t("services.intro", "以下價格區間是 reference、不是固定報價。實際依需求複雜度、交付物範圍、時程而定。送出 brief 後、24h 內你會收到含建議預算的配對方案。")}
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14, marginTop: 28 }}>
           {services.map((s, i) => (
@@ -1622,48 +1537,40 @@ function EServicesPricing() {
               <div className="le-zh" style={{ fontSize: 17, fontWeight: 600, color: "var(--text)", lineHeight: 1.4 }}>{s.zh}</div>
               <p className="le-zh" style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.65, margin: 0, flex: 1 }}>{s.desc}</p>
               <div style={{ paddingTop: 8, borderTop: "1px dashed rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--muted)", letterSpacing: "0.06em" }}>RANGE</span>
+                <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--muted)", letterSpacing: "0.06em" }}>{t("services.label_range", "RANGE")}</span>
                 <span style={{ fontFamily: "var(--mono)", fontSize: 13, fontWeight: 700, color: "var(--accent)" }}>{s.range}</span>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Data handling note · v0.5 加 · 解 service-flow review「資料處理說明」finding */}
+        {/* Data handling note · v0.5 加 · v0.5.2 Step 2 i18n · 走 dict */}
         <div style={{ marginTop: 32, padding: "18px 20px", border: "1px dashed rgba(199,232,74,0.3)", background: "rgba(199,232,74,0.03)", display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center", justifyContent: "space-between" }}>
           <div className="le-zh" style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.7, flex: 1, minWidth: 280 }}>
-            <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>◆ DATA HANDLING · 你的資料怎麼處理</span>
-            送出的 brief / email / portfolio 進 BeyondPath 後台、僅平台團隊 + AI 初審工具看得到、不公開、不轉售。資料保留期視業務需要而定（用於未來案件配對與 retainer 邀請）、可隨時寄信到 <a href="mailto:hello@beyondpath.tw?subject=BeyondPath%20%E5%88%AA%E9%99%A4%E8%B3%87%E6%96%99%E8%AB%8B%E6%B1%82" style={{ color: "var(--accent)", borderBottom: "1px solid var(--accent-line)" }}>hello@beyondpath.tw</a> 要求刪除你的資料。
+            <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>{t("services.data_label", "◆ DATA HANDLING · 你的資料怎麼處理")}</span>
+            {t("services.data_body_before", "送出的 brief / email / portfolio 進 BeyondPath 後台、僅平台團隊 + AI 初審工具看得到、不公開、不轉售。資料保留期視業務需要而定（用於未來案件配對與 retainer 邀請）、可隨時寄信到 ")}<a href="mailto:hello@beyondpath.tw?subject=BeyondPath%20%E5%88%AA%E9%99%A4%E8%B3%87%E6%96%99%E8%AB%8B%E6%B1%82" style={{ color: "var(--accent)", borderBottom: "1px solid var(--accent-line)" }}>{t("services.data_body_link", "hello@beyondpath.tw")}</a>{t("services.data_body_after", " 要求刪除你的資料。")}
           </div>
-          <a href="legal/privacy.html" style={{ display: "inline-flex", alignItems: "center", padding: "10px 16px", border: "1px solid var(--accent-line)", color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.12em", textDecoration: "none", textTransform: "uppercase" }}>查看完整隱私政策 →</a>
+          <a href="legal/privacy.html" style={{ display: "inline-flex", alignItems: "center", padding: "10px 16px", border: "1px solid var(--accent-line)", color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.12em", textDecoration: "none", textTransform: "uppercase" }}>{t("services.data_cta", "查看完整隱私政策 →")}</a>
         </div>
       </div>
     </section>
   );
 }
 
-// FAQ · v0.4.6 (2026-05-10) 改寫為發案/接案者真問題、不再是投資人 FAQ
-const FAQS = [
-  { n: "01", tag: "發案者", q: "我已經有合作的接案者 / 設計師了，為什麼要換 BeyondPath？", a: "你不用換、你可以平行用。BeyondPath 解的是「現有人脈池外、突然要新類型 AI 交付」這個場景——例如你平常合作的設計師不會剪短影音、你又不想為了一支 reels 重新發 30 封 brief。留下需求後，24 小時內先得到適配領域、預算與候選方向；進入短名單後再看 Top 3 配對與理由。首案合不合適你自己判斷、平台不綁約、不收訂閱。" },
-  { n: "02", tag: "發案者", q: "做不出來 / 品質不對怎麼辦？", a: "POC 階段先不把你丟進全自動黑箱。我們會先用 AI 拆需求、判斷領域與風險，再由人工覆核 milestone、交付標準與候選人。早期不做平台代收代付；付款與合約由雙方自行處理。BeyondPath 先把需求、候選人與驗收紀錄跑穩。" },
-  { n: "03", tag: "發案者", q: "如果 LLM 以後也能媒合人選，BeyondPath 還必要嗎？", a: "如果只是推薦名單，確實會被 LLM 商品化。BeyondPath 要累積的是 LLM 很難直接擁有的交付信任資料：worker 的 AI workflow、真實交付物、驗收紀錄、雙邊 NPS、適合的產業情境與失敗風險。名單只是起點，真正有價值的是「這個人為什麼值得被信任」的證據。" },
-  { n: "04", tag: "發案者", q: "這個比 Fiverr 貴 / 比工作室便宜嗎？怎麼定價？", a: "我們在 Fiverr 跟月費代理之間。早期會先測試需求診斷、候選短名單、認證服務或媒合服務費等模式，不在平台上代收專案款。你付費買的不是名單，而是需求拆解、候選理由、驗收框架與降低找錯人的判斷成本。" },
-  { n: "05", tag: "接案者", q: "我想接案、要怎麼申請？真的通過率 < 10%？", a: "兩段式：Stage 1（Tier B 入會、AI 初評 + 簡易驗證）目前約 28% 通過、Stage 2（Tier A 正式認證）才是 < 10%。完整 4 階段認證：（1）技能測驗——你的領域基本功、（2）同儕 review——已認證 worker 評分、（3）客戶模擬案件——平台給一個假需求、你交一份成果、（4）主審委員會——通過前三關才進。整個流程約 2-3 週。沒過可以 6 個月後重申、平台會給回饋說明哪裡需要補強。" },
-  { n: "06", tag: "接案者", q: "平台怎麼收費？我需要先付費嗎？", a: "beta 前期先不在平台上代收專案款，也不做抽佣承諾。BeyondPath 會先測試需求診斷、候選短名單、認證服務或媒合服務費等模式；目前你申請認證不用付費，也不需要先承諾排他。" },
-  { n: "07", tag: "接案者", q: "如果一段時間沒接到案、平台會幫忙嗎？", a: "會。我們有「反馬太 +10」機制——3 個月內無接案的 worker、配對排序自動 +10 加權；新認證 < 30 天 +5；首案池保留 20% slot 給新人。前提是你已通過 < 10% 認證——這不是降門檻、是讓已被驗證的人有持續接案機會。同時 AI 教練會主動提示「升 Tier 還差什麼」「哪些領域最近需求高」。" }
-];
+// FAQ · v0.4.6 + v0.5.2 Step 2 i18n · FAQS 改 dict (faq.items · 7 題)
 function EFaq() {
   useLangRerender();
+  const items = t("faq.items", []);
   return (
     <section className="le-section" id="faq">
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("faq.eyebrow", "◆ FAQ · 你可能會問的")}</div>
         <h2 className="le-h2">{t("faq.headline_part1", "七個 ")}<span className="le-acc">{t("faq.headline_em", "真問題")}</span>{t("faq.headline_part2", "。")}</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
-          前 4 條給準備發案的你、後 3 條給準備接案的你。沒答到的、寫信給 BeyondPath → <a href="mailto:edwardt0303@gmail.com" style={{ color: "var(--accent)" }}>edwardt0303@gmail.com</a>
+          {t("faq.intro_before", "前 4 條給準備發案的你、後 3 條給準備接案的你。沒答到的、寫信給 BeyondPath → ")}<a href="mailto:edwardt0303@gmail.com" style={{ color: "var(--accent)" }}>{t("faq.intro_email", "edwardt0303@gmail.com")}</a>
         </p>
         <div className="le-faq">
-          {FAQS.map((f) => (
+          {items.map((f) => (
             <details key={f.n}>
               <summary>
                 <span className="num">Q{f.n}</span>
@@ -1773,8 +1680,8 @@ function EStory() {
           <h3 className="h le-zh">{t("story.headline_part1", "AI 讓每個人都像專家。")}<br/>{t("story.headline_part2", "也讓你更難知道誰真的能交付。")}</h3>
         </div>
 
-        {/* v0.5.1 雙視角誘因表 · 按 Edward 拍板優先序 · 文案砍短 + word-break:keep-all 解亂折行 */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+        {/* v0.5.1 雙視角誘因表 · 按 Edward 拍板優先序 · 文案砍短 + word-break:keep-all 解亂折行 · v0.5.2 Step 2 mobile fix · auto-fit 解 375 破版 */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
           {/* === CLIENT 卡 · 順序：1降本 2增效 3低風險 4品質保 === */}
           <div style={{ padding: "26px 28px", border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)", borderRadius: 4 }}>
             <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase", fontWeight: 700, marginBottom: 14 }}>
