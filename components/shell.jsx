@@ -38,11 +38,17 @@ function BP_AppShell() {
   return (
     <div className="bp-shell">
       <div className="bp-shell-top">
-        <div className="bp-shell-brand">
+        <a
+          href="landing.html"
+          className="bp-shell-brand"
+          style={{ textDecoration: "none", cursor: "pointer" }}
+          aria-label="BeyondPath · back to home"
+          title="Back to home"
+        >
           <span className="bp-shell-mark"></span>
           BEYONDPATH
           <small>{role === "client" ? "CLIENT · INTAKE OS" : "WORKER · CONSOLE"}</small>
-        </div>
+        </a>
 
         <div className="bp-shell-meta" ref={menuRef}>
           <span className="bp-shell-ver">{BP_VERSION}</span>
