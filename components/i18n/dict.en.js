@@ -632,6 +632,28 @@
   "misc": {
     "back_to_top": "Back to top",
     "engines_ahead": "/* engines ahead · 6 friction points, one at a time */"
+  },
+  "waitlist": {
+    "meta_title": "[EN] 加入 Waitlist · BeyondPath",
+    "meta_description": "[EN] 加入 BeyondPath waitlist。Prototype 階段不會自動收集個資，請寄信給 Edward 或複製 email 手動聯繫。",
+    "top_back": "BACK TO LANDING",
+    "eyebrow": "[EN] ◆ JOIN WAITLIST · PROTOTYPE STAGE",
+    "h1": "[EN] 想收到 BeyondPath beta 進度，先寄信給 Edward。",
+    "sub": "[EN] 目前 prototype 還沒有正式表單後端，不會自動收集或儲存你的個資。你可以用 email 告訴我你是發案方、接案者，或只是想追蹤產品進度。",
+    "note_label": "[EN] 建議信件內容：",
+    "note_body": "[EN] 你的名字、角色、想看的方向、是否願意參與第一批 beta 試做。",
+    "manual_label": "[EN] manual recipient",
+    "btn_copy": "[EN] 複製 EMAIL",
+    "btn_copy_done": "[EN] 已複製",
+    "role_client_title": "[EN] 發案方",
+    "role_client_sub": "[EN] CLIENT · WANT PILOT",
+    "role_worker_title": "[EN] 接案者",
+    "role_worker_sub": "[EN] WORKER · WANT CERT",
+    "role_follow_title": "[EN] 追蹤進度",
+    "role_follow_sub": "[EN] FOLLOW · PRODUCT UPDATES",
+    "btn_email_draft": "[EN] 開啟 waitlist email 草稿 →",
+    "btn_back": "[EN] 回產品頁",
+    "footer": "[EN] BeyondPath · Prototype v0.2 · waitlist uses manual email until a privacy-reviewed form backend is ready."
   }
 };
 })(window);
