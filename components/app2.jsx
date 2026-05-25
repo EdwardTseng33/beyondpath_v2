@@ -298,7 +298,7 @@ function Step1({ state, set, device }) {
                 setText(e.target.value);
                 set({ brief: e.target.value, briefSource: tab });
               }}
-              placeholder="# 我們是 ____\n# 我們需要 ____\n# 預算 ____ 時間 ____"
+              placeholder={_t("client.brief_placeholder", "# 我們是 ____\n# 我們需要 ____\n# 預算 ____ 時間 ____")}
             />
           </div>
         )}
@@ -307,18 +307,18 @@ function Step1({ state, set, device }) {
       {/* Enterprise needs (optional) · 企業 / B2B 流程選項 */}
       <div style={{ marginTop: 28 }}>
         <div className="bp-h2" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span>Enterprise needs · 企業流程</span>
-          <span style={{ fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)" }}>optional · 選填</span>
+          <span>Enterprise needs · {_t("client.section_enterprise_zh", "企業流程")}</span>
+          <span style={{ fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)" }}>{_t("client.optional_label", "optional · 選填")}</span>
         </div>
         <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 4, marginBottom: 12, lineHeight: 1.6 }}>
-          B2B / 大型企業案、勾選後 BeyondPath 24h 內回信時一併處理 NDA / 發票 / 合約 / 預約視訊。不勾沒關係、預設走個人案流程。
+          {_t("client.enterprise_hint", "B2B / 大型企業案、勾選後 BeyondPath 24h 內回信時一併處理 NDA / 發票 / 合約 / 預約視訊。不勾沒關係、預設走個人案流程。")}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
           {[
-            { id: "nda", label: "需要 NDA", sub: "簽保密協議才能談" },
-            { id: "invoice", label: "需要公司發票", sub: "三聯式 / 含統編" },
-            { id: "contract", label: "公司對公司簽約", sub: "正式服務合約 · 不接受 PayPal" },
-            { id: "talkToEdward", label: "想先跟 BeyondPath 團隊聊 30 min", sub: "大金額 / 複雜案 · 視訊預約" },
+            { id: "nda", label: _t("client.ent_nda_label", "需要 NDA"), sub: _t("client.ent_nda_sub", "簽保密協議才能談") },
+            { id: "invoice", label: _t("client.ent_invoice_label", "需要公司發票"), sub: _t("client.ent_invoice_sub", "三聯式 / 含統編") },
+            { id: "contract", label: _t("client.ent_contract_label", "公司對公司簽約"), sub: _t("client.ent_contract_sub", "正式服務合約 · 不接受 PayPal") },
+            { id: "talkToEdward", label: _t("client.ent_talk_label", "想先跟 BeyondPath 團隊聊 30 min"), sub: _t("client.ent_talk_sub", "大金額 / 複雜案 · 視訊預約") },
           ].map((f) => {
             const active = state.enterprise && state.enterprise[f.id];
             return (
@@ -359,18 +359,18 @@ function Step1({ state, set, device }) {
       {/* Client Vetting · Q3 Task 2 · 2026-05-19 · 身分 + Early Beta 規則確認 */}
       <div style={{ marginTop: 28 }}>
         <div className="bp-h2" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span>About you · 關於你</span>
-          <span style={{ fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)" }}>optional · 選填</span>
+          <span>About you · {_t("client.section_about_you_zh", "關於你")}</span>
+          <span style={{ fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)" }}>{_t("client.optional_label", "optional · 選填")}</span>
         </div>
         <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 4, marginBottom: 12, lineHeight: 1.6 }}>
-          讓我們更了解你的身分。資料只用於配對、不對外公開。
+          {_t("client.about_you_hint", "讓我們更了解你的身分。資料只用於配對、不對外公開。")}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
           {[
-            { id: "company", label: "公司 / 品牌主", sub: "有正式登記、發案做 B2B / B2C" },
-            { id: "individual", label: "個人 / 自由業", sub: "freelancer / soloist · 個人專案" },
-            { id: "studio", label: "工作室 / 創辦人", sub: "2-10 人團隊、想擴 capacity" },
-            { id: "student", label: "學生 / 學習中", sub: "校內專案 / 投資組合 / 練手" },
+            { id: "company", label: _t("client.about_company_label", "公司 / 品牌主"), sub: _t("client.about_company_sub", "有正式登記、發案做 B2B / B2C") },
+            { id: "individual", label: _t("client.about_individual_label", "個人 / 自由業"), sub: _t("client.about_individual_sub", "freelancer / soloist · 個人專案") },
+            { id: "studio", label: _t("client.about_studio_label", "工作室 / 創辦人"), sub: _t("client.about_studio_sub", "2-10 人團隊、想擴 capacity") },
+            { id: "student", label: _t("client.about_student_label", "學生 / 學習中"), sub: _t("client.about_student_sub", "校內專案 / 投資組合 / 練手") },
           ].map((f) => {
             const active = state.clientType === f.id;
             return (
@@ -424,7 +424,7 @@ function Step1({ state, set, device }) {
               style={{ marginTop: 3, flexShrink: 0 }}
             />
             <span>
-              <b style={{ color: "var(--accent)" }}>我了解 Early Beta 階段規則</b>：BeyondPath 不代收專案款、合約由雙方確認；送出 brief 進人工審核、不代表正式承諾或付款。
+              <b style={{ color: "var(--accent)" }}>{_t("client.beta_ack_prefix", "我了解 Early Beta 階段規則")}</b>{_t("client.beta_ack_body", "：BeyondPath 不代收專案款、合約由雙方確認；送出 brief 進人工審核、不代表正式承諾或付款。")}
             </span>
           </label>
         </div>
@@ -468,12 +468,12 @@ function Step2({ state, set }) {
       });
 
       if (invokeError) {
-        setError("呼叫失敗：" + (invokeError.message || "未知錯誤"));
+        setError(_t("client.err_call_failed_prefix", "呼叫失敗：") + (invokeError.message || _t("client.err_unknown", "未知錯誤")));
         setPhase("error");
         return;
       }
       if (!data || !data.ok) {
-        setError("AI 拆解失敗：" + (data?.error || "未知錯誤"));
+        setError(_t("client.err_ai_parse_failed_prefix", "AI 拆解失敗：") + (data?.error || _t("client.err_unknown", "未知錯誤")));
         setPhase("error");
         return;
       }
@@ -485,7 +485,7 @@ function Step2({ state, set }) {
       setPhase("done");
       set({ parseDone: true, parsed: data.parsed });
     } catch (e) {
-      setError(e?.message || "網路錯誤、請重試");
+      setError(e?.message || _t("client.err_network_retry", "網路錯誤、請重試"));
       setPhase("error");
     }
   }
@@ -518,7 +518,7 @@ function Step2({ state, set }) {
 
       <div className="bp-parse-grid" style={{ marginTop: 22 }}>
         <div>
-          <div className="bp-h2" style={{ marginBottom: 8 }}>Trace · 推理日誌</div>
+          <div className="bp-h2" style={{ marginBottom: 8 }}>Trace · {_t("client.trace_title", "推理日誌")}</div>
           <div className="bp-log" style={{ padding: 18 }}>
             <div style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--muted)", lineHeight: 1.8 }}>
               <div>[init] Claude Sonnet 4.6 \u00b7 max_tokens=3000</div>
@@ -565,7 +565,7 @@ function Step2({ state, set }) {
         </div>
 
         <div>
-          <div className="bp-h2" style={{ marginBottom: 8 }}>Result · 結構化卡片</div>
+          <div className="bp-h2" style={{ marginBottom: 8 }}>Result · {_t("client.result_title", "結構化卡片")}</div>
           {phase === "done" && result ? (
             <div className="bp-result-grid">
               <div className="bp-rcard bp-rise bp-rise-1">
@@ -589,7 +589,7 @@ function Step2({ state, set }) {
                 <div className="sub">{result.vertical || ""}</div>
               </div>
               <div className="bp-rcard span2 bp-rise bp-rise-2">
-                <div className="lbl">Tasks · 任務拆解</div>
+                <div className="lbl">Tasks · {_t("client.lbl_tasks", "任務拆解")}</div>
                 <div className="bp-tasklist">
                   {(result.tasks || []).map((t) => (
                     <div className="row" key={t.id}>
@@ -607,7 +607,7 @@ function Step2({ state, set }) {
                 </div>
               </div>
               <div className="bp-rcard bp-rise bp-rise-3">
-                <div className="lbl">Budget · 預估</div>
+                <div className="lbl">Budget · {_t("client.lbl_budget", "預估")}</div>
                 <div className="val">
                   <span className="accent">{fmtNT(result.budget.lo)}</span> –{" "}
                   <span className="accent">{fmtNT(result.budget.hi)}</span>
@@ -615,7 +615,7 @@ function Step2({ state, set }) {
                 <div className="sub">includes +15% platform premium</div>
               </div>
               <div className="bp-rcard bp-rise bp-rise-3">
-                <div className="lbl">Effort · 總工時</div>
+                <div className="lbl">Effort · {_t("client.lbl_effort", "總工時")}</div>
                 <div className="val">
                   <span className="accent">{result.totalHours}h</span>{" "}
                   <span style={{ color: "var(--muted)", fontSize: 14 }}>
@@ -625,7 +625,7 @@ function Step2({ state, set }) {
                 <div className="sub">multi-expert DAG attached</div>
               </div>
               <div className="bp-rcard span2 bp-rise bp-rise-4">
-                <div className="lbl">Flags · AI 提醒</div>
+                <div className="lbl">Flags · {_t("client.lbl_flags", "AI 提醒")}</div>
                 <div style={{ marginTop: 4 }}>
                   {result.flags.map((f, i) => (
                     <div key={i} className={"bp-flag " + f.kind}>
@@ -655,7 +655,7 @@ function Step2({ state, set }) {
                 justifyContent: "center",
               }}
             >
-              {phase === "error" ? "↻ 修正後重試、cards 才會出現" : "awaiting trace · cards will materialise"}
+              {phase === "error" ? _t("client.phase_error_hint", "↻ 修正後重試、cards 才會出現") : _t("client.phase_pending_hint", "awaiting trace · cards will materialise")}
             </div>
           )}
         </div>
@@ -688,15 +688,15 @@ function Step3({ state, set, device }) {
         <div className="bp-field">
           <div className="bp-field-l">
             <div className="lbl-en">Worker Tier</div>
-            <div className="lbl-zh">期待認證等級</div>
+            <div className="lbl-zh">{_t("client.lbl_tier_zh", "期待認證等級")}</div>
           </div>
           <div className="bp-seg bp-seg-tier">
             {[
-              { v: "B",   id: "B",   zh: "實踐者", price: "NT$30-80k" },
-              { v: "A",   id: "A",   zh: "專家",   price: "NT$80-200k" },
-              { v: "A+",  id: "A+",  zh: "大師",   price: "NT$200-500k" },
-              { v: "S",   id: "S",   zh: "典範",   price: "NT$500k+" },
-              { v: "any", id: "Any", zh: "",       price: "看 AI 拆解" },
+              { v: "B",   id: "B",   zh: _t("client.tier_b_zh", "實踐者"), price: "NT$30-80k" },
+              { v: "A",   id: "A",   zh: _t("client.tier_a_zh", "專家"),   price: "NT$80-200k" },
+              { v: "A+",  id: "A+",  zh: _t("client.tier_aplus_zh", "大師"),   price: "NT$200-500k" },
+              { v: "S",   id: "S",   zh: _t("client.tier_s_zh", "典範"),   price: "NT$500k+" },
+              { v: "any", id: "Any", zh: "",       price: _t("client.tier_any_price", "看 AI 拆解") },
             ].map((o) => (
               <button
                 key={o.v}
@@ -710,29 +710,35 @@ function Step3({ state, set, device }) {
             ))}
           </div>
           <div style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 6, fontFamily: "var(--mono)" }}>
-            ※ 價格區間為平台統計、實際報價依案件複雜度 + Claude AI 顧問建議調整（含 +15% 平台溢價）
+            {_t("client.tier_price_note", "※ 價格區間為平台統計、實際報價依案件複雜度 + Claude AI 顧問建議調整（含 +15% 平台溢價）")}
           </div>
         </div>
 
         <div className="bp-field">
           <div className="bp-field-l">
             <div className="lbl-en">Deliverables</div>
-            <div className="lbl-zh">交付內容</div>
+            <div className="lbl-zh">{_t("client.lbl_deliverables_zh", "交付內容")}</div>
           </div>
           <div className="bp-seg">
-            {["KV 主視覺", "Reels 腳本", "產品文案", "排程操盤", "ROAS 解讀"].map(
+            {[
+              { id: "KV 主視覺", zh: _t("client.deliv_kv", "KV 主視覺") },
+              { id: "Reels 腳本", zh: _t("client.deliv_reels", "Reels 腳本") },
+              { id: "產品文案", zh: _t("client.deliv_copy", "產品文案") },
+              { id: "排程操盤", zh: _t("client.deliv_schedule", "排程操盤") },
+              { id: "ROAS 解讀", zh: _t("client.deliv_roas", "ROAS 解讀") },
+            ].map(
               (b) => (
                 <button
-                  key={b}
-                  className={e.badges.includes(b) ? "active" : ""}
+                  key={b.id}
+                  className={e.badges.includes(b.id) ? "active" : ""}
                   onClick={() => {
-                    const has = e.badges.includes(b);
+                    const has = e.badges.includes(b.id);
                     setE({
-                      badges: has ? e.badges.filter((x) => x !== b) : [...e.badges, b],
+                      badges: has ? e.badges.filter((x) => x !== b.id) : [...e.badges, b.id],
                     });
                   }}
                 >
-                  <span className="zh">{b}</span>
+                  <span className="zh">{b.zh}</span>
                 </button>
               )
             )}
@@ -742,25 +748,25 @@ function Step3({ state, set, device }) {
         <div className="bp-field">
           <div className="bp-field-l">
             <div className="lbl-en">Delivery Window</div>
-            <div className="lbl-zh">期待交付時間</div>
+            <div className="lbl-zh">{_t("client.lbl_delivery_window_zh", "期待交付時間")}</div>
           </div>
           <div className="bp-seg">
-            {["1 wk", "2 wk", "4 wk", "6 wk", "8 wk", "10 wk", "12 wk", "彈性"].map((w) => (
+            {[{id:"1 wk"},{id:"2 wk"},{id:"4 wk"},{id:"6 wk"},{id:"8 wk"},{id:"10 wk"},{id:"12 wk"},{id:"彈性", label:_t("client.delivery_flex", "彈性")}].map((opt) => { var w = opt.id; var label = opt.label || opt.id; return (
               <button
                 key={w}
                 className={e.window === w ? "active" : ""}
                 onClick={() => setE({ window: w })}
               >
-                {w}
+                {label}
               </button>
-            ))}
+            );})}
           </div>
         </div>
 
         <div className="bp-field">
           <div className="bp-field-l">
             <div className="lbl-en">Budget Cap</div>
-            <div className="lbl-zh">預算上限（彈性 / 嚴格）</div>
+            <div className="lbl-zh">{_t("client.lbl_budget_cap_zh", "預算上限（彈性 / 嚴格）")}</div>
           </div>
           <div className="bp-range">
             <input
@@ -780,7 +786,7 @@ function Step3({ state, set, device }) {
         <div className="bp-field">
           <div className="bp-field-l">
             <div className="lbl-en">Multi-expert</div>
-            <div className="lbl-zh">是否接受多人共案</div>
+            <div className="lbl-zh">{_t("client.lbl_multi_zh", "是否接受多人共案")}</div>
           </div>
           <div style={{ display: "flex", gap: 18, alignItems: "center", flexWrap: "wrap" }}>
             <button
@@ -788,7 +794,7 @@ function Step3({ state, set, device }) {
               onClick={() => setE({ multi: !e.multi })}
             >
               <span className="sw"></span>
-              <span>{e.multi ? "ON · 接受 2-3 expert" : "OFF · 單一 worker"}</span>
+              <span>{e.multi ? _t("client.multi_on", "ON · 接受 2-3 expert") : _t("client.multi_off", "OFF · 單一 worker")}</span>
             </button>
           </div>
         </div>
@@ -796,14 +802,14 @@ function Step3({ state, set, device }) {
         <div className="bp-field">
           <div className="bp-field-l">
             <div className="lbl-en">NPS Threshold</div>
-            <div className="lbl-zh">過往 NPS 門檻</div>
+            <div className="lbl-zh">{_t("client.lbl_nps_zh", "過往 NPS 門檻")}</div>
           </div>
           <div className="bp-seg">
             {[
-              { v: 4.0, en: "≥ 4.0", zh: "寬鬆" },
-              { v: 4.3, en: "≥ 4.3", zh: "標準" },
-              { v: 4.5, en: "≥ 4.5", zh: "嚴格" },
-              { v: 4.7, en: "≥ 4.7", zh: "頂級" },
+              { v: 4.0, en: "≥ 4.0", zh: _t("client.nps_loose", "寬鬆") },
+              { v: 4.3, en: "≥ 4.3", zh: _t("client.nps_standard", "標準") },
+              { v: 4.5, en: "≥ 4.5", zh: _t("client.nps_strict", "嚴格") },
+              { v: 4.7, en: "≥ 4.7", zh: _t("client.nps_top", "頂級") },
             ].map((o) => (
               <button
                 key={o.v}
@@ -819,14 +825,14 @@ function Step3({ state, set, device }) {
         <div className="bp-field">
           <div className="bp-field-l">
             <div className="lbl-en">Bonus Signals</div>
-            <div className="lbl-zh">加分條件（複選）</div>
+            <div className="lbl-zh">{_t("client.lbl_bonus_zh", "加分條件（複選）")}</div>
           </div>
           <div className="bp-seg">
             {[
-              { id: "voice", en: "Worker has voice", zh: "希望 worker 自帶 IG/Threads 聲量" },
-              { id: "local", en: "TW market savvy", zh: "希望 worker 熟台灣市場文化" },
-              { id: "loyalty", en: "Prior collaborator", zh: "優先曾合作過的 worker" },
-              { id: "mercy", en: "Open to newcomer", zh: "願意給新銳 worker 機會（非主流選項加分）" },
+              { id: "voice", en: "Worker has voice", zh: _t("client.bonus_voice_zh", "希望 worker 自帶 IG/Threads 聲量") },
+              { id: "local", en: "TW market savvy", zh: _t("client.bonus_local_zh", "希望 worker 熟台灣市場文化") },
+              { id: "loyalty", en: "Prior collaborator", zh: _t("client.bonus_loyalty_zh", "優先曾合作過的 worker") },
+              { id: "mercy", en: "Open to newcomer", zh: _t("client.bonus_mercy_zh", "願意給新銳 worker 機會（非主流選項加分）") },
             ].map((b) => (
               <button
                 key={b.id}
@@ -855,7 +861,7 @@ function Step4({ state, set, device }) {
   const demo = getDemoForVertical(state.vertical);
   const demoWorkers = demo.workers;
   const verticalSuggestedPair = demo.suggestedPair;
-  const verticalZh = VERTICALS.find((v) => v.id === state.vertical)?.zh || "你選的領域";
+  const verticalZh = VERTICALS.find((v) => v.id === state.vertical)?.zh || _t("client.vertical_fallback", "你選的領域");
 
   // T1.5 . Supabase real worker pool (P0-2 . 2026-05-20 calcifer)
   //   real >= 3 -> use real pool (badge real pool)
@@ -1002,16 +1008,16 @@ function Step4({ state, set, device }) {
               ? { background: "var(--accent-soft)", color: "var(--accent)", borderColor: "var(--accent-line)" }
               : { background: "rgba(154,154,163,0.08)", color: "var(--muted)", borderColor: "var(--line)" }
           }
-          title={poolState.source === "real" ? "已通過認證的真實 worker pool" : "目前該領域認證 worker 累積中、以下為過往合作案例展示"}
+          title={poolState.source === "real" ? _t("client.pool_real_title", "已通過認證的真實 worker pool") : _t("client.pool_demo_title", "目前該領域認證 worker 累積中、以下為過往合作案例展示")}
         >
-          {poolState.loading ? "● 載入中…" : poolState.source === "real" ? "● 真實配對池" : "● 案例展示"}
+          {poolState.loading ? _t("client.pool_loading", "● 載入中…") : poolState.source === "real" ? _t("client.pool_real", "● 真實配對池") : _t("client.pool_demo", "● 案例展示")}
         </span>
       </div>
       <h1 className="bp-h1">
         Top examples in your vertical.
         <br />
         <span className="zh" style={{ color: "var(--muted)" }}>
-          下方為「{verticalZh}」領域過往合作案例參考、實際配對 24h 內以 email 寄出。
+          {_t("client.match_demo_hint_prefix", "下方為「")}{verticalZh}{_t("client.match_demo_hint_suffix", "」領域過往合作案例參考、實際配對 24h 內以 email 寄出。")}
         </span>
       </h1>
       <div style={{
@@ -1025,10 +1031,10 @@ function Step4({ state, set, device }) {
         lineHeight: 1.7,
       }}>
         <div style={{ marginBottom: 6 }}>
-          ✨ <b style={{ color: "var(--accent)" }}>已收到你的「{verticalZh}」需求、進入後台</b>
+          ✨ <b style={{ color: "var(--accent)" }}>{_t("client.match_received_label", "已收到你的「")}{verticalZh}{_t("client.match_received_mid", "」需求、進入後台")}</b>
         </div>
         <div style={{ fontSize: 12.5, color: "var(--muted)" }}>
-          下方為「{verticalZh}」領域過往合作案例參考。<b style={{ color: "var(--text-2)" }}>實際配對方案 24h 內寄到你的 email</b>：含 AI 初審 + 團隊人工覆核 + 候選 worker + 報價區間。早期合作 · 第一批一對一處理。
+          {_t("client.match_demo_body_prefix", "下方為「")}{verticalZh}{_t("client.match_demo_body_mid", "」領域過往合作案例參考。")}<b style={{ color: "var(--text-2)" }}>{_t("client.match_demo_body_emph", "實際配對方案 24h 內寄到你的 email")}</b>{_t("client.match_demo_body_suffix", "：含 AI 初審 + 團隊人工覆核 + 候選 worker + 報價區間。早期合作 · 第一批一對一處理。")}
         </div>
       </div>
 
@@ -1036,9 +1042,9 @@ function Step4({ state, set, device }) {
         <div>
           <div className="ttl-en">SUGGESTED PAIR · 2-EXPERT DAG</div>
           <div className="ttl-zh">
-            Tier A+ 領域專家 <span style={{ color: "var(--muted)" }}>(視覺 · 50%)</span> +
-            Tier A+ 領域專家 <span style={{ color: "var(--muted)" }}>(文案 · 30%)</span> +
-            Tier A+ 領域專家 <span style={{ color: "var(--muted)" }}>(排程 · 20%)</span>
+            {_t("client.suggested_expert", "Tier A+ 領域專家")} <span style={{ color: "var(--muted)" }}>({_t("client.suggested_visual", "視覺 · 50%")})</span> +
+            {_t("client.suggested_expert", "Tier A+ 領域專家")} <span style={{ color: "var(--muted)" }}>({_t("client.suggested_copy", "文案 · 30%")})</span> +
+            {_t("client.suggested_expert", "Tier A+ 領域專家")} <span style={{ color: "var(--muted)" }}>({_t("client.suggested_schedule", "排程 · 20%")})</span>
           </div>
         </div>
         <div className="stats">
@@ -1071,7 +1077,7 @@ function Step4({ state, set, device }) {
           className={"bp-chip " + (filter === "mercy" ? "active" : "")}
           onClick={() => setFilter("mercy")}
         >
-          反馬太加成 · 1
+          {_t("client.filter_mercy_boost", "反馬太加成 · 1")}
         </button>
         <span style={{ flex: 1 }} />
         <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>
@@ -1082,7 +1088,7 @@ function Step4({ state, set, device }) {
       {filtered.length === 0 && (
         <div className="bp-empty">
           <div className="ic">∅</div>
-          沒有符合的 worker。試試放寬條件，或 24h 客服介入。
+          {_t("client.match_no_match", "沒有符合的 worker。試試放寬條件，或 24h 客服介入。")}
         </div>
       )}
 
@@ -1143,7 +1149,7 @@ function Step4({ state, set, device }) {
                         title={p.client + " · " + p.desc + " · NPS " + p.nps + (p.roas !== "—" ? " · ROAS " + p.roas : "")}
                         onClick={(ev) => {
                           ev.stopPropagation();
-                          window.alert(p.client + "\n" + p.desc + "\nNPS " + p.nps + (p.roas !== "—" ? " · ROAS " + p.roas : "") + "\n\n(完整 case study modal · 下個 sprint)");
+                          window.alert(p.client + "\n" + p.desc + "\nNPS " + p.nps + (p.roas !== "—" ? " · ROAS " + p.roas : "") + "\n\n" + _t("client.portfolio_modal_stub", "(完整 case study modal · 下個 sprint)"));
                         }}
                       >
                         <div className="bp-thumb-img">
@@ -1160,7 +1166,7 @@ function Step4({ state, set, device }) {
               )}
               {isExp && (!w.portfolio || w.portfolio.length === 0) && (
                 <div className="bp-portfolio-empty bp-rise bp-rise-1">
-                  首案進行中 · 完成後解鎖 portfolio · 可從 voice / 領域 match 評估
+                  {_t("client.portfolio_first_case", "首案進行中 · 完成後解鎖 portfolio · 可從 voice / 領域 match 評估")}
                 </div>
               )}
               <div className="stats-grid">
@@ -1208,7 +1214,7 @@ function Step4({ state, set, device }) {
               )}
             </div>
             <div className="score-col">
-              {w.boost.mercy > 0 && <span className="mercy">+10 反馬太</span>}
+              {w.boost.mercy > 0 && <span className="mercy">{_t("client.mercy_label", "+10 反馬太")}</span>}
               <div className="score">
                 {w.score}
                 <span className="of">/100</span>
@@ -1241,9 +1247,8 @@ function Rail({ step, state }) {
       <div>
         <div className="bp-rail-h">why this exists</div>
         <p className="desc" style={{ marginTop: 8 }}>
-          客戶輸入需求 → 平台 AI 拆解 → 配給合適 AI 工作者執行 →
-          雙邊評鑑 → 數據回到推薦系統。<b style={{ color: "var(--text)" }}>
-          B1 → B4 → B5 → B2 → B3 飛輪</b>。
+          {_t("client.rail_why_p1", "客戶輸入需求 → 平台 AI 拆解 → 配給合適 AI 工作者執行 → 雙邊評鑑 → 數據回到推薦系統。")}<b style={{ color: "var(--text)" }}>
+          {_t("client.rail_why_flywheel", "B1 → B4 → B5 → B2 → B3 飛輪")}</b>{_t("client.rail_why_punc", "。")}
         </p>
       </div>
 
@@ -1252,8 +1257,7 @@ function Rail({ step, state }) {
           <span>
             <code>tip</code>{" "}
             <span className="zh">
-              想清楚是 <b>內容自動化</b> 還是 <b>策略諮詢</b>。前者走 worker pool
-              ，後者通常需要 Tier A+ 雙領域。
+              {_t("client.rail_tip0_a", "想清楚是")} <b>{_t("client.rail_tip0_auto", "內容自動化")}</b> {_t("client.rail_tip0_b", "還是")} <b>{_t("client.rail_tip0_strategy", "策略諮詢")}</b>{_t("client.rail_tip0_c", "。前者走 worker pool，後者通常需要 Tier A+ 雙領域。")}
             </span>
           </span>
         )}
@@ -1261,24 +1265,23 @@ function Rail({ step, state }) {
           <span>
             <code>fit</code>{" "}
             <span className="zh">
-              條件越嚴 → 配對池越窄。推薦先寬，看完前 5 名再回來收緊。
+              {_t("client.rail_tip1_narrow", "條件越嚴 → 配對池越窄。推薦先寬，看完前 5 名再回來收緊。")}
               <br />
               <br />
-              <b style={{ color: "var(--accent)" }}>Tier 指南</b>：
+              <b style={{ color: "var(--accent)" }}>{_t("client.rail_tier_guide", "Tier 指南")}</b>{_t("client.rail_colon", "：")}
               <br />
-              <b>B 實踐者</b> 通過驗證 · 完成 3 件 NPS≥4，市價 −10%
+              <b>{_t("client.rail_tier_b", "B 實踐者")}</b> {_t("client.rail_tier_b_desc", "通過驗證 · 完成 3 件 NPS≥4，市價 −10%")}
               <br />
-              <b>A 專家</b> 通過 &lt; 10% 篩選，市價
+              <b>{_t("client.rail_tier_a", "A 專家")}</b> {_t("client.rail_tier_a_desc", "通過 < 10% 篩選，市價")}
               <br />
-              <b>A+ 大師</b> 垂直領域認證（DTC / 品牌 DNA × AI），+15%
+              <b>{_t("client.rail_tier_aplus", "A+ 大師")}</b> {_t("client.rail_tier_aplus_desc", "垂直領域認證（DTC / 品牌 DNA × AI），+15%")}
               <br />
-              <b>S 典範</b> 雙領域大師 · 2 年以上紀錄，+35%
+              <b>{_t("client.rail_tier_s", "S 典範")}</b> {_t("client.rail_tier_s_desc", "雙領域大師 · 2 年以上紀錄，+35%")}
               <br />
-              <b>Any</b> AI 自動匹配
+              <b>Any</b> {_t("client.rail_tier_any_desc", "AI 自動匹配")}
               <br />
               <br />
-              <span style={{ color: "var(--accent)" }}>※ 未驗證接案者不會進入配對池</span>，
-              等級越高接案費率越高，預算需求隨之上升。
+              <span style={{ color: "var(--accent)" }}>{_t("client.rail_tier_warn", "※ 未驗證接案者不會進入配對池")}</span>{_t("client.rail_tier_warn_after", "，等級越高接案費率越高，預算需求隨之上升。")}
             </span>
           </span>
         )}
@@ -1286,7 +1289,7 @@ function Rail({ step, state }) {
           <span>
             <code>parse</code>{" "}
             <span className="zh">
-              AI 拆解結果 = 合約附件 A，會直接綁進 Step 6 合約草稿預覽範圍。
+              {_t("client.rail_tip2", "AI 拆解結果 = 合約附件 A，會直接綁進 Step 6 合約草稿預覽範圍。")}
             </span>
           </span>
         )}
@@ -1319,8 +1322,7 @@ function Rail({ step, state }) {
           <span>
             <code>adr-006</code>{" "}
             <span className="zh">
-              載入 / 檔期 / Tier / NPS / 領域 / 聲量 = 100 分。+10 反馬太、
-              +5 loyalty、−5 連拒。
+              {_t("client.rail_tip3", "載入 / 檔期 / Tier / NPS / 領域 / 聲量 = 100 分。+10 反馬太、+5 loyalty、−5 連拒。")}
             </span>
           </span>
         )}
@@ -1401,7 +1403,7 @@ function IntakeSubmitModal({ state, onCancel, onDone }) {
       onDone && onDone();
     } catch (e) {
       setSubmitting(false);
-      setError("送出失敗：" + (e?.message || "未知錯誤") + "。先複製 brief 寄到 edwardt0303@gmail.com 也行。");
+      setError(_t("client.err_submit_failed_prefix", "送出失敗：") + (e?.message || _t("client.err_unknown", "未知錯誤")) + _t("client.err_submit_failed_suffix", "。先複製 brief 寄到 edwardt0303@gmail.com 也行。"));
     }
   };
 
@@ -1412,15 +1414,15 @@ function IntakeSubmitModal({ state, onCancel, onDone }) {
         <h2 style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 22, fontWeight: 700, margin: "0 0 8px", lineHeight: 1.3 }}>{_t("client.submit_title", "送出需求 · 取得 24h 配對方案")}</h2>
         <p style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 14, color: "#9a9aa3", margin: "0 0 22px", lineHeight: 1.6 }}>{_t("client.submit_sub", "24h 內：AI 初審 + 人工覆核 → 配對方案、候選人與時程寄到你的 email。Early Beta · 送出進人工審核、不代表正式合約或付款。")}</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <input type="email" placeholder="your@email.com（必填）" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
-          <input type="text" placeholder="公司 / 品牌名（可選）" value={companyName} onChange={(e) => setCompanyName(e.target.value)} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
+          <input type="email" placeholder={_t("client.submit_email_placeholder", "your@email.com（必填）")} value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
+          <input type="text" placeholder={_t("client.submit_company_placeholder", "公司 / 品牌名（可選）")} value={companyName} onChange={(e) => setCompanyName(e.target.value)} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
           {error && <div style={{ padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {error}</div>}
           <div style={{ display: "flex", gap: 10, marginTop: 6 }}>
-            <button type="button" onClick={onCancel} disabled={submitting} style={{ padding: "12px 18px", background: "transparent", color: "#c8c6c0", border: "1px solid rgba(255,255,255,0.12)", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", textTransform: "uppercase" }}>取消</button>
+            <button type="button" onClick={onCancel} disabled={submitting} style={{ padding: "12px 18px", background: "transparent", color: "#c8c6c0", border: "1px solid rgba(255,255,255,0.12)", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", textTransform: "uppercase" }}>{_t("client.submit_btn_cancel", "取消")}</button>
             <button type="button" onClick={doSubmit} disabled={submitting} style={{ flex: 1, padding: "12px 18px", background: "#c7e84a", color: "#0a0a0b", border: "1px solid #c7e84a", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.1em", fontWeight: 700, cursor: submitting ? "wait" : "pointer", textTransform: "uppercase", opacity: submitting ? 0.5 : 1 }}>{submitting ? _t("client.submit_btn_submitting", "送出中…") : _t("client.submit_btn_submit", "→ 取得 24h 配對方案")}</button>
           </div>
         </div>
-        <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px dashed rgba(255,255,255,0.08)", fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6a6a78", letterSpacing: "0.06em", lineHeight: 1.7 }}>Early Beta · 你的 brief + 配對結果進入 BeyondPath 後台、不會公開 · 24h 內 email 回覆 · 第一次送出僅取得配對方案、不代表正式合約或付款</div>
+        <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px dashed rgba(255,255,255,0.08)", fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6a6a78", letterSpacing: "0.06em", lineHeight: 1.7 }}>{_t("client.submit_disclaimer", "Early Beta · 你的 brief + 配對結果進入 BeyondPath 後台、不會公開 · 24h 內 email 回覆 · 第一次送出僅取得配對方案、不代表正式合約或付款")}</div>
       </div>
     </div>
   );
@@ -1511,10 +1513,10 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
           {step === 3 && <Step4 state={state} set={set} device={device} />}
           {device === "desktop" && (() => {
             const meta = [
-              { n: "01", en: "Pre-intake", zh: "選領域 + 上傳需求" },
-              { n: "02", en: "Confirm",    zh: "確認期待" },
-              { n: "03", en: "AI Parse",   zh: "AI 拆解需求" },
-              { n: "04", en: "Match",      zh: "AI 自動配對" },
+              { n: "01", en: "Pre-intake", zh: _t("app.step_name_01", "選領域 + 上傳需求") },
+              { n: "02", en: "Confirm",    zh: _t("app.step_name_02", "確認期待") },
+              { n: "03", en: "AI Parse",   zh: _t("app.step_name_03", "AI 拆解需求") },
+              { n: "04", en: "Match",      zh: _t("app.step_name_04", "AI 自動配對") },
             ][step];
             return (
               <div className="bp-dock">

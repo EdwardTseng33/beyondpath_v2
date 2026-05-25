@@ -211,11 +211,11 @@ function WorkerDashboard({ inShell = false }) {
               <div className="bp-h2" style={{ marginTop: 26 }}>Tier ladder · {_t("worker.tier_ladder_title", "從入門到大師")}</div>
               <div className="bp-tier-ladder">
                 {[
-                  { id: "C",  en: "Unverified",   zh: "未通過審核", icon: "circle",   col: "#5a5a62", bg: "rgba(90,90,98,0.10)",   line: "rgba(90,90,98,0.35)",   sub: "此狀態無法接案 · 不進入配對池", crit: "—" },
-                  { id: "B",  en: "Practitioner", zh: "實踐者",     icon: "check",    col: "#7e8da8", bg: "rgba(126,141,168,0.12)", line: "rgba(126,141,168,0.38)", sub: "通過基礎驗證 · 市價 −10%", crit: "1–2 案" },
-                  { id: "A",  en: "Expert",       zh: "專家",       icon: "diamond",  col: "#5ec4d6", bg: "rgba(94,196,214,0.12)",  line: "rgba(94,196,214,0.42)",  sub: "通過認證，平均 NPS 4.3 · 市價", crit: "3–9 案" },
-                  { id: "A+", en: "Master",       zh: "大師",       icon: "spark",    col: "#c7e84a", bg: "rgba(199,232,74,0.14)",  line: "rgba(199,232,74,0.55)",  sub: "通過垂直認證 · 市價 +15%", crit: "10–29 案", current: true },
-                  { id: "S",  en: "Paragon",      zh: "典範",       icon: "star",     col: "#f0c651", bg: "rgba(240,198,81,0.13)",  line: "rgba(240,198,81,0.5)",   sub: "≥ 30 案，平均 NPS 4.7 · 市價 +35%", crit: "30+ 案", next: true },
+                  { id: "C",  en: "Unverified",   zh: _t("worker.tier_c_zh", "未通過審核"), icon: "circle",   col: "#5a5a62", bg: "rgba(90,90,98,0.10)",   line: "rgba(90,90,98,0.35)",   sub: _t("worker.tier_c_sub", "此狀態無法接案 · 不進入配對池"), crit: "—" },
+                  { id: "B",  en: "Practitioner", zh: _t("worker.tier_b_zh", "實踐者"),     icon: "check",    col: "#7e8da8", bg: "rgba(126,141,168,0.12)", line: "rgba(126,141,168,0.38)", sub: _t("worker.tier_b_sub", "通過基礎驗證 · 市價 −10%"), crit: _t("worker.tier_b_crit", "1–2 案") },
+                  { id: "A",  en: "Expert",       zh: _t("worker.tier_a_zh", "專家"),       icon: "diamond",  col: "#5ec4d6", bg: "rgba(94,196,214,0.12)",  line: "rgba(94,196,214,0.42)",  sub: _t("worker.tier_a_sub", "通過認證，平均 NPS 4.3 · 市價"), crit: _t("worker.tier_a_crit", "3–9 案") },
+                  { id: "A+", en: "Master",       zh: _t("worker.tier_aplus_zh", "大師"),       icon: "spark",    col: "#c7e84a", bg: "rgba(199,232,74,0.14)",  line: "rgba(199,232,74,0.55)",  sub: _t("worker.tier_aplus_sub", "通過垂直認證 · 市價 +15%"), crit: _t("worker.tier_aplus_crit", "10–29 案"), current: true },
+                  { id: "S",  en: "Paragon",      zh: _t("worker.tier_s_zh", "典範"),       icon: "star",     col: "#f0c651", bg: "rgba(240,198,81,0.13)",  line: "rgba(240,198,81,0.5)",   sub: _t("worker.tier_s_sub", "≥ 30 案，平均 NPS 4.7 · 市價 +35%"), crit: _t("worker.tier_s_crit", "30+ 案"), next: true },
                 ].map((t) => (
                   <div key={t.id} className={"bp-tier-step " + (t.current ? "current" : t.next ? "next" : "")}
                        style={{ "--tcol": t.col, "--tbg": t.bg, "--tline": t.line }}>
@@ -262,20 +262,20 @@ function WorkerDashboard({ inShell = false }) {
               <div className="bp-h2" style={{ marginTop: 22 }}>{_t("worker.upgrade_checklist_title", "升級到 Tier S 還差什麼 · UPGRADE CHECKLIST")}</div>
               <div className="bp-panel">
                 <div className="bp-panel-h">
-                  <span style={{ color: "#f0c651", fontFamily: "var(--mono)", letterSpacing: "0.08em" }}>TIER S · 典範</span>
+                  <span style={{ color: "#f0c651", fontFamily: "var(--mono)", letterSpacing: "0.08em" }}>{_t("worker.tier_s_label", "TIER S · 典範")}</span>
                   <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>4 / 7 · 57%</span>
                 </div>
                 <div className="bp-panel-b">
                   <div className="bp-progress-bar"><div className="bp-progress-fill" style={{ width: "57%" }}></div></div>
                   <div className="bp-checklist" style={{ marginTop: 14 }}>
                     {[
-                      { done: true,  t: "平均 NPS ≥ 4.7",                    sub: "current 4.94 · streak 6 個月" },
-                      { done: true,  t: "至少 2 個 retainer 案",             sub: "2 / 2 · LUMINE + HANA" },
-                      { done: true,  t: "解鎖「Brand DNA × AI」垂直認證",   sub: "unlocked 2024-12" },
-                      { done: true,  t: "累積 24+ 高 NPS 案",                sub: "24 / 24 · 已達基線" },
-                      { done: false, t: "完成 Tier S 認證 case study",       sub: "0 / 2 · 需 NPS ≥ 4.9 案件作評審 sample" },
-                      { done: false, t: "平均 case 預算 ≥ NT$120K",          sub: "current avg NT$98K · 還差 NT$22K" },
-                      { done: false, t: "通過 S-tier 客戶推薦審查",          sub: "0 / 1 · 需 1 位 Tier S 客戶推薦或委員會審核" },
+                      { done: true,  t: _t("worker.checklist_nps_t", "平均 NPS ≥ 4.7"),                    sub: _t("worker.checklist_nps_sub", "current 4.94 · streak 6 個月") },
+                      { done: true,  t: _t("worker.checklist_retainer_t", "至少 2 個 retainer 案"),             sub: _t("worker.checklist_retainer_sub", "2 / 2 · LUMINE + HANA") },
+                      { done: true,  t: _t("worker.checklist_brand_t", "解鎖「Brand DNA × AI」垂直認證"),   sub: _t("worker.checklist_brand_sub", "unlocked 2024-12") },
+                      { done: true,  t: _t("worker.checklist_high_nps_t", "累積 24+ 高 NPS 案"),                sub: _t("worker.checklist_high_nps_sub", "24 / 24 · 已達基線") },
+                      { done: false, t: _t("worker.checklist_casestudy_t", "完成 Tier S 認證 case study"),       sub: _t("worker.checklist_casestudy_sub", "0 / 2 · 需 NPS ≥ 4.9 案件作評審 sample") },
+                      { done: false, t: _t("worker.checklist_avg_budget_t", "平均 case 預算 ≥ NT$120K"),          sub: _t("worker.checklist_avg_budget_sub", "current avg NT$98K · 還差 NT$22K") },
+                      { done: false, t: _t("worker.checklist_review_t", "通過 S-tier 客戶推薦審查"),          sub: _t("worker.checklist_review_sub", "0 / 1 · 需 1 位 Tier S 客戶推薦或委員會審核") },
                     ].map((row, i) => (
                       <div key={i} className={"bp-check-row " + (row.done ? "done" : "todo")}>
                         <div className="bp-check-icon">
@@ -299,7 +299,7 @@ function WorkerDashboard({ inShell = false }) {
                   </div>
                   <div className="bp-tip" style={{ marginTop: 14, borderLeft: "2px solid #f0c651" }}>
                     <span style={{ fontFamily: "var(--mono)", color: "#f0c651" }}>next</span>{" "}
-                    <span className="zh">完成 1 個 NT$120K+ 高 NPS 案 + 認證 case study × 2 → 觸發 Tier S 委員會審核 →</span>
+                    <span className="zh">{_t("worker.upgrade_trigger_zh", "完成 1 個 NT$120K+ 高 NPS 案 + 認證 case study × 2 → 觸發 Tier S 委員會審核 →")}</span>
                   </div>
                 </div>
               </div>
@@ -308,10 +308,10 @@ function WorkerDashboard({ inShell = false }) {
               <div className="bp-h2" style={{ marginTop: 22 }}>badges earned · {_t("worker.badges_title", "你的徽章牆")}</div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
                 {[
-                  { k: "DTC", t: "DTC × 7 cases",   on: true,  sub: "unlocked 2024-09",   col: "#c7e84a", icon: "spark"   },
-                  { k: "BD",  t: "Brand DNA × AI",  on: true,  sub: "unlocked 2024-12",   col: "#5ec4d6", icon: "diamond" },
-                  { k: "S",   t: "Tier S · DTC",    on: false, sub: "8% to go",           col: "#f0c651", icon: "star"    },
-                  { k: "RT",  t: "Retainer Master", on: false, sub: "需 3 個 retainer 案", col: "#c39bff", icon: "crown"   },
+                  { k: "DTC", t: "DTC × 7 cases",   on: true,  sub: _t("worker.badge_dtc_sub", "unlocked 2024-09"),   col: "#c7e84a", icon: "spark"   },
+                  { k: "BD",  t: "Brand DNA × AI",  on: true,  sub: _t("worker.badge_bd_sub", "unlocked 2024-12"),   col: "#5ec4d6", icon: "diamond" },
+                  { k: "S",   t: "Tier S · DTC",    on: false, sub: _t("worker.badge_s_sub", "8% to go"),           col: "#f0c651", icon: "star"    },
+                  { k: "RT",  t: "Retainer Master", on: false, sub: _t("worker.badge_rt_sub", "需 3 個 retainer 案"), col: "#c39bff", icon: "crown"   },
                 ].map((b, i) => (
                   <div key={i} className="bp-rcard" style={{
                     border: b.on ? `1px solid ${b.col}` : "1px dashed var(--line)",
@@ -368,7 +368,7 @@ function WorkerDashboard({ inShell = false }) {
                 {[
                   { lbl: "Accepted scope", v: "3 cases", sub: "↑ 38% MoM", a: true },
                   { lbl: "Review logs", v: "7", sub: "from 3 active cases" },
-                  { lbl: "AI 工具補貼", v: "NT$3,500", sub: "Claude Pro · ChatGPT Team", a: true },
+                  { lbl: _t("worker.subsidy_label", "AI 工具補貼"), v: "NT$3,500", sub: "Claude Pro · ChatGPT Team", a: true },
                 ].map((s, i) => (
                   <div key={i} className="bp-rcard">
                     <div className="lbl">{s.lbl}</div>
@@ -382,10 +382,10 @@ function WorkerDashboard({ inShell = false }) {
               <div className="bp-panel">
                 <div className="bp-panel-b" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
                   {[
-                    { t: "Claude Pro", s: "已啟用 · 平台支付 NT$700/mo" },
-                    { t: "ChatGPT Team", s: "已啟用 · 平台支付 NT$900/mo" },
-                    { t: "Midjourney Standard", s: "已啟用 · NT$960/mo" },
-                    { t: "Figma Pro + Plugin pack", s: "已啟用 · NT$940/mo" },
+                    { t: "Claude Pro", s: _t("worker.subsidy_claude", "已啟用 · 平台支付 NT$700/mo") },
+                    { t: "ChatGPT Team", s: _t("worker.subsidy_chatgpt", "已啟用 · 平台支付 NT$900/mo") },
+                    { t: "Midjourney Standard", s: _t("worker.subsidy_mj", "已啟用 · NT$960/mo") },
+                    { t: "Figma Pro + Plugin pack", s: _t("worker.subsidy_figma", "已啟用 · NT$940/mo") },
                   ].map((p, i) => (
                     <div key={i} style={{
                       padding: "12px 14px", background: "var(--bg-1)",
@@ -453,10 +453,9 @@ function WorkerDashboard({ inShell = false }) {
                   <div style={{ marginTop: 12, padding: "10px 12px", background: "var(--bg-1)", borderLeft: "2px solid var(--accent)", borderRadius: 4, fontFamily: "var(--zh)", fontSize: 12, color: "var(--text-2)", lineHeight: 1.7 }}>
                     <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--accent)", letterSpacing: "0.12em" }}>AI SUMMARY</span>
                     <div style={{ marginTop: 6 }}>
-                      你的 <b>Visual + Brand DNA</b> 已穩居 Tier A+ DTC 領先群。下一個 unlock（Tier S）的瓶頸是
-                      <b style={{ color: "var(--warn)" }}> Reels 短影音 </b>與
-                      <b style={{ color: "var(--warn)" }}> 績效型文案</b>——這兩塊正是 LUMINE 案中由 Mei 補上的部分。
-                      補齊後預估推薦權重再 +12%。
+                      {_t("worker.summary_intro_pre", "你的 ")}<b>Visual + Brand DNA</b>{_t("worker.summary_intro_post", " 已穩居 Tier A+ DTC 領先群。下一個 unlock（Tier S）的瓶頸是")}
+                      <b style={{ color: "var(--warn)" }}>{_t("worker.summary_warn1", " Reels 短影音 ")}</b>{_t("worker.summary_and", "與")}
+                      <b style={{ color: "var(--warn)" }}>{_t("worker.summary_warn2", " 績效型文案")}</b>{_t("worker.summary_outro", "——這兩塊正是 LUMINE 案中由 Mei 補上的部分。 補齊後預估推薦權重再 +12%。")}
                     </div>
                   </div>
                 </div>
@@ -465,9 +464,9 @@ function WorkerDashboard({ inShell = false }) {
               <div className="bp-h2" style={{ marginTop: 22 }}>recommended · {_t("worker.recommended_title", "補足學習路徑（個人化）")}</div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
                 {[
-                  { tag: "COURSE", t: "Reels 60s storytelling", who: "BeyondPath original", time: "2h 40m · 8 modules", lift: "+9 score", paid: "平台補貼 100%" },
-                  { tag: "COURSE", t: "Performance copy fundamentals", who: "Maven cohort · imported", time: "4 weeks · live", lift: "+14 score", paid: "平台補貼 NT$4,800 / 6,000" },
-                  { tag: "PRACTICE", t: "Reels rapid drill", who: "AI 模擬客戶 brief × 6", time: "self-paced · 6h", lift: "+6 score", paid: "免費 · Tier A+ 福利" },
+                  { tag: "COURSE", t: "Reels 60s storytelling", who: "BeyondPath original", time: "2h 40m · 8 modules", lift: "+9 score", paid: _t("worker.course_reels_paid", "平台補貼 100%") },
+                  { tag: "COURSE", t: "Performance copy fundamentals", who: "Maven cohort · imported", time: "4 weeks · live", lift: "+14 score", paid: _t("worker.course_copy_paid", "平台補貼 NT$4,800 / 6,000") },
+                  { tag: "PRACTICE", t: "Reels rapid drill", who: _t("worker.practice_reels_who", "AI 模擬客戶 brief × 6"), time: "self-paced · 6h", lift: "+6 score", paid: _t("worker.practice_reels_paid", "免費 · Tier A+ 福利") },
                 ].map((c, i) => (
                   <div key={i} className="bp-panel">
                     <div className="bp-panel-h">
@@ -493,10 +492,10 @@ function WorkerDashboard({ inShell = false }) {
               <div className="bp-panel">
                 <div className="bp-panel-b" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
                   {[
-                    { t: "Runway Gen-3 Alpha", why: "你的 Reels 短影音可從 KV 直接生成 · 估計時程 -40%", state: "推薦", new: true },
-                    { t: "Claude Projects + Brand GPTs", why: "你 LUMINE 已用過、可一鍵複製到 HANA / Plant", state: "已接", new: false },
-                    { t: "Arcads · UGC AI actor", why: "績效型短影片 · 補你 Performance copy 弱項", state: "推薦", new: true },
-                    { t: "Figma Make", why: "從 KV 直接出可互動 mock，retainer 案常用", state: "推薦", new: true },
+                    { t: "Runway Gen-3 Alpha", why: _t("worker.tool_runway_why", "你的 Reels 短影音可從 KV 直接生成 · 估計時程 -40%"), state: "推薦", new: true },
+                    { t: "Claude Projects + Brand GPTs", why: _t("worker.tool_claude_why", "你 LUMINE 已用過、可一鍵複製到 HANA / Plant"), state: "已接", new: false },
+                    { t: "Arcads · UGC AI actor", why: _t("worker.tool_arcads_why", "績效型短影片 · 補你 Performance copy 弱項"), state: "推薦", new: true },
+                    { t: "Figma Make", why: _t("worker.tool_figma_why", "從 KV 直接出可互動 mock，retainer 案常用"), state: "推薦", new: true },
                   ].map((tool, i) => (
                     <div key={i} style={{
                       padding: "12px 14px",
@@ -533,9 +532,9 @@ function WorkerDashboard({ inShell = false }) {
               <div className="bp-h2" style={{ marginTop: 26 }}>{_t("worker.inbox_title", "inbox · 3 待回")}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {[
-                  { tier: "A+", who: "AURA Skincare", role: "Brand DNA × AI", score: 89, fee: 280000, hot: true, zh: "8 週・3 SKU 全套素材・retainer 入口・client NPS 4.7" },
-                  { tier: "A+", who: "Wahmi · Q1 GTM", role: "Visual KV", score: 81, fee: 156000, zh: "6 週・需要快速產出, AI 拆解結果已附" },
-                  { tier: "A", who: "Maru · packaging", role: "Visual", score: 72, fee: 84000, zh: "4 週・小型專案, 試做機會" },
+                  { tier: "A+", who: "AURA Skincare", role: "Brand DNA × AI", score: 89, fee: 280000, hot: true, zh: _t("worker.inbox_aura_zh", "8 週・3 SKU 全套素材・retainer 入口・client NPS 4.7") },
+                  { tier: "A+", who: "Wahmi · Q1 GTM", role: "Visual KV", score: 81, fee: 156000, zh: _t("worker.inbox_wahmi_zh", "6 週・需要快速產出, AI 拆解結果已附") },
+                  { tier: "A", who: "Maru · packaging", role: "Visual", score: 72, fee: 84000, zh: _t("worker.inbox_maru_zh", "4 週・小型專案, 試做機會") },
                 ].map((p, i) => (
                   <div key={i} className="bp-worker" style={{ cursor: "default" }}>
                     <div className="av" style={{ background: "var(--bg-1)", color: "var(--accent)", fontFamily: "var(--mono)" }}>
@@ -580,7 +579,7 @@ function WorkerDashboard({ inShell = false }) {
           </div>
           <div className="bp-tip">
             <span style={{ fontFamily: "var(--mono)" }}>tip</span>{" "}
-            <span className="zh">本月新人加成名額已用罄 · 你目前處於 <b>Tier A+ 飛輪複利區</b>，每多一個高 NPS 案 → 推薦權重 +0.7%。</span>
+            <span className="zh">{_t("worker.month_quota_zh", "本月新人加成名額已用罄 · 你目前處於 ")}<b>{_t("worker.tier_aplus_flywheel", "Tier A+ 飛輪複利區")}</b>{_t("worker.tier_aplus_flywheel_after", "，每多一個高 NPS 案 → 推薦權重 +0.7%。")}</span>
           </div>
           <div>
             <div className="bp-rail-h">upcoming</div>
