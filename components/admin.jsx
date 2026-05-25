@@ -516,10 +516,10 @@ function AdminApp() {
   return (
     <div className="admin-shell">
       <div className="admin-top">
-        <div className="admin-brand">
+        <a className="admin-brand" href="landing.html" aria-label="BeyondPath · back to home" title="Back to home">
           <span className="admin-mark"></span>
-          <span className="admin-title">Beyond<span>Path</span> · Admin Console</span>
-        </div>
+          <span className="admin-title">Beyond<span className="le-acc">Path</span><small>ADMIN CONSOLE</small></span>
+        </a>
         <div className="admin-meta">POC · INTERNAL ONLY · v0.1</div>
       </div>
 

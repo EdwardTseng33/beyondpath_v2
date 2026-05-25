@@ -72,7 +72,7 @@
 }
 </script>
 
-<link rel="stylesheet" href="components/styles.css">
+<link rel="stylesheet" href="components/styles.css?v=2026-05-25-p0p1">
 <style>
   /* ========= Base ========= */
   html, body { margin: 0; padding: 0; background: var(--bg); font-family: var(--sans); color: var(--text); }
@@ -136,15 +136,15 @@
 
   /* ========= Nav ========= */
   .le-nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; padding: 14px 56px; background: rgba(10,10,11,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-soft); }
-  .le-nav .brand { font-family: var(--sans); font-weight: 800; font-size: 22px; letter-spacing: -0.03em; }
-  .le-nav .brand small { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.2em; margin-left: 10px; }
+  .le-nav .brand { font-family: var(--sans); font-weight: 800; font-size: 18px; letter-spacing: -0.02em; }
+  .le-nav .brand small { font-family: var(--mono); font-size: 9px; font-weight: 500; color: var(--muted); letter-spacing: 0.2em; margin-left: 8px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,0.1); }
   .le-nav .links { display: flex; gap: 28px; margin-left: 60px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; }
   .le-nav .links a { color: var(--muted); text-decoration: none; transition: color 120ms; }
   .le-nav .links a:hover { color: var(--text); }
   .le-nav .actions { margin-left: auto; display: flex; gap: 12px; }
   .le-nav .btn-ghost { background: transparent; border: 1px solid var(--accent-line); color: var(--text); padding: 9px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; cursor: pointer; text-decoration: none; }
   .le-nav .btn-primary { background: var(--accent); border: 0; color: var(--bg); padding: 9px 18px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; font-weight: 700; cursor: pointer; text-decoration: none; }
-  @media (max-width: 900px) { .le-nav { padding: 12px 16px; gap: 8px; } .le-nav .links { display: none; } .le-nav .brand { font-size: 18px; } .le-nav .brand small { display: none; } .le-nav .btn-ghost { display: none; } .le-nav .btn-primary { padding: 12px 16px; font-size: 11px; min-height: 44px; display: inline-flex; align-items: center; } }
+  @media (max-width: 768px) { .le-nav { padding: 12px 16px; gap: 8px; } .le-nav .links { display: none; } .le-nav .brand { font-size: 16px; } .le-nav .brand small { display: none; } .le-nav .btn-ghost { display: none; } .le-nav .btn-primary { padding: 12px 16px; font-size: 11px; min-height: 44px; display: inline-flex; align-items: center; } }
 
   /* v0.3 sticky scrolled state */
   .le-nav { transition: padding 240ms ease, background 240ms ease, border-color 240ms ease; }
@@ -835,10 +835,10 @@ function ENav() {
   useLangRerender();
   return (
     <nav className="le-nav">
-      <div className="brand">
+      <a className="brand" href="landing.html" aria-label="BeyondPath · back to home" title="Back to home" style={{ textDecoration: "none", color: "inherit" }}>
         Beyond<span className="le-acc">Path</span>
         <small>{t("nav.brand_version", "v0.5β")}</small>
-      </div>
+      </a>
       <div className="links">
         <a href="#problem">{t("nav.link_problem", "Problem")}</a>
         <a href="#engines">{t("nav.link_how", "How")}</a>

@@ -53,7 +53,7 @@ function BP_AppShell() {
           title="Back to home"
         >
           <span className="bp-shell-mark"></span>
-          BEYONDPATH
+          Beyond<span className="le-acc">Path</span>
           <small>{role === "client" ? "CLIENT · INTAKE OS" : "WORKER · CONSOLE"}</small>
         </a>
 

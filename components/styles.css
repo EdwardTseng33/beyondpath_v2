@@ -41,6 +41,10 @@
   --r-lg: 10px;
 }
 
+/* Brand accent semantic (cross-entry SSOT · used in shell brand · landing · admin · waitlist) */
+.le-acc { color: var(--accent); }
+.le-acc-dim { color: var(--accent-dim); }
+
 * { box-sizing: border-box; }
 
 /* Global a11y · focus visible (WCAG 2.4.7) */

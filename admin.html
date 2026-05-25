@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="components/styles.css">
+<link rel="stylesheet" href="components/styles.css?v=2026-05-25-p0p1">
 <style>
   :root {
     --bg: #0a0a0b;
@@ -39,12 +39,12 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); }
   .admin-shell { max-width: 1280px; margin: 0 auto; padding: 24px 28px 80px; }
-  .admin-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
-  .admin-brand { display: flex; align-items: center; gap: 12px; }
-  .admin-mark { width: 18px; height: 18px; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
-  .admin-title { font-weight: 800; letter-spacing: -0.02em; font-size: 18px; }
-  .admin-title span { color: var(--accent); }
+  .admin-top { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; min-height: 56px; border-bottom: 1px solid var(--line-soft); margin-bottom: 24px; position: sticky; top: 0; z-index: 50; background: rgba(10,10,11,0.85); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .admin-brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; }
+  .admin-mark { width: 14px; height: 14px; border-radius: 4px; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .admin-title { font-family: var(--sans); font-weight: 800; letter-spacing: -0.02em; font-size: 18px; }
   .admin-meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+  .admin-title small { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.2em; margin-left: 8px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,0.1); font-weight: 500; }
   .admin-top-right { display: flex; align-items: center; gap: 16px; }
   .admin-top-right .bp-lang-switcher { font-family: var(--mono); }
   .admin-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }

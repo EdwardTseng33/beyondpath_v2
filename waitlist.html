@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="components/styles.css">
+<link rel="stylesheet" href="components/styles.css?v=2026-05-25-p0p1">
 <style>
   :root {
     --bg: #0a0a0b;
@@ -31,13 +31,12 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); }
   .wl-root { min-height: 100vh; display: flex; flex-direction: column; }
-  .wl-top { padding: 18px 32px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .wl-top { padding: 12px 32px; min-height: 56px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: space-between; gap: 16px; position: sticky; top: 0; z-index: 50; background: rgba(10,10,11,0.85); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
   .wl-top-right { display: flex; align-items: center; gap: 14px; }
-  .wl-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.02em; }
-  .wl-mark { width: 16px; height: 16px; border-radius: 4px; background: var(--accent); box-shadow: 0 0 0 4px rgba(199,232,74,0.08); }
-  .wl-brand span span { color: var(--accent); }
-  .wl-top a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); font: 600 12px/1 var(--mono); letter-spacing: 0.12em; padding: 14px 4px; display: inline-flex; align-items: center; min-height: 44px; }
-  .wl-top a:hover { color: var(--accent); border-bottom-color: var(--accent-line); }
+  .wl-brand { display: flex; align-items: center; gap: 10px; font-family: var(--sans); font-weight: 800; font-size: 18px; letter-spacing: -0.02em; color: var(--text); text-decoration: none; }
+  .wl-mark { width: 14px; height: 14px; border-radius: 4px; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .wl-top-right a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); font: 600 12px/1 var(--mono); letter-spacing: 0.12em; padding: 14px 4px; display: inline-flex; align-items: center; min-height: 44px; }
+  .wl-top-right a:hover { color: var(--accent); border-bottom-color: var(--accent-line); }
   .wl-main { flex: 1; display: grid; place-items: center; padding: 56px 24px; position: relative; overflow: hidden; }
   .wl-main::before { content: ""; position: absolute; inset: -20%; background: radial-gradient(circle at 20% 20%, rgba(199,232,74,0.12), transparent 28%), radial-gradient(circle at 80% 70%, rgba(94,196,214,0.08), transparent 30%); pointer-events: none; }
   .wl-card { width: 100%; max-width: 660px; position: relative; z-index: 1; border: 1px solid var(--line); background: rgba(10,10,11,0.92); box-shadow: 0 30px 90px rgba(0,0,0,0.55); padding: 40px 36px; }
@@ -80,7 +79,7 @@
 <body>
 <div class="wl-root">
   <header class="wl-top">
-    <div class="wl-brand"><span class="wl-mark"></span><span>Beyond<span>Path</span></span></div>
+    <a class="wl-brand" href="landing.html" aria-label="BeyondPath · back to home" title="Back to home"><span class="wl-mark"></span><span>Beyond<span class="le-acc">Path</span></span></a>
     <div class="wl-top-right">
       <div id="lang-switcher-mount"></div>
       <a href="landing.html" data-i18n="waitlist.top_back">BACK TO LANDING</a>
