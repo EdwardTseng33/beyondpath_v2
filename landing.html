@@ -480,6 +480,8 @@
   .le-footer-bar .center { text-align: center; }
   .le-footer-bar .right { text-align: right; color: var(--accent); display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
   @media (max-width: 900px) { .le-footer-bar { grid-template-columns: 1fr; gap: 8px; } .le-footer-bar .center, .le-footer-bar .right { text-align: left; justify-content: flex-start; } }
+  .le-foot-caveat { font: 500 9px/1.5 var(--mono); color: var(--muted); opacity: 0.7; letter-spacing: 0.04em; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04); text-align: center; }
+  @media (max-width: 900px) { .le-foot-caveat { text-align: left; padding-left: 16px; padding-right: 16px; } }
 
   /* ============================================================
      2026-05-15 Mobile responsive comprehensive fix (Edward audit)
@@ -1665,6 +1667,9 @@ function EFinalCta() {
             {t("footer.version_status", "v0.5β · LIVE · BETA COHORT OPEN")}
           </div>
         </div>
+        {t("footer.eu_caveat", "") && (
+          <div className="le-foot-caveat">{t("footer.eu_caveat", "")}</div>
+        )}
       </div>
     </section>
   );

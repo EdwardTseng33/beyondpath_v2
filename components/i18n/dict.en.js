@@ -615,7 +615,8 @@
     "link_security": "Security whitepaper · v0.4 · soon",
     "copyright": "© 2026 BEYONDPATH NETWORK",
     "cities": "TAIPEI × SINGAPORE × TOKYO · Y1->Y3",
-    "version_status": "v0.5β · LIVE · BETA COHORT OPEN"
+    "version_status": "v0.5β · LIVE · BETA COHORT OPEN",
+    "eu_caveat": "Beta service — invite-only, primarily Taiwan-based. EU residents: data processing under review · contact hello@beyondpath.tw"
   },
   "banner": {
     "label": "◆ WORKER DECISION",

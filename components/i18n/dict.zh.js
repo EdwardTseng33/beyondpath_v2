@@ -610,7 +610,8 @@
     "link_security": "資安白皮書 · v0.4 · 即將上線",
     "copyright": "© 2026 BEYONDPATH NETWORK",
     "cities": "TAIPEI × SINGAPORE × TOKYO · Y1->Y3",
-    "version_status": "v0.5β · LIVE · BETA COHORT OPEN"
+    "version_status": "v0.5β · LIVE · BETA COHORT OPEN",
+    "eu_caveat": ""
   },
   "banner": {
     "label": "◆ WORKER DECISION",
