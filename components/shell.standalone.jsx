@@ -3,7 +3,7 @@
 
 const { useState: uSS, useEffect: uES, useRef: uRS } = React;
 const BP_ROLE_KEY = "bp-active-role";
-const BP_VERSION = "v1.0.0";
+const BP_VERSION = "v1.1.0";
 
 const BP_USERS = {
   client: { name: "Edward", email: "edward@lumine.tw", img: window.__resources.avEdward, color: "#4285F4" },

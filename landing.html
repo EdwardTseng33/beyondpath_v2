@@ -135,8 +135,8 @@
   @media (max-width: 768px) { .le-ticker { overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; } .le-ticker::-webkit-scrollbar { display: none; } .le-ticker .item { padding: 10px 14px; flex: 0 0 auto; font-size: 10px; } .le-ticker .item:last-child { flex: 0 0 auto; } }
 
   /* ========= Nav ========= */
-  .le-nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; padding: 14px 56px; background: rgba(10,10,11,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-soft); }
-  .le-nav .brand { font-family: var(--sans); font-weight: 800; font-size: 18px; letter-spacing: -0.02em; }
+  .le-nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; min-height: 56px; box-sizing: border-box; padding: 14px 56px; background: rgba(10,10,11,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-soft); }
+  .le-nav .brand { font-family: var(--sans); font-weight: 800; font-size: 18px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
   .le-nav .brand small { font-family: var(--mono); font-size: 9px; font-weight: 500; color: var(--muted); letter-spacing: 0.2em; margin-left: 8px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,0.1); }
   .le-nav .links { display: flex; gap: 28px; margin-left: 60px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; }
   .le-nav .links a { color: var(--muted); text-decoration: none; transition: color 120ms; }
@@ -144,11 +144,12 @@
   .le-nav .actions { margin-left: auto; display: flex; gap: 12px; }
   .le-nav .btn-ghost { background: transparent; border: 1px solid var(--accent-line); color: var(--text); padding: 9px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; cursor: pointer; text-decoration: none; }
   .le-nav .btn-primary { background: var(--accent); border: 0; color: var(--bg); padding: 9px 18px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; font-weight: 700; cursor: pointer; text-decoration: none; }
-  @media (max-width: 768px) { .le-nav { padding: 12px 16px; gap: 8px; } .le-nav .links { display: none; } .le-nav .brand { font-size: 16px; } .le-nav .brand small { display: none; } .le-nav .btn-ghost { display: none; } .le-nav .btn-primary { padding: 12px 16px; font-size: 11px; min-height: 44px; display: inline-flex; align-items: center; } }
+  .le-mark { width: 14px; height: 14px; border-radius: 4px; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); flex: 0 0 auto; }
+  @media (max-width: 768px) { .le-nav { padding: 12px 16px; gap: 8px; } .le-nav .links { display: none; } .le-nav .brand { font-size: 16px; gap: 8px; } .le-nav .brand small { display: none; } .le-nav .btn-ghost { display: none; } .le-nav .btn-primary { padding: 12px 16px; font-size: 11px; min-height: 44px; display: inline-flex; align-items: center; } .le-mark { width: 12px; height: 12px; box-shadow: 0 0 0 3px var(--accent-soft); } }
 
   /* v0.3 sticky scrolled state */
   .le-nav { transition: padding 240ms ease, background 240ms ease, border-color 240ms ease; }
-  .le-nav.scrolled { background: rgba(10,10,11,0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--accent); padding-top: 10px; padding-bottom: 10px; box-shadow: 0 2px 16px rgba(199, 232, 74, 0.12), 0 8px 24px rgba(0, 0, 0, 0.4); }
+  .le-nav.scrolled { background: rgba(10,10,11,0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--accent); min-height: 56px; padding-top: 10px; padding-bottom: 10px; box-shadow: 0 2px 16px rgba(199, 232, 74, 0.12), 0 8px 24px rgba(0, 0, 0, 0.4); }
   .le-nav.scrolled .brand { font-size: 18px; transition: font-size 240ms ease; }
   .le-nav.scrolled .btn-primary, .le-nav.scrolled .btn-ghost { padding: 7px 14px; transition: padding 240ms ease; }
 
@@ -590,13 +591,13 @@
   <span data-i18n="disc.foot_text">BeyondPath · Early Beta v0.8 · 2026-05-15 · 邀請制 · 平台品質審核中 · 律師合約完整版審視中 · </span><a href="legal/privacy.html" data-i18n="disc.foot_privacy">隱私權與服務條款</a> · <a href="waitlist.html" data-i18n="disc.foot_waitlist">加入 waitlist →</a>
 </footer>
 <!-- i18n bundle (must load BEFORE React+Babel) · Phase 1 Step 1 -->
-<script src="components/i18n/index.js"></script>
-<script src="components/i18n/dict.zh.js"></script>
-<script src="components/i18n/dict.en.js"></script>
+<script src="components/i18n/index.js?v=2026-05-25-i18n-r2"></script>
+<script src="components/i18n/dict.zh.js?v=2026-05-25-i18n-r2"></script>
+<script src="components/i18n/dict.en.js?v=2026-05-25-i18n-r2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx"></script>
+<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx?v=2026-05-25-i18n-r2"></script>
 
 <script type="text/babel" data-presets="env,react">
 const { useState, useEffect, useRef, useMemo } = React;
@@ -836,7 +837,8 @@ function ENav() {
   return (
     <nav className="le-nav">
       <a className="brand" href="landing.html" aria-label="BeyondPath · back to home" title="Back to home" style={{ textDecoration: "none", color: "inherit" }}>
-        Beyond<span className="le-acc">Path</span>
+        <span className="le-mark" aria-hidden="true"></span>
+        <span>Beyond<span className="le-acc">Path</span></span>
         <small>{t("nav.brand_version", "v0.5β")}</small>
       </a>
       <div className="links">
