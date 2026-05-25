@@ -11,6 +11,10 @@
 
 <!-- SEO basics -->
 <link rel="canonical" href="https://beyondpath.tw/landing.html" />
+<!-- i18n alternates · Phase 1 Step 1 (2026-05-25) -->
+<link rel="alternate" hreflang="zh-Hant" href="https://beyondpath.tw/landing.html?lang=zh" />
+<link rel="alternate" hreflang="en" href="https://beyondpath.tw/landing.html?lang=en" />
+<link rel="alternate" hreflang="x-default" href="https://beyondpath.tw/landing.html" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="theme-color" content="#0a0a0b" />
 <meta name="author" content="Edward Tsai" />
@@ -525,24 +529,93 @@
 <body>
 <div class="bp-disclaimer-top" id="bp-disc-top">
   <span class="icon">●</span>
-  <span class="label">EARLY BETA · 邀請制</span>
-  <span class="body">首批案件 BeyondPath 認證 worker 配對、24h 內系統回覆 · <a href="waitlist.html">加入 waitlist →</a></span>
-  <button class="close" onclick="document.getElementById('bp-disc-top').style.display='none'; sessionStorage.setItem('bp-disc-closed','1');" aria-label="關閉提醒">×</button>
+  <span class="label" data-i18n="disc.top_label">EARLY BETA · 邀請制</span>
+  <span class="body"><span data-i18n="disc.top_body_before">首批案件 BeyondPath 認證 worker 配對、24h 內系統回覆 · </span><a href="waitlist.html" data-i18n="disc.top_link">加入 waitlist →</a></span>
+  <button class="close" onclick="document.getElementById('bp-disc-top').style.display='none'; sessionStorage.setItem('bp-disc-closed','1');" data-i18n-attr="aria-label:disc.top_close_aria" aria-label="關閉提醒">×</button>
 </div>
 <script>
   if (sessionStorage.getItem('bp-disc-closed') === '1') {
     document.getElementById('bp-disc-top').style.display = 'none';
   }
+  /* i18n DOM walker · Phase 1 Step 1 (2026-05-25)
+   * - 處理 [data-i18n="path"] textContent swap
+   * - 處理 [data-i18n-attr="attrName:path"] attribute swap
+   * - 處理 <title> + meta description swap
+   * - re-run 在每次 i18n:change event 觸發
+   */
+  (function () {
+    function applyI18n() {
+      if (!window.BPi18n) return;
+      var t = window.BPi18n.t;
+      var lang = window.BPi18n.getLang();
+      // title + meta
+      var titleEl = document.querySelector('title');
+      if (titleEl) titleEl.textContent = t('meta.title', titleEl.textContent);
+      var descEl = document.querySelector('meta[name="description"]');
+      if (descEl) descEl.setAttribute('content', t('meta.description', descEl.getAttribute('content')));
+      var ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.setAttribute('content', t('meta.og_title', ogTitle.getAttribute('content')));
+      var ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) ogDesc.setAttribute('content', t('meta.og_description', ogDesc.getAttribute('content')));
+      var ogLocale = document.querySelector('meta[property="og:locale"]');
+      if (ogLocale) ogLocale.setAttribute('content', lang === 'en' ? 'en_US' : 'zh_TW');
+      // text content
+      var nodes = document.querySelectorAll('[data-i18n]');
+      for (var i = 0; i < nodes.length; i++) {
+        var k = nodes[i].getAttribute('data-i18n');
+        nodes[i].textContent = t(k, nodes[i].textContent);
+      }
+      // attributes (format: "attrName:dotPath")
+      var attrNodes = document.querySelectorAll('[data-i18n-attr]');
+      for (var j = 0; j < attrNodes.length; j++) {
+        var spec = attrNodes[j].getAttribute('data-i18n-attr');
+        var parts = spec.split(':');
+        if (parts.length === 2) {
+          attrNodes[j].setAttribute(parts[0], t(parts[1], attrNodes[j].getAttribute(parts[0])));
+        }
+      }
+    }
+    function ready(fn) {
+      if (document.readyState !== 'loading') { fn(); return; }
+      document.addEventListener('DOMContentLoaded', fn);
+    }
+    ready(function () {
+      applyI18n();
+      document.addEventListener('i18n:change', applyI18n);
+    });
+  })();
 </script>
 <div id="root"></div>
 <footer class="bp-disclaimer-foot">
-  BeyondPath · Early Beta v0.8 · 2026-05-15 · 邀請制 · 平台品質審核中 · 律師合約完整版審視中 · <a href="legal/privacy.html">隱私權與服務條款</a> · <a href="waitlist.html">加入 waitlist →</a>
+  <span data-i18n="disc.foot_text">BeyondPath · Early Beta v0.8 · 2026-05-15 · 邀請制 · 平台品質審核中 · 律師合約完整版審視中 · </span><a href="legal/privacy.html" data-i18n="disc.foot_privacy">隱私權與服務條款</a> · <a href="waitlist.html" data-i18n="disc.foot_waitlist">加入 waitlist →</a>
 </footer>
+<!-- i18n bundle (must load BEFORE React+Babel) · Phase 1 Step 1 -->
+<script src="components/i18n/index.js"></script>
+<script src="components/i18n/dict.zh.js"></script>
+<script src="components/i18n/dict.en.js"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx"></script>
+
 <script type="text/babel" data-presets="env,react">
 const { useState, useEffect, useRef, useMemo } = React;
+// i18n helper (Phase 1 Step 1) -- 短手 t() · 字典 fallback chain 見 components/i18n/index.js
+const t = (key, fb) => (window.BPi18n ? window.BPi18n.t(key, fb) : (fb != null ? fb : key));
+const dict = (ns) => {
+  if (!window.BPi18n) return null;
+  const lang = window.BPi18n.getLang();
+  const d = window.BPi18n.dicts[lang] || window.BPi18n.dicts.zh || {};
+  return d[ns] || (window.BPi18n.dicts.zh ? window.BPi18n.dicts.zh[ns] : null) || null;
+};
+function useLangRerender() {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const handler = () => setTick(x => x + 1);
+    document.addEventListener("i18n:change", handler);
+    return () => document.removeEventListener("i18n:change", handler);
+  }, []);
+}
 
 // Heromark · 5-tier orbital
 function Heromark({ size = 360, label = "BEYONDPATH", sub = "FLYWHEEL" }) {
@@ -733,48 +806,51 @@ function EngineMock({ kind }) {
 
 // v0.3 static bar - 3 chips no rolling (was LiveTicker)
 function EStaticBar() {
+  useLangRerender();
   return (
     <div className="le-staticbar">
       <div className="item">
         <span className="le-pulse" style={{ display: "inline-block", width: 6, height: 6, background: "var(--accent)", borderRadius: 99 }}></span>
-        <span className="k">NETWORK</span>
-        <span style={{ color: "var(--text)", marginLeft: "auto" }}>v0.5β · TAIWAN BETA</span>
+        <span className="k">{t("staticbar.network_label", "NETWORK")}</span>
+        <span style={{ color: "var(--text)", marginLeft: "auto" }}>{t("staticbar.network_value", "v0.5β · TAIWAN BETA")}</span>
       </div>
       <div className="item">
-        <span className="k">FIRST REVIEW</span>
-        <span style={{ color: "var(--accent)", marginLeft: "auto" }}>24H</span>
+        <span className="k">{t("staticbar.review_label", "FIRST REVIEW")}</span>
+        <span style={{ color: "var(--accent)", marginLeft: "auto" }}>{t("staticbar.review_value", "24H")}</span>
       </div>
       <div className="item">
-        <span className="k">FIRST PROJECT</span>
-        <span style={{ color: "var(--text)", marginLeft: "auto" }}>NT$50K+</span>
+        <span className="k">{t("staticbar.project_label", "FIRST PROJECT")}</span>
+        <span style={{ color: "var(--text)", marginLeft: "auto" }}>{t("staticbar.project_value", "NT$50K+")}</span>
       </div>
       <div className="item">
-        <span className="k">MODE</span>
-        <span style={{ color: "var(--accent-dim)", marginLeft: "auto" }}>AI 把關</span>
+        <span className="k">{t("staticbar.mode_label", "MODE")}</span>
+        <span style={{ color: "var(--accent-dim)", marginLeft: "auto" }}>{t("staticbar.mode_value", "AI 把關")}</span>
       </div>
     </div>
   );
 }
 
-// Nav
+// Nav · v0.6 (2026-05-25) Phase 1 Step 1 · i18n
 function ENav() {
+  useLangRerender();
   return (
     <nav className="le-nav">
       <div className="brand">
         Beyond<span className="le-acc">Path</span>
-        <small>v0.5β</small>
+        <small>{t("nav.brand_version", "v0.5β")}</small>
       </div>
       <div className="links">
-        <a href="#problem">Problem</a>
-        <a href="#engines">How</a>
-        <a href="#trust">Trust</a>
-        <a href="#cases">Cases</a>
-        <a href="#tier">Tier</a>
-        <a href="#faq">FAQ</a>
+        <a href="#problem">{t("nav.link_problem", "Problem")}</a>
+        <a href="#engines">{t("nav.link_how", "How")}</a>
+        <a href="#trust">{t("nav.link_trust", "Trust")}</a>
+        <a href="#cases">{t("nav.link_cases", "Cases")}</a>
+        <a href="#tier">{t("nav.link_tier", "Tier")}</a>
+        <a href="#faq">{t("nav.link_faq", "FAQ")}</a>
       </div>
       <div className="actions">
-        <a href="sign-in.html?role=client" className="btn-ghost">SIGN IN</a>
-        <a href="app.html?role=worker&onboarding=1" className="btn-primary">▲ APPLY · BETA</a>
+        <BPLangSwitcher />
+        <a href="sign-in.html?role=client" className="btn-ghost">{t("nav.cta_signin", "SIGN IN")}</a>
+        <a href="app.html?role=worker&onboarding=1" className="btn-primary">{t("nav.cta_apply", "▲ APPLY · BETA")}</a>
       </div>
     </nav>
   );
@@ -782,16 +858,17 @@ function ENav() {
 
 // v0.3 Q3 2026 內測 roadmap (was 0/3 0/2 顯得沒做事)
 function EPocTracker() {
+  useLangRerender();
   const rows = [
-    { label: "合格供給端認證", sub: "Tier B / B+ · 樣本邀請名單收集中", stat: "啟動內測" },
-    { label: "媒合付費交付專案", sub: "NPS ≥ 50 · 首批客戶名單建構中", stat: "啟動內測" },
-    { label: "雙邊 NPS 評鑑", sub: "client + worker · 內測收集後啟用", stat: "Q3 2026" }
+    { label: t("poc.row1_label", "合格供給端認證"), sub: t("poc.row1_sub", "Tier B / B+ · 樣本邀請名單收集中"), stat: t("poc.row1_stat", "啟動內測") },
+    { label: t("poc.row2_label", "媒合付費交付專案"), sub: t("poc.row2_sub", "NPS ≥ 50 · 首批客戶名單建構中"), stat: t("poc.row2_stat", "啟動內測") },
+    { label: t("poc.row3_label", "雙邊 NPS 評鑑"), sub: t("poc.row3_sub", "client + worker · 內測收集後啟用"), stat: t("poc.row3_stat", "Q3 2026") }
   ];
   return (
     <div className="le-poc" id="poc-tracker">
       <div className="le-poc-h">
-        <span className="ttl">◆ Q3 2026 啟動內測</span>
-        <span className="target">PRIVATE BETA · ROADMAP</span>
+        <span className="ttl">{t("poc.header_title", "◆ Q3 2026 啟動內測")}</span>
+        <span className="target">{t("poc.header_target", "PRIVATE BETA · ROADMAP")}</span>
       </div>
       <div className="le-poc-rows">
         {rows.map((r, i) => (
@@ -809,8 +886,9 @@ function EPocTracker() {
   );
 }
 
-// Hero
+// Hero · v0.6 i18n
 function EHero() {
+  useLangRerender();
   const [tokens, setTokens] = useState([]);
   useEffect(() => {
     const stream = ["parse(", "brief", ")", "→", "tier", "=", "A+", "·", "match", "(", 3, ")", "→", "scope", "·", "acceptance", "(", "M1", ")", "→", "milestone", "·", "nps", "→", "retainer"];
@@ -830,18 +908,18 @@ function EHero() {
       <div className="le-hero-content">
         <div className="le-hero-eyebrow">
           <span className="dot le-pulse"></span>
-          <span>// AI ERA WORK NETWORK · 台灣 beta · 發案與接案雙邊認證</span>
+          <span>{t("hero.eyebrow", "// AI ERA WORK NETWORK · 台灣 beta · 發案與接案雙邊認證")}</span>
         </div>
         <h1 className="le-hero-title le-zh">
-          <span>加入 <span className="le-grad">AI</span> 工作的下一個時代。</span>
-          <span className="sub">把不確定，變成可驗收的交付。</span>
+          <span>{t("hero.headline_part1_before", "加入 ")}<span className="le-grad">{t("hero.headline_part1_ai", "AI")}</span>{t("hero.headline_part1_after", " 工作的下一個時代。")}</span>
+          <span className="sub">{t("hero.headline_sub", "把不確定，變成可驗收的交付。")}</span>
         </h1>
         {/* v0.4.9 wave 6 #6 · Takeaway pills · 讓用戶 1 秒掌握 LP 賣什麼（Edward 反饋「無法快速掌握重點」） */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, margin: "20px 0 28px" }}>
           {[
-            { k: "1", v: "把焦慮的需求，拆成範圍、交付物與驗收標準" },
-            { k: "2", v: "AI 初審適配領域、預算與候選方向" },
-            { k: "3", v: "用認證化供給與 milestone 降低交付不確定性" },
+            { k: "1", v: t("hero.pill_1", "把焦慮的需求，拆成範圍、交付物與驗收標準") },
+            { k: "2", v: t("hero.pill_2", "AI 初審適配領域、預算與候選方向") },
+            { k: "3", v: t("hero.pill_3", "用認證化供給與 milestone 降低交付不確定性") },
           ].map((p) => (
             <div key={p.k} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", border: "1px solid var(--accent-line)", borderRadius: 999, background: "rgba(199,232,74,0.04)" }}>
               <span style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.1em" }}>0{p.k}</span>
@@ -851,28 +929,28 @@ function EHero() {
         </div>
         <div className="le-hero-grid">
           <div className="le-hero-blurb le-zh">
-            AI 讓每個人都像能交付，也讓發案與接案更焦慮：需求怎麼拆、能力怎麼判斷、成果怎麼驗收。BeyondPath 用 <b>AI 初審、認證化供給與 milestone 交付</b>，把模糊需求變成一套可被信任的 AI 工作流程。
+            {t("hero.blurb_before", "AI 讓每個人都像能交付，也讓發案與接案更焦慮：需求怎麼拆、能力怎麼判斷、成果怎麼驗收。BeyondPath 用 ")}<b>{t("hero.blurb_bold", "AI 初審、認證化供給與 milestone 交付")}</b>{t("hero.blurb_after", "，把模糊需求變成一套可被信任的 AI 工作流程。")}
           </div>
           <div className="le-hero-cta-col">
             <div className="le-hero-trust-label">
               <span style={{ display: "inline-block", width: 4, height: 4, background: "var(--accent)", borderRadius: 99 }}></span>
-              next work network · AI review · verified supply
+              {t("hero.trust_label", "next work network · AI review · verified supply")}
             </div>
             <a href="app.html?role=client&step=0" className="le-cta-primary">
-              <span>我想進入 AI 發案流程 →</span>
-              <span style={{ fontSize: 11, opacity: 0.6 }}>留下需求 · 24 小時內初步回覆</span>
+              <span>{t("hero.cta_primary_main", "我想進入 AI 發案流程 →")}</span>
+              <span style={{ fontSize: 11, opacity: 0.6 }}>{t("hero.cta_primary_sub", "留下需求 · 24 小時內初步回覆")}</span>
             </a>
             <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary">
-              <span>我想加入 AI 接案網路 →</span>
-              <span className="sub">提交作品與 AI workflow</span>
+              <span>{t("hero.cta_secondary_main", "我想加入 AI 接案網路 →")}</span>
+              <span className="sub">{t("hero.cta_secondary_sub", "提交作品與 AI workflow")}</span>
             </a>
             <a href="app.html?role=worker&view=worker-demo" className="le-zh" style={{ color: "var(--accent)", fontSize: 13, textDecoration: "none", alignSelf: "flex-start", borderBottom: "1px solid var(--accent-line)", paddingBottom: 2 }}>
-              先看通過後的 Worker Console →
+              {t("hero.cta_demo", "先看通過後的 Worker Console →")}
             </a>
           </div>
         </div>
         <div className="le-stream le-card">
-          <span className="label">◆ AGENT // STREAM</span>
+          <span className="label">{t("hero.stream_label", "◆ AGENT // STREAM")}</span>
           <div className="tokens">
             {tokens.map((tk, i) => {
               let color = "var(--text-2)";
@@ -884,27 +962,27 @@ function EHero() {
             })}
             <span style={{ color: "var(--accent)" }}>▮</span>
           </div>
-          <span className="meta">tok/s · 38</span>
+          <span className="meta">{t("hero.stream_meta", "tok/s · 38")}</span>
         </div>
         <div className="le-zh" style={{ fontSize: 11, color: "var(--muted)", letterSpacing: "0.06em", margin: "20px 0 10px", fontFamily: "var(--mono)", textTransform: "uppercase" }}>
-          ▸ <span style={{ color: "var(--accent)" }}>SPEC</span> = 平台設計標準 · ship 後驗收門檻 &nbsp;&nbsp;·&nbsp;&nbsp; <span style={{ color: "var(--accent-dim)" }}>LIVE</span> = 即時數據
+          {t("hero.legend_before", "▸ ")}<span style={{ color: "var(--accent)" }}>{t("hero.legend_spec", "SPEC")}</span>{t("hero.legend_spec_after", " = 平台設計標準 · ship 後驗收門檻   ·   ")}<span style={{ color: "var(--accent-dim)" }}>{t("hero.legend_live", "LIVE")}</span>{t("hero.legend_live_after", " = 即時數據")}
         </div>
         {/* v0.4.8 wave 5 #7 · Hero 瘦身 · 女巫 fix-1 + 蘇菲共識 · telemetry 4 → 3 cell（VERTICALS=15 已在 Network 段、移除 dup）· EPocTracker 移到 finalCTA 上方 */}
         <div className="le-telemetry">
           <div className="cell">
             <span className="badge target">SPEC</span>
-            <div className="l">BETA FOCUS</div>
-            <div className="v" style={{ color: "var(--accent)" }}>SMB</div>
+            <div className="l">{t("hero.tel_focus_label", "BETA FOCUS")}</div>
+            <div className="v" style={{ color: "var(--accent)" }}>{t("hero.tel_focus_value", "SMB")}</div>
           </div>
           <div className="cell">
             <span className="badge target">SPEC</span>
-            <div className="l">REVIEW TIME</div>
-            <div className="v" style={{ color: "var(--text)" }}>24h</div>
+            <div className="l">{t("hero.tel_review_label", "REVIEW TIME")}</div>
+            <div className="v" style={{ color: "var(--text)" }}>{t("hero.tel_review_value", "24h")}</div>
           </div>
           <div className="cell">
             <span className="badge target">SPEC</span>
-            <div className="l">FIRST PROJECT</div>
-            <div className="v" style={{ color: "var(--accent)" }}>50K+</div>
+            <div className="l">{t("hero.tel_project_label", "FIRST PROJECT")}</div>
+            <div className="v" style={{ color: "var(--accent)" }}>{t("hero.tel_project_value", "50K+")}</div>
           </div>
         </div>
       </div>
@@ -944,13 +1022,14 @@ const BETA_USE_CASES = [
 ];
 
 function EUseCases() {
+  useLangRerender();
   return (
     <section className="le-section" id="beta-use-cases" style={{ paddingTop: 72, paddingBottom: 72 }}>
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ BETA USE CASES · 第一批最適合發的案子</div>
-        <h2 className="le-h2" style={{ marginBottom: 22 }}>不要先買更多工具。<br/>先把下一個<span className="le-acc">AI 專案</span>交付出來。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("usecases.eyebrow", "◆ BETA USE CASES · 第一批最適合發的案子")}</div>
+        <h2 className="le-h2" style={{ marginBottom: 22 }}>{t("usecases.headline_part1", "不要先買更多工具。")}<br/>{t("usecases.headline_part2_before", "先把下一個")}<span className="le-acc">{t("usecases.headline_part2_em", "AI 專案")}</span>{t("usecases.headline_part2_after", "交付出來。")}</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.65, maxWidth: 900, marginTop: -8, marginBottom: 32 }}>
-          BeyondPath beta 先收「範圍清楚、交付可驗收、用 AI 能明顯加速」的交付專案。你不用先懂工具，只要知道你希望交出什麼結果。
+          {t("usecases.intro", "BeyondPath beta 先收「範圍清楚、交付可驗收、用 AI 能明顯加速」的交付專案。你不用先懂工具，只要知道你希望交出什麼結果。")}
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
           {BETA_USE_CASES.map((c, i) => (
@@ -1016,13 +1095,14 @@ const PROBLEMS = [
   { lbl: "ANXIETY 3 · 雙邊", title: "不知道什麼算完成", pain: "AI 專案最可怕的不是開始，而是做了很多、改了很久，最後沒有人說得清楚算不算交付。", fix: "BeyondPath: 開案前先拆 milestone、交付物與驗收標準，讓合作從第一天就有共同規則。" }
 ];
 function EProblem() {
+  useLangRerender();
   return (
     <section className="le-section" id="problem">
       <div className="inner">
-        <div className="le-cap le-warn" style={{ marginBottom: 24 }}>◆ THE ANXIETY · AI 時代真正放大的不是工具，是不確定性</div>
-        <h2 className="le-h2">AI 讓機會變多，<br/>也讓<span className="le-warn">判斷成本</span>爆炸。</h2>
+        <div className="le-cap le-warn" style={{ marginBottom: 24 }}>{t("problem.eyebrow", "◆ THE ANXIETY · AI 時代真正放大的不是工具，是不確定性")}</div>
+        <h2 className="le-h2">{t("problem.headline_part1", "AI 讓機會變多，")}<br/>{t("problem.headline_part2_before", "也讓")}<span className="le-warn">{t("problem.headline_part2_em", "判斷成本")}</span>{t("problem.headline_part2_after", "爆炸。")}</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
-          發案方怕找錯人、押錯案、看不懂成果；接案方怕好能力被拿去跟低價模板比較。BeyondPath 要處理的不是工具缺口，而是 AI 工作網路裡的焦慮、不安與不確定性。
+          {t("problem.intro", "發案方怕找錯人、押錯案、看不懂成果；接案方怕好能力被拿去跟低價模板比較。BeyondPath 要處理的不是工具缺口，而是 AI 工作網路裡的焦慮、不安與不確定性。")}
         </p>
         <div className="le-engines-grid le-problem-grid">
           {PROBLEMS.map((p, i) => (
@@ -1115,11 +1195,12 @@ const CASE_STUDIES = [
   }
 ];
 function ECaseStudies() {
+  useLangRerender();
   return (
     <section className="le-section" id="cases">
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ CASE STUDIES · 真實案件實錄</div>
-        <h2 className="le-h2">看 BeyondPath 怎麼<span className="le-acc">真的在跑</span>。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("cases.eyebrow", "◆ CASE STUDIES · 真實案件實錄")}</div>
+        <h2 className="le-h2">{t("cases.headline_part1", "看 BeyondPath 怎麼")}<span className="le-acc">{t("cases.headline_em", "真的在跑")}</span>{t("cases.headline_part2", "。")}</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
           3 個 case 為 BeyondPath 早期合作案例樣本（DTC 領域）——展示 brief → 配對 → 交付 → 驗收紀錄的真實樣態。<span style={{ color: "var(--muted)", fontSize: 14 }}>（其他 14 領域案例累積中 · 想看你領域範例請<a href="app.html?role=client&step=0" style={{ color: "var(--accent)" }}>填 brief</a>、實際配對方案 24h 內 email）</span>
         </p>
@@ -1168,17 +1249,18 @@ function EEpigraph() {
 
 // v0.4.9 wave 6 #4 · Engines + Protocol 合併（Edward 反饋「太長」· 6 卡 + Protocol 4-stage 1-row strip 收尾）
 function EEnginesMerged() {
+  useLangRerender();
   const stages = [
-    { i: "I",   zh: "進案",   en: "INTAKE",    steps: "01 選領域 · 02 上傳 brief · 03 確認期待" },
-    { i: "II",  zh: "配對",   en: "MATCH",     steps: "04 AI 配對 · 05 接案" },
-    { i: "III", zh: "執行",   en: "EXECUTE",   steps: "06 範圍確認 · 07 milestone · 08 案件儀表 · 09 交付驗收" },
-    { i: "IV",  zh: "複利",   en: "COMPOUND",  steps: "10 雙邊 NPS · 11 Tier 飛輪 · 12 retainer 提案" },
+    { i: "I",   zh: t("engines.stages.0.zh", "進案"),   en: "INTAKE",    steps: t("engines.stages.0.steps", "01 選領域 · 02 上傳 brief · 03 確認期待") },
+    { i: "II",  zh: t("engines.stages.1.zh", "配對"),   en: "MATCH",     steps: t("engines.stages.1.steps", "04 AI 配對 · 05 接案") },
+    { i: "III", zh: t("engines.stages.2.zh", "執行"),   en: "EXECUTE",   steps: t("engines.stages.2.steps", "06 範圍確認 · 07 milestone · 08 案件儀表 · 09 交付驗收") },
+    { i: "IV",  zh: t("engines.stages.3.zh", "複利"),   en: "COMPOUND",  steps: t("engines.stages.3.steps", "10 雙邊 NPS · 11 Tier 飛輪 · 12 retainer 提案") },
   ];
   return (
     <section className="le-section" id="engines">
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ HOW IT WORKS · 從模糊需求到可驗收交付</div>
-        <h2 className="le-h2">你只需要說結果。<br/>我們把它變成可開案、可配對、可驗收。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("engines.eyebrow", "◆ HOW IT WORKS · 從模糊需求到可驗收交付")}</div>
+        <h2 className="le-h2">{t("engines.headline_part1", "你只需要說結果。")}<br/>{t("engines.headline_part2", "我們把它變成可開案、可配對、可驗收。")}</h2>
         <div className="le-engines-grid">
           {ENGINES.map((e) => (
             <div key={e.n} className="le-engine-card">
@@ -1297,13 +1379,14 @@ const TIERS = [
   { id: "C",  zh: "受訓",   sub: "TRAINEE · 申請中 / 補件",            stat: "0-5 cases · —", color: "var(--muted-2)" }
 ];
 function ETier() {
+  useLangRerender();
   return (
     <section className="le-section" id="tier">
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ TIER · 5 階認證 · 升降基於 NPS</div>
-        <h2 className="le-h2">Tier 不是裝飾 · <span className="le-acc">是推薦排序權重</span>。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("tier.eyebrow", "◆ TIER · 5 階認證 · 升降基於 NPS")}</div>
+        <h2 className="le-h2">{t("tier.headline_part1", "Tier 不是裝飾 · ")}<span className="le-acc">{t("tier.headline_em", "是推薦排序權重")}</span>{t("tier.headline_part2", "。")}</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 48 }}>
-          Tier 升降基於結案 NPS、領域認證、客戶推薦 + 反馬太 +10（3 個月內無接案保留 slot）。worker 看得到「升級還差什麼」、client 看得到「這個 worker 為什麼貴」。
+          {t("tier.intro", "Tier 升降基於結案 NPS、領域認證、客戶推薦 + 反馬太 +10（3 個月內無接案保留 slot）。worker 看得到「升級還差什麼」、client 看得到「這個 worker 為什麼貴」。")}
         </p>
         <div className="le-tier-ladder le-tier-ladder-solo">
           {TIERS.map((t, i) => (
@@ -1404,12 +1487,13 @@ function EVision() {
 const VERTICALS = ["DTC 內容自動化", "設計品牌 × AI", "短影音 · 剪輯", "網頁設計 + 切版", "客製軟體開發", "客製系統建置", "AI Agent · Bot", "數據 · BI", "B2B SaaS GTM", "品牌市場調研", "行銷服務操盤", "SEO · 內容營運", "客服自動化", "翻譯 · 在地化", "其他"];
 // v0.4.9 wave 6 #5 · Network 從 15-cell grid 縮成 1 行 chip strip（蘇菲早就點到「dead-end catalog」· Edward「太長」拍板砍）
 function EVerticals() {
+  useLangRerender();
   const HOT = [0, 6];
   return (
     <section className="le-section" id="network" style={{ padding: "56px 56px" }}>
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 16 }}>◆ NETWORK · 15 領域、24 小時初步判斷</div>
-        <h2 className="le-h2" style={{ fontSize: 32 }}>15 個 <span className="le-acc">領域</span>，先判斷該找哪一種人。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 16 }}>{t("network.eyebrow", "◆ NETWORK · 15 領域、24 小時初步判斷")}</div>
+        <h2 className="le-h2" style={{ fontSize: 32 }}>{t("network.headline_part1", "15 個 ")}<span className="le-acc">{t("network.headline_em", "領域")}</span>{t("network.headline_part2", "，先判斷該找哪一種人。")}</h2>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 24 }}>
           {VERTICALS.map((v, i) => {
             const isHot = HOT.indexOf(i) >= 0;
@@ -1437,6 +1521,7 @@ function EVerticals() {
 
 // Trust 3 metrics · BP 真數值
 function ETrust3() {
+  useLangRerender();
   const items = [
     { v: "AI", en: "AI REVIEW", zh: "AI 初審 + 人工覆核", facts: ["先由 AI 拆 brief 與交付範圍", "再由人工覆核候選人與風險", "不讓你直接丟進平台黑箱"], color: "var(--accent)" },
     { v: "24h", en: "MATCH DIRECTION", zh: "先給候選方向", facts: ["初判領域與預算是否合理", "中文 brief 原生理解", "先看適配，再談短名單"], color: "var(--text)" },
@@ -1445,8 +1530,8 @@ function ETrust3() {
   return (
     <section className="le-section" id="trust">
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ TRUST · AI-first，但不把人丟進黑箱</div>
-        <h2 className="le-h2">先用 AI 降低不確定性，<br/>再用覆核與驗收建立<span className="le-acc">信任層</span>。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("trust3.eyebrow", "◆ TRUST · AI-first，但不把人丟進黑箱")}</div>
+        <h2 className="le-h2">{t("trust3.headline_part1", "先用 AI 降低不確定性，")}<br/>{t("trust3.headline_part2_before", "再用覆核與驗收建立")}<span className="le-acc">{t("trust3.headline_part2_em", "信任層")}</span>{t("trust3.headline_part2_after", "。")}</h2>
         <div className="le-trust3-grid">
           {items.map((it, i) => (
             <div key={i} className="le-trust3-cell">
@@ -1486,11 +1571,12 @@ const IRREPLACEABLE = [
   }
 ];
 function EIrreplaceable() {
+  useLangRerender();
   return (
     <section className="le-section" id="moat">
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ WHY BEYONDPATH · 當 LLM 也會媒合，我們還剩什麼</div>
-        <h2 className="le-h2">LLM 可以推薦人。<br/>但信任來自<span className="le-acc">交付證據</span>。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("moat.eyebrow", "◆ WHY BEYONDPATH · 當 LLM 也會媒合，我們還剩什麼")}</div>
+        <h2 className="le-h2">{t("moat.headline_part1", "LLM 可以推薦人。")}<br/>{t("moat.headline_part2_before", "但信任來自")}<span className="le-acc">{t("moat.headline_part2_em", "交付證據")}</span>{t("moat.headline_part2_after", "。")}</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 900, marginTop: -32, marginBottom: 32 }}>
           BeyondPath 不把不可取代性押在「比 AI 更會配對」。我們真正要建立的是 AI 工作的信任資料層：誰能把哪一類需求交付出來、用了什麼 workflow、結果如何被驗收、下次為什麼值得被推薦。
         </p>
@@ -1511,6 +1597,7 @@ function EIrreplaceable() {
 
 // Services & Pricing · v0.5 (2026-05-19) 加 · 解 service-flow review「信任證據」P2 finding · 4 個可接案 + Tier 對應價格 reference + 資料處理透明
 function EServicesPricing() {
+  useLangRerender();
   const services = [
     { n: "01", en: "AI WORKFLOW", zh: "AI workflow 顧問 + 落地", desc: "從需求拆解到工具流 setup、含 handoff 文件。常見：客服自動化、內容 pipeline、內部 agent。", tiers: "Tier B+ / A+", range: "NT$ 15–80 萬" },
     { n: "02", en: "BRAND CONTENT", zh: "DTC 品牌內容", desc: "視覺 KV、brand DNA、社群內容操盤。常見：保養品 / 食品 / 設計品牌 launch + 持續經營。", tiers: "Tier B / B+ / A+", range: "NT$ 5–60 萬" },
@@ -1520,8 +1607,8 @@ function EServicesPricing() {
   return (
     <section className="le-section" id="services" style={{ padding: "56px 56px", borderTop: "1px solid var(--line-soft)" }}>
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 16 }}>◆ SERVICES · 目前可接案 + 價格 reference</div>
-        <h2 className="le-h2" style={{ fontSize: 32 }}>4 個主要交付類型、<span className="le-acc">每案有適配 Tier 與預算 reference</span>。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 16 }}>{t("services.eyebrow", "◆ SERVICES · 目前可接案 + 價格 reference")}</div>
+        <h2 className="le-h2" style={{ fontSize: 32 }}>{t("services.headline_part1", "4 個主要交付類型、")}<span className="le-acc">{t("services.headline_em", "每案有適配 Tier 與預算 reference")}</span>{t("services.headline_part2", "。")}</h2>
         <p className="le-zh" style={{ color: "var(--muted)", fontSize: 14, marginTop: 12, maxWidth: 720, lineHeight: 1.7 }}>
           以下價格區間是 reference、不是固定報價。實際依需求複雜度、交付物範圍、時程而定。送出 brief 後、24h 內你會收到含建議預算的配對方案。
         </p>
@@ -1566,11 +1653,12 @@ const FAQS = [
   { n: "07", tag: "接案者", q: "如果一段時間沒接到案、平台會幫忙嗎？", a: "會。我們有「反馬太 +10」機制——3 個月內無接案的 worker、配對排序自動 +10 加權；新認證 < 30 天 +5；首案池保留 20% slot 給新人。前提是你已通過 < 10% 認證——這不是降門檻、是讓已被驗證的人有持續接案機會。同時 AI 教練會主動提示「升 Tier 還差什麼」「哪些領域最近需求高」。" }
 ];
 function EFaq() {
+  useLangRerender();
   return (
     <section className="le-section" id="faq">
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ FAQ · 你可能會問的</div>
-        <h2 className="le-h2">七個 <span className="le-acc">真問題</span>。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("faq.eyebrow", "◆ FAQ · 你可能會問的")}</div>
+        <h2 className="le-h2">{t("faq.headline_part1", "七個 ")}<span className="le-acc">{t("faq.headline_em", "真問題")}</span>{t("faq.headline_part2", "。")}</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
           前 4 條給準備發案的你、後 3 條給準備接案的你。沒答到的、寫信給 BeyondPath → <a href="mailto:edwardt0303@gmail.com" style={{ color: "var(--accent)" }}>edwardt0303@gmail.com</a>
         </p>
@@ -1595,55 +1683,56 @@ function EFaq() {
 
 // Final CTA + Footer (v0.4.8 wave 5 #7 · EPocTracker 從 hero 移來這·當 roadmap 在 CTA 前提供透明度)
 function EFinalCta() {
+  useLangRerender();
   return (
     <section className="le-finalcta">
       <div className="ghost">BeyondPath</div>
       <div className="inner">
         <div style={{ maxWidth: 720, margin: "0 auto 56px", padding: "32px 28px", border: "1px solid var(--line)", borderRadius: 4, background: "rgba(255,255,255,0.015)" }}>
-          <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.18em", color: "var(--accent-dim)", textTransform: "uppercase", marginBottom: 16 }}>◆ ROADMAP · 在你按下排隊前 · 我們的進度</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.18em", color: "var(--accent-dim)", textTransform: "uppercase", marginBottom: 16 }}>{t("finalcta.roadmap_label", "◆ ROADMAP · 在你按下排隊前 · 我們的進度")}</div>
           <EPocTracker />
         </div>
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>◆ JOIN · PRIVATE BETA</div>
-        <h2 className="h">加入第一批 AI 工作網路。</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("finalcta.eyebrow", "◆ JOIN · PRIVATE BETA")}</div>
+        <h2 className="h">{t("finalcta.headline", "加入第一批 AI 工作網路。")}</h2>
         <div className="grid">
-          <div className="blurb le-zh">第一批 beta 先用 AI 初審與人工覆核並行。發案方可以留下需求，把不確定的 AI 專案拆成可驗收流程；接案者可以提交作品與 AI workflow，讓能力被認證、被理解、被推薦。</div>
+          <div className="blurb le-zh">{t("finalcta.blurb", "第一批 beta 先用 AI 初審與人工覆核並行。發案方可以留下需求，把不確定的 AI 專案拆成可驗收流程；接案者可以提交作品與 AI workflow，讓能力被認證、被理解、被推薦。")}</div>
           <div className="form">
             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10, marginBottom: 14 }}>
               <a href="app.html?role=client&step=0" className="le-cta-primary" style={{ padding: "14px 18px", fontSize: 12 }}>
-                <span>我想進入 AI 發案流程 →</span>
-                <span style={{ fontSize: 10, opacity: 0.65 }}>發案方</span>
+                <span>{t("finalcta.cta_client_main", "我想進入 AI 發案流程 →")}</span>
+                <span style={{ fontSize: 10, opacity: 0.65 }}>{t("finalcta.cta_client_sub", "發案方")}</span>
               </a>
               <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary" style={{ padding: "14px 18px", fontSize: 12 }}>
-                <span>我想加入 AI 接案網路 →</span>
-                <span className="sub">接案者</span>
+                <span>{t("finalcta.cta_worker_main", "我想加入 AI 接案網路 →")}</span>
+                <span className="sub">{t("finalcta.cta_worker_sub", "接案者")}</span>
               </a>
               <a href="app.html?role=worker&view=worker-demo" className="le-zh" style={{ color: "var(--accent)", fontSize: 13, textDecoration: "none", textAlign: "center", paddingTop: 2 }}>
-                先看 Worker Console demo →
+                {t("finalcta.cta_demo", "先看 Worker Console demo →")}
               </a>
             </div>
             <a href="waitlist.html" className="le-cta-secondary" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "13px 16px", textDecoration: "none", marginTop: 4 }}>
-              <span>加入 Beta waitlist →</span>
-              <span style={{ fontSize: 10, opacity: 0.6 }}>手動覆核</span>
+              <span>{t("finalcta.cta_waitlist_main", "加入 Beta waitlist →")}</span>
+              <span style={{ fontSize: 10, opacity: 0.6 }}>{t("finalcta.cta_waitlist_sub", "手動覆核")}</span>
             </a>
             <div className="meta" style={{ marginTop: 10 }}>
-              <span>EARLY BETA</span>
-              <span className="le-acc">送出進人工審核 · 不代表正式合約或付款</span>
+              <span>{t("finalcta.meta_left", "EARLY BETA")}</span>
+              <span className="le-acc">{t("finalcta.meta_right", "送出進人工審核 · 不代表正式合約或付款")}</span>
             </div>
           </div>
         </div>
         <div className="le-footer-nav">
           <div className="brand-col">
             <div className="name">Beyond<span className="le-acc">Path</span></div>
-            <div className="tag le-zh">台灣 beta 先從 AI 內容、網站、自動化與 GTM 交付開始。用 brief、候選人、milestone，把找人與交付風險降下來。</div>
+            <div className="tag le-zh">{t("footer.brand_tag", "台灣 beta 先從 AI 內容、網站、自動化與 GTM 交付開始。用 brief、候選人、milestone，把找人與交付風險降下來。")}</div>
             <div className="chips">
               {["TPE", "SGP", "TYO"].map((c) => (<span key={c}>{c}</span>))}
             </div>
           </div>
           {[
-            ["PRODUCT", [["流程協定 · 12 步", "#flywheel"], ["核心引擎 · 6", "#engines"], ["Tier 飛輪", "#tier"], ["信任機制", "#trust"], ["WHY BEYONDPATH", "#moat"]]],
-            ["NETWORK", [["客戶申請", "app.html?role=client&step=0"], ["Expert 申請", "app.html?role=worker&onboarding=1"], ["15 領域總覽", "#network"], ["A+ 大師牆 · 即將上線", "mailto:edwardt0303@gmail.com?subject=A%2B%20%E5%A4%A7%E5%B8%AB%E7%89%86%E5%85%88%E8%A1%8C%E5%90%8D%E5%96%AE"], ["Retainer Plans · 即將上線", "mailto:edwardt0303@gmail.com?subject=Retainer%20Plans"]]],
-            ["COMPANY", [["關於 BeyondPath", "#whyus"], ["合作回饋 · 即將上線", "#cases"], ["加入我們", "mailto:edwardt0303@gmail.com?subject=Join%20BeyondPath"], ["edwardt0303@gmail.com", "mailto:edwardt0303@gmail.com"]]],
-            ["LEGAL", [["Terms · 即將上線", "mailto:edwardt0303@gmail.com?subject=Terms%20of%20Service"], ["Privacy · 即將上線", "mailto:edwardt0303@gmail.com?subject=Privacy%20Policy"], ["驗收規則", "#trust"], ["爭議紀錄流程", "#trust"], ["資安白皮書 · v0.4 · 即將上線", "mailto:edwardt0303@gmail.com?subject=BP%20Security%20Whitepaper"]]]
+            [t("footer.col_product", "PRODUCT"), [[t("footer.link_protocol", "流程協定 · 12 步"), "#flywheel"], [t("footer.link_engines", "核心引擎 · 6"), "#engines"], [t("footer.link_tier", "Tier 飛輪"), "#tier"], [t("footer.link_trust", "信任機制"), "#trust"], [t("footer.link_why", "WHY BEYONDPATH"), "#moat"]]],
+            [t("footer.col_network", "NETWORK"), [[t("footer.link_client_apply", "客戶申請"), "app.html?role=client&step=0"], [t("footer.link_expert_apply", "Expert 申請"), "app.html?role=worker&onboarding=1"], [t("footer.link_15verticals", "15 領域總覽"), "#network"], [t("footer.link_master_wall", "A+ 大師牆 · 即將上線"), "mailto:edwardt0303@gmail.com?subject=A%2B%20%E5%A4%A7%E5%B8%AB%E7%89%86%E5%85%88%E8%A1%8C%E5%90%8D%E5%96%AE"], [t("footer.link_retainer", "Retainer Plans · 即將上線"), "mailto:edwardt0303@gmail.com?subject=Retainer%20Plans"]]],
+            [t("footer.col_company", "COMPANY"), [[t("footer.link_about", "關於 BeyondPath"), "#whyus"], [t("footer.link_feedback", "合作回饋 · 即將上線"), "#cases"], [t("footer.link_join_us", "加入我們"), "mailto:edwardt0303@gmail.com?subject=Join%20BeyondPath"], [t("footer.link_contact_email", "edwardt0303@gmail.com"), "mailto:edwardt0303@gmail.com"]]],
+            [t("footer.col_legal", "LEGAL"), [[t("footer.link_terms", "Terms · 即將上線"), "mailto:edwardt0303@gmail.com?subject=Terms%20of%20Service"], [t("footer.link_privacy", "Privacy · 即將上線"), "mailto:edwardt0303@gmail.com?subject=Privacy%20Policy"], [t("footer.link_acceptance", "驗收規則"), "#trust"], [t("footer.link_dispute", "爭議紀錄流程"), "#trust"], [t("footer.link_security", "資安白皮書 · v0.4 · 即將上線"), "mailto:edwardt0303@gmail.com?subject=BP%20Security%20Whitepaper"]]]
           ].map(([h, items]) => (
             <div key={h}>
               <h4>◆ {h}</h4>
@@ -1658,13 +1747,13 @@ function EFinalCta() {
           <div>
             <div className="le-loomark">
               <span className="ring"></span>
-              <span className="text">© 2026 BEYONDPATH NETWORK</span>
+              <span className="text">{t("footer.copyright", "© 2026 BEYONDPATH NETWORK")}</span>
             </div>
           </div>
-          <div className="center">TAIPEI × SINGAPORE × TOKYO · Y1→Y3</div>
+          <div className="center">{t("footer.cities", "TAIPEI × SINGAPORE × TOKYO · Y1→Y3")}</div>
           <div className="right">
             <span className="le-pulse" style={{ display: "inline-block", width: 6, height: 6, background: "var(--accent)", borderRadius: 99 }}></span>
-            v0.5β · LIVE · BETA COHORT OPEN
+            {t("footer.version_status", "v0.5β · LIVE · BETA COHORT OPEN")}
           </div>
         </div>
       </div>
@@ -1675,12 +1764,13 @@ function EFinalCta() {
 // v0.3 3-段敘事 起承轉 (霍爾 220 字 spec)
 // v0.5.0 wave 7 · Story 重寫·痛點 + explicit 誘因（Edward 反饋「敘事看不懂、發案/接案者誘因不明」）
 function EStory() {
+  useLangRerender();
   return (
     <section className="le-story" id="story" style={{ padding: "56px 56px" }}>
       <div className="le-story-inner" style={{ gap: 32, maxWidth: 920 }}>
         <div className="le-story-block peak">
-          <span className="label">◆ 為什麼是 BeyondPath</span>
-          <h3 className="h le-zh">AI 讓每個人都像專家。<br/>也讓你更難知道誰真的能交付。</h3>
+          <span className="label">{t("story.label", "◆ 為什麼是 BeyondPath")}</span>
+          <h3 className="h le-zh">{t("story.headline_part1", "AI 讓每個人都像專家。")}<br/>{t("story.headline_part2", "也讓你更難知道誰真的能交付。")}</h3>
         </div>
 
         {/* v0.5.1 雙視角誘因表 · 按 Edward 拍板優先序 · 文案砍短 + word-break:keep-all 解亂折行 */}
@@ -1748,17 +1838,17 @@ function EStory() {
 
         <div style={{ textAlign: "center", paddingTop: 8, borderTop: "1px dashed var(--line-soft)" }}>
           <p className="le-zh" style={{ fontSize: 14, color: "var(--muted)", marginBottom: 16 }}>
-            <b style={{ color: "var(--text)" }}>這不是在加入另一個接案平台。</b> 這是在加入一套 AI 時代的工作交付規則：AI 初審、公平化評分、認證化供給、可驗收交付。
+            <b style={{ color: "var(--text)" }}>{t("story.bottom_para_bold", "這不是在加入另一個接案平台。")}</b>{t("story.bottom_para_after", " 這是在加入一套 AI 時代的工作交付規則：AI 初審、公平化評分、認證化供給、可驗收交付。")}
           </p>
           <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
             <a href="app.html?role=client&step=0" className="le-cta-primary" style={{ padding: "14px 22px", fontSize: 13 }}>
-              <span>我想進入 AI 發案流程 →</span>
+              <span>{t("story.bottom_cta_client", "我想進入 AI 發案流程 →")}</span>
             </a>
             <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary" style={{ padding: "14px 22px", fontSize: 13 }}>
-              <span>我想加入 AI 接案網路 →</span>
+              <span>{t("story.bottom_cta_worker", "我想加入 AI 接案網路 →")}</span>
             </a>
             <a href="app.html?role=worker&view=worker-demo" className="le-cta-secondary" style={{ padding: "14px 22px", fontSize: 13 }}>
-              <span>先看 Worker Console →</span>
+              <span>{t("story.bottom_cta_demo", "先看 Worker Console →")}</span>
             </a>
           </div>
         </div>
@@ -1769,6 +1859,7 @@ function EStory() {
 
 // Worker Decision Banner · v0.5 (2026-05-19) · Q3 Task 4 配套 · 處理 worker-accept-decline Edge Function redirect 後的 ?worker_decision=...&action=... query string
 function EWorkerDecisionBanner() {
+  useLangRerender();
   const [info, setInfo] = React.useState(null);
   React.useEffect(() => {
     try {
@@ -1778,13 +1869,13 @@ function EWorkerDecisionBanner() {
       if (!decision) return;
       let next;
       if (decision === "success" && action === "accept") {
-        next = { kind: "ok", title: "已接受配對邀請", body: "BeyondPath 24-72 小時內準備合約草稿與案件初始 milestone、寄到你的 email。客戶端也會收到「worker 已確認接案」通知。若 72 小時無收信、請聯絡 hello@beyondpath.tw。" };
+        next = { kind: "ok", title: t("banner.ok_title", "已接受配對邀請"), body: t("banner.ok_body", "BeyondPath 24-72 小時內準備合約草稿與案件初始 milestone、寄到你的 email。客戶端也會收到「worker 已確認接案」通知。若 72 小時無收信、請聯絡 hello@beyondpath.tw。") };
       } else if (decision === "success" && action === "decline") {
-        next = { kind: "neutral", title: "已記錄你婉拒這次配對", body: "謝謝告知。下次有適配案件、BeyondPath 仍會優先推薦。" };
+        next = { kind: "neutral", title: t("banner.decline_title", "已記錄你婉拒這次配對"), body: t("banner.decline_body", "謝謝告知。下次有適配案件、BeyondPath 仍會優先推薦。") };
       } else if (decision === "error") {
-        next = { kind: "warn", title: "配對連結已過期或無效", body: "邀請信連結有 7 天效期。請聯絡 BeyondPath：hello@beyondpath.tw" };
+        next = { kind: "warn", title: t("banner.error_title", "配對連結已過期或無效"), body: t("banner.error_body", "邀請信連結有 7 天效期。請聯絡 BeyondPath：hello@beyondpath.tw") };
       } else {
-        next = { kind: "neutral", title: "感謝你的回應", body: "若有疑問請聯絡 BeyondPath：hello@beyondpath.tw" };
+        next = { kind: "neutral", title: t("banner.default_title", "感謝你的回應"), body: t("banner.default_body", "若有疑問請聯絡 BeyondPath：hello@beyondpath.tw") };
       }
       setInfo(next);
       // 清掉 URL query、避免 reload 重複顯示
@@ -1815,7 +1906,7 @@ function EWorkerDecisionBanner() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 14 }}>
         <div style={{ flex: 1 }}>
           <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.12em", color: color, marginBottom: 6 }}>
-            ◆ WORKER DECISION
+            {t("banner.label", "◆ WORKER DECISION")}
           </div>
           <div className="le-zh" style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", marginBottom: 4 }}>
             {info.title}
@@ -1827,7 +1918,7 @@ function EWorkerDecisionBanner() {
         <button
           onClick={() => setInfo(null)}
           style={{ background: "transparent", border: 0, color: "var(--muted)", cursor: "pointer", fontSize: 22, padding: 0, lineHeight: 1 }}
-          aria-label="關閉"
+          aria-label={t("banner.close_aria", "關閉")}
         >×</button>
       </div>
     </div>
@@ -1892,7 +1983,7 @@ root.render(<LandingRoot />);
     if (document.querySelector(".le-totop")) return;
     const btn = document.createElement("button");
     btn.className = "le-totop";
-    btn.setAttribute("aria-label", "回到頂部");
+    btn.setAttribute("aria-label", (window.BPi18n ? window.BPi18n.t("misc.back_to_top", "回到頂部") : "回到頂部"));
     btn.innerHTML = "↑";
     btn.addEventListener("click", function () {
       window.scrollTo({ top: 0, behavior: "smooth" });
