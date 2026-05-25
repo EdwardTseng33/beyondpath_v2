@@ -949,7 +949,7 @@
     "summary_warn1": "short-form Reels ",
     "summary_and": "and ",
     "summary_warn2": "performance copywriting",
-    "summary_outro": " — exactly what Mei filled in on the LUMINE project. Closing these gaps adds an est. +12% to your recommendation weight.",
+    "summary_outro": " — exactly what the assigned Tier A+ expert filled in on the LUMINE project. Closing these gaps adds an est. +12% to your recommendation weight.",
     "recommended_title": "Recommended learning path (personalized)",
     "tools_title": "Latest tools you haven't connected (AI auto-detected)",
     "tools_state_connected": "Connected",

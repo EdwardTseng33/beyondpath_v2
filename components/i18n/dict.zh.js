@@ -944,7 +944,7 @@
     "summary_warn1": "Reels 短影音 ",
     "summary_and": "與 ",
     "summary_warn2": "績效型文案",
-    "summary_outro": "——這兩塊正是 LUMINE 案中由 Mei 補上的部分。 補齊後預估推薦權重再 +12%。",
+    "summary_outro": "——這兩塊正是 LUMINE 案中由 Tier A+ 領域專家補上的部分。 補齊後預估推薦權重再 +12%。",
     "recommended_title": "補足學習路徑（個人化）",
     "tools_title": "你還沒接上的最新工具（AI 自動偵測）",
     "tools_state_connected": "已接",
