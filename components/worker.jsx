@@ -1244,7 +1244,7 @@ function WorkerEmptyState() {
                 {parseError && <div style={{ marginTop: 10, padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {parseError}</div>}
                 <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <button type="button" onClick={tryParsePaste} style={btnPrimaryStyle}>{_t("worker.apply_paste_check_btn", "檢查格式 + 生成能力卡 →")}</button>
-                  <button type="button" onClick={() => { setPasteRaw(SAMPLE_PASTE); setParseError(""); }} style={btnGhostStyle}>{_t("worker.apply_paste_sample_btn", "用範例試試")}</button>
+                  <button type="button" onClick={() => { setPasteRaw(getSamplePaste()); setParseError(""); }} style={btnGhostStyle}>{_t("worker.apply_paste_sample_btn", "用範例試試")}</button>
                 </div>
               </div>
             </div>
@@ -1749,7 +1749,7 @@ const btnGhostStyle = { padding: "10px 16px", background: "transparent", color: 
 // [2026-05-15 v0.3 雙軌] Route A paste-back flow 的範例 JSON
 // worker 點「用範例試試」button 時 setPasteRaw(SAMPLE_PASTE) · 給 user 看正確格式
 // schema 對齊 Route B 的 ai_proof output (skill_matrix 6 維 + L_score + tier_suggestion 等)
-const SAMPLE_PASTE = `{
+const SAMPLE_PASTE_ZH = `{
   "name": "Arc",
   "verticals": ["DTC 內容"],
   "case_count": "16-30",
@@ -1775,6 +1775,42 @@ const SAMPLE_PASTE = `{
   ],
   "evidence_quality": "中"
 }`;
+
+const SAMPLE_PASTE_EN = `{
+  "name": "Arc",
+  "verticals": ["DTC content"],
+  "case_count": "16-30",
+  "L_score": 7,
+  "L_confidence": "L6-L7",
+  "tier_suggestion": "Tier B",
+  "skill_matrix": {
+    "workflow_design": 8,
+    "tool_orchestration": 7,
+    "judgement": 7,
+    "domain_depth": 8,
+    "client_communication": 6,
+    "delivery_reliability": 7
+  },
+  "strengths": [
+    "Two complete DTC workflows including fallback mechanism",
+    "Concrete case of recovering from AI failure · skincare copy prompt reset",
+    "Clear pricing logic · milestone-based + tool subscription amortization"
+  ],
+  "growth": [
+    "Client communication section is vague · needs one concrete communication case",
+    "Cross-vertical depth · B+ requires deep evidence in a second vertical"
+  ],
+  "evidence_quality": "medium"
+}`;
+
+function getSamplePaste() {
+  try {
+    if (typeof window !== "undefined" && window.BPi18n && typeof window.BPi18n.getLang === "function" && window.BPi18n.getLang() === "en") {
+      return SAMPLE_PASTE_EN;
+    }
+  } catch (e) {}
+  return SAMPLE_PASTE_ZH;
+}
 
 window.BP_WorkerDashboard = WorkerDashboard;
 
