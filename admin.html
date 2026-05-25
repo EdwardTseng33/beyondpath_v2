@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Admin · BeyondPath（內部後台）</title>
 <meta name="description" content="BeyondPath POC 後台。內部使用、無公開連結。" />
+<link rel="alternate" hreflang="zh-Hant" href="https://beyondpath.tw/admin.html?lang=zh" />
+<link rel="alternate" hreflang="en" href="https://beyondpath.tw/admin.html?lang=en" />
+<link rel="alternate" hreflang="x-default" href="https://beyondpath.tw/admin.html" />
 <meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#0a0a0b" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -42,6 +45,8 @@
   .admin-title { font-weight: 800; letter-spacing: -0.02em; font-size: 18px; }
   .admin-title span { color: var(--accent); }
   .admin-meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+  .admin-top-right { display: flex; align-items: center; gap: 16px; }
+  .admin-top-right .bp-lang-switcher { font-family: var(--mono); }
   .admin-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
   .admin-tab { background: transparent; border: 0; padding: 12px 20px; color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; border-bottom: 2px solid transparent; }
   .admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
@@ -96,8 +101,54 @@
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<!-- i18n core (Step 3b - 2026-05-25) -->
+<script src="components/i18n/index.js"></script>
+<script src="components/i18n/dict.zh.js"></script>
+<script src="components/i18n/dict.en.js"></script>
+<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="components/supabase.js?v=2026-05-19-admin"></script>
-<script type="text/babel" src="components/admin.jsx?v=2026-05-19-admin"></script>
+<script type="text/babel" src="components/admin.jsx?v=2026-05-25-i18n"></script>
+
+<!-- Title + LangSwitcher mount -->
+<script>
+  (function() {
+    function updateTitle() {
+      try {
+        var title = window.BPi18n && window.BPi18n.t("admin.title_admin", "Admin Console");
+        if (title) document.title = title + " · BeyondPath";
+      } catch (e) {}
+    }
+    function mountSwitcher() {
+      if (!window.React || !window.ReactDOM || !window.BPLangSwitcher) return false;
+      var root = document.querySelector(".admin-top");
+      if (!root || root.__bp_lang_mounted) return true;
+      // Wrap .admin-meta in a row with switcher
+      var meta = root.querySelector(".admin-meta");
+      if (!meta) return true;
+      var wrap = document.createElement("div");
+      wrap.className = "admin-top-right";
+      meta.parentNode.insertBefore(wrap, meta);
+      var sw = document.createElement("div");
+      sw.id = "admin-lang-switcher";
+      wrap.appendChild(sw);
+      wrap.appendChild(meta);
+      ReactDOM.createRoot(sw).render(React.createElement(window.BPLangSwitcher));
+      root.__bp_lang_mounted = true;
+      return true;
+    }
+    document.addEventListener("i18n:change", updateTitle);
+    var tries = 0;
+    var poll = setInterval(function() {
+      tries++;
+      updateTitle();
+      if (mountSwitcher() || tries > 80) {
+        clearInterval(poll);
+      }
+    }, 100);
+  })();
+</script>
 </body>
 </html>
