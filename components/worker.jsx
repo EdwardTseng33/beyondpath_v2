@@ -3,7 +3,21 @@ const { useState: uSW } = React;
 const _DW = window.BP_DATA;
 const _ARC = _DW.WORKERS.find((w) => w.id === "w-arc");
 
+// === i18n helpers (Step 3c - 2026-05-25) ===
+function _t(key, fallback) {
+  return window.BPi18n ? window.BPi18n.t(key, fallback) : fallback;
+}
+function useI18n() {
+  const [, setRev] = React.useState(0);
+  React.useEffect(() => {
+    const h = () => setRev(r => r + 1);
+    document.addEventListener("i18n:change", h);
+    return () => document.removeEventListener("i18n:change", h);
+  }, []);
+}
+
 function WorkerDashboard({ inShell = false }) {
+  useI18n();
   const [tab, setTab] = uSW("active");
   const isDemoView = (() => {
     try {
@@ -19,7 +33,7 @@ function WorkerDashboard({ inShell = false }) {
       {isDemoView && (
         <div style={{ padding: "8px 18px", borderBottom: "1px solid rgba(199,232,74,0.18)", background: "rgba(199,232,74,0.04)", display: "flex", gap: 10, alignItems: "center", justifyContent: "center", flexWrap: "wrap", fontFamily: "var(--mono)", fontSize: 10.5, letterSpacing: "0.08em", color: "var(--muted)" }}>
           <span style={{ color: "var(--accent)", fontWeight: 700 }}>◆ DEMO</span>
-          <span className="zh" style={{ fontFamily: "var(--zh)", letterSpacing: 0 }}>這是通過認證後的接案方畫面範例 · 資料皆為模擬</span>
+          <span className="zh" style={{ fontFamily: "var(--zh)", letterSpacing: 0 }}>{_t("worker.header_desc_zh", "這是通過認證後的接案方畫面範例 · 資料皆為模擬")}</span>
         </div>
       )}
       <div className="bp-topbar">
@@ -37,7 +51,7 @@ function WorkerDashboard({ inShell = false }) {
             <span className="num">A+</span><span>tier</span>
           </div>
           <div className={tab === "wallet" ? "active" : ""} onClick={() => setTab("wallet")} style={{ cursor: "pointer" }}>
-            <span className="num">$</span><span>terms + AI 補貼</span>
+            <span className="num">$</span><span>{_t("worker.header_subsidy_label", "terms + AI 補貼")}</span>
           </div>
           <div className={tab === "coach" ? "active" : ""} onClick={() => setTab("coach")} style={{ cursor: "pointer" }}>
             <span className="num">✦</span><span>AI coach</span>
@@ -80,9 +94,9 @@ function WorkerDashboard({ inShell = false }) {
                 </svg>
               </div>
               <div style={{ flex: "1 1 280px", minWidth: 0 }}>
-                <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.12em", marginBottom: 6, textTransform: "uppercase" }}>◆ 首次進入 · TIER B APPLY</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", marginBottom: 4, lineHeight: 1.3 }}>先做你的 AI 認證評估、生成能力卡</div>
-                <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.55 }}>5 步 · 30-45 分鐘 · 用你自己的 AI 整理工作證據 · 24h 內 AI 初步回覆、3-7 天人工覆核</div>
+                <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.12em", marginBottom: 6, textTransform: "uppercase" }}>{_t("worker.demo_entry_eyebrow", "◆ 首次進入 · TIER B APPLY")}</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", marginBottom: 4, lineHeight: 1.3 }}>{_t("worker.demo_entry_title", "先做你的 AI 認證評估、生成能力卡")}</div>
+                <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.55 }}>{_t("worker.demo_entry_sub", "5 步 · 30-45 分鐘 · 用你自己的 AI 整理工作證據 · 24h 內 AI 初步回覆、3-7 天人工覆核")}</div>
               </div>
               <a href="app.html?role=worker&onboarding=1" style={{
                 padding: "14px 24px",
@@ -97,7 +111,7 @@ function WorkerDashboard({ inShell = false }) {
                 whiteSpace: "nowrap",
                 border: "1px solid var(--accent)",
                 flexShrink: 0,
-              }}>→ 開始評估</a>
+              }}>{_t("worker.demo_entry_cta", "→ 開始評估")}</a>
             </div>
           )}
 
@@ -113,7 +127,7 @@ function WorkerDashboard({ inShell = false }) {
             color: "var(--text-2)",
             lineHeight: 1.6,
           }}>
-            ◆ <b style={{ color: "var(--accent)" }}>通過後預覽</b> · 下方是通過 Tier B 認證後你會看到的 Worker Console · 目前是 demo 樣態、實際數據以你通過後為準
+            ◆ <b style={{ color: "var(--accent)" }}>{_t("worker.demo_preview_banner_label", "通過後預覽")}</b>{_t("worker.demo_preview_banner_body", " · 下方是通過 Tier B 認證後你會看到的 Worker Console · 目前是 demo 樣態、實際數據以你通過後為準")}
           </div>
 
           {/* HERO · greeting + score */}
@@ -122,7 +136,7 @@ function WorkerDashboard({ inShell = false }) {
               <div className="bp-eyebrow"><span>Welcome back</span><span className="pill green">● tier up unlocked</span></div>
               <h1 className="bp-h1" style={{ marginTop: 6 }}>
                 Welcome back.
-                <br/><span className="zh" style={{ color: "var(--muted)" }}>3 個案在跑、1 個提案待回。</span>
+                <br/><span className="zh" style={{ color: "var(--muted)" }}>{_t("worker.status_sub", "3 個案在跑、1 個提案待回。")}</span>
               </h1>
             </div>
             <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
@@ -194,7 +208,7 @@ function WorkerDashboard({ inShell = false }) {
 
           {tab === "tier" && (
             <>
-              <div className="bp-h2" style={{ marginTop: 26 }}>Tier ladder · 從入門到大師</div>
+              <div className="bp-h2" style={{ marginTop: 26 }}>Tier ladder · {_t("worker.tier_ladder_title", "從入門到大師")}</div>
               <div className="bp-tier-ladder">
                 {[
                   { id: "C",  en: "Unverified",   zh: "未通過審核", icon: "circle",   col: "#5a5a62", bg: "rgba(90,90,98,0.10)",   line: "rgba(90,90,98,0.35)",   sub: "此狀態無法接案 · 不進入配對池", crit: "—" },
@@ -245,7 +259,7 @@ function WorkerDashboard({ inShell = false }) {
                 </div>
               </div>
 
-              <div className="bp-h2" style={{ marginTop: 22 }}>升級到 Tier S 還差什麼 · UPGRADE CHECKLIST</div>
+              <div className="bp-h2" style={{ marginTop: 22 }}>{_t("worker.upgrade_checklist_title", "升級到 Tier S 還差什麼 · UPGRADE CHECKLIST")}</div>
               <div className="bp-panel">
                 <div className="bp-panel-h">
                   <span style={{ color: "#f0c651", fontFamily: "var(--mono)", letterSpacing: "0.08em" }}>TIER S · 典範</span>
@@ -291,7 +305,7 @@ function WorkerDashboard({ inShell = false }) {
               </div>
 
 
-              <div className="bp-h2" style={{ marginTop: 22 }}>badges earned · 你的徽章牆</div>
+              <div className="bp-h2" style={{ marginTop: 22 }}>badges earned · {_t("worker.badges_title", "你的徽章牆")}</div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
                 {[
                   { k: "DTC", t: "DTC × 7 cases",   on: true,  sub: "unlocked 2024-09",   col: "#c7e84a", icon: "spark"   },
@@ -325,7 +339,7 @@ function WorkerDashboard({ inShell = false }) {
                 ))}
               </div>
 
-              <div className="bp-h2" style={{ marginTop: 22 }}>weighting · 你目前的推薦權重</div>
+              <div className="bp-h2" style={{ marginTop: 22 }}>weighting · {_t("worker.weighting_title", "你目前的推薦權重")}</div>
               <div className="bp-panel">
                 <div className="bp-panel-b">
                   {[
@@ -364,7 +378,7 @@ function WorkerDashboard({ inShell = false }) {
                 ))}
               </div>
 
-              <div className="bp-h2" style={{ marginTop: 22 }}>AI 工具補貼 · Tier A+ benefit</div>
+              <div className="bp-h2" style={{ marginTop: 22 }}>{_t("worker.tool_subsidy_title", "AI 工具補貼 · Tier A+ benefit")}</div>
               <div className="bp-panel">
                 <div className="bp-panel-b" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
                   {[
@@ -389,7 +403,7 @@ function WorkerDashboard({ inShell = false }) {
               </div>
               <div className="bp-tip" style={{ marginTop: 14 }}>
                 <span style={{ fontFamily: "var(--mono)" }}>commercial terms</span>{" "}
-                <span className="zh">早期不在平台內代收專案款；報價、付款與合約由雙方自行約定，BeyondPath 先累積驗收與交付證據。</span>
+                <span className="zh">{_t("worker.no_collect_zh", "早期不在平台內代收專案款；報價、付款與合約由雙方自行約定，BeyondPath 先累積驗收與交付證據。")}</span>
               </div>
             </>
           )}
@@ -397,15 +411,15 @@ function WorkerDashboard({ inShell = false }) {
           {tab === "coach" && (
             <>
               <div className="bp-h2" style={{ marginTop: 26 }}>
-                AI 教練 · skill assessment
+                {_t("worker.coach_title", "AI 教練 · skill assessment")}
                 <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", marginLeft: 10, letterSpacing: "0.08em" }}>
                   ANALYZED FROM 24 CASES + 162 DELIVERABLES
                 </span>
               </div>
               <div className="bp-panel">
                 <div className="bp-panel-h">
-                  <span>skill gap analysis · 你 vs Tier A+ DTC 中位</span>
-                  <span style={{ marginLeft: "auto", color: "var(--accent)" }}>4 / 6 領先 · 2 / 6 落後</span>
+                  <span>{_t("worker.skillgap_label", "skill gap analysis · 你 vs Tier A+ DTC 中位")}</span>
+                  <span style={{ marginLeft: "auto", color: "var(--accent)" }}>{_t("worker.skillgap_rank", "4 / 6 領先 · 2 / 6 落後")}</span>
                 </div>
                 <div className="bp-panel-b">
                   {[
@@ -448,7 +462,7 @@ function WorkerDashboard({ inShell = false }) {
                 </div>
               </div>
 
-              <div className="bp-h2" style={{ marginTop: 22 }}>recommended · 補足學習路徑（個人化）</div>
+              <div className="bp-h2" style={{ marginTop: 22 }}>recommended · {_t("worker.recommended_title", "補足學習路徑（個人化）")}</div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
                 {[
                   { tag: "COURSE", t: "Reels 60s storytelling", who: "BeyondPath original", time: "2h 40m · 8 modules", lift: "+9 score", paid: "平台補貼 100%" },
@@ -475,7 +489,7 @@ function WorkerDashboard({ inShell = false }) {
                 ))}
               </div>
 
-              <div className="bp-h2" style={{ marginTop: 22 }}>tools · 你還沒接上的最新工具（AI 自動偵測）</div>
+              <div className="bp-h2" style={{ marginTop: 22 }}>tools · {_t("worker.tools_title", "你還沒接上的最新工具（AI 自動偵測）")}</div>
               <div className="bp-panel">
                 <div className="bp-panel-b" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
                   {[
@@ -509,14 +523,14 @@ function WorkerDashboard({ inShell = false }) {
 
               <div className="bp-tip" style={{ marginTop: 14 }}>
                 <span style={{ fontFamily: "var(--mono)" }}>coach</span>{" "}
-                <span className="zh">學習路徑由 AI 根據你 24 個案例 / 162 件交付物 + Tier S 標準缺口反推。完成後自動回填至 B3 Tier 進度，不需手動申請。</span>
+                <span className="zh">{_t("worker.learning_zh", "學習路徑由 AI 根據你 24 個案例 / 162 件交付物 + Tier S 標準缺口反推。完成後自動回填至 B3 Tier 進度，不需手動申請。")}</span>
               </div>
             </>
           )}
 
           {tab === "inbox" && (
             <>
-              <div className="bp-h2" style={{ marginTop: 26 }}>inbox · 3 待回</div>
+              <div className="bp-h2" style={{ marginTop: 26 }}>{_t("worker.inbox_title", "inbox · 3 待回")}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {[
                   { tier: "A+", who: "AURA Skincare", role: "Brand DNA × AI", score: 89, fee: 280000, hot: true, zh: "8 週・3 SKU 全套素材・retainer 入口・client NPS 4.7" },

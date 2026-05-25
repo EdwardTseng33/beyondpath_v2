@@ -10,6 +10,19 @@ const fmtNT = (n) => "NT$" + n.toLocaleString();
 
 // Tier atom (T1.5 . 2026-05-20 calcifer . spec 09)
 // Maps tier_suggestion -> CSS modifier + zh narrative label.
+// === i18n helpers (Step 3c - 2026-05-25) ===
+function _t(key, fallback) {
+  return window.BPi18n ? window.BPi18n.t(key, fallback) : fallback;
+}
+function useI18n() {
+  const [, setRev] = React.useState(0);
+  React.useEffect(() => {
+    const h = () => setRev(r => r + 1);
+    document.addEventListener("i18n:change", h);
+    return () => document.removeEventListener("i18n:change", h);
+  }, []);
+}
+
 const TIER_META = {
   "B":     { cls: "b",     label: "Tier B · 起步" },
   "Bplus": { cls: "bplus", label: "Tier B+ · 累積" },
@@ -122,14 +135,14 @@ function Step1({ state, set, device }) {
   return (
     <div>
       <div className="bp-eyebrow">
-        <span>Step 01 / Pre-intake · 選領域 + 上傳需求</span>
+        <span>{_t("app.step_label_pre_intake", "Step 01 / Pre-intake · 選領域 + 上傳需求")}</span>
         <span className="pill green">● live</span>
       </div>
       <h1 className="bp-h1">
         Pick a vertical, drop your brief.
         <br />
         <span className="zh" style={{ color: "var(--muted)" }}>
-          選擇案件垂直領域，匯入需求文件。
+          {_t("client.h1_step01_zh", "選擇案件垂直領域，匯入需求文件。")}
         </span>
       </h1>
       <p className="bp-sub">
@@ -434,13 +447,13 @@ function Step2({ state, set }) {
 
     const brief = (state.brief || "").trim();
     if (brief.length < 20) {
-      setError("brief 內容太短（< 20 字）、無法 AI 拆解。請回 Step 01 補充。");
+      setError(_t("client.err_brief_too_short", "brief 內容太短（< 20 字）、無法 AI 拆解。請回 Step 01 補充。"));
       setPhase("error");
       return;
     }
 
     if (!window.bpAiParse) {
-      setError("Supabase client 尚未載入、請重整頁面。");
+      setError(_t("client.err_supabase_not_loaded", "Supabase client 尚未載入、請重整頁面。"));
       setPhase("error");
       return;
     }
@@ -492,14 +505,14 @@ function Step2({ state, set }) {
   return (
     <div>
       <div className="bp-eyebrow">
-        <span>Step 03 / AI Parse · AI 拆解需求</span>
+        <span>{_t("app.step_label_ai_parse", "Step 03 / AI Parse · AI 拆解需求")}</span>
         <span className="pill">{phase === "running" ? "Claude thinking…" : phase === "error" ? "error" : "complete"}</span>
       </div>
       <h1 className="bp-h1">
         AI is reading your brief.
         <br />
         <span className="zh" style={{ color: "var(--muted)" }}>
-          平台 AI 正在拆解你的需求成可執行任務。
+          {_t("client.step03_sub", "平台 AI 正在拆解你的需求成可執行任務。")}
         </span>
       </h1>
 
@@ -660,14 +673,14 @@ function Step3({ state, set, device }) {
   return (
     <div>
       <div className="bp-eyebrow">
-        <span>Step 02 / Confirm · 確認期待</span>
-        <span className="pill">補完 AI 沒猜到的</span>
+        <span>{_t("app.step_label_confirm", "Step 02 / Confirm · 確認期待")}</span>
+        <span className="pill">{_t("client.confirm_pill", "補完 AI 沒猜到的")}</span>
       </div>
       <h1 className="bp-h1">
         Confirm what AI missed.
         <br />
         <span className="zh" style={{ color: "var(--muted)" }}>
-          補完 AI 拆解中沒涵蓋的偏好。
+          {_t("client.h1_step02_zh", "補完 AI 拆解中沒涵蓋的偏好。")}
         </span>
       </h1>
 
@@ -980,8 +993,8 @@ function Step4({ state, set, device }) {
   return (
     <div>
       <div className="bp-eyebrow">
-        <span>Step 04 / Match · AI 配對 + 人工覆核</span>
-        <span className="pill" style={{ background: "rgba(255,200,80,0.1)", color: "#ffc850", borderColor: "rgba(255,200,80,0.3)" }}>● POC · 早期合作</span>
+        <span>{_t("app.step_label_match", "Step 04 / Match · AI 配對 + 人工覆核")}</span>
+        <span className="pill" style={{ background: "rgba(255,200,80,0.1)", color: "#ffc850", borderColor: "rgba(255,200,80,0.3)" }}>{_t("client.step04_pill_poc", "● POC · 早期合作")}</span>
         <span
           className="pill"
           style={
@@ -1372,7 +1385,7 @@ function IntakeSubmitModal({ state, onCancel, onDone }) {
   const doSubmit = async () => {
     setError("");
     if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      setError("請填一個有效 email · BeyondPath 24h 內回覆配對結果");
+      setError(_t("client.err_email_invalid", "請填一個有效 email · BeyondPath 24h 內回覆配對結果"));
       return;
     }
     setSubmitting(true);
@@ -1395,16 +1408,16 @@ function IntakeSubmitModal({ state, onCancel, onDone }) {
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
       <div style={{ width: "100%", maxWidth: 480, background: "#0a0a0b", border: "1px solid rgba(199,232,74,0.4)", padding: "32px 28px", color: "#f0eee8" }}>
-        <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, letterSpacing: "0.14em", color: "#c7e84a", textTransform: "uppercase", marginBottom: 10 }}>◆ 取得 24h 配對方案</div>
-        <h2 style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 22, fontWeight: 700, margin: "0 0 8px", lineHeight: 1.3 }}>送出需求 · 取得 24h 配對方案</h2>
-        <p style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 14, color: "#9a9aa3", margin: "0 0 22px", lineHeight: 1.6 }}>24h 內：AI 初審 + 人工覆核 → 配對方案、候選人與時程寄到你的 email。Early Beta · 送出進人工審核、不代表正式合約或付款。</p>
+        <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, letterSpacing: "0.14em", color: "#c7e84a", textTransform: "uppercase", marginBottom: 10 }}>{_t("client.submit_eyebrow", "◆ 取得 24h 配對方案")}</div>
+        <h2 style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 22, fontWeight: 700, margin: "0 0 8px", lineHeight: 1.3 }}>{_t("client.submit_title", "送出需求 · 取得 24h 配對方案")}</h2>
+        <p style={{ fontFamily: "Noto Sans TC, sans-serif", fontSize: 14, color: "#9a9aa3", margin: "0 0 22px", lineHeight: 1.6 }}>{_t("client.submit_sub", "24h 內：AI 初審 + 人工覆核 → 配對方案、候選人與時程寄到你的 email。Early Beta · 送出進人工審核、不代表正式合約或付款。")}</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <input type="email" placeholder="your@email.com（必填）" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
           <input type="text" placeholder="公司 / 品牌名（可選）" value={companyName} onChange={(e) => setCompanyName(e.target.value)} disabled={submitting} style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0eee8", fontFamily: "Noto Sans TC, sans-serif", fontSize: 15 }} />
           {error && <div style={{ padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {error}</div>}
           <div style={{ display: "flex", gap: 10, marginTop: 6 }}>
             <button type="button" onClick={onCancel} disabled={submitting} style={{ padding: "12px 18px", background: "transparent", color: "#c8c6c0", border: "1px solid rgba(255,255,255,0.12)", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.08em", cursor: "pointer", textTransform: "uppercase" }}>取消</button>
-            <button type="button" onClick={doSubmit} disabled={submitting} style={{ flex: 1, padding: "12px 18px", background: "#c7e84a", color: "#0a0a0b", border: "1px solid #c7e84a", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.1em", fontWeight: 700, cursor: submitting ? "wait" : "pointer", textTransform: "uppercase", opacity: submitting ? 0.5 : 1 }}>{submitting ? "送出中…" : "→ 取得 24h 配對方案"}</button>
+            <button type="button" onClick={doSubmit} disabled={submitting} style={{ flex: 1, padding: "12px 18px", background: "#c7e84a", color: "#0a0a0b", border: "1px solid #c7e84a", fontFamily: "JetBrains Mono, monospace", fontSize: 12, letterSpacing: "0.1em", fontWeight: 700, cursor: submitting ? "wait" : "pointer", textTransform: "uppercase", opacity: submitting ? 0.5 : 1 }}>{submitting ? _t("client.submit_btn_submitting", "送出中…") : _t("client.submit_btn_submit", "→ 取得 24h 配對方案")}</button>
           </div>
         </div>
         <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px dashed rgba(255,255,255,0.08)", fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6a6a78", letterSpacing: "0.06em", lineHeight: 1.7 }}>Early Beta · 你的 brief + 配對結果進入 BeyondPath 後台、不會公開 · 24h 內 email 回覆 · 第一次送出僅取得配對方案、不代表正式合約或付款</div>
@@ -1414,6 +1427,7 @@ function IntakeSubmitModal({ state, onCancel, onDone }) {
 }
 
 function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = false, step: controlledStep, onStep, onAdvanceBeyond, hideStepper = false, hideTopbar = false }) {
+  useI18n();
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
   const [submitDone, setSubmitDone] = useState(false);
   const [uStep, setUStep] = useState(initialStep);
@@ -1483,7 +1497,7 @@ function ClientIntakeApp({ device = "desktop", initialStep = 0, presetParsed = f
     if (step === 0) return "Confirm expectations →";
     if (step === 1) return "Run AI parse →";
     if (step === 2) return "Find matches →";
-    return submitDone ? "合約草稿預覽 →" : "Submit · 取得 24h 配對方案 →";
+    return submitDone ? _t("client.submit_done_label", "合約草稿預覽 →") : _t("client.submit_normal_label", "Submit · 取得 24h 配對方案 →");
   };
 
   return (
