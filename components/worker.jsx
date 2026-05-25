@@ -678,7 +678,7 @@ const AI_BRIEF = `你是 BeyondPath 認證 AI 整理員。我正在申請台灣 
 請開始第 1 段。`;
 
 function WorkerEmptyState() {
-  const APPLICATION_EMAIL = "edwardt0303@gmail.com";
+  const APPLICATION_EMAIL = _t("worker.apply_email_default", "edwardt0303@gmail.com");
   const [copiedEmail, setCopiedEmail] = uSW(false);
   const [copiedBrief, setCopiedBrief] = uSW(false);
   // step: intro | generate | paste | chat | preview
@@ -708,26 +708,26 @@ function WorkerEmptyState() {
     setParseError("");
     setParsed(null);
     if (!pasteRaw.trim()) {
-      setParseError("把 AI 整理出來的內容整段貼進來就好（含中文說明 OK · 我們會自動抓出 JSON 部分）。");
+      setParseError(_t("worker.apply_parse_err_empty", "把 AI 整理出來的內容整段貼進來就好（含中文說明 OK · 我們會自動抓出 JSON 部分）。"));
       return;
     }
     try {
       const m = pasteRaw.match(/\{[\s\S]*\}/);
       if (!m) {
-        throw new Error("貼進來的內容找不到 JSON 區塊（要含 { } 大括號）。請回 ChatGPT/Claude 確認最後有產出 JSON、整段複製貼上。");
+        throw new Error(_t("worker.apply_parse_err_nojson", "貼進來的內容找不到 JSON 區塊（要含 { } 大括號）。請回 ChatGPT/Claude 確認最後有產出 JSON、整段複製貼上。"));
       }
       const obj = JSON.parse(m[0]);
       if (typeof obj.L_score !== "number") {
-        throw new Error("JSON 裡缺 `L_score`（一個 0-10 的數字）。可能是 AI 沒走完訪談、回去看是否漏了 L 分評估那段。");
+        throw new Error(_t("worker.apply_parse_err_no_lscore", "JSON 裡缺 `L_score`（一個 0-10 的數字）。可能是 AI 沒走完訪談、回去看是否漏了 L 分評估那段。"));
       }
       if (!obj.skill_matrix) {
-        throw new Error("JSON 裡缺 `skill_matrix`（6 維能力評分）。回 ChatGPT/Claude 補完 6 維評分後重貼。");
+        throw new Error(_t("worker.apply_parse_err_no_matrix", "JSON 裡缺 `skill_matrix`（6 維能力評分）。回 ChatGPT/Claude 補完 6 維評分後重貼。"));
       }
       setParsed(obj);
       setStep("preview");
     } catch (e) {
       const friendly = e.message.includes("Unexpected") || e.message.includes("Unterminated")
-        ? `JSON 格式不完整（${e.message.slice(0, 60)}…）。常見原因：複製時漏了結尾 } 或多了句點。再貼一次試試、或點下方「用範例試試」看正確格式長怎樣。`
+        ? _t("worker.apply_parse_err_friendly_prefix", "JSON 格式不完整（") + e.message.slice(0, 60) + _t("worker.apply_parse_err_friendly_suffix", "…）。常見原因：複製時漏了結尾 } 或多了句點。再貼一次試試、或點下方「用範例試試」看正確格式長怎樣。")
         : e.message;
       setParseError(friendly);
     }
@@ -758,7 +758,7 @@ function WorkerEmptyState() {
 
     if (!window.bpAiInterview) {
       setInterviewAsking(false);
-      setInterviewError("AI 訪談模組沒載入（bpAiInterview undefined）。檢查 supabase.js 是否在頁面上。");
+      setInterviewError(_t("worker.apply_interview_err_no_module", "AI 訪談模組沒載入（bpAiInterview undefined）。檢查 supabase.js 是否在頁面上。"));
       return;
     }
 
@@ -766,7 +766,7 @@ function WorkerEmptyState() {
     setInterviewAsking(false);
 
     if (error || !data?.ok) {
-      const msg = error?.message || data?.error || "AI 訪談呼叫失敗、請稍後再試。";
+      const msg = error?.message || data?.error || _t("worker.apply_interview_err_call_fail", "AI 訪談呼叫失敗、請稍後再試。");
       const hint = data?.hint ? ` · ${data.hint}` : "";
       setInterviewError(msg + hint);
       return;
@@ -907,20 +907,20 @@ function WorkerEmptyState() {
             <circle cx="40" cy="40" r="36" fill="none" stroke="#c7e84a" strokeWidth="2"/>
             <path d="M24 40 l12 12 l22 -22" fill="none" stroke="#c7e84a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.2, margin: "0 0 14px", color: "#f0eee8" }}>申請草稿已準備好。</h1>
-          <p style={{ color: "#9a9aa3", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.08em", marginBottom: 28 }}>EMAIL APPLICATION · SEND TO REVIEW</p>
+          <h1 style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.2, margin: "0 0 14px", color: "#f0eee8" }}>{_t("worker.apply_sub_title", "申請草稿已準備好。")}</h1>
+          <p style={{ color: "#9a9aa3", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.08em", marginBottom: 28 }}>{_t("worker.apply_sub_mono_label", "EMAIL APPLICATION · SEND TO REVIEW")}</p>
 
           <div style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.08)", marginBottom: 28, textAlign: "left" }}>
             <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.14em", color: "#9a9aa3", textTransform: "uppercase" }}>
-              下一步 · WHAT HAPPENS NEXT
+              {_t("worker.apply_sub_next_label", "下一步 · WHAT HAPPENS NEXT")}
             </div>
             <div style={{ padding: "18px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
               {[
-                `Supabase 已收到你的申請（能力卡 + email）· 你應該幾分鐘內收到一封自動確認信`,
-                `24h 內 AI 初步回覆 · 3-7 天人工覆核 → 結果用 email 寄到你留的信箱（正式 Tier 認證委員會另有時程）`,
-                "通過 → 進首案池（保留 20% slot 給新人）→ 第一個案最快 2 週、首案後才進 Tier 升降",
-                "沒通過 → 我們會給具體補強方向 · 6 個月後可重申",
-                "若 72h 內沒收到任何信、寄到下方信箱提醒、不會掉案",
+                _t("worker.apply_sub_next_01", "Supabase 已收到你的申請（能力卡 + email）· 你應該幾分鐘內收到一封自動確認信"),
+                _t("worker.apply_sub_next_02", "24h 內 AI 初步回覆 · 3-7 天人工覆核 → 結果用 email 寄到你留的信箱（正式 Tier 認證委員會另有時程）"),
+                _t("worker.apply_sub_next_03", "通過 → 進首案池（保留 20% slot 給新人）→ 第一個案最快 2 週、首案後才進 Tier 升降"),
+                _t("worker.apply_sub_next_04", "沒通過 → 我們會給具體補強方向 · 6 個月後可重申"),
+                _t("worker.apply_sub_next_05", "若 72h 內沒收到任何信、寄到下方信箱提醒、不會掉案"),
               ].map((t, i) => (
                 <div key={i} style={{ display: "flex", gap: 14, alignItems: "start" }}>
                   <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#c7e84a", fontWeight: 700, minWidth: 18 }}>0{i+1}</span>
@@ -931,12 +931,12 @@ function WorkerEmptyState() {
           </div>
 
           <div style={{ background: "rgba(199,232,74,0.05)", border: "1px solid rgba(199,232,74,0.4)", padding: "14px 18px", marginBottom: 28, fontSize: 13, color: "#c8c6c0", textAlign: "left" }}>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#c7e84a", display: "block", marginBottom: 6 }}>● EARLY BETA · 申請已送出</span>
-            你的能力卡與 email 已存入 BeyondPath 後台。24h 內 AI 先給初步回覆、3-7 天人工覆核完成後、結果寄到你的 email。想額外補資料或自我介紹，可寄到下方 email。
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#c7e84a", display: "block", marginBottom: 6 }}>{_t("worker.apply_sub_banner_label", "● EARLY BETA · 申請已送出")}</span>
+            {_t("worker.apply_sub_banner_body", "你的能力卡與 email 已存入 BeyondPath 後台。24h 內 AI 先給初步回覆、3-7 天人工覆核完成後、結果寄到你的 email。想額外補資料或自我介紹，可寄到下方 email。")}
           </div>
 
           <div style={{ border: "1px dashed rgba(255,255,255,0.16)", padding: "14px 16px", marginBottom: 22, textAlign: "left", background: "rgba(255,255,255,0.018)" }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#9a9aa3", textTransform: "uppercase", marginBottom: 8 }}>手動寄送收件人</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", color: "#9a9aa3", textTransform: "uppercase", marginBottom: 8 }}>{_t("worker.apply_sub_email_label", "手動寄送收件人")}</div>
             <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
               <code style={{ color: "#c7e84a", fontFamily: "'JetBrains Mono', monospace", fontSize: 14, background: "rgba(199,232,74,0.06)", border: "1px solid rgba(199,232,74,0.2)", padding: "8px 10px" }}>{APPLICATION_EMAIL}</code>
               <button
@@ -950,14 +950,14 @@ function WorkerEmptyState() {
                 }}
                 style={{ padding: "8px 12px", border: "1px solid rgba(199,232,74,0.5)", background: "transparent", color: "#f0eee8", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.1em", cursor: "pointer" }}
               >
-                {copiedEmail ? "已複製" : "複製 email"}
+                {copiedEmail ? _t("worker.apply_sub_copied", "已複製") : _t("worker.apply_sub_copy_btn", "複製 email")}
               </button>
             </div>
           </div>
 
           <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
-            <a href="app.html?role=worker&view=worker-demo" style={{ display: "inline-block", padding: "12px 24px", border: "1px solid rgba(199,232,74,0.65)", color: "#c7e84a", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.12em", textDecoration: "none" }}>看通過後 Worker Console</a>
-            <a href="landing.html" style={{ display: "inline-block", padding: "12px 24px", border: "1px solid #c8c6c0", color: "#f0eee8", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.12em", textDecoration: "none" }}>← 回 BeyondPath 首頁</a>
+            <a href="app.html?role=worker&view=worker-demo" style={{ display: "inline-block", padding: "12px 24px", border: "1px solid rgba(199,232,74,0.65)", color: "#c7e84a", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.12em", textDecoration: "none" }}>{_t("worker.apply_sub_link_console", "看通過後 Worker Console")}</a>
+            <a href="landing.html" style={{ display: "inline-block", padding: "12px 24px", border: "1px solid #c8c6c0", color: "#f0eee8", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "0.12em", textDecoration: "none" }}>{_t("worker.apply_sub_link_home", "← 回 BeyondPath 首頁")}</a>
           </div>
         </div>
       </div>
@@ -983,12 +983,12 @@ function WorkerEmptyState() {
               </svg>
             </div>
             <div className="bp-eyebrow" style={{ justifyContent: "center", marginTop: 18 }}>
-              <span>Apply · Tier B Certification</span>
-              <span className="pill green">● applications open</span>
+              <span>{_t("worker.apply_intro_eyebrow", "Apply · Tier B Certification")}</span>
+              <span className="pill green">{_t("worker.apply_intro_pill_open", "● applications open")}</span>
             </div>
             <h1 className="bp-h1" style={{ textAlign: "center", marginTop: 10 }}>
-              You're 1 step away from the closed club.
-              <br/><span className="zh" style={{ color: "var(--muted)" }}>還差一步加入 &lt; 10%</span>
+              {_t("worker.apply_intro_h1_en", "You're 1 step away from the closed club.")}
+              <br/><span className="zh" style={{ color: "var(--muted)" }}>{_t("worker.apply_intro_h1_zh", "還差一步加入 < 10%")}</span>
             </h1>
 
             {/* Senior fast-track · 資深 worker 跳過 4 步、直接跟 Edward 30 min 聊 */}
@@ -1004,11 +1004,11 @@ function WorkerEmptyState() {
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                 <span style={{ fontSize: 16 }}>👔</span>
-                <b style={{ color: "#ffc850", fontSize: 13.5 }}>資深 worker（10+ 年 / Tier A+ 以上）</b>
-                <span style={{ fontSize: 12, color: "var(--muted)", fontFamily: "var(--mono)" }}>fast-track</span>
+                <b style={{ color: "#ffc850", fontSize: 13.5 }}>{_t("worker.apply_intro_senior_badge", "資深 worker（10+ 年 / Tier A+ 以上）")}</b>
+                <span style={{ fontSize: 12, color: "var(--muted)", fontFamily: "var(--mono)" }}>{_t("worker.apply_intro_senior_tag", "fast-track")}</span>
               </div>
               <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.6 }}>
-                30 分鐘 AI 訪談對你的職涯太短。直接跟 BeyondPath 團隊預約 30 min 視訊聊策略合作、跳過下方 4 步、直接進 Tier A+ pipeline。
+                {_t("worker.apply_intro_senior_desc", "30 分鐘 AI 訪談對你的職涯太短。直接跟 BeyondPath 團隊預約 30 min 視訊聊策略合作、跳過下方 4 步、直接進 Tier A+ pipeline。")}
               </div>
               <a
                 href="mailto:edwardt0303@gmail.com?subject=BeyondPath%20Senior%20Worker%20Fast-Track%20%E7%94%B3%E8%AB%8B&body=Edward%20%E5%A5%BD%EF%BC%8C%0A%0A%E6%88%91%E6%98%AF%E8%B3%87%E6%B7%B1%20worker%EF%BC%88_____%20%E5%B9%B4%E7%B6%93%E9%A9%97%EF%BC%89%E3%80%81%E6%83%B3%E8%B7%B3%E9%81%8E%204%20%E6%AD%A5%E7%B0%A1%E5%8C%96%E8%A8%AA%E8%AB%87%E3%80%81%E7%9B%B4%E6%8E%A5%E8%B7%9F%E4%BD%A0%E9%A0%90%E7%B4%84%2030%20min%20%E8%A6%96%E8%A8%8A%E8%81%8A%E7%AD%96%E7%95%A5%E5%90%88%E4%BD%9C%E3%80%82%0A%0A%E4%B8%BB%E5%8A%9B%E9%A0%98%E5%9F%9F%EF%BC%9A_____%0A%E4%B8%BB%E8%A6%81%E5%85%AC%E5%8F%B8%20%2F%20%E4%BD%9C%E5%93%81%EF%BC%9A_____%0A%E5%8F%AF%E9%A0%90%E7%B4%84%E6%99%82%E6%AE%B5%EF%BC%9A_____%0A%0A%E8%AC%9D%E8%AC%9D"
@@ -1025,21 +1025,21 @@ function WorkerEmptyState() {
                   fontFamily: "var(--sans)",
                 }}
               >
-                → 預約團隊 30 min 視訊
+                {_t("worker.apply_intro_senior_cta", "→ 預約團隊 30 min 視訊")}
               </a>
             </div>
 
             <div className="bp-panel bp-onb-card" style={{ marginTop: 26 }}>
               <div className="bp-panel-h">
-                <span>Tier B Certification · 4 步</span>
-                <span style={{ marginLeft: "auto", color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11 }}>免費 · 不收任何申請費</span>
+                <span>{_t("worker.apply_intro_card_title", "Tier B Certification · 4 步")}</span>
+                <span style={{ marginLeft: "auto", color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11 }}>{_t("worker.apply_intro_card_fee", "免費 · 不收任何申請費")}</span>
               </div>
               <div className="bp-panel-b">
                 {[
-                  { n: 1, t: "Submit application form", sub: "5 min · 基本資料 + 身份 + email" },
-                  { n: 2, t: "Upload 3 portfolio cases", sub: "近 12 個月實際 AI 相關案件" },
-                  { n: 3, t: "AI 拆解 portfolio · 評估技能", sub: "即時自動 · skill matrix 6 維" },
-                  { n: 4, t: "30-min video review · 平台委員", sub: "批次審核 · 每月 1 號 / 15 號" },
+                  { n: 1, t: _t("worker.apply_intro_step1_t", "Submit application form"), sub: _t("worker.apply_intro_step1_sub", "5 min · 基本資料 + 身份 + email") },
+                  { n: 2, t: _t("worker.apply_intro_step2_t", "Upload 3 portfolio cases"), sub: _t("worker.apply_intro_step2_sub", "近 12 個月實際 AI 相關案件") },
+                  { n: 3, t: _t("worker.apply_intro_step3_t", "AI 拆解 portfolio · 評估技能"), sub: _t("worker.apply_intro_step3_sub", "即時自動 · skill matrix 6 維") },
+                  { n: 4, t: _t("worker.apply_intro_step4_t", "30-min video review · 平台委員"), sub: _t("worker.apply_intro_step4_sub", "批次審核 · 每月 1 號 / 15 號") },
                 ].map((s) => (
                   <div key={s.n} className="bp-onb-step">
                     <div className="bp-onb-step-n">
@@ -1055,8 +1055,8 @@ function WorkerEmptyState() {
                   </div>
                 ))}
                 <div className="bp-onb-stat">
-                  <div><span className="lbl">avg approval</span><span className="v">7 days</span></div>
-                  <div><span className="lbl">pass rate</span><span className="v">stage 1 ~28% · Tier A &lt; 10%</span></div>
+                  <div><span className="lbl">{_t("worker.apply_intro_stat_avg_label", "avg approval")}</span><span className="v">{_t("worker.apply_intro_stat_avg_value", "7 days")}</span></div>
+                  <div><span className="lbl">{_t("worker.apply_intro_stat_pass_label", "pass rate")}</span><span className="v">{_t("worker.apply_intro_stat_pass_value", "stage 1 ~28% · Tier A < 10%")}</span></div>
                 </div>
               </div>
             </div>
@@ -1073,10 +1073,10 @@ function WorkerEmptyState() {
                 }}
                 style={{ width: "100%" }}
               >
-                → 我有 ChatGPT / Claude / Gemini · 自己跑訪談
+                {_t("worker.apply_intro_route_a_cta", "→ 我有 ChatGPT / Claude / Gemini · 自己跑訪談")}
               </button>
               <div style={{ fontSize: 12, color: "var(--muted)", textAlign: "center", fontFamily: "var(--mono)", letterSpacing: "0.04em", marginTop: -4 }}>
-                推薦 · 用你已付費的 AI · 整理好的證據貼回來
+                {_t("worker.apply_intro_route_a_sub", "推薦 · 用你已付費的 AI · 整理好的證據貼回來")}
               </div>
 
               {/* Route B · 保底：BP 內建 */}
@@ -1101,20 +1101,20 @@ function WorkerEmptyState() {
                   marginTop: 6,
                 }}
               >
-                沒付費 AI · 用 BeyondPath 內建訪談 →
+                {_t("worker.apply_intro_route_b_cta", "沒付費 AI · 用 BeyondPath 內建訪談 →")}
               </button>
               <div style={{ fontSize: 12, color: "var(--muted)", textAlign: "center", fontFamily: "var(--mono)", letterSpacing: "0.04em", marginTop: -4 }}>
-                保底選項 · BeyondPath AI 直接帶你跑 7 段 · 15-25 min
+                {_t("worker.apply_intro_route_b_sub", "保底選項 · BeyondPath AI 直接帶你跑 7 段 · 15-25 min")}
               </div>
             </div>
 
             <div style={{ marginTop: 18, display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
-              <a href="app.html?role=worker&view=worker-demo" className="bp-btn ghost" style={{ textDecoration: "none" }}>先看通過後 Worker Console →</a>
+              <a href="app.html?role=worker&view=worker-demo" className="bp-btn ghost" style={{ textDecoration: "none" }}>{_t("worker.apply_intro_preview_link", "先看通過後 Worker Console →")}</a>
             </div>
-            <div className="bp-onb-ghost"><a href="#" onClick={(e) => e.preventDefault()}>Read terms &amp; DPA →</a></div>
+            <div className="bp-onb-ghost"><a href="#" onClick={(e) => e.preventDefault()}>{_t("worker.apply_intro_terms_link", "Read terms & DPA →")}</a></div>
             <div className="bp-onb-fine">
-              全程約 30-45 分鐘 · 24 小時內初步回覆
-              <br/>免費申請 · prototype 階段不收任何個資
+              {_t("worker.apply_intro_fine_1", "全程約 30-45 分鐘 · 24 小時內初步回覆")}
+              <br/>{_t("worker.apply_intro_fine_2", "免費申請 · prototype 階段不收任何個資")}
             </div>
           </div>
           )}
@@ -1124,32 +1124,32 @@ function WorkerEmptyState() {
           {step === "generate" && (
           <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
             <ApplyProgress current={1} setStep={setStep} route="self" onRouteReset={() => { setRoute(""); setPasteRaw(""); clearProgressStorage(); }} />
-            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>用你自己的 AI 整理工作證據。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 1 · 30 分鐘 · 一鍵打開你常用的 AI</span></h1>
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>{_t("worker.apply_gen_h1", "用你自己的 AI 整理工作證據。")}<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>{_t("worker.apply_gen_h1_sub", "Step 1 · 30 分鐘 · 一鍵打開你常用的 AI")}</span></h1>
             <div className="bp-panel" style={{ marginTop: 22, border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)" }}>
-              <div className="bp-panel-h"><span>怎麼用</span></div>
+              <div className="bp-panel-h"><span>{_t("worker.apply_gen_how_title", "怎麼用")}</span></div>
               <div className="bp-panel-b" style={{ fontSize: 14, lineHeight: 1.75 }}>
                 <ol style={{ paddingLeft: 22, margin: 0 }}>
-                  <li>下方 brief 是<b>對 AI 的訪談指引</b>、含 7 段問題（基本資料 / 工具棧 / workflow / 案例證據 / 判斷力 / 報價 / L 分自評）</li>
-                  <li>點「複製 Brief」→ 再點「打開 Claude / ChatGPT / Gemini」其中一個</li>
-                  <li>到 AI 對話框貼上、AI 會帶你跑 30 分鐘訪談、有不懂的 AI 會追問</li>
-                  <li>AI 最後產出一段 JSON、回來這裡<b>貼回 BeyondPath</b></li>
+                  <li>{_t("worker.apply_gen_how_li1_a", "下方 brief 是")}<b>{_t("worker.apply_gen_how_li1_b", "對 AI 的訪談指引")}</b>{_t("worker.apply_gen_how_li1_c", "、含 7 段問題（基本資料 / 工具棧 / workflow / 案例證據 / 判斷力 / 報價 / L 分自評）")}</li>
+                  <li>{_t("worker.apply_gen_how_li2", "點「複製 Brief」→ 再點「打開 Claude / ChatGPT / Gemini」其中一個")}</li>
+                  <li>{_t("worker.apply_gen_how_li3", "到 AI 對話框貼上、AI 會帶你跑 30 分鐘訪談、有不懂的 AI 會追問")}</li>
+                  <li>{_t("worker.apply_gen_how_li4_a", "AI 最後產出一段 JSON、回來這裡")}<b>{_t("worker.apply_gen_how_li4_b", "貼回 BeyondPath")}</b></li>
                 </ol>
-                <div style={{ marginTop: 14, padding: "10px 12px", background: "rgba(0,0,0,0.2)", borderLeft: "2px solid var(--accent)", fontSize: 13, color: "var(--text-2)" }}>不收費、不傳資料、純用你自己付費的 AI 跑。未來會支援 MCP 直接讓你的 AI 把證據推進 BeyondPath、跳過複製貼上。</div>
+                <div style={{ marginTop: 14, padding: "10px 12px", background: "rgba(0,0,0,0.2)", borderLeft: "2px solid var(--accent)", fontSize: 13, color: "var(--text-2)" }}>{_t("worker.apply_gen_how_note", "不收費、不傳資料、純用你自己付費的 AI 跑。未來會支援 MCP 直接讓你的 AI 把證據推進 BeyondPath、跳過複製貼上。")}</div>
               </div>
             </div>
             <div className="bp-panel" style={{ marginTop: 16 }}>
-              <div className="bp-panel-h"><span>BRIEF · 對 AI 的指示</span><span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{AI_BRIEF.length} chars</span></div>
+              <div className="bp-panel-h"><span>{_t("worker.apply_gen_brief_title", "BRIEF · 對 AI 的指示")}</span><span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{AI_BRIEF.length}{_t("worker.apply_gen_brief_chars_suffix", " chars")}</span></div>
               <div className="bp-panel-b">
                 <textarea readOnly value={AI_BRIEF} style={{ width: "100%", minHeight: 280, background: "rgba(0,0,0,0.3)", color: "var(--text-2)", border: "1px solid var(--line-soft)", padding: "12px 14px", fontFamily: "var(--mono)", fontSize: 12, lineHeight: 1.7, resize: "vertical" }} />
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
-                  <button type="button" onClick={() => { try { navigator.clipboard.writeText(AI_BRIEF); setCopiedBrief(true); setTimeout(() => setCopiedBrief(false), 1600); } catch (e) {} }} style={btnPrimaryStyle}>{copiedBrief ? "✓ 已複製" : "複製 Brief"}</button>
-                  <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 Claude →</a>
-                  <a href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 ChatGPT →</a>
-                  <a href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>打開 Gemini →</a>
+                  <button type="button" onClick={() => { try { navigator.clipboard.writeText(AI_BRIEF); setCopiedBrief(true); setTimeout(() => setCopiedBrief(false), 1600); } catch (e) {} }} style={btnPrimaryStyle}>{copiedBrief ? _t("worker.apply_gen_copied", "✓ 已複製") : _t("worker.apply_gen_copy_btn", "複製 Brief")}</button>
+                  <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>{_t("worker.apply_gen_open_claude", "打開 Claude →")}</a>
+                  <a href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>{_t("worker.apply_gen_open_chatgpt", "打開 ChatGPT →")}</a>
+                  <a href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer" style={btnGhostStyle}>{_t("worker.apply_gen_open_gemini", "打開 Gemini →")}</a>
                 </div>
               </div>
             </div>
-            <StepNav onBack={() => { setRoute(""); setStep("intro"); }} onNext={() => setStep("paste")} nextLabel="AI 跑完了、貼回來 →" />
+            <StepNav onBack={() => { setRoute(""); setStep("intro"); }} onNext={() => setStep("paste")} nextLabel={_t("worker.apply_gen_next_label", "AI 跑完了、貼回來 →")} />
           </div>
           )}
 
@@ -1157,19 +1157,19 @@ function WorkerEmptyState() {
           {step === "paste" && (
           <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
             <ApplyProgress current={2} setStep={setStep} route="self" onRouteReset={() => { setRoute(""); setPasteRaw(""); clearProgressStorage(); }} />
-            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>貼回 AI 整理的結果。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>Step 2 · 1 分鐘 · 把 AI 給的 JSON 整段貼進來</span></h1>
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>{_t("worker.apply_paste_h1", "貼回 AI 整理的結果。")}<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>{_t("worker.apply_paste_h1_sub", "Step 2 · 1 分鐘 · 把 AI 給的 JSON 整段貼進來")}</span></h1>
             <div className="bp-panel" style={{ marginTop: 22 }}>
-              <div className="bp-panel-h"><span>PASTE · AI 整理結果</span></div>
+              <div className="bp-panel-h"><span>{_t("worker.apply_paste_title", "PASTE · AI 整理結果")}</span></div>
               <div className="bp-panel-b">
                 <textarea value={pasteRaw} onChange={(e) => { setPasteRaw(e.target.value); setParseError(""); }} placeholder='{ "L_score": 7, "L_confidence": "L6-L7", "tier_suggestion": "Tier B", "skill_matrix": { ... }, "strengths": [...], "growth": [...], "evidence_quality": "深" }' style={{ width: "100%", minHeight: 280, background: "rgba(0,0,0,0.3)", color: "var(--text)", border: "1px solid var(--line-soft)", padding: "12px 14px", fontFamily: "var(--mono)", fontSize: 12, lineHeight: 1.7, resize: "vertical" }} />
                 {parseError && <div style={{ marginTop: 10, padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {parseError}</div>}
                 <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <button type="button" onClick={tryParsePaste} style={btnPrimaryStyle}>檢查格式 + 生成能力卡 →</button>
-                  <button type="button" onClick={() => { setPasteRaw(SAMPLE_PASTE); setParseError(""); }} style={btnGhostStyle}>用範例試試</button>
+                  <button type="button" onClick={tryParsePaste} style={btnPrimaryStyle}>{_t("worker.apply_paste_check_btn", "檢查格式 + 生成能力卡 →")}</button>
+                  <button type="button" onClick={() => { setPasteRaw(SAMPLE_PASTE); setParseError(""); }} style={btnGhostStyle}>{_t("worker.apply_paste_sample_btn", "用範例試試")}</button>
                 </div>
               </div>
             </div>
-            <StepNav onBack={() => setStep("generate")} onNext={tryParsePaste} nextLabel="生成能力卡 →" />
+            <StepNav onBack={() => setStep("generate")} onNext={tryParsePaste} nextLabel={_t("worker.apply_paste_next_label", "生成能力卡 →")} />
           </div>
           )}
 
@@ -1178,32 +1178,32 @@ function WorkerEmptyState() {
           <div style={{ maxWidth: 780, margin: "32px auto", padding: "0 24px" }}>
             <ApplyProgress current={1} setStep={setStep} route="internal" onRouteReset={() => { resetInterview(); setRoute(""); clearProgressStorage(); }} />
             <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>
-              AI 訪談你的工作流。
+              {_t("worker.apply_chat_h1", "AI 訪談你的工作流。")}
               <span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>
-                Step 1 · 15-25 分鐘 · BeyondPath AI 帶你跑 7 段問題
+                {_t("worker.apply_chat_h1_sub", "Step 1 · 15-25 分鐘 · BeyondPath AI 帶你跑 7 段問題")}
               </span>
             </h1>
 
             {/* 進入訪談前的引導（messages 空 + 還沒在 ask）*/}
             {interviewMessages.length === 0 && !interviewAsking && !interviewError && (
               <div className="bp-panel" style={{ marginTop: 22, border: "1px solid var(--accent-line)", background: "rgba(199,232,74,0.04)" }}>
-                <div className="bp-panel-h"><span>怎麼進行</span></div>
+                <div className="bp-panel-h"><span>{_t("worker.apply_chat_how_title", "怎麼進行")}</span></div>
                 <div className="bp-panel-b" style={{ fontSize: 14, lineHeight: 1.75 }}>
                   <ol style={{ paddingLeft: 22, margin: 0 }}>
-                    <li>BeyondPath AI 會帶你跑 7 段訪談、共 15-25 分鐘</li>
-                    <li>段順序：領域 / 年資 → AI 工具棧 → 案件數量 + 3 例 → 最自豪 workflow → L-Score 自評 → 6 維技能 → 接案偏好</li>
-                    <li>答得越具體（客戶名 / 數字 / 工具串接細節）、評分越準</li>
-                    <li>答完 AI 自動產能力卡 · 24h 內 AI 給初步回覆 · 3-7 天人工覆核完成寄 email</li>
+                    <li>{_t("worker.apply_chat_how_li1", "BeyondPath AI 會帶你跑 7 段訪談、共 15-25 分鐘")}</li>
+                    <li>{_t("worker.apply_chat_how_li2", "段順序：領域 / 年資 → AI 工具棧 → 案件數量 + 3 例 → 最自豪 workflow → L-Score 自評 → 6 維技能 → 接案偏好")}</li>
+                    <li>{_t("worker.apply_chat_how_li3", "答得越具體（客戶名 / 數字 / 工具串接細節）、評分越準")}</li>
+                    <li>{_t("worker.apply_chat_how_li4", "答完 AI 自動產能力卡 · 24h 內 AI 給初步回覆 · 3-7 天人工覆核完成寄 email")}</li>
                   </ol>
                   <div style={{ marginTop: 14, padding: "10px 12px", background: "rgba(0,0,0,0.2)", borderLeft: "2px solid var(--accent)", fontSize: 13, color: "var(--text-2)" }}>
-                    後端 Claude Sonnet 4.6 · 每段答完 AI 會追問具體例子、別怕「答得太簡單」。
+                    {_t("worker.apply_chat_how_note", "後端 Claude Sonnet 4.6 · 每段答完 AI 會追問具體例子、別怕「答得太簡單」。")}
                   </div>
                   <button
                     type="button"
                     onClick={startInterview}
                     style={{ ...btnPrimaryStyle, marginTop: 18 }}
                   >
-                    → 開始訪談
+                    {_t("worker.apply_chat_start_btn", "→ 開始訪談")}
                   </button>
                 </div>
               </div>
@@ -1213,7 +1213,7 @@ function WorkerEmptyState() {
             {(interviewMessages.length > 0 || interviewAsking || interviewError) && (
               <div className="bp-panel" style={{ marginTop: 22 }}>
                 <div className="bp-panel-h">
-                  <span>AI INTERVIEW · 訪談中</span>
+                  <span>{_t("worker.apply_chat_panel_title", "AI INTERVIEW · 訪談中")}</span>
                   {interviewProgress && (
                     <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)" }}>
                       {interviewProgress}
@@ -1249,7 +1249,7 @@ function WorkerEmptyState() {
                           fontSize: 13,
                           fontFamily: "var(--mono)",
                         }}>
-                          AI 思考中<span style={{ animation: "bpDotPulse 1.4s infinite" }}>...</span>
+                          {_t("worker.apply_chat_thinking", "AI 思考中")}<span style={{ animation: "bpDotPulse 1.4s infinite" }}>...</span>
                         </div>
                       </div>
                     )}
@@ -1283,7 +1283,7 @@ function WorkerEmptyState() {
                         }}
                         style={{ padding: "4px 10px", background: "transparent", border: "1px solid currentColor", color: "inherit", fontSize: 12, cursor: "pointer", fontFamily: "var(--mono)" }}
                       >
-                        retry
+                        {_t("worker.apply_chat_retry", "retry")}
                       </button>
                     </div>
                   )}
@@ -1299,7 +1299,7 @@ function WorkerEmptyState() {
                           handleInterviewSubmit(e);
                         }
                       }}
-                      placeholder={interviewAsking ? "AI 正在思考、請稍候..." : "輸入你的答案... (Enter 送出 · Shift+Enter 換行)"}
+                      placeholder={interviewAsking ? _t("worker.apply_chat_input_thinking", "AI 正在思考、請稍候...") : _t("worker.apply_chat_input_placeholder", "輸入你的答案... (Enter 送出 · Shift+Enter 換行)")}
                       disabled={interviewAsking}
                       style={{
                         flex: 1,
@@ -1324,7 +1324,7 @@ function WorkerEmptyState() {
                         alignSelf: "flex-end",
                       }}
                     >
-                      送出
+                      {_t("worker.apply_chat_send", "送出")}
                     </button>
                   </form>
                 </div>
@@ -1338,20 +1338,20 @@ function WorkerEmptyState() {
                 onClick={() => { resetInterview(); setRoute(""); clearProgressStorage(); setStep("intro"); }}
                 style={{ ...btnGhostStyle, padding: "8px 18px", fontSize: 12 }}
               >
-                ← 取消、回首頁
+                {_t("worker.apply_chat_cancel", "← 取消、回首頁")}
               </button>
               {interviewMessages.length > 0 && (
                 <button
                   type="button"
                   onClick={() => {
-                    if (window.confirm("確定要重新開始訪談？目前進度會丟失。")) {
+                    if (window.confirm(_t("worker.apply_chat_restart_confirm", "確定要重新開始訪談？目前進度會丟失。"))) {
                       resetInterview();
                       setTimeout(() => startInterview(), 80);
                     }
                   }}
                   style={{ ...btnGhostStyle, padding: "8px 18px", fontSize: 12 }}
                 >
-                  重新開始訪談
+                  {_t("worker.apply_chat_restart", "重新開始訪談")}
                 </button>
               )}
             </div>
@@ -1362,32 +1362,32 @@ function WorkerEmptyState() {
           {step === "preview" && parsed && (
           <div style={{ maxWidth: 880, margin: "32px auto", padding: "0 24px" }}>
             <ApplyProgress current={route === "internal" ? 2 : 3} setStep={setStep} route={route || "self"} onRouteReset={() => { resetInterview(); setRoute(""); setPasteRaw(""); clearProgressStorage(); }} />
-            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>這就是你即將出現在客戶面前的樣子。<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>預覽你的能力卡 + 送出申請</span></h1>
+            <h1 className="bp-h1" style={{ margin: "20px 0 6px" }}>{_t("worker.apply_preview_h1", "這就是你即將出現在客戶面前的樣子。")}<span className="zh" style={{ color: "var(--muted)", fontSize: "0.5em", display: "block", marginTop: 6 }}>{_t("worker.apply_preview_h1_sub", "預覽你的能力卡 + 送出申請")}</span></h1>
 
             {/* ABILITY CARD */}
             <div className="bp-panel" style={{ marginTop: 22, borderColor: "var(--accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 32px rgba(199,232,74,0.08)" }}>
               <div className="bp-panel-h" style={{ background: "var(--accent-soft)" }}>
-                <span style={{ color: "var(--accent)" }}>◆ AI WORKFLOW PROOF PROFILE</span>
-                <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>PREVIEW · NOT YET SUBMITTED</span>
+                <span style={{ color: "var(--accent)" }}>{_t("worker.apply_preview_card_title", "◆ AI WORKFLOW PROOF PROFILE")}</span>
+                <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{_t("worker.apply_preview_card_status", "PREVIEW · NOT YET SUBMITTED")}</span>
               </div>
               <div className="bp-panel-b" style={{ padding: "24px 22px" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 20, alignItems: "start", marginBottom: 18 }}>
                   <div>
-                    <div style={{ fontSize: 22, fontWeight: 700, color: "var(--text)" }}>{parsed.name || "—"}</div>
-                    <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 4, fontFamily: "var(--mono)" }}>{(parsed.verticals || []).join(" · ")}{parsed.case_count ? ` · ${parsed.case_count} 案` : ""}</div>
+                    <div style={{ fontSize: 22, fontWeight: 700, color: "var(--text)" }}>{parsed.name || _t("worker.apply_preview_name_empty", "—")}</div>
+                    <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 4, fontFamily: "var(--mono)" }}>{(parsed.verticals || []).join(" · ")}{parsed.case_count ? " · " + parsed.case_count + _t("worker.apply_preview_case_suffix", " 案") : ""}</div>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em" }}>AI LEVEL</div>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em" }}>{_t("worker.apply_preview_ai_level", "AI LEVEL")}</div>
                     <div style={{ fontSize: 42, fontWeight: 800, color: "var(--accent)", lineHeight: 1, fontFamily: "var(--mono)" }}>L{parsed.L_score}</div>
                     <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{parsed.L_confidence}</div>
                   </div>
                 </div>
                 <div style={{ padding: "10px 14px", background: "var(--accent-soft)", border: "1px solid var(--accent-line)", marginBottom: 18, fontSize: 14, color: "var(--text)" }}>
-                  <b style={{ color: "var(--accent)" }}>建議：{parsed.tier_suggestion}</b> · 證據強度 {parsed.evidence_quality || "—"}
+                  <b style={{ color: "var(--accent)" }}>{_t("worker.apply_preview_suggest_prefix", "建議：")}{parsed.tier_suggestion}</b>{_t("worker.apply_preview_evidence_prefix", " · 證據強度 ")}{parsed.evidence_quality || _t("worker.apply_preview_evidence_empty", "—")}
                 </div>
 
                 {/* SKILL MATRIX 6 維 */}
-                <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--muted)", marginBottom: 10 }}>SKILL MATRIX · 6 維</div>
+                <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--muted)", marginBottom: 10 }}>{_t("worker.apply_preview_matrix_label", "SKILL MATRIX · 6 維")}</div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
                   {Object.entries(parsed.skill_matrix || {}).map(([k, v]) => (
                     <div key={k} style={{ padding: "10px 12px", border: "1px solid var(--line-soft)", background: "rgba(0,0,0,0.15)" }}>
@@ -1404,7 +1404,7 @@ function WorkerEmptyState() {
 
                 {parsed.strengths && parsed.strengths.length > 0 && (
                   <div style={{ marginTop: 18 }}>
-                    <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--muted)", marginBottom: 8 }}>STRENGTHS</div>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--muted)", marginBottom: 8 }}>{_t("worker.apply_preview_strengths_label", "STRENGTHS")}</div>
                     <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, color: "var(--text)", lineHeight: 1.7 }}>
                       {parsed.strengths.map((s, i) => <li key={i}>{s}</li>)}
                     </ul>
@@ -1416,26 +1416,26 @@ function WorkerEmptyState() {
             {/* LAYER 2 · 我們的考核 */}
             <div className="bp-panel" style={{ marginTop: 22 }}>
               <div className="bp-panel-h">
-                <span>◇ 第 2 層 · 我們的考核（自評之外）</span>
-                <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>LAYER 2 · OBJECTIVE</span>
+                <span>{_t("worker.apply_preview_layer2_title", "◇ 第 2 層 · 我們的考核（自評之外）")}</span>
+                <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{_t("worker.apply_preview_layer2_tag", "LAYER 2 · OBJECTIVE")}</span>
               </div>
               <div className="bp-panel-b" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <ObjLayer
                   num="01"
-                  title="情境題 · 30 分鐘 · 看判斷力"
-                  desc="BP 出一份假 client brief（DTC 品牌想做週 12 支短影音、預算 8 萬、3 週）。你 30 分鐘內交回「我會怎麼接、用什麼工具、為什麼這個價」。"
+                  title={_t("worker.apply_preview_layer2_01_t", "情境題 · 30 分鐘 · 看判斷力")}
+                  desc={_t("worker.apply_preview_layer2_01_d", "BP 出一份假 client brief（DTC 品牌想做週 12 支短影音、預算 8 萬、3 週）。你 30 分鐘內交回「我會怎麼接、用什麼工具、為什麼這個價」。")}
                   status="pending"
                 />
                 <ObjLayer
                   num="02"
-                  title="持續 NPS · 每結案一次自動評"
-                  desc="通過後接的每一案、結案 client 評分都累積進你的 trust data。NPS 跌破 3.5 自動降階、4.7+ 自動推薦升 B+。"
+                  title={_t("worker.apply_preview_layer2_02_t", "持續 NPS · 每結案一次自動評")}
+                  desc={_t("worker.apply_preview_layer2_02_d", "通過後接的每一案、結案 client 評分都累積進你的 trust data。NPS 跌破 3.5 自動降階、4.7+ 自動推薦升 B+。")}
                   status="auto"
                 />
                 <ObjLayer
                   num="03"
-                  title="試水案 pilot · 等 BP 有 client 進來才開"
-                  desc="BP 派一個小案（5-15K 真實付費）給你、結案表現直接證明能力。"
+                  title={_t("worker.apply_preview_layer2_03_t", "試水案 pilot · 等 BP 有 client 進來才開")}
+                  desc={_t("worker.apply_preview_layer2_03_d", "BP 派一個小案（5-15K 真實付費）給你、結案表現直接證明能力。")}
                   status="future"
                 />
               </div>
@@ -1444,8 +1444,8 @@ function WorkerEmptyState() {
             {/* LAYER 3 · 教育路徑 · routing by L 分 */}
             <div className="bp-panel" style={{ marginTop: 16 }}>
               <div className="bp-panel-h">
-                <span>◈ 第 3 層 · 教育資源（按你 L{parsed.L_score} 自動推薦）</span>
-                <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>LAYER 3 · GROWTH</span>
+                <span>{_t("worker.apply_preview_layer3_title_a", "◈ 第 3 層 · 教育資源（按你 L")}{parsed.L_score}{_t("worker.apply_preview_layer3_title_b", " 自動推薦）")}</span>
+                <span style={{ marginLeft: "auto", fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>{_t("worker.apply_preview_layer3_tag", "LAYER 3 · GROWTH")}</span>
               </div>
               <div className="bp-panel-b">
                 <EducationRouting score={parsed.L_score} growth={parsed.growth || []} />
@@ -1464,7 +1464,7 @@ function WorkerEmptyState() {
                 onClick={() => setStep(route === "internal" ? "chat" : "paste")}
                 style={{ ...btnGhostStyle, padding: "8px 18px" }}
               >
-                {route === "internal" ? "← 回去訪談（補答案）" : "← 回去改 AI 結果"}
+                {route === "internal" ? _t("worker.apply_preview_back_internal", "← 回去訪談（補答案）") : _t("worker.apply_preview_back_self", "← 回去改 AI 結果")}
               </button>
             </div>
           </div>
@@ -1487,11 +1487,11 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
   async function doSubmit() {
     setErrMsg("");
     if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      setErrMsg("先填一個有效 email · BeyondPath 24h 內回覆要寄到這裡");
+      setErrMsg(_t("worker.apply_submit_email_err", "先填一個有效 email · BeyondPath 24h 內回覆要寄到這裡"));
       return;
     }
     if (!window.bpWorkerApply) {
-      setErrMsg("Supabase 還沒載入完成、過幾秒再試");
+      setErrMsg(_t("worker.apply_submit_loading_err", "Supabase 還沒載入完成、過幾秒再試"));
       return;
     }
     setStatus("loading");
@@ -1515,18 +1515,18 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
       setTimeout(() => onDone && onDone(), 600);
     } catch (e) {
       setStatus("error");
-      setErrMsg("送出失敗：" + (e?.message || "未知錯誤") + "。先複製能力卡截圖、寄到 edwardt0303@gmail.com 也可以。");
+      setErrMsg(_t("worker.apply_submit_fail_prefix", "送出失敗：") + (e?.message || _t("worker.apply_submit_fail_unknown", "未知錯誤")) + _t("worker.apply_submit_fail_suffix", "。先複製能力卡截圖、寄到 edwardt0303@gmail.com 也可以。"));
     }
   }
 
   return (
     <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", gap: 12, alignItems: "stretch" }}>
-      <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em", textTransform: "uppercase" }}>SUBMIT · 留下 email 收 BeyondPath 系統評估結果</div>
+      <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{_t("worker.apply_submit_section_label", "SUBMIT · 留下 email 收 BeyondPath 系統評估結果")}</div>
       <input
         type="email"
         value={email}
         onChange={(e) => { setEmail(e.target.value); setErrMsg(""); }}
-        placeholder="your@email.com"
+        placeholder={_t("worker.apply_submit_email_placeholder", "your@email.com")}
         disabled={status === "loading" || status === "success"}
         style={{ width: "100%", padding: "12px 14px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--line-soft)", color: "var(--text)", fontFamily: "var(--zh)", fontSize: 15 }}
       />
@@ -1538,7 +1538,7 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
         className="bp-btn primary"
         style={{ padding: "14px 28px", opacity: status === "loading" || status === "success" ? 0.5 : 1, cursor: status === "loading" || status === "success" ? "wait" : "pointer" }}
       >
-        {status === "loading" ? "送出中…" : status === "success" ? "✓ 已送出" : "→ Submit · 送交評估、24h 內回覆"}
+        {status === "loading" ? _t("worker.apply_submit_btn_loading", "送出中…") : status === "success" ? _t("worker.apply_submit_btn_success", "✓ 已送出") : _t("worker.apply_submit_btn_idle", "→ Submit · 送交評估、24h 內回覆")}
       </button>
     </div>
   );
@@ -1548,13 +1548,13 @@ function ApplyProgress({ current, setStep, route, onRouteReset }) {
   // 2026-05-15 v0.3 雙軌:Route A (self · 自帶 AI · 3 step) vs Route B (internal · BP 內建 · 2 step)
   const steps = route === "internal"
     ? [
-        { n: 1, label: "AI 訪談", key: "chat" },
-        { n: 2, label: "預覽能力卡", key: "preview" },
+        { n: 1, label: _t("worker.apply_progress_step_chat", "AI 訪談"), key: "chat" },
+        { n: 2, label: _t("worker.apply_progress_step_preview", "預覽能力卡"), key: "preview" },
       ]
     : [
-        { n: 1, label: "取 Brief", key: "generate" },
-        { n: 2, label: "貼回結果", key: "paste" },
-        { n: 3, label: "預覽能力卡", key: "preview" },
+        { n: 1, label: _t("worker.apply_progress_step_generate", "取 Brief"), key: "generate" },
+        { n: 2, label: _t("worker.apply_progress_step_paste", "貼回結果"), key: "paste" },
+        { n: 3, label: _t("worker.apply_progress_step_preview", "預覽能力卡"), key: "preview" },
       ];
   return (
     <div style={{ display: "flex", gap: 0, alignItems: "center", flexWrap: "wrap", padding: "12px 0", borderBottom: "1px solid var(--line-soft)" }}>
@@ -1562,7 +1562,7 @@ function ApplyProgress({ current, setStep, route, onRouteReset }) {
         type="button"
         onClick={() => { if (onRouteReset) onRouteReset(); setStep("intro"); }}
         style={{ background: "transparent", border: "none", color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", cursor: "pointer", marginRight: 14, textTransform: "uppercase" }}
-      >← 回 intro</button>
+      >{_t("worker.apply_progress_back", "← 回 intro")}</button>
       {steps.map((s, i) => (
         <React.Fragment key={s.n}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, opacity: current >= s.n ? 1 : 0.4 }}>
@@ -1588,14 +1588,14 @@ function FormField({ label, children }) {
 function StepNav({ onBack, onNext, nextDisabled, nextLabel }) {
   return (
     <div style={{ display: "flex", gap: 10, justifyContent: "space-between", marginTop: 24, flexWrap: "wrap" }}>
-      {onBack ? <button type="button" onClick={onBack} style={btnGhostStyle}>← 上一步</button> : <span></span>}
+      {onBack ? <button type="button" onClick={onBack} style={btnGhostStyle}>{_t("worker.apply_stepnav_back", "← 上一步")}</button> : <span></span>}
       <button type="button" onClick={onNext} disabled={nextDisabled} style={{ ...btnPrimaryStyle, opacity: nextDisabled ? 0.35 : 1, cursor: nextDisabled ? "not-allowed" : "pointer" }}>{nextLabel}</button>
     </div>
   );
 }
 
 function ObjLayer({ num, title, desc, status }) {
-  const statusBadge = { pending: { txt: "你即將要做", color: "var(--accent)" }, auto: { txt: "通過後自動跑", color: "oklch(0.78 0.10 230)" }, future: { txt: "等 BP 有 client 才開", color: "var(--muted)" } }[status];
+  const statusBadge = { pending: { txt: _t("worker.apply_obj_status_pending", "你即將要做"), color: "var(--accent)" }, auto: { txt: _t("worker.apply_obj_status_auto", "通過後自動跑"), color: "oklch(0.78 0.10 230)" }, future: { txt: _t("worker.apply_obj_status_future", "等 BP 有 client 才開"), color: "var(--muted)" } }[status];
   return (
     <div style={{ display: "flex", gap: 14, padding: "14px 16px", border: "1px solid var(--line-soft)", background: "rgba(0,0,0,0.15)" }}>
       <span style={{ fontFamily: "var(--mono)", color: "var(--accent)", fontWeight: 700, fontSize: 13, minWidth: 24 }}>{num}</span>
@@ -1613,25 +1613,25 @@ function ObjLayer({ num, title, desc, status }) {
 function EducationRouting({ score, growth }) {
   let tier, color, items;
   if (score >= 7) {
-    tier = "已達 Tier B 申請門檻"; color = "var(--accent)";
+    tier = _t("worker.apply_edu_tier_high", "已達 Tier B 申請門檻"); color = "var(--accent)";
     items = [
-      { t: "升 Tier B+ 路徑", d: "再補一個 vertical 的 2 件深證據 + 多 vertical workflow 範例" },
-      { t: "AI 工具補貼資訊", d: "通過後可申請 Claude Pro / Cursor 訂閱補貼（每月 NT$ 500-1500）" },
-      { t: "B+ 旗艦池", d: "L8+ 多 vertical 跨界、優先配高單價案件" },
+      { t: _t("worker.apply_edu_high_01_t", "升 Tier B+ 路徑"), d: _t("worker.apply_edu_high_01_d", "再補一個 vertical 的 2 件深證據 + 多 vertical workflow 範例") },
+      { t: _t("worker.apply_edu_high_02_t", "AI 工具補貼資訊"), d: _t("worker.apply_edu_high_02_d", "通過後可申請 Claude Pro / Cursor 訂閱補貼（每月 NT$ 500-1500）") },
+      { t: _t("worker.apply_edu_high_03_t", "B+ 旗艦池"), d: _t("worker.apply_edu_high_03_d", "L8+ 多 vertical 跨界、優先配高單價案件") },
     ];
   } else if (score >= 4) {
-    tier = "L4-6 中段 · 補強區"; color = "oklch(0.82 0.16 75)";
+    tier = _t("worker.apply_edu_tier_mid", "L4-6 中段 · 補強區"); color = "oklch(0.82 0.16 75)";
     items = [
-      { t: "你缺的 3 個技能", d: growth.length > 0 ? growth.join(" / ") : "判斷力深度 · 跨工具 orchestration · 客戶溝通 (預設、AI 未填時)" },
-      { t: "Vertical 培訓", d: "DTC 內容 / B2B SaaS GTM / 設計品牌 三方向、每個方向有 5-10 個技能清單" },
-      { t: "補強後重試", d: "申請 6 個月內可重試、保留你的 portfolio 不必重填" },
+      { t: _t("worker.apply_edu_mid_01_t", "你缺的 3 個技能"), d: growth.length > 0 ? growth.join(" / ") : _t("worker.apply_edu_mid_01_d_default", "判斷力深度 · 跨工具 orchestration · 客戶溝通 (預設、AI 未填時)") },
+      { t: _t("worker.apply_edu_mid_02_t", "Vertical 培訓"), d: _t("worker.apply_edu_mid_02_d", "DTC 內容 / B2B SaaS GTM / 設計品牌 三方向、每個方向有 5-10 個技能清單") },
+      { t: _t("worker.apply_edu_mid_03_t", "補強後重試"), d: _t("worker.apply_edu_mid_03_d", "申請 6 個月內可重試、保留你的 portfolio 不必重填") },
     ];
   } else {
-    tier = "L1-3 入門 · 基礎學習"; color = "var(--muted)";
+    tier = _t("worker.apply_edu_tier_low", "L1-3 入門 · 基礎學習"); color = "var(--muted)";
     items = [
-      { t: "AI 工具基礎課程", d: "ChatGPT / Claude / Midjourney 基礎用法（外部優質資源連結）" },
-      { t: "Workflow 思維建立", d: "從「會用 AI」到「能對成果負責」需要的 5 個轉變" },
-      { t: "Build evidence first", d: "先累積 3-5 個真實案件、3-6 個月後再來申請" },
+      { t: _t("worker.apply_edu_low_01_t", "AI 工具基礎課程"), d: _t("worker.apply_edu_low_01_d", "ChatGPT / Claude / Midjourney 基礎用法（外部優質資源連結）") },
+      { t: _t("worker.apply_edu_low_02_t", "Workflow 思維建立"), d: _t("worker.apply_edu_low_02_d", "從「會用 AI」到「能對成果負責」需要的 5 個轉變") },
+      { t: _t("worker.apply_edu_low_03_t", "Build evidence first"), d: _t("worker.apply_edu_low_03_d", "先累積 3-5 個真實案件、3-6 個月後再來申請") },
     ];
   }
   return (
@@ -1654,12 +1654,12 @@ function EducationRouting({ score, growth }) {
 
 function skillLabel(k) {
   return ({
-    workflow_design: "Workflow 設計",
-    tool_orchestration: "多工具搭配",
-    judgement: "判斷力",
-    domain_depth: "領域深度",
-    client_communication: "客戶溝通",
-    delivery_reliability: "交付可靠度",
+    workflow_design: _t("worker.apply_skill_workflow_design", "Workflow 設計"),
+    tool_orchestration: _t("worker.apply_skill_tool_orchestration", "多工具搭配"),
+    judgement: _t("worker.apply_skill_judgement", "判斷力"),
+    domain_depth: _t("worker.apply_skill_domain_depth", "領域深度"),
+    client_communication: _t("worker.apply_skill_client_communication", "客戶溝通"),
+    delivery_reliability: _t("worker.apply_skill_delivery_reliability", "交付可靠度"),
   })[k] || k;
 }
 
