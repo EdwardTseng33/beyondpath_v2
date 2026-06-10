@@ -1,0 +1,28 @@
+# BeyondPath POC . Supabase CLI config
+# 2026-06-10 calcifer . 每日額度 fail-open 事故收尾 . verify_jwt 防 regression
+#
+# 背景: client-brief-parse 的 gateway "Verify JWT with legacy secret" 若為 ON、
+#   新版 publishable key (sb_publishable_*, 非 JWT) 當 Bearer 會被 gateway 401 擋掉
+#   → 匿名訪客連函式都進不去、「匿名 3 次/天」日額度永遠不會執行 (2026-06-10 實測確診)。
+#   函式內已有自己的 auth 邏輯 (isAdminRequest / resolveIdentity)、
+#   Supabase 官方建議: OFF with JWT and custom auth logic in your function code。
+#
+# 鐵律: CLI `functions deploy` 不帶 --no-verify-jwt 時預設會把 verify_jwt 翻回 true!
+#   寫死在此檔 = 之後任何 deploy 都不會把匿名再擋回去。
+#   (2026-06-10 verify_jwt 已在 dashboard 手動切 OFF + 驗收: 匿名第 4 次 429 daily-limit-exceeded)
+
+project_id = "iacwmkcloxjffghrweie"
+
+# 匿名估價入口 . 限流 (分鐘 10 + 日 anon 3 / account 10) 全在函式內做
+[functions.client-brief-parse]
+verify_jwt = false
+
+# 以下 3 支與 docs/deploy/deploy-all-functions.sh 的 --no-verify-jwt 名單一致 (申明現狀、雙保險)
+[functions.submit-signature]
+verify_jwt = false
+
+[functions.ecpay-redirect]
+verify_jwt = false
+
+[functions.ecpay-webhook]
+verify_jwt = false
