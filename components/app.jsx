@@ -553,7 +553,7 @@ function Step3({ state, set, device }) {
           <div className="bp-range">
             <input
               type="range"
-              min="100000"
+              min="50000"
               max="400000"
               step="10000"
               value={e.budget}

@@ -83,11 +83,19 @@
 > 完整計畫：[docs/launch/48-pricing-trust-iteration-roadmap.md](docs/launch/48-pricing-trust-iteration-roadmap.md)
 > 核心：先鋪「報價可信」地基、再講「省錢」故事（順序顛倒會自殺 · QA 已證 SMB「省太多=可疑」）
 - **⏳ 等 Edward 拍板**：報價主從規則（推薦 AI 區間=錨 / 客戶上限=過濾器 / worker 報價=成交價）— 這是 PT-2、所有後續工程的地基
-- P0 PT-1 預算拉桿 10萬→3萬（解雅婷「10萬牆」blocker · ~0.5hr · 可馬上做）
+- ✅ P0 PT-1 預算拉桿 10萬→**5萬**（解雅婷「10萬牆」· 對齊全站 50K+ 定位 · app2+app.jsx 已改、本地驗證過 · 6/10 推進）
 - P0 PT-3 拉桿語義「設上限→AI 區間微調」（依賴 PT-2）
 - P1 PT-4 worker 去匿名+證據展示（解 Kevin「無法驗真」）
 - P1 PT-5 AI 建議隊形+發案方可挑可調（半自動、非全自動黑箱）
 - P2 PT-6 首頁傳統 vs AI native 對照（主打確定性+證據、非「省X%」）
+
+### 📣 行銷三件套（6/10 產出 · docs/marketing/ · 等 Edward 審）
+> 目標：找到接案者與發案方。三份已過「先可信後省錢」訊息紀律檢查（無省X%、無未上線功能、無寫死金額）
+- [49 短影音企劃包](docs/marketing/49-shortvideo-pack.md)：3 支腳本（發案方/接案者/品牌）· 建議先拍 #02 接案者版（先建供給池）
+- [50 小額廣告計畫](docs/marketing/50-paid-ads-plan.md)：三檔月預算 6K/15K/30K · 推薦 15K 起跑 · **前提=先裝 Meta Pixel + GA4（工程需求清單在文內）**
+- [51 社群策略](docs/marketing/51-social-strategy.md)：Threads+LinkedIn 雙主力 · 前 6 週全押接案者側 · 30 天日曆 20+ 題
+- ⏳ 等 Edward：(1) 預算檔位拍板 (2) 拍片難度選擇 (3) ✅ PT-1 拉桿已放到 5萬（廣告「小案試水」話術門檻請對齊 5萬、非 3萬）
+- 投放前最後一關：素材定稿後過霍爾 Gate 3 一次（現在不審草稿、避免重複審）
 
 ### 其他既有待續
 - worker 端漏斗埋點（client 已補、worker 同類缺口待補）
