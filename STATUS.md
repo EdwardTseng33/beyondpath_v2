@@ -79,10 +79,20 @@
 
 ## 待續
 
-- 🔄 去 BETA 大改動視覺驗收（女巫 Gate 2 進行中）
-- 上線編排（需 Edward 參與：Auth 設定 + preview 視覺審 + 金流點頭）
+### 🎯 定價與信任迭代（6/10 規劃 · 霍爾 46 + 蕪菁頭 47 + 整合 48）
+> 完整計畫：[docs/launch/48-pricing-trust-iteration-roadmap.md](docs/launch/48-pricing-trust-iteration-roadmap.md)
+> 核心：先鋪「報價可信」地基、再講「省錢」故事（順序顛倒會自殺 · QA 已證 SMB「省太多=可疑」）
+- **⏳ 等 Edward 拍板**：報價主從規則（推薦 AI 區間=錨 / 客戶上限=過濾器 / worker 報價=成交價）— 這是 PT-2、所有後續工程的地基
+- P0 PT-1 預算拉桿 10萬→3萬（解雅婷「10萬牆」blocker · ~0.5hr · 可馬上做）
+- P0 PT-3 拉桿語義「設上限→AI 區間微調」（依賴 PT-2）
+- P1 PT-4 worker 去匿名+證據展示（解 Kevin「無法驗真」）
+- P1 PT-5 AI 建議隊形+發案方可挑可調（半自動、非全自動黑箱）
+- P2 PT-6 首頁傳統 vs AI native 對照（主打確定性+證據、非「省X%」）
+
+### 其他既有待續
 - worker 端漏斗埋點（client 已補、worker 同類缺口待補）
 - 全站漏斗數據進 admin（需建 funnel_events table + deploy、要 Edward 拍）
+- P1 轉換優化批（QA 抓的其餘卡點：英文版條款 i18n / 領域限制前置告知 / 違約金字眼時機）
 
 ## ⚠️ deploy 時必做（cache-buster）
 
