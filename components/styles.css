@@ -1179,3 +1179,73 @@
   /* 超窄容器安全閥：若單一 nowrap 語意單元仍超出寬度、允許 break 避免水平溢出 */
   .zh-headline .zh-nowrap, .zh-subhead .zh-nowrap { white-space: normal; }
 }
+
+
+/* ============================================================
+   Worker dashboard bare shell - Mobile overflow fix (2026-06-10 Calcifer - Gate 1)
+   ------------------------------------------------------------
+   ROOT CAUSE:
+     - app.html Root() does NOT route worker entry through IOSDevice MobileShell;
+       it renders BP_AppShell desktop shell directly (by design - app.html L421).
+     - The whole responsive layer is bound to the .bp-mobile JS class
+       (device==="mobile"); the worker bare shell never gets it, so .bp-main
+       stays at desktop two-column.
+     - Worse, worker.jsx L69 hard-writes inline gridTemplateColumns:"1fr 360px"
+       on .bp-main, which even a CSS class cannot override.
+   RESULT: at 375 the .bp-rail (360px) pushes out past the 432px edge and the
+           ACTIVE CASE scope cards (inline repeat(4,1fr)) get clipped offscreen.
+
+   FIX (pure CSS - targets worker bare shell only - leaves client/landing alone):
+     1. .bp-main forced single column -> needs !important to beat inline style.
+     2. .bp-rail stacks below the main content (drop border-left / add border-top).
+        No !important: inside the client IOSDevice frame the higher-specificity
+        .bp-mobile .bp-rail{display:none} still wins -> client untouched.
+     3. inline multi-column grids inside .bp-content collapse to one column.
+   SCOPE: <= 768px - desktop unaffected.
+   ============================================================ */
+@media (max-width: 768px) {
+  /* 1 - root grid forced single column (beats worker.jsx L69 inline "1fr 360px") */
+  .bp-main { grid-template-columns: 1fr !important; height: auto; }
+
+  /* 2 - rail stacks below main content (worker mobile must still see STATS / UPCOMING / NPS).
+     No !important so the client frame keeps .bp-mobile .bp-rail{display:none}. */
+  .bp-rail {
+    border-left: 0;
+    border-top: 1px solid var(--line-soft);
+    background: linear-gradient(180deg, rgba(255,255,255,0.012), transparent 40%);
+    padding: 18px 16px 40px;
+  }
+
+  /* 3 - inline multi-column grids inside the content column collapse to one column
+     (scope repeat(4,1fr) / badges / stat rows / other-active 1fr 1fr) so cards stop clipping */
+  .bp-content [style*="grid-template-columns: repeat(4"],
+  .bp-content [style*="gridTemplateColumns: repeat(4"],
+  .bp-content [style*="grid-template-columns: repeat(3"],
+  .bp-content [style*="gridTemplateColumns: repeat(3"],
+  .bp-content [style*="grid-template-columns: repeat(2"],
+  .bp-content [style*="gridTemplateColumns: repeat(2"],
+  .bp-content [style*="grid-template-columns: 1fr 1fr"],
+  .bp-content [style*="gridTemplateColumns: 1fr 1fr"],
+  .bp-content [style*="grid-template-columns: 1fr auto"],
+  .bp-content [style*="gridTemplateColumns: 1fr auto"] {
+    grid-template-columns: 1fr !important;
+    gap: 18px;
+  }
+
+  /* Worker hero h1 - keep the Chinese subtitle from clipping/breaking mid-word.
+     With the hero collapsed to one column the title spans full width; nudge the
+     mobile size down a touch and apply CJK kinsoku so the line breaks at a clean
+     boundary instead of orphaning a single glyph + period on its own line. */
+  .bp-content .bp-h1 {
+    font-size: 23px !important;
+    line-height: 1.3 !important;
+    line-break: strict;
+    text-wrap: pretty;
+    word-break: normal;
+    overflow-wrap: break-word;
+    font-feature-settings: "palt" 1, "kern" 1;
+  }
+
+  /* content column horizontal safety valve: nothing bursts the viewport, contain instead of hard-clip */
+  .bp-content { overflow-x: hidden; }
+}

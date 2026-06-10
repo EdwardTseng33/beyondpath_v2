@@ -655,7 +655,7 @@ function Step1({ state, set, device }) {
                 onClick={(e) => e.stopPropagation()}
                 style={{ color: "var(--accent)", borderBottom: "1px solid var(--accent-line)", textDecoration: "none" }}
               >{_t("client.terms_ack_privacy_link", "《隱私政策》")}</a>
-              <span style={{ color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11, marginLeft: 6 }}>{_t("client.terms_ack_note", "· 含 §8 違約金倍率")}</span>
+              <span style={{ color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11, marginLeft: 6 }}>{_t("client.terms_ack_note", "· 含服務費率與合作規範")}</span>
             </span>
           </label>
           {!state.betaAck && (
