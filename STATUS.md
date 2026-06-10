@@ -9,11 +9,13 @@
 
 正式站已上線且運轉（金流函式全部活在 prod、開放申請文案已生效、中英 i18n 完整）。2026-06-10 全產品 QA（6 面向 + 11 合成用戶）結論：六面向全 🟡、無 🔴，骨架健康、法務金流是真功夫，但「從 demo 升級正式收費」收尾沒清乾淨。完整報告：[docs/qa-2026-06-10-full-product-qa.md](docs/qa-2026-06-10-full-product-qa.md)。
 
-### 2026-06-10 QA 抓到、上線前最該處理（依序）
-1. 🔴 **資安 P0**：整個 `docs/` + `STATUS.md` 被公開部署到正式站（含資安稽核文件）→ 加 `.vercelignore` 擋掉、重新部署
-2. 🔴 **版控**：5/29-6/1 共 4278 行已上 prod 卻從未 commit、無退版錨點 → 補存快照 + 打 tag
-3. 🟠 **金流訊息精神分裂**：steps-5-8.jsx Step7 + dict 6 處 + email 模板 + 英文 escrow 字眼，仍殘留「平台不碰錢/雙方自結」與代收代付互斥 → 全面對齊
-4. 🟠 **Tier 體系**：landing 標 S/A+/A/B/C、條款是 S/A+/A/B+/B → 統一
+### 2026-06-10 QA 四大項 → 同日全數處理完畢（Edward 點頭 · 蘇菲執行 · prod 已驗證）
+1. ✅ **資安 P0 已擋**：`.vercelignore` 上線，`/docs/*` + `/*.md` + `supabase/` + 備份檔正式站全部 404（實測過）；legal 頁正常未誤擋
+2. ✅ **版控已補**：快照 commit `fd85d1c` + 退版錨點 tag `v0.9.0-prod-snapshot-20260610`，已上傳 GitHub（branch `feat/i18n-phase1-step1`）
+3. ✅ **金流文案 17 處全對齊代收代付**：Step07 整面 / dict 中英 / worker fallback / 配對信 4 處（notify-lead-slack 已重新上線）/ 英文 escrow·custody 9 處 / 「+15% 平台溢價」矛盾句 4 處
+4. ✅ **Tier 階梯已統一**：S/A+/A/B+/B（中英 dict 同步、prod dict 實測確認）
+- 全站 cache-buster 統一 `?v=2026-06-10-pay`（mobile.html 首次補上）
+- prod 部署 `prototype-v02-88q6dd4wa` · 出事退版：Vercel promote 前一版 + git tag 雙保險
 
 ### ⚠️ 本檔先前過時點（已於 6/10 修正認知，code 待後續同步）
 - 舊版標 ecpay-webhook / mark-commission-event / 7 個 rate-limit 為「未 deploy」→ **實測證實全部已上線 prod**
