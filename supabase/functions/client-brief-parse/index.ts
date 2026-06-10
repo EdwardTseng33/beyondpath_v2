@@ -10,6 +10,8 @@
 // Cost (Claude Sonnet 4.6): ~2000-3000 input + 1500-2500 output tokens / call ≈ NT$0.5-0.8 / case
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { checkRateLimit, getClientIp, rateLimitResponse } from "../_shared/rate-limit.ts";  // 2026-05-29 calcifer doc28 C . 燒 Anthropic token . 限流防洗
+import { isAdminRequest } from "../_shared/admin.ts";  // admin JWT bypass 限流
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-sonnet-4-6";
@@ -133,6 +135,14 @@ serve(async (req: Request) => {
 
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405, headers: CORS_HEADERS });
+  }
+
+  // 2026-05-29 calcifer . doc 28 Part C Group B . IP 限流 (高優先 . 燒 Anthropic token)
+  // 狂打此函式 = AI 帳單失血 . 每 IP 每分鐘上限 10 次 . 超過 429
+  // admin JWT (Edward 操作) 自動 bypass . 不被擋
+  if (!(await isAdminRequest(req))) {
+    const rl = await checkRateLimit("client-brief-parse", getClientIp(req), { limit: 10, windowSec: 60 });
+    if (!rl.allowed) return rateLimitResponse(rl, CORS_HEADERS);
   }
 
   if (!ANTHROPIC_API_KEY) {

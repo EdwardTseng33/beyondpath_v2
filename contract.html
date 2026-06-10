@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>合約簽署 · BeyondPath</title>
+<meta name="description" content="BeyondPath 線上合約簽署頁。雙方手寫簽或平板簽，自動加 SHA-256 hash + 時間戳存證。" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#0a0a0b" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --surface: #131316;
+  --surface-2: #1a1a1f;
+  --line: rgba(255,255,255,0.08);
+  --line-soft: rgba(255,255,255,0.04);
+  --text: #f0eee8;
+  --text-2: #c8c6c0;
+  --muted: #9a9aa3;
+  --accent: oklch(0.88 0.22 128);
+  --accent-soft: oklch(0.88 0.22 128 / 0.12);
+  --accent-line: oklch(0.88 0.22 128 / 0.4);
+  --info: oklch(0.78 0.10 230);
+  --warn: oklch(0.82 0.16 75);
+  --err: oklch(0.7 0.18 25);
+  --err-soft: oklch(0.7 0.18 25 / 0.12);
+  --ok: #4ade80;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: "IBM Plex Sans", "Noto Sans TC", system-ui, sans-serif; }
+.shell { max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; }
+.top { display: flex; align-items: center; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+.mark { width: 14px; height: 14px; border-radius: 4px; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.brand { font-weight: 700; letter-spacing: -0.02em; }
+.meta { margin-left: auto; font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 24px; margin-bottom: 16px; }
+h1 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.02em; }
+h2 { font-size: 17px; margin: 24px 0 12px; color: var(--text-2); }
+.sub { color: var(--muted); font-size: 13px; }
+.pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-family: ui-monospace, monospace; letter-spacing: 0.08em; border: 1px solid var(--accent-line); color: var(--accent); }
+.pill.warn { border-color: var(--warn); color: var(--warn); }
+.pill.ok { border-color: var(--ok); color: var(--ok); }
+.pill.err { border-color: var(--err); color: var(--err); }
+.pdf-wrap { background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 16px; margin: 16px 0; }
+.pdf-wrap embed, .pdf-wrap iframe { width: 100%; height: 560px; border: 0; border-radius: 4px; background: #fff; }
+.uploader { padding: 24px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; transition: border-color 0.2s; }
+.uploader.dragover { border-color: var(--accent); background: var(--accent-soft); }
+.uploader input[type=file] { display: none; }
+.upload-label { display: inline-block; padding: 12px 24px; background: var(--accent); color: #0a0a0b; border-radius: 6px; font-weight: 600; cursor: pointer; text-decoration: none; }
+.preview { margin: 16px 0; text-align: center; }
+.preview img { max-width: 100%; max-height: 400px; border-radius: 6px; border: 1px solid var(--line); background: #fff; }
+.btn-row { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+button, .btn { padding: 12px 24px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font-size: 14px; cursor: pointer; font-family: inherit; }
+button:hover, .btn:hover { border-color: var(--accent-line); }
+button.primary { background: var(--accent); color: #0a0a0b; border-color: var(--accent); font-weight: 600; }
+button.danger { background: var(--err-soft); color: var(--err); border-color: var(--err); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.err-box { background: var(--err-soft); border: 1px solid var(--err); color: var(--err); padding: 12px 16px; border-radius: 6px; margin: 12px 0; }
+.ok-box { background: rgba(74, 222, 128, 0.1); border: 1px solid var(--ok); color: var(--ok); padding: 12px 16px; border-radius: 6px; margin: 12px 0; }
+.meta-row { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; font-size: 13px; margin: 12px 0; }
+.meta-row .k { color: var(--muted); }
+.meta-row .v { color: var(--text-2); font-family: ui-monospace, monospace; word-break: break-all; }
+canvas.sig-pad { background: #fff; border-radius: 6px; border: 1px solid var(--line); touch-action: none; cursor: crosshair; display: block; width: 100%; max-width: 600px; height: 200px; margin: 12px 0; }
+.tab-row { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin: 16px 0 0; }
+.tab { padding: 10px 16px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; font-size: 14px; }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-pane { padding: 16px 0; }
+.tab-pane.hidden { display: none; }
+@media (max-width: 600px) {
+  .pdf-wrap embed, .pdf-wrap iframe { height: 360px; }
+  canvas.sig-pad { height: 150px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="mark"></div>
+    <div class="brand">BeyondPath · Contract Sign</div>
+    <div class="meta" id="meta-id">—</div>
+  </div>
+  <div id="root">
+    <div class="card">
+      <h1>載入中…</h1>
+      <p class="sub">驗證合約 token + 拉取合約資料</p>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  var SUPABASE_URL = "https://iacwmkcloxjffghrweie.supabase.co";
+  var SUPABASE_ANON_KEY = "sb_publishable_Ke3oOlMiYwQ4_XGhYofF3w_TdBtoQEY";
+
+  function qs(name) {
+    var m = new RegExp("[?&]" + name + "=([^&]*)").exec(window.location.search);
+    return m ? decodeURIComponent(m[1]) : "";
+  }
+  var contractId = qs("id");
+  var role = qs("role");
+  var token = qs("token");
+  document.getElementById("meta-id").textContent = contractId ? contractId.slice(0, 8) : "—";
+
+  var root = document.getElementById("root");
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      if (k === "className") node.className = attrs[k];
+      else if (k === "innerHTML") node.innerHTML = attrs[k];
+      else if (k.indexOf("on") === 0) node.addEventListener(k.slice(2).toLowerCase(), attrs[k]);
+      else node.setAttribute(k, attrs[k]);
+    }
+    if (children) for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if (c == null) continue;
+      if (typeof c === "string") node.appendChild(document.createTextNode(c));
+      else node.appendChild(c);
+    }
+    return node;
+  }
+
+  function fatal(msg, detail) {
+    root.innerHTML = "";
+    root.appendChild(el("div", { className: "card" }, [
+      el("h1", null, ["無法載入合約"]),
+      el("div", { className: "err-box" }, [msg + (detail ? " (" + detail + ")" : "")]),
+      el("p", { className: "sub" }, [
+        "檢查 email 內的簽署連結是否完整（含 id / role / token 三個 query 參數）。",
+      ]),
+      el("p", { className: "sub" }, [
+        "若超過 14 天 token 已過期、請聯絡 ",
+        el("a", { href: "mailto:edwardt0303@gmail.com" }, ["edwardt0303@gmail.com"]),
+        " 重發。",
+      ]),
+    ]));
+  }
+
+  if (!contractId || !role || !token) {
+    fatal("連結參數不完整", "missing id / role / token");
+    return;
+  }
+  if (role !== "client" && role !== "worker") {
+    fatal("角色不合法", "role must be client or worker");
+    return;
+  }
+
+  var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  function loadContract() {
+    return sb.rpc("contract_verify_lookup", { p_contract_id: contractId }).then(function (res) {
+      if (res.error) throw res.error;
+      var rows = res.data || [];
+      if (rows.length === 0) throw new Error("contract not found");
+      return rows[0];
+    });
+  }
+
+  var state = {
+    meta: null,
+    signed: false,
+    signedAt: null,
+    signatureBase64: null,
+    submitting: false,
+    msg: null,
+    err: null,
+    mode: "upload"
+  };
+
+  function statusPill(status) {
+    if (status === "complete") return el("span", { className: "pill ok" }, ["complete · 雙方已簽"]);
+    if (status === "partial") return el("span", { className: "pill" }, ["partial · 一方已簽"]);
+    if (status === "cancelled") return el("span", { className: "pill err" }, ["cancelled"]);
+    return el("span", { className: "pill warn" }, ["pending · 雙方未簽"]);
+  }
+
+  function render() {
+    root.innerHTML = "";
+    var m = state.meta || {};
+    var roleZh = role === "client" ? "發案方 (Client / Brand)" : "接案者 (Worker / Service Provider)";
+
+    var headerRow = el("div", { className: "btn-row", style: "justify-content:space-between; margin: 0 0 12px" }, [
+      el("h1", null, ["合約簽署 · " + roleZh]),
+      statusPill(m.status || "pending"),
+    ]);
+
+    var metaRow = el("div", { className: "meta-row" }, [
+      el("span", { className: "k" }, ["合約 ID"]),
+      el("span", { className: "v" }, [contractId]),
+      el("span", { className: "k" }, ["你的角色"]),
+      el("span", { className: "v" }, [role]),
+      el("span", { className: "k" }, ["建立時間"]),
+      el("span", { className: "v" }, [m.created_at ? new Date(m.created_at).toLocaleString() : "—"]),
+      el("span", { className: "k" }, ["PDF Hash"]),
+      el("span", { className: "v" }, [m.pdf_hash || "—"]),
+      el("span", { className: "k" }, ["對方簽署狀態"]),
+      el("span", { className: "v" }, [
+        role === "client"
+          ? (m.worker_signed_at ? "已簽 · " + new Date(m.worker_signed_at).toLocaleString() : "未簽")
+          : (m.client_signed_at ? "已簽 · " + new Date(m.client_signed_at).toLocaleString() : "未簽")
+      ]),
+    ]);
+
+    var headCard = el("div", { className: "card" }, [
+      headerRow,
+      el("p", { className: "sub" }, ["請確認下列合約 metadata、上傳或手繪簽署後送出。SHA-256 hash + 時間戳會自動記錄。"]),
+      metaRow,
+    ]);
+
+    var pdfCard = el("div", { className: "card" }, [
+      el("h2", null, ["1. 合約 PDF 預覽"]),
+      el("p", { className: "sub" }, [
+        "完整合約 PDF 已透過 email 寄到你的信箱（7 天 signed URL）。請開信點下載連結確認後再回這裡簽署。"
+      ]),
+      el("p", { className: "sub" }, [
+        "若 PDF 連結失效、請聯絡 ",
+        el("a", { href: "mailto:edwardt0303@gmail.com" }, ["edwardt0303@gmail.com"]),
+        " 重發。"
+      ]),
+    ]);
+
+    var tabRow = el("div", { className: "tab-row" }, [
+      el("div", {
+        className: "tab" + (state.mode === "upload" ? " active" : ""),
+        onClick: function () { state.mode = "upload"; render(); }
+      }, ["上傳簽署照片 (拍照 / image/*)"]),
+      el("div", {
+        className: "tab" + (state.mode === "draw" ? " active" : ""),
+        onClick: function () { state.mode = "draw"; render(); }
+      }, ["平板 / 滑鼠手繪簽"]),
+    ]);
+
+    var signPane = state.mode === "upload" ? buildUploadPane() : buildDrawPane();
+
+    var signCard = el("div", { className: "card" }, [
+      el("h2", null, ["2. 你的簽署"]),
+      tabRow,
+      signPane,
+      buildPreviewBlock(),
+      buildSubmitBlock(),
+    ]);
+
+    root.appendChild(headCard);
+    root.appendChild(pdfCard);
+    root.appendChild(signCard);
+
+    if (state.err) root.appendChild(el("div", { className: "err-box" }, [state.err]));
+    if (state.msg) root.appendChild(el("div", { className: "ok-box" }, [state.msg]));
+  }
+
+  function buildUploadPane() {
+    var pane = el("div", { className: "tab-pane" + (state.mode !== "upload" ? " hidden" : "") }, []);
+    var box = el("div", { className: "uploader" }, []);
+    var input = el("input", { type: "file", accept: "image/*", id: "file-input" });
+    var label = el("label", { className: "upload-label", "for": "file-input" }, ["選擇照片 / 拍照"]);
+    var hint = el("p", { className: "sub", style: "margin-top:12px" }, [
+      "支援 JPEG / PNG / WebP / HEIC / GIF · 最大 5MB · 手機可直接拍照"
+    ]);
+    box.appendChild(input);
+    box.appendChild(label);
+    box.appendChild(hint);
+
+    input.addEventListener("change", function (e) {
+      var f = e.target.files && e.target.files[0];
+      if (!f) return;
+      if (f.size > 5 * 1024 * 1024) {
+        state.err = "檔案超過 5MB 上限。請壓縮後再試。";
+        render();
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function () {
+        state.signatureBase64 = reader.result;
+        state.err = null;
+        render();
+      };
+      reader.onerror = function () {
+        state.err = "讀取檔案失敗。";
+        render();
+      };
+      reader.readAsDataURL(f);
+    });
+
+    box.addEventListener("dragover", function (e) { e.preventDefault(); box.classList.add("dragover"); });
+    box.addEventListener("dragleave", function () { box.classList.remove("dragover"); });
+    box.addEventListener("drop", function (e) {
+      e.preventDefault();
+      box.classList.remove("dragover");
+      var f = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) {
+        input.files = e.dataTransfer.files;
+        input.dispatchEvent(new Event("change"));
+      }
+    });
+
+    pane.appendChild(box);
+    return pane;
+  }
+
+  function buildDrawPane() {
+    var pane = el("div", { className: "tab-pane" + (state.mode !== "draw" ? " hidden" : "") }, []);
+    var hint = el("p", { className: "sub" }, ["按住滑鼠或用手指 / 觸控筆在白板上簽。完成後點 [採用此簽] 預覽。"]);
+    var canvas = document.createElement("canvas");
+    canvas.className = "sig-pad";
+    canvas.width = 600;
+    canvas.height = 200;
+
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = "#0a0a0b";
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    var drawing = false;
+    var last = null;
+    function getPos(e) {
+      var rect = canvas.getBoundingClientRect();
+      var x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+      var y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+      var sx = canvas.width / rect.width;
+      var sy = canvas.height / rect.height;
+      return { x: x * sx, y: y * sy };
+    }
+    function startDraw(e) { drawing = true; last = getPos(e); e.preventDefault(); }
+    function moveDraw(e) {
+      if (!drawing) return;
+      var p = getPos(e);
+      ctx.beginPath();
+      ctx.moveTo(last.x, last.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      last = p;
+      e.preventDefault();
+    }
+    function endDraw() { drawing = false; }
+    canvas.addEventListener("mousedown", startDraw);
+    canvas.addEventListener("mousemove", moveDraw);
+    canvas.addEventListener("mouseup", endDraw);
+    canvas.addEventListener("mouseleave", endDraw);
+    canvas.addEventListener("touchstart", startDraw, { passive: false });
+    canvas.addEventListener("touchmove", moveDraw, { passive: false });
+    canvas.addEventListener("touchend", endDraw);
+
+    var btnClear = el("button", {
+      onClick: function () {
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+    }, ["清除"]);
+    var btnTake = el("button", {
+      className: "primary",
+      onClick: function () {
+        state.signatureBase64 = canvas.toDataURL("image/png");
+        state.err = null;
+        render();
+      }
+    }, ["採用此簽"]);
+    var btnRow = el("div", { className: "btn-row" }, [btnClear, btnTake]);
+
+    pane.appendChild(hint);
+    pane.appendChild(canvas);
+    pane.appendChild(btnRow);
+    return pane;
+  }
+
+  function buildPreviewBlock() {
+    if (!state.signatureBase64) return el("div", null, []);
+    return el("div", { className: "preview" }, [
+      el("p", { className: "sub" }, ["你的簽署預覽："]),
+      el("img", { src: state.signatureBase64, alt: "signature preview" }),
+    ]);
+  }
+
+  function buildSubmitBlock() {
+    if (state.signed) {
+      return el("div", { className: "ok-box" }, [
+        "✓ 已簽署完成 · " + (state.signedAt ? new Date(state.signedAt).toLocaleString() : "") +
+        " · 對方完成簽署後 BeyondPath 會自動寄存證副本給雙方。"
+      ]);
+    }
+    var disabled = !state.signatureBase64 || state.submitting;
+    var btnSubmit = el("button", {
+      className: "primary",
+      onClick: function () { submit(); }
+    }, [state.submitting ? "送出中…" : "確認簽署 · 送出"]);
+    if (disabled) btnSubmit.setAttribute("disabled", "disabled");
+
+    var btnReset = el("button", {
+      onClick: function () { state.signatureBase64 = null; render(); }
+    }, ["重新選擇"]);
+    if (!state.signatureBase64 || state.submitting) btnReset.setAttribute("disabled", "disabled");
+
+    return el("div", { className: "btn-row" }, [btnSubmit, btnReset]);
+  }
+
+  function submit() {
+    if (!state.signatureBase64 || state.submitting) return;
+    state.submitting = true;
+    state.err = null;
+    state.msg = null;
+    render();
+
+    fetch(SUPABASE_URL + "/functions/v1/submit-signature", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({
+        contract_id: contractId,
+        role: role,
+        signature_base64: state.signatureBase64,
+        token: token
+      })
+    }).then(function (r) {
+      return r.json().then(function (j) { return { ok: r.ok, status: r.status, body: j }; });
+    }).then(function (res) {
+      state.submitting = false;
+      if (!res.ok) {
+        state.err = "送出失敗：" + (res.body && (res.body.error || res.body.message) || "HTTP " + res.status);
+        render();
+        return;
+      }
+      state.signed = true;
+      state.signedAt = res.body.signed_at;
+      state.msg = "簽署成功！合約狀態：" + (res.body.contract_status || "partial") +
+        (res.body.contract_status === "complete"
+          ? " · 雙方已簽完，BeyondPath 正在寄送雙方存證副本。"
+          : " · 等對方簽署完成後雙方都會收到存證副本。");
+      loadContract().then(function (meta) {
+        state.meta = meta;
+        render();
+      }).catch(function () { render(); });
+    }).catch(function (e) {
+      state.submitting = false;
+      state.err = "送出失敗：" + (e && e.message ? e.message : String(e));
+      render();
+    });
+  }
+
+  loadContract().then(function (meta) {
+    state.meta = meta;
+    if (meta.status === "complete") {
+      state.signed = true;
+      state.signedAt = role === "client" ? meta.client_signed_at : meta.worker_signed_at;
+      state.msg = "此合約已完成簽署。";
+    } else if ((role === "client" && meta.client_signed_at) || (role === "worker" && meta.worker_signed_at)) {
+      state.signed = true;
+      state.signedAt = role === "client" ? meta.client_signed_at : meta.worker_signed_at;
+      state.msg = "你已簽署。等對方完成。";
+    }
+    render();
+  }).catch(function (e) {
+    var raw = e && e.message ? e.message : String(e);
+    var friendly = "載入合約失敗";
+    var detail = "";
+    if (/not found/i.test(raw) || /no rows/i.test(raw)) {
+      friendly = "找不到此合約";
+      detail = "連結可能已失效或合約已被取消";
+    } else if (/schema cache/i.test(raw) || /function/i.test(raw)) {
+      friendly = "服務暫時無法使用";
+      detail = "後端設定異常、請稍後再試或聯絡 edwardt0303@gmail.com";
+    } else if (/network|fetch|timeout/i.test(raw)) {
+      friendly = "連線失敗";
+      detail = "請檢查網路後重新整理";
+    } else if (/token|jwt|expired/i.test(raw)) {
+      friendly = "簽署連結已失效";
+      detail = "超過 14 天未簽署、請聯絡平台重發";
+    } else {
+      detail = raw.slice(0, 80);
+    }
+    fatal(friendly, detail);
+  });
+})();
+</script>
+</body>
+</html>

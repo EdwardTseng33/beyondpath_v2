@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>仲裁案件 · BeyondPath</title>
+<meta name="description" content="BeyondPath 仲裁立場提交頁。5 工作日 deadline 內提交立場與證據。" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#0a0a0b" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --surface: #131316;
+  --surface-2: #1a1a1f;
+  --line: rgba(255,255,255,0.08);
+  --text: #f0eee8;
+  --text-2: #c8c6c0;
+  --muted: #9a9aa3;
+  --accent: oklch(0.88 0.22 128);
+  --accent-soft: oklch(0.88 0.22 128 / 0.12);
+  --warn: oklch(0.82 0.16 75);
+  --err: #d94a4a;
+  --err-soft: rgba(217, 74, 74, 0.12);
+  --ok: #4ade80;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: "IBM Plex Sans", "Noto Sans TC", system-ui, sans-serif; }
+.shell { max-width: 880px; margin: 0 auto; padding: 24px 20px 80px; }
+.top { display: flex; align-items: center; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+.mark { width: 14px; height: 14px; border-radius: 4px; background: var(--err); box-shadow: 0 0 0 4px var(--err-soft); }
+.brand { font-weight: 700; letter-spacing: -0.02em; }
+.meta { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 24px; margin-bottom: 16px; }
+.card.danger { border-color: var(--err); background: var(--err-soft); }
+h1 { font-size: 26px; margin: 0 0 8px; letter-spacing: -0.02em; }
+h2 { font-size: 17px; margin: 24px 0 12px; color: var(--text-2); }
+.sub { color: var(--muted); font-size: 13px; }
+.countdown { font-family: var(--mono); font-size: 18px; color: var(--err); font-weight: 700; }
+.meta-row { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; font-size: 13px; margin: 12px 0; }
+.meta-row .k { color: var(--muted); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+button, .btn { padding: 12px 22px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font-size: 14px; cursor: pointer; font-family: inherit; }
+button:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+textarea, .input { width: 100%; padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; color: var(--text); font-family: inherit; font-size: 14px; }
+textarea { resize: vertical; min-height: 180px; }
+label { display: block; font-family: var(--mono); font-size: 11px; color: var(--muted); margin: 16px 0 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.err-box { background: var(--err-soft); border: 1px solid var(--err); color: var(--err); padding: 12px 16px; border-radius: 6px; margin: 12px 0; font-size: 13px; }
+.ok-box { background: rgba(74, 222, 128, 0.1); border: 1px solid var(--ok); color: var(--ok); padding: 12px 16px; border-radius: 6px; margin: 12px 0; font-size: 13px; }
+.position-block { padding: 14px 16px; background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 13px; line-height: 1.7; }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="mark"></div>
+    <div class="brand">BeyondPath · Arbitration</div>
+    <div class="meta" id="meta-id">—</div>
+  </div>
+  <div id="root">
+    <div class="card"><h1>載入中…</h1><p class="sub">驗證 token + 拉取仲裁案件</p></div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  var SUPABASE_URL = "https://iacwmkcloxjffghrweie.supabase.co";
+  var SUPABASE_ANON_KEY = "sb_publishable_Ke3oOlMiYwQ4_XGhYofF3w_TdBtoQEY";
+
+  function qs(name) {
+    var m = new RegExp("[?&]" + name + "=([^&]*)").exec(window.location.search);
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+
+  var caseId = qs("case_id");
+  var role = qs("role");
+  var token = qs("token");
+
+  var root = document.getElementById("root");
+  var metaIdEl = document.getElementById("meta-id");
+
+  if (!caseId || !role || !token) {
+    root.innerHTML = '<div class="card"><h1>連結無效</h1><p class="sub">缺少 case_id / role / token</p></div>';
+    return;
+  }
+  metaIdEl.textContent = role.toUpperCase() + " · CASE " + caseId.slice(0, 8);
+
+  function fmtDate(s) {
+    if (!s) return "—";
+    try {
+      var d = new Date(s);
+      return d.toLocaleString("zh-TW", { dateStyle: "long", timeStyle: "short" });
+    } catch (e) { return s; }
+  }
+
+  function countdownText(deadlineIso) {
+    var diff = new Date(deadlineIso).getTime() - Date.now();
+    if (diff <= 0) return "已逾期";
+    var days = Math.floor(diff / (24 * 3600 * 1000));
+    var hours = Math.floor((diff % (24 * 3600 * 1000)) / (3600 * 1000));
+    return "剩 " + days + " 天 " + hours + " 小時";
+  }
+
+  function render(state) {
+    var arb = state.arbitration_case;
+    var m = state.milestone;
+    var c = state.contract;
+    var snap = c ? (c.contract_snapshot || {}) : {};
+    var mySubmitted = state.my_submitted;
+    var otherSubmitted = role === "worker" ? !!arb.client_position_submitted_at : !!arb.worker_position_submitted_at;
+    var otherText = role === "worker" ? arb.client_position_text : arb.worker_position_text;
+    var deadlineExpired = new Date(arb.position_deadline).getTime() < Date.now();
+    var resolved = arb.status === "resolved";
+
+    var html = '';
+    html += '<div class="card danger">';
+    html += '<h1>⚠ 仲裁案件</h1>';
+    html += '<p class="sub">' + (snap.client_name || "Client") + ' ⇄ ' + (snap.worker_name || "Worker") + '</p>';
+    html += '<div class="meta-row">';
+    html += '<div class="k">Case ID</div><div>' + arb.id.slice(0, 8) + '</div>';
+    html += '<div class="k">Milestone</div><div>' + (m ? (m.title || ("Milestone " + m.milestone_number)) : "—") + '</div>';
+    html += '<div class="k">觸發原因</div><div>' + (arb.triggered_reason || "—") + '</div>';
+    html += '<div class="k">觸發時間</div><div>' + fmtDate(arb.triggered_at) + '</div>';
+    html += '<div class="k">立場 deadline</div><div>' + fmtDate(arb.position_deadline) + '</div>';
+    html += '<div class="k">剩餘時間</div><div class="countdown">' + countdownText(arb.position_deadline) + '</div>';
+    html += '<div class="k">狀態</div><div>' + arb.status + '</div>';
+    html += '</div>';
+    html += '</div>';
+
+    if (resolved) {
+      html += '<div class="card">';
+      html += '<h2>仲裁結果</h2>';
+      html += '<div class="meta-row">';
+      html += '<div class="k">Decision</div><div>' + arb.verdict_decision + '</div>';
+      if (arb.verdict_percent != null) html += '<div class="k">釋款</div><div>' + arb.verdict_percent + '%</div>';
+      if (arb.verdict_breach_multiplier != null) html += '<div class="k">違約金倍率</div><div>' + arb.verdict_breach_multiplier + 'x</div>';
+      if (arb.final_payment_amount_ntd != null) html += '<div class="k">最終付款</div><div>NT$' + arb.final_payment_amount_ntd + '</div>';
+      if (arb.final_breach_amount_ntd != null) html += '<div class="k">違約金</div><div>NT$' + arb.final_breach_amount_ntd + '</div>';
+      html += '<div class="k">判定時間</div><div>' + fmtDate(arb.verdict_at) + '</div>';
+      html += '</div>';
+      html += '<h2>判定理由</h2>';
+      html += '<div class="position-block">' + (arb.verdict_text || "(無)") + '</div>';
+      root.innerHTML = html;
+      return;
+    }
+
+    if (!mySubmitted && !deadlineExpired) {
+      html += '<div class="card">';
+      html += '<h2>提交你的立場</h2>';
+      html += '<p class="sub">送出前對方立場將被隱藏 . 確保仲裁公平性 . deadline 過後無法提交</p>';
+      html += '<label>立場陳述 (max 5000 字)</label>';
+      html += '<textarea id="position-text" placeholder="請說明你的立場 . 包含: 1) 對方主張的問題在哪 2) 你的證據 3) 你期望的解決方案"></textarea>';
+      html += '<label>證據檔案 (選填 . 你可附 Google Drive / Dropbox 等外部連結)</label>';
+      html += '<input class="input" id="evidence-urls" placeholder="https://drive.google.com/... (多個用逗號分隔)" />';
+      html += '<div style="margin-top:16px"><button class="primary" id="btn-submit">送出立場 (不可修改)</button></div>';
+      html += '<div id="submit-msg"></div>';
+      html += '</div>';
+    } else if (mySubmitted) {
+      html += '<div class="card">';
+      html += '<h2>✓ 你已提交立場</h2>';
+      html += '<div class="position-block">' + ((role === "worker" ? arb.worker_position_text : arb.client_position_text) || "—") + '</div>';
+      html += '<p class="sub">提交時間 ' + fmtDate(role === "worker" ? arb.worker_position_submitted_at : arb.client_position_submitted_at) + '</p>';
+      html += '</div>';
+
+      if (otherSubmitted) {
+        html += '<div class="card">';
+        html += '<h2>對方立場</h2>';
+        html += '<div class="position-block">' + (otherText || "—") + '</div>';
+        html += '</div>';
+        html += '<div class="card">';
+        html += '<h2>下一步</h2>';
+        html += '<p class="sub">雙方立場已齊備 . BeyondPath 平台正在進行仲裁判定 . 判定結果將透過 email 寄送雙方</p>';
+        html += '</div>';
+      } else {
+        html += '<div class="card">';
+        html += '<h2>等待對方提交立場</h2>';
+        html += '<p class="sub">對方尚未提交 . deadline 過後若對方未提 . 平台將基於你的立場進行判定</p>';
+        html += '</div>';
+      }
+    } else if (deadlineExpired) {
+      html += '<div class="card danger">';
+      html += '<h2>⚠ 立場 deadline 已逾期</h2>';
+      html += '<p class="sub">你未在 5 工作日內提交立場 . 平台將基於對方立場進行判定</p>';
+      html += '</div>';
+    }
+
+    root.innerHTML = html;
+
+    var btnSubmit = document.getElementById("btn-submit");
+    if (btnSubmit) {
+      btnSubmit.addEventListener("click", async function () {
+        var txt = document.getElementById("position-text").value.trim();
+        if (!txt) { document.getElementById("submit-msg").innerHTML = '<div class="err-box">立場陳述不可空白</div>'; return; }
+        if (txt.length > 5000) { document.getElementById("submit-msg").innerHTML = '<div class="err-box">超過 5000 字</div>'; return; }
+        if (!window.confirm("送出後不可修改 . 確定送出?")) return;
+        var ev = document.getElementById("evidence-urls").value.trim();
+        var files = [];
+        if (ev) {
+          var urls = ev.split(",");
+          for (var i = 0; i < urls.length; i++) {
+            var u = urls[i].trim();
+            if (u.match(/^https?:\/\//)) files.push({ url: u, file_name: u.split("/").pop() || u, sha256: null, size: null });
+          }
+        }
+        btnSubmit.disabled = true;
+        document.getElementById("submit-msg").innerHTML = '<div style="color:var(--muted);font-size:12px;margin-top:8px">送出中…</div>';
+        try {
+          var res = await fetch(SUPABASE_URL + "/functions/v1/submit-arbitration-position", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+            body: JSON.stringify({ case_id: caseId, role: role, position_text: txt, position_files: files, token: token }),
+          });
+          var data = await res.json();
+          if (data.ok) {
+            document.getElementById("submit-msg").innerHTML = '<div class="ok-box">✓ 立場已送出</div>';
+            setTimeout(load, 1200);
+          } else {
+            document.getElementById("submit-msg").innerHTML = '<div class="err-box">✗ ' + (data.error || "送出失敗") + '</div>';
+            btnSubmit.disabled = false;
+          }
+        } catch (e) {
+          document.getElementById("submit-msg").innerHTML = '<div class="err-box">✗ ' + (e.message || String(e)) + '</div>';
+          btnSubmit.disabled = false;
+        }
+      });
+    }
+  }
+
+  async function load() {
+    try {
+      var res = await fetch(SUPABASE_URL + "/functions/v1/get-arbitration-detail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+        body: JSON.stringify({ case_id: caseId, role: role, token: token }),
+      });
+      var data = await res.json();
+      if (!data.ok) {
+        root.innerHTML = '<div class="card"><h1>載入失敗</h1><div class="err-box">' + (data.error || "未知錯誤") + '</div></div>';
+        return;
+      }
+      render(data);
+    } catch (e) {
+      root.innerHTML = '<div class="card"><h1>載入失敗</h1><div class="err-box">' + (e.message || String(e)) + '</div></div>';
+    }
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>

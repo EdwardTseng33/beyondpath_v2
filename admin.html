@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Admin · BeyondPath（內部後台）</title>
-<meta name="description" content="BeyondPath POC 後台。內部使用、無公開連結。" />
+<meta name="description" content="BeyondPath 內部後台。僅限授權人員、無公開連結。" />
 <link rel="alternate" hreflang="zh-Hant" href="https://beyondpath.tw/admin.html?lang=zh" />
 <link rel="alternate" hreflang="en" href="https://beyondpath.tw/admin.html?lang=en" />
 <link rel="alternate" hreflang="x-default" href="https://beyondpath.tw/admin.html" />
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="components/styles.css?v=2026-05-25-p0p1">
+<link rel="stylesheet" href="components/styles.css?v=2026-06-01-dash">
 <style>
   :root {
     --bg: #0a0a0b;
@@ -71,6 +71,14 @@
   .admin-btn.danger:hover { background: var(--err-soft); color: var(--err); }
   .admin-btn:disabled { opacity: 0.5; cursor: wait; }
   .admin-empty { padding: 60px 20px; text-align: center; color: var(--muted); font-size: 13px; }
+  /* Empty state · 2026-05-28 P0-2 · 女巫 */
+  .admin-empty-state { padding: 56px 24px 60px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; border: 1px dashed var(--line); background: var(--surface); margin: 8px 0 24px; }
+  .admin-empty-icon { width: 56px; height: 56px; border-radius: 50%; border: 1.5px solid var(--accent-line); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 22px; line-height: 1; background: var(--accent-soft); box-shadow: 0 0 0 6px oklch(0.88 0.22 128 / 0.05); }
+  .admin-empty-title { font-family: var(--sans); font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; margin-top: 4px; }
+  .admin-empty-hint { font-family: var(--zh); font-size: 13px; color: var(--text-2); line-height: 1.7; max-width: 420px; }
+  .admin-empty-secondary { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; margin-top: 4px; }
+  .admin-empty-actions { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
+  .admin-empty-actions .admin-btn { min-height: 36px; }
   .admin-loading { padding: 40px 20px; text-align: center; color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; }
   .admin-error { padding: 14px 18px; background: var(--err-soft); border: 1px solid oklch(0.7 0.18 25 / 0.4); color: var(--err); font-size: 13px; margin-bottom: 14px; }
   .admin-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; font-family: var(--mono); font-size: 11px; }
@@ -87,11 +95,14 @@
   .match-result-card .meta { font-size: 13px; color: var(--text); }
   .match-result-card .meta .sub { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.08em; margin-top: 2px; }
   .match-result-card label { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--text-2); cursor: pointer; }
+  /* 數據總覽 Dashboard grid · 2026-06-01 calcifer · auto-fit 防爆行 · 中文用空間排 */
+  .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
   @media (max-width: 720px) {
     .admin-shell { padding: 16px 14px 60px; }
     .admin-detail { grid-template-columns: 1fr; }
     .admin-tabs { overflow-x: auto; }
     .admin-card-h { flex-direction: column; }
+    .dash-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
@@ -103,14 +114,14 @@
 <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
 <!-- i18n core (Step 3b - 2026-05-25) -->
-<script src="components/i18n/index.js?v=2026-05-25-i18n-r2"></script>
-<script src="components/i18n/dict.zh.js?v=2026-05-25-i18n-r2"></script>
-<script src="components/i18n/dict.en.js?v=2026-05-25-i18n-r2"></script>
-<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx?v=2026-05-25-i18n-r2"></script>
+<script src="components/i18n/index.js?v=2026-06-01-dash"></script>
+<script src="components/i18n/dict.zh.js?v=2026-06-01-dash"></script>
+<script src="components/i18n/dict.en.js?v=2026-06-01-dash"></script>
+<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx?v=2026-06-01-dash"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="components/supabase.js?v=2026-05-19-admin"></script>
-<script type="text/babel" src="components/admin.jsx?v=2026-05-25-i18n"></script>
+<script src="components/supabase.js?v=2026-06-01-dash"></script>
+<script type="text/babel" src="components/admin.jsx?v=2026-06-01-dash"></script>
 
 <!-- Title + LangSwitcher mount -->
 <script>

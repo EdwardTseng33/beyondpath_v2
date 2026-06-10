@@ -4,14 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>隱私權與服務條款 · BeyondPath</title>
-<meta name="description" content="BeyondPath Beta 階段（POC）隱私權政策與服務條款 · 我們收什麼資料、怎麼用、你的權利。" />
+<meta name="description" content="BeyondPath 隱私權政策與服務條款 · 我們收什麼資料、怎麼用、你的權利。" />
 <link rel="canonical" href="https://beyondpath.tw/legal/privacy.html" />
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#0a0a0b" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://beyondpath.tw/legal/privacy.html" />
 <meta property="og:title" content="隱私權與服務條款 · BeyondPath" />
-<meta property="og:description" content="BeyondPath Beta 階段隱私權政策與服務條款。" />
+<meta property="og:description" content="BeyondPath 隱私權政策與服務條款。" />
 <meta property="og:image" content="https://beyondpath.tw/assets/og-beyondpath.png" />
 <meta property="og:site_name" content="BeyondPath" />
 <meta property="og:locale" content="zh_TW" />
@@ -57,14 +57,16 @@
   <div class="legal-top">
     <a href="/">← BeyondPath</a>
     <span>·</span>
-    <span>Legal</span>
+    <span>Legal · Privacy</span>
+    <span>·</span>
+    <a href="/legal/terms.html">服務條款</a>
   </div>
 
   <h1>隱私權與服務條款</h1>
-  <div class="legal-meta">最近更新：2026-05-15 · 版本 v1.0（Beta · POC）</div>
+  <div class="legal-meta">最近更新：2026-05-29 · 版本 v1.2</div>
 
   <div class="legal-note">
-    BeyondPath 目前處於 <strong>Beta · POC（概念驗證）</strong> 階段、由 Edward Tsai（個人營業者）營運。本條款為 prototype 等級簡版、上正式商業階段前會由律師審閱調整。任何個資與條款疑問請寄 <a href="mailto:edwardt0303@gmail.com">edwardt0303@gmail.com</a>。
+    BeyondPath 由 <strong>Edward Tsai（個人營業者）</strong>營運。本政策依個資法 §27 內部安全維護計畫精神撰寫、規範平台如何蒐集、處理、利用你的個資。政策如有更新將依 §11 機制公告。任何個資與條款疑問請寄 <a href="mailto:edwardt0303@gmail.com">edwardt0303@gmail.com</a>。
   </div>
 
   <hr>
@@ -73,13 +75,55 @@
   <p>BeyondPath 是 AI 時代的工作配對網路、媒合發案方與接案者。本服務由 Edward Tsai（edwardt0303@gmail.com）個人營運、未來計畫成立公司。</p>
 
   <h2>2 · 我們蒐集什麼</h2>
-  <p>使用 BeyondPath 時、我們可能蒐集：</p>
+  <p>BeyondPath 蒐集個資依當事人角色分為兩類、皆以「最小化原則」為界：</p>
+
+  <h3>2.1 Client（發案方）個資</h3>
+  <p><strong>必填欄位</strong>（送出 brief 必收）：</p>
   <ul>
-    <li><strong>登入資訊</strong>：透過 Google OAuth 取得的 email、姓名、大頭照</li>
-    <li><strong>發案 / 接案資訊</strong>：你填寫的需求 brief、預算、時程；或 portfolio、能力描述、AI 工作 proof</li>
-    <li><strong>聯繫紀錄</strong>：你主動寄信給我們的內容</li>
+    <li>聯絡 email · 用於配對結果通知、合約寄送</li>
+    <li>聯絡人姓名 · 用於信件抬頭</li>
+    <li>身分類型（個人 / 公司 / 工作室 / 非營利）· 用於配對流程分流</li>
+    <li>需求 brief 文字 · 用於 AI 拆解與 worker 配對</li>
+    <li>預算範圍 · 用於 Tier 配對</li>
+    <li>時程 · 用於 worker capacity 判斷</li>
   </ul>
-  <p>我們<strong>不蒐集</strong>：身分證字號、銀行帳號、信用卡、護照、健保資料、地址。</p>
+  <p><strong>選填欄位</strong>：</p>
+  <ul>
+    <li>公司名稱、產業類別、聯絡電話、企業需求標籤（NDA / 發票 / 視訊預約 / 大型合約）· 用於 B2B 流程加值</li>
+    <li>過往合作經驗、品牌資料、參考連結 · 用於 worker 配對精度</li>
+  </ul>
+  <p><strong>使用目的</strong>：配對 worker、AI 顧問推薦、合約寄送、案件追蹤。</p>
+  <p><strong>保存期限</strong>：案件結案後 2 年（依個資法 §11 必要範圍）；用戶提出刪除請求後 30 天內清除。</p>
+
+  <h3>2.2 Worker（接案方）個資</h3>
+  <p><strong>必填欄位</strong>（送出申請必收）：</p>
+  <ul>
+    <li>聯絡 email · 用於配對通知、邀請信</li>
+    <li>顯示姓名 / handle · 用於 client 視覺化展示</li>
+    <li>專業領域（vertical）· 用於配對</li>
+    <li>AI 訪談對話內容 · 用於 Tier 認證初審</li>
+    <li>能力 proof 描述（你可選擇是否揭露真實 case 名稱）· 用於 Tier 評估</li>
+  </ul>
+  <p><strong>選填欄位</strong>：</p>
+  <ul>
+    <li>Portfolio 連結、過往作品 URL · 用於展示</li>
+    <li>L-score 自評（learning velocity）· 用於 Tier 動態升降</li>
+    <li>capacity 狀態（接案可用度）· 用於配對排序</li>
+    <li>偏好接案類型、合作偏好 · 用於配對精度</li>
+    <li>價格區間 · 用於配對</li>
+  </ul>
+  <p><strong>使用目的</strong>：Tier 認證、配對 client、配對邀請信寄送、Tier 升降紀錄。</p>
+  <p><strong>保存期限</strong>：申請通過或拒絕後 2 年（供業務查核與 Tier 紀錄）；用戶提出刪除請求後 30 天內清除。</p>
+  <p><strong>AI 訪談特別聲明</strong>：worker AI 訪談對話僅用於 Tier 評估、<strong>不會用於訓練第三方 AI 模型</strong>。訪談原文僅 Edward 與認證機制存取、不對 client 揭露。</p>
+
+  <h3>2.3 共同不蒐集</h3>
+  <p>我們<strong>絕不蒐集</strong>：身分證字號、銀行帳號、信用卡號、護照號、健保資料、戶籍地址、政治傾向、宗教信仰、犯罪紀錄、生物特徵。</p>
+
+  <h3>2.4 自動蒐集（伺服器 log）</h3>
+  <ul>
+    <li>瀏覽器 user-agent、IP（記至 /24 net、不到完整 IP）、訪問頁面、時間戳 · 用於異常偵測、效能調校、安全 incident 處理</li>
+    <li>保存期限：90 天自動輪替清除</li>
+  </ul>
 
   <h2>3 · 我們如何使用</h2>
   <ul>
@@ -90,12 +134,33 @@
   </ul>
   <p>我們<strong>不會</strong>：販賣你的資料、用於廣告再行銷、提供給第三方做行銷用途。</p>
 
-  <h2>4 · 資料儲存</h2>
+  <h2>4 · 資料儲存與跨境傳輸</h2>
+
+  <h3>4.1 儲存位置</h3>
   <ul>
-    <li>儲存於 <strong>Supabase</strong>（資料 region：日本東京 ap-northeast-1）</li>
-    <li>全站 HTTPS 加密、資料庫 AES-256 at-rest 加密</li>
-    <li>由 Supabase 提供自動備份與基礎設施安全（SOC 2 Type II）</li>
+    <li>主資料庫：<strong>Supabase</strong>（資料 region：日本東京 ap-northeast-1、由 AWS Tokyo 機房承載）</li>
+    <li>靜態檔案 / hosting：<strong>Vercel</strong>（全球 CDN edge、原始 origin 含日本、新加坡、美西區）</li>
+    <li>Email 寄送：<strong>Resend</strong>（美國 us-east-1 region · 經 TLS 加密寄送）</li>
+    <li>OAuth 認證：<strong>Google Cloud</strong>（全球分散式、依 Google 標準 DPA）</li>
+    <li>AI 推理：<strong>Anthropic Claude API</strong>（美國 us-east region · 經 TLS 加密 · API 對話不入 Anthropic 訓練資料、依 Anthropic Commercial Terms）</li>
   </ul>
+
+  <h3>4.2 加密</h3>
+  <ul>
+    <li>傳輸中（in-transit）：全站強制 HTTPS / TLS 1.2+</li>
+    <li>靜態加密（at-rest）：Supabase Postgres AES-256</li>
+    <li>備份：Supabase Pro 自動每日備份 + 7 天 PITR、加密同上</li>
+  </ul>
+
+  <h3>4.3 跨境傳輸告知（個資法 §21）</h3>
+  <p>BeyondPath 上述部分服務涉及將你的個資傳輸至中華民國境外處理：</p>
+  <ul>
+    <li><strong>主儲存 · 日本</strong>：Supabase（AWS Tokyo）· 依 SOC 2 Type II + GDPR DPA 保護</li>
+    <li><strong>Email 寄送 · 美國</strong>：Resend · 僅傳輸寄送必要欄位（收件人 email、寄件內容）· 依 Resend DPA 保護</li>
+    <li><strong>AI 推理 · 美國</strong>：Anthropic · 傳輸 worker AI 訪談內容與 client brief 拆解請求 · 對話不入訓練資料</li>
+    <li><strong>未來規劃</strong>：歐盟用戶上線時將啟用歐盟 region；美國市場開拓時將提供 US region 選項</li>
+  </ul>
+  <p>主管機關若依個資法 §21 限制特定資料跨境傳輸、BeyondPath 將遵循限制並於 30 日內通知受影響用戶。</p>
 
   <h2>5 · 保存期限</h2>
   <ul>
@@ -113,50 +178,147 @@
   </ul>
   <p>我們會在 <strong>7 個工作天</strong>內回覆、不收取手續費。</p>
 
-  <h2>7 · Cookies</h2>
-  <p>我們僅使用必要 cookies（登入 session、語言偏好）、<strong>不用追蹤 cookies</strong>、不接第三方廣告平台。</p>
+  <h2>7 · Cookies / 本地儲存</h2>
+  <p>BeyondPath 僅使用「必要功能」cookies 與 localStorage、<strong>絕不使用追蹤 cookies、絕不接第三方廣告與行銷再行銷平台</strong>。</p>
+
+  <h3>7.1 我們使用的項目</h3>
+  <table style="width:100%; border-collapse:collapse; margin:12px 0; font-size:13.5px;">
+    <thead>
+      <tr style="background:rgba(199,232,74,0.05); border-bottom:1px solid rgba(199,232,74,0.2);">
+        <th style="text-align:left; padding:8px 10px; color:#c7e84a; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">名稱</th>
+        <th style="text-align:left; padding:8px 10px; color:#c7e84a; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">類型</th>
+        <th style="text-align:left; padding:8px 10px; color:#c7e84a; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">用途</th>
+        <th style="text-align:left; padding:8px 10px; color:#c7e84a; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">期限</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:8px 10px; font-family:'IBM Plex Mono',monospace; font-size:12px;">sb-iacwmkcloxjffghrweie-auth-token</td>
+        <td style="padding:8px 10px;">localStorage</td>
+        <td style="padding:8px 10px;">Supabase 登入 session（含 access token + refresh token）</td>
+        <td style="padding:8px 10px;">登出時清除</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:8px 10px; font-family:'IBM Plex Mono',monospace; font-size:12px;">bp-active-role</td>
+        <td style="padding:8px 10px;">localStorage</td>
+        <td style="padding:8px 10px;">記住你目前選的身分（client / worker）、避免每次切換</td>
+        <td style="padding:8px 10px;">登出時清除</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:8px 10px; font-family:'IBM Plex Mono',monospace; font-size:12px;">bp-lang-preference</td>
+        <td style="padding:8px 10px;">localStorage</td>
+        <td style="padding:8px 10px;">語言偏好（zh-Hant / en）</td>
+        <td style="padding:8px 10px;">手動清除</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:8px 10px; font-family:'IBM Plex Mono',monospace; font-size:12px;">bp-worker-onboarding</td>
+        <td style="padding:8px 10px;">localStorage</td>
+        <td style="padding:8px 10px;">worker 認證流程進度暫存</td>
+        <td style="padding:8px 10px;">完成或登出時清除</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:8px 10px; font-family:'IBM Plex Mono',monospace; font-size:12px;">_vercel_jwt（Vercel）</td>
+        <td style="padding:8px 10px;">cookie · httponly</td>
+        <td style="padding:8px 10px;">Vercel preview 認證（僅內部 preview 用、prod 不啟用）</td>
+        <td style="padding:8px 10px;">session</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>7.2 我們<strong>不</strong>使用</h3>
+  <ul>
+    <li>Google Analytics / GA4 追蹤碼</li>
+    <li>Facebook Pixel / Meta Pixel</li>
+    <li>TikTok / LINE / 任何廣告追蹤像素</li>
+    <li>Vercel Analytics 廣告功能（若啟用基礎流量分析、僅以彙總無識別性方式蒐集）</li>
+    <li>第三方再行銷（retargeting）cookies</li>
+  </ul>
+
+  <h3>7.3 你怎麼清除</h3>
+  <ul>
+    <li>瀏覽器設定 → 清除網站資料（site data）→ 對 <code>beyondpath.tw</code> 執行</li>
+    <li>或開啟無痕視窗使用、關閉即自動清除</li>
+    <li>登出按鈕亦會清除 BeyondPath 本地 session</li>
+  </ul>
 
   <h2>8 · 第三方服務</h2>
   <ul>
     <li><strong>Google OAuth</strong>：依 <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google 隱私權政策</a></li>
     <li><strong>Supabase</strong>：依 <a href="https://supabase.com/privacy" target="_blank" rel="noopener">Supabase 隱私權政策</a>（SOC 2 Type II）</li>
     <li><strong>Vercel</strong>（hosting）：依 <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">Vercel 隱私權政策</a></li>
+    <li><strong>Resend</strong>（email 寄送 · 美國）：傳輸收件人 email 與寄件內容、依 <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener">Resend 隱私權政策</a></li>
+    <li><strong>Anthropic</strong>（Claude API · AI 推理 · 美國）：傳輸 worker AI 訪談內容與 client brief 拆解請求、對話不入訓練資料、依 <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic 隱私權政策</a></li>
+    <li><strong>綠界科技 ECPay</strong>（第三方支付 · 金流代收代付 · 台灣）：交易時傳輸付款必要欄位（金額、訂單編號、付款結果）、依 <a href="https://www.ecpay.com.tw/Service/private_policy" target="_blank" rel="noopener">綠界隱私權政策</a></li>
   </ul>
 
   <hr>
 
-  <h2>9 · 服務條款（Beta · POC 階段）</h2>
+  <h2>9 · 服務條款</h2>
 
   <h3>9.1 服務性質</h3>
-  <p>BeyondPath 提供發案需求理解、AI 工作者 Tier 認證初審、配對候選工作者、交付過程紀錄。<strong>Beta 階段限制</strong>：服務可能中斷、資料可能變動；不保證配對成功率；商業條款（付款、合約）目前由 Edward 線下協助、平台不收費。</p>
+  <p>BeyondPath 提供發案需求理解、AI 工作者 Tier 認證初審、配對候選工作者、交付過程紀錄。服務可能中斷、資料可能變動；不保證配對成功率；平台就成功配對案件收取分級服務費（take rate、見服務條款 §3）。</p>
 
   <h3>9.2 用戶責任</h3>
   <p>你保證提供的資訊真實、準確、合法；不上傳侵權內容；不嘗試破壞系統、繞過認證、攻擊其他用戶；不重複申請或偽造資料。違反者、我們有權終止帳號。</p>
+
+  <h3>9.2.1 行為能力與年齡限制</h3>
+  <p>本服務涉及金流（透過綠界第三方支付代收代付）與合約簽署。使用本服務即表示你保證為<strong>年滿 18 歲、具完全行為能力之自然人</strong>、或為<strong>合法登記之法人、商號之有權代表人</strong>。</p>
+  <p>依中華民國民法規定、限制行為能力人（未滿 18 歲）所為之法律行為效力未定。BeyondPath 不向未滿 18 歲之未成年人提供配對、簽約或金流服務；如經發現用戶不具備上述行為能力、我們有權終止其帳號並中止相關案件。</p>
 
   <h3>9.3 智慧財產權</h3>
   <p>你上傳的 portfolio / brief 仍歸你所有。BeyondPath 取得「為配對與展示之非專屬授權」、在你刪除帳號後失效。BeyondPath 平台 code、UI、商標歸 Edward Tsai 所有。</p>
 
   <h3>9.4 免責聲明</h3>
-  <p>Beta 階段、BeyondPath 「<strong>依現狀</strong>（AS-IS）」提供、不對配對結果的商業成果、工作者實際表現、第三方行為、服務中斷造成的損失負責。我們仍會盡力維護服務品質。</p>
+  <p>BeyondPath 之媒合服務「<strong>依現狀</strong>（AS-IS）」提供、不對配對結果的商業成果、工作者實際表現、第三方行為、服務中斷造成的損失負責。我們仍會盡力維護服務品質。</p>
 
   <h3>9.5 責任上限</h3>
-  <p>BeyondPath（含 Edward Tsai 個人）對任何單一用戶的累計賠償責任、上限為你在過去 12 個月實際支付給 BeyondPath 的費用（Beta 階段為 NT$ 0）、或 NT$ 10,000、取較高者。</p>
+  <p>BeyondPath（含 Edward Tsai 個人）對任何單一用戶的累計賠償責任、上限為以下兩者取較高者：(a) 你過去 12 個月實際支付給 BeyondPath 的服務費總額之 <strong>3 倍</strong>；(b) 保底 <strong>NT$ 50,000</strong>。本上限與你實際使用本服務之對價相當。</p>
+  <p><strong>例外</strong>：因 BeyondPath 故意或重大過失（含個資外洩經主管機關認定）造成之損害、不適用本條責任上限、依實際損害賠償（依個資法 §28-31 規定）。</p>
 
   <h3>9.6 準據法與管轄</h3>
   <p>本條款受<strong>中華民國法律</strong>管轄、爭議由<strong>台灣台北地方法院</strong>為第一審管轄法院。</p>
 
   <hr>
 
-  <h2>10 · 政策變更</h2>
-  <p>本政策更新時、會在首頁公告、重大變更會以 email 通知。繼續使用本服務視為同意新版。</p>
+  <h2>10 · 平台角色聲明</h2>
 
-  <h2>11 · 聯繫</h2>
+  <h3>10.1 平台提供哪些服務</h3>
+  <p>BeyondPath 僅提供以下三項中介服務：</p>
+  <ul>
+    <li><strong>(a) 配對媒合</strong>：以 AI 拆解需求 + Tier / 領域 / capacity / L-score 演算法、為 client 配對 worker</li>
+    <li><strong>(b) 通知傳遞</strong>：寄送配對邀請信、追蹤 worker 接受 / 婉拒回應</li>
+    <li><strong>(c) Tier 認證初審</strong>：對 worker 進行 AI 訪談、評估 Tier 等級</li>
+    <li><strong>(d) 服務費代收代付</strong>：平台就配對案件向接案者收取分級服務費（take rate）；平台透過綠界第三方支付代收客戶案款後、扣抵服務費再撥付接案者（代收代付、不長期託管、非 escrow、見服務條款 §3.4）</li>
+  </ul>
+
+  <h3>10.2 平台<strong>不</strong>提供哪些服務</h3>
+  <p>BeyondPath 明確<strong>不</strong>提供以下中介責任：</p>
+  <ul>
+    <li><strong>(e) 不擔保交付品質</strong>：worker 實際接案表現由雙方獨立評估</li>
+    <li><strong>(f) 不擔保付款</strong>：client 若拖款、平台不代墊不擔保</li>
+    <li><strong>(g) 不提供合約仲裁</strong>：合約由雙方另行簽訂、平台不為合約糾紛仲裁方</li>
+    <li><strong>(h) 不擔任稅務代理</strong>：發票、扣繳、報稅責任由雙方依法各自處理</li>
+    <li><strong>(i) 不提供保險 / 履約保證</strong>：雙方自行評估風險</li>
+  </ul>
+
+  <h3>10.3 配對成功後</h3>
+  <p>當 worker 接受配對、BeyondPath 將協助雙方簽約；案款支付透過平台指定金流通道代收代付（平台收取服務費、見服務條款 §3）；交付、爭議解決依平台流程與雙方獨立合約進行。平台就配對案件<strong>收取分級服務費</strong>。</p>
+
+  <h3>10.4 為什麼這樣設計</h3>
+  <p>本平台以「明確中介、最高透明」為核心、避免承擔超出媒合服務範圍的法律與業務責任；同時讓 client 與 worker 保有最大自主。隨產品成熟、未來版本可能擴充服務範圍、屆時將更新本條款並以 email 通知。</p>
+
+  <hr>
+
+  <h2>11 · 政策變更</h2>
+  <p>本政策更新時、會在首頁公告、重大變更（責任上限、跨境傳輸新增區域、平台角色擴張等）會以 email 通知並提供 30 日預告期。繼續使用本服務視為同意新版。</p>
+
+  <h2>12 · 聯繫</h2>
   <p>任何個資與條款疑問：<a href="mailto:edwardt0303@gmail.com">edwardt0303@gmail.com</a></p>
 
 </main>
 
 <footer class="legal-foot">
-  © 2026 BeyondPath · Beta POC · <a href="/">回首頁</a>
+  © 2026 BeyondPath · <a href="/">回首頁</a> · <a href="/legal/terms.html">服務條款</a>
 </footer>
 
 </body>

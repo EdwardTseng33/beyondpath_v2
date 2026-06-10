@@ -3,8 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- 候補頁已停用 · 自動導回首頁（正式上線後一律走直接發案流程）· 2026-06-01 -->
+<script>location.replace('/landing.html' + (location.search || ''));</script>
+<meta http-equiv="refresh" content="0; url=/landing.html" />
+<meta name="robots" content="noindex, nofollow" />
 <title>Join Waitlist · BeyondPath</title>
-<meta name="description" content="加入 BeyondPath waitlist。Prototype 階段不會自動收集個資，請寄信給 Edward 或複製 email 手動聯繫。" />
+<meta name="description" content="BeyondPath · 直接發案，24 小時內收到配對方向。" />
 <link rel="alternate" hreflang="zh-Hant" href="https://beyondpath.tw/waitlist.html?lang=zh" />
 <link rel="alternate" hreflang="en" href="https://beyondpath.tw/waitlist.html?lang=en" />
 <link rel="alternate" hreflang="x-default" href="https://beyondpath.tw/waitlist.html" />
@@ -12,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="components/styles.css?v=2026-05-25-p0p1">
+<link rel="stylesheet" href="components/styles.css?v=2026-06-01-dash">
 <style>
   :root {
     --bg: #0a0a0b;
@@ -117,15 +121,15 @@
   <footer class="wl-bottom" data-i18n="waitlist.footer">BeyondPath · Prototype v0.2 · waitlist uses manual email until a privacy-reviewed form backend is ready.</footer>
 </div>
 <!-- i18n core (Step 1/2 framework) -->
-<script src="components/i18n/index.js?v=2026-05-25-i18n-r2"></script>
-<script src="components/i18n/dict.zh.js?v=2026-05-25-i18n-r2"></script>
-<script src="components/i18n/dict.en.js?v=2026-05-25-i18n-r2"></script>
+<script src="components/i18n/index.js?v=2026-06-01-dash"></script>
+<script src="components/i18n/dict.zh.js?v=2026-06-01-dash"></script>
+<script src="components/i18n/dict.en.js?v=2026-06-01-dash"></script>
 
 <!-- React + Babel (for LangSwitcher) -->
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
-<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx?v=2026-05-25-i18n-r2"></script>
+<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx?v=2026-06-01-dash"></script>
 
 <script>
   // === waitlist - i18n binding (Step 3a - 2026-05-25) ===

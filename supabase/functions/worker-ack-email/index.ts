@@ -13,6 +13,8 @@
 // Secrets required: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY, SLACK_BOT_TOKEN (optional)
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { checkRateLimit, getClientIp, rateLimitResponse } from "../_shared/rate-limit.ts";  // 2026-05-29 calcifer doc28 C . 防洗信限流
+import { isAdminRequest } from "../_shared/admin.ts";  // admin JWT bypass
 import { buildWorkerAckEmail } from "../_shared/confirmation-email-template.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? Deno.env.get("NEXT_PUBLIC_SUPABASE_URL") ?? "";
@@ -109,6 +111,13 @@ serve(async function (req: Request) {
   }
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405, headers: CORS_HEADERS });
+  }
+
+  // 2026-05-29 calcifer . doc 28 Part C Group B . IP 限流 (防洗信)
+  // worker 申請後送一封 ack . 正常一人一次 . 限流 10/min 防有人狂觸發發信
+  if (!(await isAdminRequest(req))) {
+    const rl = await checkRateLimit("worker-ack-email", getClientIp(req), { limit: 10, windowSec: 60 });
+    if (!rl.allowed) return rateLimitResponse(rl, CORS_HEADERS);
   }
 
   let body: AckRequestBody;

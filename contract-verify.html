@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>合約查驗 · BeyondPath</title>
+<meta name="description" content="BeyondPath 合約公開查驗頁。上傳合約 PDF + 輸入合約 ID 比對 SHA-256 hash 驗本機檔是否為平台正本。" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0a0a0b" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --surface: #131316;
+  --surface-2: #1a1a1f;
+  --line: rgba(255,255,255,0.08);
+  --text: #f0eee8;
+  --text-2: #c8c6c0;
+  --muted: #9a9aa3;
+  --accent: oklch(0.88 0.22 128);
+  --accent-soft: oklch(0.88 0.22 128 / 0.12);
+  --accent-line: oklch(0.88 0.22 128 / 0.4);
+  --warn: oklch(0.82 0.16 75);
+  --err: oklch(0.7 0.18 25);
+  --err-soft: oklch(0.7 0.18 25 / 0.12);
+  --ok: #4ade80;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: "IBM Plex Sans", "Noto Sans TC", system-ui, sans-serif; }
+.shell { max-width: 760px; margin: 0 auto; padding: 24px 20px 80px; }
+.top { display: flex; align-items: center; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+.mark { width: 14px; height: 14px; border-radius: 4px; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.brand { font-weight: 700; letter-spacing: -0.02em; }
+.meta { margin-left: auto; font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 24px; margin-bottom: 16px; }
+h1 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.02em; }
+h2 { font-size: 17px; margin: 24px 0 12px; color: var(--text-2); }
+.sub { color: var(--muted); font-size: 13px; line-height: 1.7; }
+.field { margin: 16px 0; }
+.field label { display: block; font-size: 13px; color: var(--text-2); margin-bottom: 6px; }
+.field input[type=text], .field input[type=file] { width: 100%; padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--line); color: var(--text); border-radius: 6px; font-family: inherit; font-size: 14px; }
+.field input[type=text]:focus { outline: none; border-color: var(--accent); }
+button { padding: 12px 24px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: #0a0a0b; font-size: 14px; cursor: pointer; font-family: inherit; font-weight: 600; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.err-box { background: var(--err-soft); border: 1px solid var(--err); color: var(--err); padding: 12px 16px; border-radius: 6px; margin: 12px 0; }
+.ok-box { background: rgba(74, 222, 128, 0.1); border: 1px solid var(--ok); color: var(--ok); padding: 12px 16px; border-radius: 6px; margin: 12px 0; }
+.warn-box { background: rgba(245, 166, 35, 0.1); border: 1px solid var(--warn); color: var(--warn); padding: 12px 16px; border-radius: 6px; margin: 12px 0; }
+.meta-row { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; font-size: 13px; margin: 12px 0; }
+.meta-row .k { color: var(--muted); }
+.meta-row .v { color: var(--text-2); font-family: ui-monospace, monospace; word-break: break-all; }
+.hash-box { background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 12px; font-family: ui-monospace, monospace; font-size: 11px; word-break: break-all; color: var(--text-2); margin: 8px 0; }
+.pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-family: ui-monospace, monospace; letter-spacing: 0.08em; border: 1px solid var(--accent-line); color: var(--accent); }
+.pill.ok { border-color: var(--ok); color: var(--ok); }
+.pill.warn { border-color: var(--warn); color: var(--warn); }
+.pill.err { border-color: var(--err); color: var(--err); }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="mark"></div>
+    <div class="brand">BeyondPath · Contract Verify</div>
+    <div class="meta">PUBLIC LOOKUP</div>
+  </div>
+  <div class="card">
+    <h1>合約查驗</h1>
+    <p class="sub">
+      上傳合約 PDF + 輸入合約 ID、自動比對 SHA-256 hash 確認本機 PDF 是否為 BeyondPath 平台正本。
+      任何人可查、無需登入。回傳資料僅含合約 metadata（不含雙方 email、不含 PDF URL）。
+    </p>
+    <div class="field">
+      <label for="cid-input">合約 ID（uuid 格式）</label>
+      <input type="text" id="cid-input" placeholder="例 5e8a91a6-c7b3-4f1e-..." />
+    </div>
+    <div class="field">
+      <label for="pdf-input">合約 PDF 檔（要比對的本機檔）</label>
+      <input type="file" id="pdf-input" accept="application/pdf" />
+    </div>
+    <button id="verify-btn">查驗</button>
+    <div id="result"></div>
+  </div>
+  <div class="card">
+    <h2>查驗原理</h2>
+    <p class="sub">
+      BeyondPath 產生合約 PDF 後、會把 PDF 的 SHA-256 hash 寫進資料庫。任何人取得 PDF 都可比對：
+    </p>
+    <ol class="sub">
+      <li>輸入合約 ID + 上傳手上的 PDF</li>
+      <li>本頁在瀏覽器內計算上傳 PDF 的 SHA-256 hash（不上傳到伺服器）</li>
+      <li>查詢平台資料庫該合約 ID 的 hash</li>
+      <li>比對兩個 hash 是否一致 · 一致 = 確認為平台正本</li>
+    </ol>
+    <p class="sub">
+      <strong>說明</strong>：PDF 不會上傳到伺服器、只在瀏覽器內 hash。
+      平台只回傳 metadata（status / 簽署時間 / handle 匿名化 / hash 比對結果）。
+      不洩漏雙方 email、不洩漏 PDF URL。
+    </p>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  var SUPABASE_URL = "https://iacwmkcloxjffghrweie.supabase.co";
+  var SUPABASE_ANON_KEY = "sb_publishable_Ke3oOlMiYwQ4_XGhYofF3w_TdBtoQEY";
+  var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  var resultEl = document.getElementById("result");
+  var verifyBtn = document.getElementById("verify-btn");
+  var cidInput = document.getElementById("cid-input");
+  var pdfInput = document.getElementById("pdf-input");
+
+  function show(html) { resultEl.innerHTML = html; }
+  function escape(s) {
+    if (s == null) return "";
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function shortHash(h) {
+    if (!h) return "—";
+    if (h.length < 24) return h;
+    return h.slice(0, 16) + "..." + h.slice(-8);
+  }
+  function bufToHex(buf) {
+    var arr = new Uint8Array(buf);
+    var out = "";
+    for (var i = 0; i < arr.length; i++) {
+      var h = arr[i].toString(16);
+      out += h.length === 1 ? "0" + h : h;
+    }
+    return out;
+  }
+  function hashFile(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        crypto.subtle.digest("SHA-256", reader.result).then(function (buf) {
+          resolve(bufToHex(buf));
+        }).catch(reject);
+      };
+      reader.onerror = function () { reject(new Error("read file failed")); };
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  function uuidValid(s) {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+  }
+
+  verifyBtn.addEventListener("click", function () {
+    var cid = cidInput.value.trim();
+    var file = pdfInput.files && pdfInput.files[0];
+
+    if (!cid) {
+      show('<div class="err-box">請輸入合約 ID</div>');
+      return;
+    }
+    if (!uuidValid(cid)) {
+      show('<div class="err-box">合約 ID 格式不合法（應為 uuid 格式）</div>');
+      return;
+    }
+    if (!file) {
+      show('<div class="err-box">請選擇要比對的 PDF 檔</div>');
+      return;
+    }
+    if (file.type && file.type.indexOf("pdf") < 0) {
+      show('<div class="warn-box">⚠ 檔案類型不是 PDF。仍會比對 hash 但結果通常會不符。</div>');
+    }
+
+    verifyBtn.disabled = true;
+    show('<p class="sub">計算 PDF hash + 查詢平台中…</p>');
+
+    Promise.all([
+      hashFile(file),
+      sb.rpc("contract_verify_lookup", { p_contract_id: cid })
+    ]).then(function (arr) {
+      var localHash = arr[0];
+      var rpc = arr[1];
+      verifyBtn.disabled = false;
+      if (rpc.error) {
+        show('<div class="err-box">查詢失敗：' + escape(rpc.error.message || "unknown") + '</div>');
+        return;
+      }
+      var rows = rpc.data || [];
+      if (rows.length === 0) {
+        show(
+          '<div class="err-box">' +
+          '<strong>✗ 合約 ID 不存在</strong>' +
+          '<div class="sub" style="margin-top:8px;color:inherit">' +
+          '此 ID 在 BeyondPath 平台沒有對應紀錄。請確認 ID 是否正確、或聯絡發案方 / 接案者確認來源。' +
+          '</div></div>'
+        );
+        return;
+      }
+      var c = rows[0];
+      var platformHash = c.pdf_hash || "";
+      var match = localHash && platformHash && localHash.toLowerCase() === platformHash.toLowerCase();
+
+      var statusZh = c.status === "complete" ? "雙方已簽（complete）"
+                   : c.status === "partial" ? "一方已簽（partial）"
+                   : c.status === "cancelled" ? "已取消（cancelled）"
+                   : "雙方未簽（pending）";
+      var statusPill = c.status === "complete" ? '<span class="pill ok">complete</span>'
+                     : c.status === "partial" ? '<span class="pill warn">partial</span>'
+                     : c.status === "cancelled" ? '<span class="pill err">cancelled</span>'
+                     : '<span class="pill">pending</span>';
+
+      var hashMatchHtml = match
+        ? '<div class="ok-box"><strong>✓ Hash 一致 · 確認為 BeyondPath 平台正本</strong></div>'
+        : '<div class="err-box"><strong>✗ Hash 不符</strong> · 本機 PDF 與平台正本不一致。可能是：1) 上傳了錯的檔案 2) PDF 被修改過 3) 不是 BeyondPath 平台產出</div>';
+
+      var sigInfo = "";
+      if (c.signature_hash) {
+        sigInfo =
+          '<div class="meta-row">' +
+          '<span class="k">完整簽署 hash</span>' +
+          '<span class="v">' + escape(shortHash(c.signature_hash)) + '</span>' +
+          '</div>' +
+          '<div class="hash-box">' + escape(c.signature_hash) + '</div>';
+      }
+
+      show(
+        hashMatchHtml +
+        '<div class="card" style="margin-top:16px">' +
+        '<h2>合約 metadata · ' + statusPill + '</h2>' +
+        '<div class="meta-row">' +
+        '<span class="k">合約 ID</span><span class="v">' + escape(c.id) + '</span>' +
+        '<span class="k">狀態</span><span class="v">' + escape(statusZh) + '</span>' +
+        '<span class="k">建立時間</span><span class="v">' + (c.created_at ? new Date(c.created_at).toLocaleString() : "—") + '</span>' +
+        '<span class="k">發案方</span><span class="v">' + escape(c.client_handle || "—") + '</span>' +
+        '<span class="k">接案者</span><span class="v">' + escape(c.worker_handle || "—") + '</span>' +
+        '<span class="k">發案方簽署</span><span class="v">' + (c.client_signed_at ? new Date(c.client_signed_at).toLocaleString() : "未簽") + '</span>' +
+        '<span class="k">接案者簽署</span><span class="v">' + (c.worker_signed_at ? new Date(c.worker_signed_at).toLocaleString() : "未簽") + '</span>' +
+        '<span class="k">平台 PDF hash</span><span class="v">' + escape(shortHash(platformHash)) + '</span>' +
+        '<span class="k">本機 PDF hash</span><span class="v">' + escape(shortHash(localHash)) + '</span>' +
+        '</div>' +
+        sigInfo +
+        '<p class="sub" style="margin-top:16px">查驗結果為公開資料。不洩漏雙方 email / PDF URL。</p>' +
+        '</div>'
+      );
+    }).catch(function (e) {
+      verifyBtn.disabled = false;
+      show('<div class="err-box">查驗失敗：' + escape(e && e.message ? e.message : String(e)) + '</div>');
+    });
+  });
+})();
+</script>
+</body>
+</html>

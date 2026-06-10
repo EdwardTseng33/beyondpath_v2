@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BeyondPath . 感謝您的付款</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <style>
+    body {
+      font-family: "IBM Plex Sans", "Noto Sans TC", system-ui, sans-serif;
+      background: #fafafa;
+      color: #0a0a0b;
+      margin: 0;
+      padding: 60px 20px;
+      line-height: 1.7;
+    }
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px 36px;
+      border: 1px solid #e5e5e5;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+    }
+    h1 {
+      font-family: Georgia, "Noto Serif TC", serif;
+      font-style: italic;
+      font-size: 28px;
+      font-weight: 400;
+      margin: 0 0 12px;
+      color: #16a34a;
+    }
+    .order {
+      background: #fafafa;
+      border-left: 3px solid #c7e84a;
+      padding: 16px;
+      margin: 24px 0;
+      font-size: 14px;
+    }
+    .order code {
+      font-family: "JetBrains Mono", monospace;
+      background: #fff;
+      padding: 2px 6px;
+      border: 1px solid #e5e5e5;
+    }
+    .tag {
+      display: inline-block;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: #16a34a;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .next {
+      background: #f8f8f8;
+      padding: 16px;
+      margin: 20px 0;
+      font-size: 13px;
+      color: #555;
+    }
+    .next ol { margin: 8px 0 0 20px; padding: 0; }
+    .next li { margin-bottom: 6px; }
+    .footer {
+      font-size: 11px;
+      color: #999;
+      margin-top: 32px;
+      border-top: 1px solid #eee;
+      padding-top: 16px;
+      text-align: center;
+    }
+    a { color: #16a34a; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="tag">● BEYONDPATH . PAYMENT RECEIVED</div>
+    <h1>感謝您的付款</h1>
+    <p>您的付款已成功送出 . BeyondPath 將盡快確認入帳。</p>
+    <div class="order">
+      <div style="font-size:11px;color:#888;font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;margin-bottom:4px">ORDER NO.</div>
+      <code id="order-no">loading...</code>
+    </div>
+    <div class="next">
+      <strong>接下來：</strong>
+      <ol>
+        <li>系統正在處理您的付款 (通常 30 秒內完成)</li>
+        <li>確認入帳後您將收到一封收據 email</li>
+        <li>接案者也會收到開工通知 . 將依合約 milestone 推進</li>
+        <li>有問題請聯絡 <a href="mailto:hello@beyondpath.tw">hello@beyondpath.tw</a></li>
+      </ol>
+    </div>
+    <div class="footer">
+      BeyondPath . 您可以關閉此頁面
+    </div>
+  </div>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var orderNo = params.get("o") || params.get("MerchantTradeNo") || "(unknown)";
+      var el = document.getElementById("order-no");
+      if (el) el.textContent = orderNo;
+    })();
+  </script>
+</body>
+</html>

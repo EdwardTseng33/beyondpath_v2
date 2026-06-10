@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BeyondPath · App</title>
-<meta name="description" content="BeyondPath POC · 接案者與發案者的雙端入口、AI 初審與認證化供給。" />
+<meta name="description" content="BeyondPath · 接案者與發案者的雙端入口、AI 初審與認證化供給。" />
 <link rel="canonical" href="https://beyondpath.tw/app.html" />
 <link rel="alternate" hreflang="zh-Hant" href="https://beyondpath.tw/app.html?lang=zh" />
 <link rel="alternate" hreflang="en" href="https://beyondpath.tw/app.html?lang=en" />
@@ -14,7 +14,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://beyondpath.tw/app.html" />
 <meta property="og:title" content="BeyondPath · 接案 / 發案 App" />
-<meta property="og:description" content="BeyondPath POC · 接案者與發案者的雙端入口、AI 初審與認證化供給。" />
+<meta property="og:description" content="BeyondPath · 接案者與發案者的雙端入口、AI 初審與認證化供給。" />
 <meta property="og:image" content="https://beyondpath.tw/assets/og-beyondpath.png" />
 <meta property="og:site_name" content="BeyondPath" />
 <meta property="og:locale" content="zh_TW" />
@@ -26,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="components/styles.css?v=2026-05-25-p0p1">
+<link rel="stylesheet" href="components/styles.css?v=2026-06-01-dash">
 
 <style>
   html, body { margin: 0; padding: 0; height: 100%; background: #0a0a0b; font-family: "IBM Plex Sans", "Noto Sans TC", system-ui, sans-serif; color: #e8e8ea; }
@@ -265,17 +265,6 @@
 </head>
 <body>
 
-<div class="bp-disclaimer-top" id="bp-disc-top">
-  <span class="icon">🚧</span>
-  <span class="label" data-i18n="app.disc_top_label">PROTOTYPE DEMO · 非正式服務</span>
-  <span class="body"><span data-i18n="app.disc_top_body">所有資料皆為模擬 · 真實服務尚未開放 · 不收費 / 不處理真實個資 / 不簽法律效力文件 · 正式上線預計 2026 Q3 · </span><a href="waitlist.html" data-i18n="app.disc_top_waitlist">加入 waitlist →</a></span>
-  <button class="close" onclick="document.getElementById('bp-disc-top').style.display='none'; sessionStorage.setItem('bp-disc-closed','1');" aria-label="關閉提醒" data-i18n-attr="aria-label:app.disc_top_close_aria">×</button>
-</div>
-<script>
-  if (sessionStorage.getItem('bp-disc-closed') === '1') {
-    document.getElementById('bp-disc-top').style.display = 'none';
-  }
-</script>
 
 <script>
   // === BeyondPath Query Param Bootstrap (v1.5 · sprint round 5) ===
@@ -376,21 +365,18 @@
   })();
 </script>
 
-<footer class="bp-disclaimer-foot">
-  <span data-i18n="app.disc_foot">BeyondPath · Prototype v0.2 · 2026-05-09 · 所有合約 / 付款 / 認證內容僅為展示、無法律效力 · 正式上線前完整律師審視中 · </span><a href="waitlist.html" data-i18n="app.disc_top_waitlist">加入 waitlist →</a>
-</footer>
 
 <!-- i18n core (Step 3c - 2026-05-25) - load BEFORE React/Babel so BPi18n is available to component code -->
-<script src="components/i18n/index.js?v=2026-05-25-i18n-r2"></script>
-<script src="components/i18n/dict.zh.js?v=2026-05-25-i18n-r2"></script>
-<script src="components/i18n/dict.en.js?v=2026-05-25-i18n-r2"></script>
+<script src="components/i18n/index.js?v=2026-06-01-dash"></script>
+<script src="components/i18n/dict.zh.js?v=2026-06-01-dash"></script>
+<script src="components/i18n/dict.en.js?v=2026-06-01-dash"></script>
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
 <!-- LangSwitcher (loaded AFTER React/Babel) -->
-<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx?v=2026-05-25-i18n-r2"></script>
+<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx?v=2026-06-01-dash"></script>
 
 <!-- Resource shim: emulate the bundler-injected window.__resources for local file serving -->
 <script>
@@ -404,16 +390,16 @@
   };
 </script>
 
-<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="ios-frame.jsx?v=2026-06-01-dash"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="components/supabase.js?v=0.8.0-launch"></script>
-<script type="text/babel" src="components/data.standalone.jsx?v=2026-05-18-vertical-aware"></script>
-<script type="text/babel" src="components/app2.jsx?v=2026-05-25-i18n3c"></script>
-<script type="text/babel" src="components/steps-5-8.jsx?v=0.5.9"></script>
-<script type="text/babel" src="components/steps-9-12.jsx?v=0.5.9"></script>
-<script type="text/babel" src="components/worker.jsx?v=2026-05-25-ai-brief-sample-en"></script>
-<script type="text/babel" src="components/journey.jsx?v=0.8.0-launch"></script>
-<script type="text/babel" src="components/shell.standalone.jsx?v=2026-05-25-brand-wrap"></script>
+<script src="components/supabase.js?v=2026-06-01-dash"></script>
+<script type="text/babel" src="components/data.standalone.jsx?v=2026-06-01-dash"></script>
+<script type="text/babel" src="components/app2.jsx?v=2026-06-01-dash"></script>
+<script type="text/babel" src="components/steps-5-8.jsx?v=2026-06-01-dash"></script>
+<script type="text/babel" src="components/steps-9-12.jsx?v=2026-06-01-dash"></script>
+<script type="text/babel" src="components/worker.jsx?v=2026-06-01-dash"></script>
+<script type="text/babel" src="components/journey.jsx?v=2026-06-01-dash"></script>
+<script type="text/babel" src="components/shell.standalone.jsx?v=2026-06-01-dash"></script>
 
 <style>
   /* RWD mobile mode (≤ 768px) — full-bleed iPhone shell */
@@ -473,6 +459,24 @@
 
     /* eyebrow · 縮 font */
     .bp-eyebrow { font-size: 10px !important; gap: 8px !important; flex-wrap: wrap; }
+    /* === BP-Journey tracker 12-step grid . mobile fix (2026-05-28 calcifer mobile audit) ===
+       desktop = grid-template-columns: repeat(12, 1fr) . mobile 擠死
+       改 6 col + 兩行 + 縮 padding/font . dot label 隱掉只留 num */
+    .bp-jtrack { padding: 6px 8px 8px !important; }
+    .bp-jtrack-mode { font-size: 9px !important; padding: 0 2px 6px !important; }
+    .bp-jtrack-mode .dot { width: 5px !important; height: 5px !important; }
+    .bp-jtrack-hide { padding: 2px 6px !important; font-size: 9px !important; }
+    .bp-jtrack-inner { grid-template-columns: repeat(6, 1fr) !important; gap: 4px !important; }
+    .bp-jdot { padding: 5px 4px !important; min-height: 36px !important; gap: 3px !important; flex-direction: column !important; align-items: center !important; }
+    .bp-jdot .num { font-size: 10px !important; }
+    .bp-jdot .lbl { font-size: 8px !important; max-width: 100% !important; }
+
+    /* === Journey body 內 nav 縮 padding . avoid 雙 bottom nav 堆疊 === */
+    .bp-jnav { padding: 8px 10px !important; gap: 8px !important; font-size: 10px !important; flex-wrap: wrap !important; }
+    .bp-jnav-meta { gap: 4px !important; min-width: 0; flex-wrap: wrap; }
+    .bp-jnav-meta .en, .bp-jnav-meta .zh { font-size: 10px !important; }
+    .bp-jnav-meta .actor { display: none !important; }
+
   }
 </style>
 

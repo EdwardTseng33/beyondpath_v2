@@ -32,19 +32,32 @@ function BP_Journey({ defaultStep = 0, inShell = false }) {
     } catch {}
     return defaultStep;
   });
+  // 2026-06-01 calcifer . doc 43 UX . demo nav 是內部/設計走查工具、正式用戶不可見。
+  // 預設隱藏；只有內部帶 ?demo=1 (或曾手動開過 localStorage bp-demo-nav=1) 才顯示。
   const [showTracker, setShowTracker] = uSJ(() => {
-    try { return localStorage.getItem("bp-journey-tracker") !== "0"; } catch { return true; }
+    try {
+      const internal = /[?&]demo=1/.test(window.location.search) || localStorage.getItem("bp-demo-nav") === "1";
+      if (!internal) return false;
+      return localStorage.getItem("bp-journey-tracker") !== "0";
+    } catch { return false; }
   });
 
   uEJ(() => {
     try { localStorage.setItem(BP_STORAGE_KEY, String(step)); } catch {}
   }, [step]);
   uEJ(() => {
-    try { localStorage.setItem("bp-journey-tracker", showTracker ? "1" : "0"); } catch {}
+    try {
+      localStorage.setItem("bp-journey-tracker", showTracker ? "1" : "0");
+      if (showTracker) localStorage.setItem("bp-demo-nav", "1"); // 一旦內部開過、保留 opt-in
+    } catch {}
   }, [showTracker]);
 
   const meta = BP_JOURNEY_STEPS[step];
   const inIntake = step <= 3;
+  // 內部走查旗標 (與 showTracker 初始一致) . 控制 re-open 按鈕是否對真實用戶出現
+  const demoInternal = (() => {
+    try { return /[?&]demo=1/.test(window.location.search) || localStorage.getItem("bp-demo-nav") === "1"; } catch { return false; }
+  })();
 
   // Step 5-12 元件
   const StepBody = [
@@ -81,7 +94,7 @@ function BP_Journey({ defaultStep = 0, inShell = false }) {
           </div>
         </div>
       )}
-      {!showTracker && (
+      {!showTracker && demoInternal && (
         <button className="bp-jtrack-show" onClick={() => setShowTracker(true)} title="show demo tracker">
           ◐ show demo nav · 12-step tracker
         </button>
@@ -96,7 +109,7 @@ function BP_Journey({ defaultStep = 0, inShell = false }) {
             onStep={(v) => setStep(v)}
             onAdvanceBeyond={() => setStep(4)}
             presetParsed={step >= 2}
-            hideStepper={true}
+            hideStepper={showTracker}
             hideTopbar={inShell}
           />
         )}

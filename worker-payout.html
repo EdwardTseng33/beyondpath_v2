@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>實收明細 · BeyondPath</title>
+<meta name="description" content="BeyondPath 接案者實收明細頁。查詢本筆合約客戶總付 / 平台抽佣 / 實收金額 / 階段釋款 / 抽佣發票。" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#0a0a0b" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b; --surface: #131316; --surface-2: #1a1a1f;
+  --line: rgba(255,255,255,0.08); --line-soft: rgba(255,255,255,0.04);
+  --text: #f0eee8; --text-2: #c8c6c0; --muted: #9a9aa3;
+  --accent: oklch(0.88 0.22 128); --accent-soft: oklch(0.88 0.22 128 / 0.12);
+  --accent-line: oklch(0.88 0.22 128 / 0.4);
+  --warn: oklch(0.82 0.16 75); --err: oklch(0.7 0.18 25); --ok: #4ade80;
+  --gold: #c7841a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text);
+  font-family: "IBM Plex Sans", "Noto Sans TC", system-ui, sans-serif; }
+.shell { max-width: 760px; margin: 0 auto; padding: 24px 20px 80px; }
+.top { display: flex; align-items: center; gap: 12px; padding-bottom: 16px;
+  border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+.mark { width: 14px; height: 14px; border-radius: 4px; background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft); }
+.brand { font-weight: 700; letter-spacing: -0.02em; }
+.meta { margin-left: auto; font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 24px; margin-bottom: 16px; }
+h1 { font-size: 22px; margin: 0 0 8px; letter-spacing: -0.02em; }
+h2 { font-size: 15px; margin: 24px 0 12px; color: var(--text-2); }
+.sub { color: var(--muted); font-size: 13px; }
+.err-box { background: oklch(0.7 0.18 25 / 0.12); border: 1px solid var(--err);
+  color: var(--err); padding: 12px 16px; border-radius: 6px; margin: 12px 0; }
+.amount-row { display: grid; grid-template-columns: 1fr auto; gap: 12px;
+  padding: 12px 0; border-bottom: 1px dashed var(--line-soft); }
+.amount-row .k { color: var(--text-2); font-size: 14px; }
+.amount-row .v { font-family: "JetBrains Mono", monospace; font-size: 16px; color: var(--text); }
+.amount-row.bigp .v { font-size: 22px; color: var(--accent); font-weight: 700; }
+.amount-row.warnp .v { color: var(--gold); }
+.pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px;
+  font-family: "JetBrains Mono", monospace; letter-spacing: 0.08em;
+  border: 1px solid var(--accent-line); color: var(--accent); }
+.pill.warn { border-color: var(--warn); color: var(--warn); }
+.pill.ok { border-color: var(--ok); color: var(--ok); }
+.ms-row { display: grid; grid-template-columns: auto 1fr auto auto; gap: 12px;
+  padding: 12px; background: var(--surface-2); border-radius: 6px;
+  margin: 8px 0; align-items: center; }
+.ms-num { font-family: "JetBrains Mono", monospace; color: var(--muted); font-size: 13px; }
+.ms-title { font-size: 14px; }
+.ms-pct { font-family: "JetBrains Mono", monospace; color: var(--accent); font-size: 13px; }
+.note { background: oklch(0.82 0.16 75 / 0.1); border-left: 3px solid var(--warn);
+  padding: 12px 16px; color: var(--text-2); font-size: 13px; line-height: 1.7;
+  margin: 16px 0; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="mark"></div>
+    <div class="brand">BeyondPath · 實收明細</div>
+    <div class="meta" id="meta-id">—</div>
+  </div>
+  <div id="root">
+    <div class="card">
+      <h1>載入中…</h1>
+      <p class="sub">驗證 token + 拉取合約資料</p>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  var SUPABASE_URL = "https://iacwmkcloxjffghrweie.supabase.co";
+  var SUPABASE_ANON_KEY = "sb_publishable_Ke3oOlMiYwQ4_XGhYofF3w_TdBtoQEY";
+
+  function qs(name) {
+    var m = new RegExp("[?&]" + name + "=([^&]*)").exec(window.location.search);
+    return m ? decodeURIComponent(m[1]) : "";
+  }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[c];
+    });
+  }
+  function fmtNTD(n) {
+    if (n == null || isNaN(n)) return "—";
+    return "NT$ " + Number(n).toLocaleString();
+  }
+  function pct(a, b) {
+    if (!b) return 0;
+    return Math.round(a / b * 100);
+  }
+
+  var statusLabel = {
+    pending: "待開始", in_progress: "進行中", delivered: "已交付",
+    approved: "已驗收", disputed: "退件", arbitration: "仲裁中"
+  };
+  var statusClass = {
+    pending: "", in_progress: "warn", delivered: "warn",
+    approved: "ok", disputed: "warn", arbitration: "warn"
+  };
+
+  function render(state) {
+    var root = document.getElementById("root");
+    if (state.error) {
+      root.innerHTML = '<div class="card"><h1>無法載入</h1><div class="err-box">' + esc(state.error) + '</div></div>';
+      return;
+    }
+    var c = state.contract;
+    var snap = c.contract_snapshot || {};
+    document.getElementById("meta-id").textContent = String(c.id || "").slice(0, 8);
+
+    var paid = Number(c.client_paid_total_ntd || 0);
+    var total = Number(c.project_budget_ntd || 0);
+    var paidPct = pct(paid, total);
+    var commission = Number(c.commission_amount_ntd || 0);
+    var workerNet = Number(c.worker_net_amount_ntd || 0);
+    var commCollected = Number(c.commission_collected_total_ntd || 0);
+    var commPct = pct(commCollected, commission);
+
+    var ms = state.milestones || [];
+    var msHtml = ms.length === 0
+      ? '<div class="sub">尚無里程碑</div>'
+      : ms.map(function (m) {
+          var lbl = statusLabel[m.status] || m.status;
+          var cls = statusClass[m.status] || "";
+          return '<div class="ms-row">' +
+            '<div class="ms-num">#' + m.milestone_number + '</div>' +
+            '<div class="ms-title">' + esc(m.title) + '</div>' +
+            '<div class="ms-pct">' + m.amount_pct + '%</div>' +
+            '<div><span class="pill ' + cls + '">' + lbl + '</span></div>' +
+            '</div>';
+        }).join("");
+
+    var invoiceHtml = "";
+    if (state.invoices && state.invoices.length > 0) {
+      invoiceHtml = '<h2>抽佣發票紀錄</h2>' +
+        state.invoices.map(function (rec) {
+          return '<div class="amount-row"><div class="k">' + esc(rec.reference_number || rec.event_type) +
+            ' . ' + new Date(rec.paid_at || rec.created_at).toLocaleDateString() +
+            '</div><div class="v">' + fmtNTD(rec.amount_ntd) + '</div></div>';
+        }).join("");
+    }
+
+    root.innerHTML =
+      '<div class="card">' +
+        '<h1>合約 ' + String(c.id).slice(0, 8) + ' 實收明細</h1>' +
+        '<p class="sub">客戶: ' + esc(snap.client_name || "—") +
+        ' · Tier ' + esc(snap.tier || "—") +
+        ' · ' + esc(c.contract_type || "one_off") + '</p>' +
+        '<h2>金流總覽</h2>' +
+        '<div class="amount-row"><div class="k">客戶總付 (合約總額)</div>' +
+          '<div class="v">' + fmtNTD(total) + '</div></div>' +
+        '<div class="amount-row"><div class="k">客戶已付累計 (' + paidPct + '%)</div>' +
+          '<div class="v">' + fmtNTD(paid) + '</div></div>' +
+        '<div class="amount-row warnp"><div class="k">平台抽佣 (' + (c.commission_rate || 0) + '%)</div>' +
+          '<div class="v">' + fmtNTD(commission) + '</div></div>' +
+        '<div class="amount-row bigp"><div class="k">你實收淨額</div>' +
+          '<div class="v">' + fmtNTD(workerNet) + '</div></div>' +
+        '<h2>里程碑釋款</h2>' +
+        msHtml +
+        invoiceHtml +
+        '<div class="note">' +
+          '<strong>金流流程</strong>：客戶刷卡 → 7-14 天綠界放款 → 平台戶轉接案者淨額 → 平台寄抽佣發票 → 你 ATM 匯抽佣回平台戶。' +
+          '抽佣已收回累計 ' + fmtNTD(commCollected) + ' (' + commPct + '%)' +
+        '</div>' +
+      '</div>';
+  }
+
+  async function main() {
+    var contractId = qs("contract_id");
+    var token = qs("token");
+    if (!contractId) {
+      render({ error: "缺少 contract_id 參數" });
+      return;
+    }
+    // Use anon SUPABASE client . contracts table has admin-only RLS,
+    // so worker access via worker-payout.html requires either:
+    //   (a) JWT contract_sign token (already used for contract.html), or
+    //   (b) admin login session
+    // v1: passthrough query with anon key . if RLS rejects we show error.
+    // Future: dedicated edge function `get-worker-payout` with JWT verify.
+    try {
+      var client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      // Try contract fetch (anon may fail if RLS strict)
+      var cRes = await fetch(SUPABASE_URL + "/rest/v1/contracts?id=eq." + contractId + "&select=*", {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: "Bearer " + SUPABASE_ANON_KEY,
+        },
+      });
+      var rows = await cRes.json();
+      if (!Array.isArray(rows) || rows.length === 0) {
+        render({ error: "找不到合約 . 或你無權限查看 (RLS 阻擋) . 請洽 BeyondPath 客服" });
+        return;
+      }
+      var contract = rows[0];
+
+      // milestones
+      var msRes = await fetch(SUPABASE_URL + "/rest/v1/contract_milestones?contract_id=eq." + contractId +
+        "&select=id,milestone_number,title,amount_pct,status,delivered_at,approved_at&order=milestone_number.asc", {
+        headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + SUPABASE_ANON_KEY },
+      });
+      var milestones = await msRes.json();
+      if (!Array.isArray(milestones)) milestones = [];
+
+      // commission_records (invoice_issued only)
+      var invRes = await fetch(SUPABASE_URL + "/rest/v1/commission_records?contract_id=eq." + contractId +
+        "&event_type=eq.invoice_issued&select=*&order=created_at.desc", {
+        headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + SUPABASE_ANON_KEY },
+      });
+      var invoices = await invRes.json();
+      if (!Array.isArray(invoices)) invoices = [];
+
+      render({ contract: contract, milestones: milestones, invoices: invoices });
+    } catch (e) {
+      render({ error: "載入失敗 . " + (e && e.message ? e.message : String(e)) });
+    }
+  }
+  main();
+})();
+</script>
+</body>
+</html>

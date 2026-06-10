@@ -2,10 +2,14 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "beyondpath-static",
+      "name": "bp-dash-qa",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "5859"],
-      "port": 5859
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "5858"
+      ],
+      "port": 5858
     }
   ]
 }

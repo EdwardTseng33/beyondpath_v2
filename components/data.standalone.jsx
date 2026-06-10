@@ -625,8 +625,143 @@ pre-PMF B2B SaaS、現有 30 個 paying customer、想找全套行銷操盤手�
   },
 };
 
+// ════════════════════════════════════════════════════════════
+// 2026-05-29 calcifer · 交付物「翻人話」(doc 29 霍爾設計 · Edward 5/29 拍板 B)
+//   破洞①: deliverablesFor() 原本直接丟 parse.tasks[].zh = 工程術語
+//   解法: DELIVERABLE_HUMAN 對照表 · key = 工程詞 zh · value = { human, tech }
+//     human = 客戶看得懂的成果語言 (大字 · 講你會得到什麼結果)
+//     tech  = 原工程詞 (小灰註腳 · 給內行客戶/接案者看 · 不刪只降級)
+//   全 15 vertical task zh 覆蓋 · doc 29 起草 5 個 · 其餘照同風格補
+// ════════════════════════════════════════════════════════════
+var DELIVERABLE_HUMAN = {
+  // -- DTC --
+  "主視覺 KV":       { human: "上架就能用的品牌主視覺",           tech: "Visual KV × 2" },
+  "短影音腳本":       { human: "照著拍就行的短影音腳本",           tech: "Reels Script × 6" },
+  "產品長文案":       { human: "官網 / EDM / LP 都能直接用的產品文案", tech: "Product Copy × 3" },
+  "排程上架":         { human: "幫你排好各平台的發布時間，不用一個個傳", tech: "Channel Scheduling" },
+  "成效分析報告":     { human: "一份看得懂的成效報告，知道錢花得值不值", tech: "ROAS Read-out" },
+  // -- 軟體開發 --
+  "HubSpot API 整合":  { human: "你的客戶與成交資料自動同步進系統（不用再手動貼 Excel）", tech: "HubSpot API 整合" },
+  "React Dashboard 前端": { human: "一個你自己就能打開看的銷售儀表板", tech: "React + TypeScript Dashboard" },
+  "KPI 視覺化":        { human: "業績漏斗、成交率、回本天數，一眼看懂的圖表", tech: "KPI Visualization" },
+  "Slack 整合":        { human: "大金額訂單一有動靜，自動發訊息通知你的團隊", tech: "Slack Webhook" },
+  // -- 設計品牌 --
+  "Brand DNA 工作坊":  { human: "把想成為什麼樣的品牌講清楚的一場深談 + 一份定位文件", tech: "Brand DNA Workshop" },
+  "Logo + 識別系統":   { human: "你的 Logo、配色、字體，加一份怎麼用才不會走樣的手冊", tech: "Identity System" },
+  "包裝設計 × 4":      { human: "4 款產品的完整包裝設計稿（可直接送印）", tech: "Packaging × 4" },
+  "品牌 GPTs 訓練":    { human: "一個會用你品牌口吻寫東西的專屬 AI 助手",   tech: "Brand GPTs" },
+  // -- 短影音 --
+  "週腳本 × 5":        { human: "每週 5 支影片的腳本，照著拍就行",         tech: "Weekly Script × 5" },
+  "剪輯 × 5":          { human: "每週 5 支剪好可直接上架的成片",           tech: "Video Edit × 5" },
+  "AI 配音 + 雙語字幕": { human: "中英雙語配音與字幕，做完直接給海外觀眾看", tech: "AI VO + 雙語字幕" },
+  "三平台排程":        { human: "幫你排好 IG / TikTok / YouTube 的發布時間", tech: "3-Platform Sched" },
+  // -- AI Agent --
+  "RAG 建置 + FAQ 灌入": { human: "一個讀過你所有 FAQ、答得出客戶問題的 AI 客服", tech: "RAG Build + FAQ" },
+  "Multi-agent 路由":  { human: "接單、退換貨、推薦商品分開處理，問什麼接對人", tech: "Multi-agent Routing" },
+  "LINE OA + Web Chat 接入": { human: "你的 LINE 官方帳號跟官網都能用這個 AI 客服", tech: "LINE OA + Web Chat" },
+  "人工接手介面":      { human: "AI 答不了的時候，你的真人客服可以一鍵接手", tech: "Human-in-loop" },
+  // -- 行銷增長 --
+  "ICP 訪談 + GTM playbook": { human: "訪談你的真實客戶 + 一份怎麼把產品賣出去的操作手冊", tech: "ICP + GTM Playbook" },
+  "三平台廣告操盤":    { human: "三大平台的廣告操盤，每月幫你帶進新名單",   tech: "Ad Ops × 3" },
+  "Content 月產 12 篇": { human: "每月 12 篇行銷內容（案例 + 觀點文）幫你帶流量", tech: "Content × 12" },
+  "數據儀表板":        { human: "每月一份看得懂的成效報告，知道錢花在哪、帶來什麼", tech: "Marketing Dashboard" },
+  // -- 網頁設計 --
+  "Figma 設計":        { human: "你品牌官網 + LP 的完整設計稿（可直接交給工程切版）", tech: "Figma Design" },
+  "切版":             { human: "一個做好、可直接上線、手機電腦都好看的網站", tech: "Webflow / Front-end Build" },
+  // -- 客製化系統 --
+  "Odoo 模組開發":     { human: "照你流程客製的 ERP 模組，做完直接在你公司系統用", tech: "Odoo Module" },
+  "CRM 雙向同步":      { human: "你的 CRM 跟 ERP 資料自動雙向更新，不用兩邊重打", tech: "CRM Sync" },
+  // -- 數據 BI --
+  "ETL 建置":          { human: "把你散在各處的資料自動匯整到一個地方",     tech: "ETL Setup" },
+  "Dashboard 視覺化":  { human: "一個你自己就能登入看完整生意數據的儀表板", tech: "BI Dashboard" },
+  // -- B2B GTM --
+  "ICP 訪談":          { human: "訪談你的真實客戶，整理成他們為什麼買的報告", tech: "ICP Interview" },
+  "Sales playbook":    { human: "一份業務照著做就能談成的銷售操作手冊", tech: "Sales Playbook" },
+  // -- 品牌調研 --
+  "訪談 × 30":         { human: "訪談 30 位真實消費者，整理成決策洞察報告", tech: "Interview × 30" },
+  "競品分析":          { human: "一份對手在做什麼、你的機會在哪的競品報告", tech: "Competitor Analysis" },
+  // -- SEO --
+  "Topical 規劃":      { human: "一份該寫哪些主題才會被搜尋到的內容地圖", tech: "Topical Plan" },
+  "月文 × 20":         { human: "每月 20 篇能被 Google 搜到的內容文章",     tech: "Content × 20" },
+  // -- 客服自動化 --
+  "KB + RAG 建置":     { human: "一個讀過你知識庫、答得出客戶問題的 AI 客服", tech: "KB + RAG Build" },
+  // -- 翻譯在地化 --
+  "UI × 4 語":         { human: "你產品介面的繁中 / 簡中 / 日 / 韓 4 語版本", tech: "UI Translation × 4" },
+  "Native 潤稿":       { human: "母語人士潤過的譯文，讀起來像當地人寫的",   tech: "Native QA" },
+  // -- 其他 --
+  "人工分類 + 評估":   { human: "BeyondPath 團隊幫你判斷需求 + 給配對方案", tech: "Manual Review" },
+  "Worker 配對":       { human: "配對到最適合你這個案子的認證接案者",       tech: "Worker Sourcing" },
+};
+
+// 工程詞 zh -> 成果語言 (找不到就回原工程詞 · 確保不漏)
+function humanizeDeliverable(zh) {
+  var m = DELIVERABLE_HUMAN[zh];
+  return (m && m.human) ? m.human : zh;
+}
+
+// 2026-05-29 calcifer Q2 (升級) · deliverables = 成果語言陣列 (人話)
+//   回 string 陣列維持向後相容 (Step3 badges chip 用 string key / includes)
+function deliverablesFor(demo) {
+  var tasks = (demo && demo.parse && demo.parse.tasks) || [];
+  var out = [];
+  for (var i = 0; i < tasks.length; i++) {
+    if (tasks[i] && tasks[i].zh) out.push(humanizeDeliverable(tasks[i].zh));
+  }
+  return out;
+}
+
+// 交付物 4 件套 meta · UI 顯示 成果語言(大) + 技術註腳(小灰) 用
+//   回 [{ human, tech }] · 跟 deliverablesFor() 同序
+function deliverableMetaFor(demo) {
+  var tasks = (demo && demo.parse && demo.parse.tasks) || [];
+  var out = [];
+  for (var i = 0; i < tasks.length; i++) {
+    var t = tasks[i];
+    if (!t || !t.zh) continue;
+    var m = DELIVERABLE_HUMAN[t.zh];
+    out.push({ human: (m && m.human) ? m.human : t.zh, tech: (m && m.tech) ? m.tech : (t.en || t.zh) });
+  }
+  return out;
+}
+
+// ════════════════════════════════════════════════════════════
+// 2026-05-29 calcifer · 交付邊界 A/B (doc 30 蕪菁頭調研 · Edward 5/29 拍板 B)
+//   PMF 先支援 A (交付成果) + B (交付 + 協助上線) · C/D 暫不做
+//   軟體/開發類 = 完整文案 · 非軟體類 (設計/內容/SEO) = 簡化版對應
+// ════════════════════════════════════════════════════════════
+var DELIVERY_SCOPE_OPTIONS = {
+  // 軟體 / 系統 / Agent / 數據 / 網頁 · 需界定交付到哪
+  build: [
+    { id: "A", en: "Deliverable only", zh: "交付成果", desc: "交付檔案 / 程式 / 帳號，後續我自己處理" },
+    { id: "B", en: "Deliver + go-live", zh: "交付 + 協助上線", desc: "交付後協助上線、確認真的能用" },
+  ],
+  // 設計 / 內容 / 短影音 · 交檔 vs 持續調整
+  content: [
+    { id: "A", en: "Files only", zh: "交付檔案", desc: "交付完整檔案，後續我自己用" },
+    { id: "B", en: "Files + revisions", zh: "交付 + 協助調整", desc: "交付後協助微調、確認可直接使用" },
+  ],
+};
+
+// vertical id -> 該用哪組交付邊界文案 (預設 build)
+var VERTICAL_SCOPE_KIND = {
+  dtc: "content", design: "content", video: "content", seo: "content", research: "content", localize: "content",
+  software: "build", system: "build", agent: "build", data: "build", web: "build", cs: "build",
+  mkt: "build", b2b: "build", other: "build",
+};
+
+// 回該 vertical 的交付邊界選項 (A/B) · 給 Step3 Confirm 顯示
+function deliveryScopeOptionsFor(verticalId) {
+  var kind = VERTICAL_SCOPE_KIND[verticalId] || "build";
+  return DELIVERY_SCOPE_OPTIONS[kind] || DELIVERY_SCOPE_OPTIONS.build;
+}
+
 function getDemoForVertical(verticalId) {
-  return VERTICAL_DEMO_MAP[verticalId] || VERTICAL_DEMO_MAP.dtc;
+  var demo = VERTICAL_DEMO_MAP[verticalId] || VERTICAL_DEMO_MAP.dtc;
+  // attach deliverables (人話) + meta (人話+技術註腳) derived from parse tasks
+  return Object.assign({}, demo, {
+    deliverables: deliverablesFor(demo),
+    deliverableMeta: deliverableMetaFor(demo),
+  });
 }
 
 window.BP_DATA = {
@@ -638,4 +773,11 @@ window.BP_DATA = {
   AI_PARSE_RESULT,
   WORKERS,
   SUGGESTED_PAIR,
+  // 2026-05-29 calcifer · 交付物人話 + 交付邊界 A/B
+  DELIVERABLE_HUMAN,
+  humanizeDeliverable,
+  deliverableMetaFor,
+  deliveryScopeOptionsFor,
+  DELIVERY_SCOPE_OPTIONS,
+  VERTICAL_SCOPE_KIND,
 };

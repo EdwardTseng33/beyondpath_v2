@@ -123,7 +123,7 @@
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="components/supabase.js?v=0.1.0"></script>
+<script src="components/supabase.js?v=2026-06-01-final"></script>
 
 <script type="text/babel" data-presets="env,react">
 const { useState, useEffect } = React;
@@ -185,6 +185,20 @@ function getRoleFromQuery() {
   return null;
 }
 
+// 2026-05-29 calcifer · doc 28 A.3 · 登入後回原處 (發案前登入閘跳轉用)
+// e.g. sign-in.html?role=client&return=app.html%3Frole%3Dclient · 登入完導回該頁續送
+function getReturnFromQuery() {
+  try {
+    const qs = new URLSearchParams(window.location.search);
+    const ret = qs.get("return");
+    // 只接受站內相對路徑 · 防 open-redirect (沙利曼 Gate 5)
+    if (ret && /^[a-zA-Z0-9._~\-]+\.html/.test(ret) && ret.indexOf("//") === -1 && ret.indexOf(":") === -1) {
+      return ret;
+    }
+  } catch (e) {}
+  return null;
+}
+
 function persistRole(role) {
   try {
     localStorage.setItem("bp-active-role", role);
@@ -194,9 +208,13 @@ function persistRole(role) {
 
 function App() {
   const queryRole = getRoleFromQuery();
-  const [stage, setStage] = useState("idle"); // idle / loading / error
+  const returnTo = getReturnFromQuery();
+  const [stage, setStage] = useState("idle"); // idle / loading / sent / error
   const [chosenRole, setChosenRole] = useState(queryRole || "client");
   const [errMsg, setErrMsg] = useState("");
+  // 2026-05-29 calcifer · doc 28 A · email magic link
+  const [email, setEmail] = useState("");
+  const [sentTo, setSentTo] = useState("");
 
   // Already signed in? Redirect to their dashboard
   useEffect(() => {
@@ -205,7 +223,12 @@ function App() {
       if (session?.user) {
         let role = chosenRole;
         try { role = localStorage.getItem("bp-active-role") || chosenRole; } catch (e) {}
-        window.location.href = "app.html?role=" + role + "&signedin=1";
+        // 有 return 目標 (發案前登入閘) → 導回原處續送、否則回 dashboard
+        if (returnTo) {
+          window.location.href = returnTo + (returnTo.indexOf("?") === -1 ? "?" : "&") + "signedin=1";
+        } else {
+          window.location.href = "app.html?role=" + role + "&signedin=1";
+        }
       }
     });
   }, []);
@@ -218,7 +241,10 @@ function App() {
     }
     persistRole(chosenRole);
     setStage("loading");
-    const redirectTo = window.location.origin + window.location.pathname.replace(/sign-in\.html$/, "app.html") + "?role=" + chosenRole + "&signedin=1";
+    const base = window.location.origin + window.location.pathname.replace(/sign-in\.html$/, "");
+    const redirectTo = returnTo
+      ? base + returnTo + (returnTo.indexOf("?") === -1 ? "?" : "&") + "signedin=1"
+      : base + "app.html?role=" + chosenRole + "&signedin=1";
     const { error } = await window.bpAuth.signInWithGoogle(redirectTo);
     if (error) {
       setStage("error");
@@ -227,18 +253,46 @@ function App() {
     // On success Supabase navigates the page to Google OAuth, then back to redirectTo
   };
 
+  // 2026-05-29 calcifer · doc 28 A · email magic link 送出
+  const onEmailSubmit = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setErrMsg("");
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      setErrMsg("請填一個有效 email");
+      return;
+    }
+    if (!window.bpAuth) {
+      setErrMsg("Auth SDK 還沒載入、過幾秒再試");
+      return;
+    }
+    persistRole(chosenRole);
+    setStage("loading");
+    const base = window.location.origin + window.location.pathname.replace(/sign-in\.html$/, "");
+    const redirectTo = returnTo
+      ? base + returnTo + (returnTo.indexOf("?") === -1 ? "?" : "&") + "signedin=1"
+      : base + "app.html?role=" + chosenRole + "&signedin=1";
+    const { error } = await window.bpAuth.signInWithEmail(email, redirectTo);
+    if (error) {
+      setStage("error");
+      setErrMsg("寄送登入連結失敗：" + error.message);
+    } else {
+      setSentTo(email);
+      setStage("sent");
+    }
+  };
+
   return (
     <div className="si-root">
       <div className="si-top">
         <span className="mark"></span>
         <span className="name">Beyond<span className="accent">Path</span></span>
-        <small>SIGN IN · v0.4β</small>
+        <small>SIGN IN</small>
       </div>
 
       <div className="si-main">
         <AmbientMesh />
         <div className="si-card">
-          {stage !== "loading" && (
+          {(stage === "idle" || stage === "error") && (
             <>
               <div className="si-eyebrow">◆ WELCOME BACK</div>
               <h1 className="si-h">登入 BeyondPath。</h1>
@@ -247,7 +301,7 @@ function App() {
               <div className="si-disclaimer">
                 <span className="icon">●</span>
                 <div className="text">
-                  <b>EARLY BETA ·</b> 用你的 Google 帳號登入 · BeyondPath 只會看到你的 email 與大頭照 · 不存其他資料 · 後續流程都可隨時退出。
+                  用你的 Google 帳號登入 · BeyondPath 只會看到你的 email 與大頭照 · 不存其他資料 · 後續流程都可隨時退出。
                 </div>
               </div>
               {errMsg && (
@@ -288,6 +342,20 @@ function App() {
                 </button>
               </div>
 
+              {/* 2026-05-29 calcifer · doc 28 A · email magic link (用既有 si-divider / si-email-form / si-input / si-cta-primary) */}
+              <div className="si-divider">OR</div>
+              <form className="si-email-form" onSubmit={onEmailSubmit}>
+                <input
+                  className="si-input"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value); setErrMsg(""); }}
+                  autoComplete="email"
+                />
+                <button className="si-cta-primary" type="submit">寄登入連結給我 →</button>
+              </form>
+
               <div className="si-foot">
                 還沒帳號？<a href="app.html?role=client&step=0">用發案表單試一次（不需註冊）→</a><br/>
                 想接案？<a href="app.html?role=worker&onboarding=1">看 Tier B 認證流程 →</a>
@@ -300,6 +368,24 @@ function App() {
               <div className="si-spinner"></div>
               <div className="si-loading-text">VERIFYING · {chosenRole.toUpperCase()}</div>
               <div className="si-loading-sub">登入中、即將進入你的{chosenRole === "client" ? "客戶" : "工作"}儀表板…</div>
+            </div>
+          )}
+
+          {stage === "sent" && (
+            <div className="si-loading">
+              <div className="si-loading-text" style={{ fontSize: 22, color: "var(--accent)" }}>✦ 信寄出去了</div>
+              <div className="si-loading-sub" style={{ textAlign: "center" }}>
+                我們寄了一封登入連結到<br/>
+                <b style={{ color: "var(--text)" }}>{sentTo}</b><br/>
+                去收信點一下就會自動登入回來。沒收到？檢查垃圾信匣。
+              </div>
+              <button
+                className="si-btn"
+                style={{ maxWidth: 220 }}
+                onClick={() => { setStage("idle"); setSentTo(""); }}
+              >
+                ← 用別的方式登入
+              </button>
             </div>
           )}
         </div>

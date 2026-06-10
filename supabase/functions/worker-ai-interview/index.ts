@@ -8,6 +8,8 @@
 // Cost (Sonnet 4.6): ~14 turns × 1k input + 800 output ≈ NT$2-3 / completed interview
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { checkRateLimit, getClientIp, rateLimitResponse } from "../_shared/rate-limit.ts";  // 2026-05-29 calcifer doc28 C . 燒 Anthropic token . 限流防洗
+import { isAdminRequest } from "../_shared/admin.ts";  // admin JWT bypass 限流
 import { aiProofToUnifiedWorker, type AiProof, type WorkerApplicationRow } from "../_shared/worker-schema.ts";
 import { computeAuditFlags } from "../_shared/audit-flags.ts";
 
@@ -146,6 +148,13 @@ serve(async (req: Request) => {
   }
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405, headers: CORS_HEADERS });
+  }
+
+  // 2026-05-29 calcifer . doc 28 Part C Group B . IP 限流 (高優先 . 燒 Anthropic token)
+  // 訪談多輪對話 . 每輪 1 call . 限流放寬到 20/min (容多輪正常對話) . admin bypass
+  if (!(await isAdminRequest(req))) {
+    const rl = await checkRateLimit("worker-ai-interview", getClientIp(req), { limit: 20, windowSec: 60 });
+    if (!rl.allowed) return rateLimitResponse(rl, CORS_HEADERS);
   }
 
   if (!ANTHROPIC_API_KEY) {

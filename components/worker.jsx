@@ -1560,6 +1560,8 @@ function WorkerEmptyState() {
 
 function SubmitToSupabaseBtn({ parsed, onDone }) {
   const [email, setEmail] = uSW("");
+  const [country, setCountry] = uSW(""); // 2026-05-28 calcifer . B-2 . TW / SG / MY / HK / OTHER
+  const [termsAck, setTermsAck] = uSW(false); // 2026-05-28 calcifer . A-2 . terms + privacy
   const [status, setStatus] = uSW("idle"); // idle | loading | error | success
   const [errMsg, setErrMsg] = uSW("");
 
@@ -1567,6 +1569,14 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
     setErrMsg("");
     if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       setErrMsg(_t("worker.apply_submit_email_err", "先填一個有效 email · BeyondPath 24h 內回覆要寄到這裡"));
+      return;
+    }
+    if (!country) {
+      setErrMsg(_t("worker.apply_submit_country_err", "請選擇你的居住地 · Y1 簽約僅限台灣、其他地區可投件進國際池"));
+      return;
+    }
+    if (!termsAck) {
+      setErrMsg(_t("worker.apply_submit_terms_err", "請先勾選同意《服務條款》與《隱私政策》才能送出"));
       return;
     }
     if (!window.bpWorkerApply) {
@@ -1580,6 +1590,7 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
         displayName: parsed?.name,
         aiProof: parsed,
         unifiedCard: unifiedCard,
+        country: country, // 2026-05-28 calcifer . B-2 . TW / SG / MY / HK / OTHER
       });
       if (error) throw error;
       setStatus("success");
@@ -1598,6 +1609,8 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
     }
   }
 
+  const submitDisabled = status === "loading" || status === "success";
+
   return (
     <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", gap: 12, alignItems: "stretch" }}>
       <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{_t("worker.apply_submit_section_label", "SUBMIT · 留下 email 收 BeyondPath 系統評估結果")}</div>
@@ -1606,19 +1619,91 @@ function SubmitToSupabaseBtn({ parsed, onDone }) {
         value={email}
         onChange={(e) => { setEmail(e.target.value); setErrMsg(""); }}
         placeholder={_t("worker.apply_submit_email_placeholder", "your@email.com")}
-        disabled={status === "loading" || status === "success"}
+        disabled={submitDisabled}
         style={{ width: "100%", padding: "12px 14px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--line-soft)", color: "var(--text)", fontFamily: "var(--zh)", fontSize: 15 }}
       />
+
+      {/* 2026-05-28 calcifer . B-2 . country select */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <label style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+          {_t("worker.apply_submit_country_label", "COUNTRY · 居住地（必填）")}
+        </label>
+        <select
+          value={country}
+          onChange={(e) => { setCountry(e.target.value); setErrMsg(""); }}
+          disabled={submitDisabled}
+          style={{ width: "100%", padding: "12px 14px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--line-soft)", color: "var(--text)", fontFamily: "var(--zh)", fontSize: 15 }}
+        >
+          <option value="">{_t("worker.apply_submit_country_placeholder", "選擇你的居住地…")}</option>
+          <option value="TW">{_t("worker.apply_submit_country_tw", "台灣 Taiwan")}</option>
+          <option value="SG">{_t("worker.apply_submit_country_sg", "新加坡 Singapore")}</option>
+          <option value="MY">{_t("worker.apply_submit_country_my", "馬來西亞 Malaysia")}</option>
+          <option value="HK">{_t("worker.apply_submit_country_hk", "香港 Hong Kong")}</option>
+          <option value="OTHER">{_t("worker.apply_submit_country_other", "其他 Other (進國際池)")}</option>
+        </select>
+        {country && country !== "TW" && (
+          <div style={{ fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)", lineHeight: 1.6 }}>
+            {_t("worker.apply_submit_country_intl_note", ". Y1 階段 BeyondPath 簽約僅限台灣 · 國際接案者可投件 · 國際版上線後開放配對")}
+          </div>
+        )}
+      </div>
+
+      {/* 2026-05-28 calcifer . A-2 . terms + privacy ack */}
+      <div style={{
+        padding: "10px 14px",
+        border: "1px dashed rgba(199,232,74,0.25)",
+        background: "rgba(199,232,74,0.02)",
+        fontSize: 12,
+        color: "var(--text-2)",
+        lineHeight: 1.6,
+      }}>
+        <label style={{ display: "flex", gap: 10, cursor: "pointer", alignItems: "flex-start" }}>
+          <input
+            type="checkbox"
+            checked={!!termsAck}
+            onChange={(e) => { setTermsAck(e.target.checked); setErrMsg(""); }}
+            disabled={submitDisabled}
+            style={{ marginTop: 3, flexShrink: 0 }}
+          />
+          <span>
+            {_t("worker.apply_submit_terms_prefix", "我已閱讀並同意 BeyondPath ")}
+            <a
+              href="/legal/terms.html"
+              target="_blank"
+              rel="noopener"
+              onClick={(e) => e.stopPropagation()}
+              style={{ color: "var(--accent)", borderBottom: "1px solid var(--accent-line)", textDecoration: "none" }}
+            >{_t("worker.apply_submit_terms_link", "《服務條款》")}</a>
+            {_t("worker.apply_submit_terms_and", " 與 ")}
+            <a
+              href="/legal/privacy.html"
+              target="_blank"
+              rel="noopener"
+              onClick={(e) => e.stopPropagation()}
+              style={{ color: "var(--accent)", borderBottom: "1px solid var(--accent-line)", textDecoration: "none" }}
+            >{_t("worker.apply_submit_privacy_link", "《隱私政策》")}</a>
+            <span style={{ color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 11, marginLeft: 6 }}>{_t("worker.apply_submit_terms_note", "· Beta POC · 含 §8 違約金倍率")}</span>
+          </span>
+        </label>
+      </div>
+
       {errMsg && <div style={{ padding: "10px 12px", background: "rgba(212,113,42,0.1)", border: "1px solid rgba(212,113,42,0.4)", color: "oklch(0.82 0.16 75)", fontSize: 13 }}>⚠ {errMsg}</div>}
       <button
         type="button"
         onClick={doSubmit}
-        disabled={status === "loading" || status === "success"}
+        disabled={submitDisabled || !termsAck || !country}
         className="bp-btn primary"
-        style={{ padding: "14px 28px", opacity: status === "loading" || status === "success" ? 0.5 : 1, cursor: status === "loading" || status === "success" ? "wait" : "pointer" }}
+        style={{ padding: "14px 28px", opacity: (submitDisabled || !termsAck || !country) ? 0.5 : 1, cursor: submitDisabled ? "wait" : ((!termsAck || !country) ? "not-allowed" : "pointer") }}
       >
         {status === "loading" ? _t("worker.apply_submit_btn_loading", "送出中…") : status === "success" ? _t("worker.apply_submit_btn_success", "✓ 已送出") : _t("worker.apply_submit_btn_idle", "→ Submit · 送交評估、24h 內回覆")}
       </button>
+      {(!termsAck || !country) && status === "idle" && (
+        <div style={{ paddingLeft: 4, fontSize: 11, color: "var(--muted)", fontFamily: "var(--mono)" }}>
+          {!country
+            ? _t("worker.apply_submit_btn_hint_country", ". 必選居住地才能繼續")
+            : _t("worker.apply_submit_btn_hint_terms", ". 必勾選同意條款才能繼續")}
+        </div>
+      )}
     </div>
   );
 }

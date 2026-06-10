@@ -15,8 +15,12 @@ import { buildClientAckEmail } from "../_shared/confirmation-email-template.ts";
 import { rankWorkers, type ClientIntakeForMatch } from "../_shared/match-algorithm.ts";
 import type { UnifiedWorker } from "../_shared/worker-schema.ts";
 import { VERTICAL_ADJACENCY } from "../_shared/vertical-adjacency.ts";
+import { notifyEdward } from "../_shared/notify-edward.ts";  // 2026-05-31 calcifer . doc 37 gap 2 . ops event -> Edward email
 
 const SLACK_BOT_TOKEN = Deno.env.get("SLACK_BOT_TOKEN") ?? "";
+// 2026-05-29 calcifer doc28 C . DB webhook 防偽造 . 設 WEBHOOK_SECRET 後 . request 必帶相符 header
+// 未設則放行 (向後相容 . 既有 webhook 不會立刻壞) . 沙利曼建議上線後設此 secret
+const NOTIFY_WEBHOOK_SECRET = Deno.env.get("NOTIFY_WEBHOOK_SECRET") ?? "";
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const ANTHROPIC_MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-sonnet-4-6";
 const LEADS_CHANNEL_ID = "C0B3RRKGQCD"; // #beyondpath-leads (private)
@@ -65,7 +69,7 @@ function buildWorkerConfirmEmail(row: Record<string, unknown>): { subject: strin
     `${PUBLIC_HOMEPAGE}`,
     ``,
     `————————`,
-    `prototype 階段 · 不簽法律效力文件 · 不收申請費 · 正式服務於 2026 Q3 啟動`,
+    `BeyondPath v1.0 · 接案者申請免費 · 媒合服務費僅成功配對且雙方簽約完成才向接案者收（見服務條款 §3）`,
   ].filter(line => line !== null).join("\n");
 
   const html = `<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BeyondPath · Application Received</title></head><body style="font-family:'IBM Plex Sans','Noto Sans TC',system-ui,sans-serif;background:#0a0a0b;color:#f0eee8;margin:0;padding:40px 20px;">
@@ -95,7 +99,7 @@ function buildWorkerConfirmEmail(row: Record<string, unknown>): { subject: strin
 
   <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ BeyondPath 是什麼 / WHAT IS BP</div>
   <p style="color:#c8c6c0;line-height:1.75;font-size:14px;margin:0 0 12px;">台灣首個 <b style="color:#f0eee8;">AI 認證交付網路</b>、用 <b style="color:#f0eee8;">AI 評估 + 多維配對演算法</b>媒合付費 AI 工具有實戰經驗的 worker 跟品牌。</p>
-  <p style="color:#9a9aa3;line-height:1.75;font-size:13px;margin:0 0 28px;font-style:italic;">目前 prototype 階段、預計 <b style="color:#c7e84a;font-style:normal;">2026 Q3</b> 正式上線。你會是首批 <b style="color:#f0eee8;font-style:normal;">founding worker</b>。</p>
+  <p style="color:#9a9aa3;line-height:1.75;font-size:13px;margin:0 0 28px;font-style:italic;">平台<b style="color:#c7e84a;font-style:normal;">現正式營運中</b>。你會是平台<b style="color:#f0eee8;font-style:normal;">早期接案者</b>。</p>
 
   <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.6;font-size:13px;">
     → 想補資料 (case 截圖 / 客戶 testimonial) 寫信到 <b style="color:#c7e84a;">hello@beyondpath.tw</b>
@@ -103,7 +107,7 @@ function buildWorkerConfirmEmail(row: Record<string, unknown>): { subject: strin
 
   <hr style="border:none;border-top:1px solid #2a2a2e;margin:24px 0;"/>
   <p style="color:#9a9aa3;font-size:12px;margin:0 0 8px;">— BeyondPath · <a href="${PUBLIC_HOMEPAGE}" style="color:#c7e84a;text-decoration:none;">${PUBLIC_HOMEPAGE}</a></p>
-  <p style="color:#6a6a72;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;margin:8px 0 0;">prototype 階段 · 不簽法律效力文件 · 不收申請費 · 正式服務於 2026 Q3 啟動</p>
+  <p style="color:#6a6a72;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;margin:8px 0 0;">BeyondPath v1.0 · 接案者申請免費 · 媒合服務費僅成功配對且雙方簽約完成才向接案者收（見服務條款 §3）</p>
 </div>
 </body></html>`;
   return { subject, html, text };
@@ -159,7 +163,7 @@ function buildClientConfirmEmail(row: Record<string, unknown>): { subject: strin
     `${PUBLIC_HOMEPAGE}`,
     ``,
     `————————`,
-    `prototype 階段 · 不簽法律效力文件 · 不收平台費 · 正式服務於 2026 Q3 啟動`,
+    `BeyondPath v1.0 · 客戶端不另收平台費 · 案款由平台透過綠界第三方支付代收代付（見服務條款 §3）`,
   ].filter(line => line !== null).join("\n");
 
   const html = `<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BeyondPath · Brief Received</title></head><body style="font-family:'IBM Plex Sans','Noto Sans TC',system-ui,sans-serif;background:#0a0a0b;color:#f0eee8;margin:0;padding:40px 20px;">
@@ -202,7 +206,7 @@ function buildClientConfirmEmail(row: Record<string, unknown>): { subject: strin
 
   <hr style="border:none;border-top:1px solid #2a2a2e;margin:24px 0;"/>
   <p style="color:#9a9aa3;font-size:12px;margin:0 0 8px;">— BeyondPath · <a href="${PUBLIC_HOMEPAGE}" style="color:#c7e84a;text-decoration:none;">${PUBLIC_HOMEPAGE}</a></p>
-  <p style="color:#6a6a72;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;margin:8px 0 0;">prototype 階段 · 不簽法律效力文件 · 不收平台費 · 正式服務於 2026 Q3 啟動</p>
+  <p style="color:#6a6a72;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;margin:8px 0 0;">BeyondPath v1.0 · 客戶端不另收平台費 · 案款由平台透過綠界第三方支付代收代付（見服務條款 §3）</p>
 </div>
 </body></html>`;
   return { subject, html, text };
@@ -224,17 +228,39 @@ function emailWrapper(opts: { header: string; titleTo: string; openLine: string;
   ${opts.bodyHtml}
   <hr style="border:none;border-top:1px solid #2a2a2e;margin:24px 0;"/>
   <p style="color:#9a9aa3;font-size:12px;margin:0 0 8px;">— BeyondPath · <a href="${PUBLIC_HOMEPAGE}" style="color:#c7e84a;text-decoration:none;">${PUBLIC_HOMEPAGE}</a></p>
-  <p style="color:#6a6a72;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;margin:8px 0 0;">prototype 階段 · 不簽法律效力文件 · 不收平台費 · 正式服務於 2026 Q3 啟動</p>
+  <p style="color:#6a6a72;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;margin:8px 0 0;">BeyondPath v1.0 · 客戶端不另收平台費 · 案款由平台透過綠界第三方支付代收代付（見服務條款 §3）</p>
 </div>
 </body></html>`;
 }
 
 // ============ Worker × 3 ============
 
+// 2026-06-01 calcifer . Edward 點名 . 定價對齊 terms.html §3.2 Tier take rate (媒合服務費、向接案者收)
+// §3.2 單一費率欄: B=20% B+=19% A=18% A+=17% S=17% . composite tier 取較入門 tier (費率較高那檔、保守揭露)
+function tierTakeRate(tierRaw: string): { tier: string; rate: number } {
+  const t = String(tierRaw || "").toUpperCase();
+  const table: Array<{ key: string; rate: number }> = [
+    { key: "S", rate: 17 },
+    { key: "A+", rate: 17 },
+    { key: "A", rate: 18 },
+    { key: "B+", rate: 19 },
+    { key: "B", rate: 20 },
+  ];
+  let best: { tier: string; rate: number } | null = null;
+  for (const e of table) {
+    const re = new RegExp(e.key.replace("+", "\+") + "(?![+])");  // A 不誤命中 A+
+    if (re.test(t)) {
+      if (!best || e.rate > best.rate) best = { tier: e.key, rate: e.rate };
+    }
+  }
+  return best || { tier: "B", rate: 20 };
+}
+
 function buildWorkerPassEmail(row: Record<string, unknown>, opts?: { firstCaseHint?: string }): { subject: string; html: string; text: string } {
   const name = (row.display_name as string) || "創作者";
   const tier = (row.tier_suggestion as string) || "B+";
   const lScore = row.l_score ?? "?";
+  const tr = tierTakeRate(tier);  // 2026-06-01 . §3.2 take rate for this worker tier
   const firstCaseHint = opts?.firstCaseHint || "你的第一個案件方向會在 1-2 週內透過 BeyondPath 系統媒合配對、屆時系統會主動通知。";
 
   const subject = `BeyondPath 認證通過 · 歡迎進首案池 · ${name}`;
@@ -253,7 +279,7 @@ function buildWorkerPassEmail(row: Record<string, unknown>, opts?: { firstCaseHi
     `  · 接案後雙方直接溝通 + 用 BeyondPath 工具（SOW / 報價單 / 驗收 checklist）`,
     ``,
     `▍founding worker 福利`,
-    `  · POC 階段不收平台費（Q3 上線後 success fee 8-12%）`,
+    `  · 媒合服務費依 Tier 與案件型態分級（你的 Tier ${tr.tier}：一次性案 ${tr.rate}%、月聘案費率另計、完整見服務條款 §3.2；僅成功配對且雙方簽約完成才向接案者收）`,
     `  · 公開 portfolio 第一批上架（早鳥曝光）`,
     `  · 累積 case study 進 BeyondPath`,
     ``,
@@ -278,7 +304,7 @@ function buildWorkerPassEmail(row: Record<string, unknown>, opts?: { firstCaseHi
   </ul>
   <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;">▍ FOUNDING WORKER 福利</div>
   <ul style="color:#c8c6c0;line-height:1.85;font-size:14px;margin:0 0 24px;padding-left:20px;">
-    <li>POC 階段不收平台費（Q3 後 success fee 8-12%）</li>
+    <li>媒合服務費依 Tier 與案件型態分級（你的 Tier ${tr.tier}：一次性案 <b style="color:#c7e84a;">${tr.rate}%</b>、月聘案費率另計、完整見<a href="${PUBLIC_HOMEPAGE}/legal/terms.html" style="color:#c7e84a;">服務條款 §3.2</a>；僅成功配對且雙方簽約完成才向接案者收）</li>
     <li>公開 portfolio 第一批上架（早鳥曝光）</li>
     <li>累積 case study 進 BeyondPath</li>
   </ul>
@@ -1035,6 +1061,21 @@ serve(async (req: Request) => {
     return new Response("Method not allowed", { status: 405 });
   }
 
+  // 2026-05-29 calcifer . doc 28 Part C . DB webhook 防偽造
+  // 註: notify-lead-slack 是 Supabase Database Webhook (worker_applications / client_intakes INSERT 觸發) .
+  //     來源是 Supabase 內部 . 不是 anon 任意打 . 故「不用 IP 限流」(對內部 webhook 無意義 . IP 不固定) .
+  //     正解 = webhook secret header 驗證 . 防外人偽造 INSERT payload 洗 Slack .
+  //     Edward 在 Database Webhook 設定加 header (x-webhook-secret: <值>) + 設 NOTIFY_WEBHOOK_SECRET env .
+  //     未設 secret 時放行 (向後相容 . 既有 webhook 不立刻壞) .
+  if (NOTIFY_WEBHOOK_SECRET) {
+    const got = req.headers.get("x-webhook-secret") || "";
+    if (got !== NOTIFY_WEBHOOK_SECRET) {
+      return new Response(JSON.stringify({ ok: false, error: "invalid-webhook-secret" }), {
+        status: 401, headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
+
   if (!SLACK_BOT_TOKEN) {
     return new Response(JSON.stringify({ ok: false, error: "missing-slack-token" }), {
       status: 500,
@@ -1113,6 +1154,39 @@ serve(async (req: Request) => {
     if (candidateBlock) text += candidateBlock;
   } else {
     text = `📥 *新 Lead* (${payload.table}) · row id: \`${payload.record.id ?? "?"}\``;
+  }
+
+  // 2026-05-31 calcifer . doc 37 gap 2 . fire-and-forget email 通知 Edward 本人 (待覆核 / 待配對)
+  //   - 不 await . 不阻塞 Slack + 確認信 response . fail-soft (RESEND 未設 silent)
+  if (payload.table === "worker_applications") {
+    notifyEdward("worker_apply", {
+      title: (payload.record.display_name as string) || (payload.record.email as string) || "(unnamed)",
+      email: (payload.record.email as string) || undefined,
+      tier: (payload.record.tier_suggestion as string) || null,
+      lScore: (payload.record.l_score as number | null) ?? null,
+      verticals: Array.isArray(payload.record.verticals) ? (payload.record.verticals as string[]) : null,
+    }).catch(function () {});
+  } else if (payload.table === "client_intakes") {
+    const _id2 = payload.record.intake_data as Record<string, unknown> | null;
+    const _briefSnip = (_id2 && typeof _id2 === "object")
+      ? truncate(((_id2.brief as string) || (_id2.description as string) || (_id2.project_brief as string) || ""), 200)
+      : "";
+    const _ent2 = (_id2 && typeof _id2 === "object" && _id2.enterprise && typeof _id2.enterprise === "object")
+      ? _id2.enterprise as Record<string, unknown> : null;
+    const _entFlags2: string[] = [];
+    if (_ent2?.nda) _entFlags2.push("NDA");
+    if (_ent2?.invoice) _entFlags2.push("invoice");
+    if (_ent2?.contract) _entFlags2.push("contract");
+    if (_ent2?.talkToEdward) _entFlags2.push("video");
+    notifyEdward("client_intake", {
+      title: (payload.record.company_name as string) || (payload.record.email as string) || "(unnamed)",
+      email: (payload.record.email as string) || undefined,
+      vertical: (payload.record.vertical as string) || null,
+      budget: (payload.record.budget_range as string) || null,
+      timeline: (payload.record.timeline as string) || null,
+      briefSnippet: _briefSnip || null,
+      enterpriseFlags: _entFlags2.length ? _entFlags2 : null,
+    }).catch(function () {});
   }
 
   // Append Claude advisor analysis if available

@@ -1104,3 +1104,78 @@
   .bp-input { min-height: 44px; padding: 12px 14px; font-size: 14px; }
 }
 
+/* ============================================================
+   2026-05-28 P0-2 Mobile fix 14 段 · 女巫補
+   範圍: ≤ 768px desktop 不受影響
+   ============================================================ */
+@media (max-width: 768px) {
+  .bp-disclaimer, .bp-footer-fine, .bp-fine { font-size: 12px; line-height: 1.65; }
+  .admin-skill-matrix > div:last-child { grid-template-columns: 1fr !important; gap: 6px 0 !important; }
+  .admin-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; mask-image: linear-gradient(to right, black 88%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 88%, transparent 100%); }
+  .admin-tabs::-webkit-scrollbar { display: none; }
+  .admin-tab { flex-shrink: 0; }
+  .admin-btn { min-height: 44px; padding: 11px 16px; }
+  .admin-card { padding: 16px 14px; }
+  .admin-card-h .title { font-size: 15px; }
+  .admin-card-h .sub { font-size: 10px; }
+  .bp-engine-card canvas, .bp-engine-card svg { max-width: 100%; height: auto; }
+  .bp-hero-eyebrow, .bp-eyebrow-row { flex-wrap: wrap; gap: 6px 8px; }
+  .bp-trust-strip, .bp-trust-grid { grid-template-columns: 1fr !important; gap: 12px; }
+  .bp-cta.primary, .bp-btn.primary { width: 100%; padding: 14px 20px; justify-content: center; font-size: 14px; }
+  .ios-device, .device-mockup, .bp-device-frame { max-width: 100%; transform: scale(0.92); transform-origin: center top; }
+  .privacy-shell, .legal-shell, .doc-shell { padding: 20px 16px 60px; }
+  .privacy-shell h1, .legal-shell h1, .doc-shell h1 { font-size: 22px; }
+  .privacy-shell h2, .legal-shell h2, .doc-shell h2 { font-size: 17px; }
+  .manifesto-h, .bp-manifesto-h { font-size: 26px !important; line-height: 1.25 !important; letter-spacing: -0.02em; }
+  .protocol-grid, .bp-protocol-grid { grid-template-columns: 1fr !important; gap: 12px; }
+  .admin-modal-bg { padding: 12px; }
+  .admin-modal { max-height: 92vh; padding: 20px 16px; }
+}
+
+
+/* ============================================================
+   中文標題排版機制 · CJK Headline Typography (2026-06-01 卡西法)
+   ------------------------------------------------------------
+   目的：根治中文標題「在詞組中間硬斷 / 標點孤立行首行尾」的折行病。
+   不靠每次手動補 <br> —— 套 class 即自動避免折行病。
+
+   用法：
+     1. 標題容器加 .zh-headline（H1/H2 級）或 .zh-subhead（副標級）
+     2. 不可拆的語意單元用 <span class="zh-nowrap">…</span> 包
+        （例：「已驗證的 AI 工作者」「比亂找接案者穩」）
+     3. 需要在語意完整點換行時、用 <br class="zh-br"> —— 窄螢幕自動隱藏
+
+   規則原理（CJK kinsoku 禁則）：
+     · line-break: strict   → 標點避頭尾（。，？不落行首、不孤立行尾）
+     · text-wrap: pretty    → 平衡多行、避免末行落單字（比 balance 更利中文閱讀）
+     · word-break: normal   → 中文不被逐字硬斷（配 zh-nowrap 鎖語意單元）
+     · overflow-wrap        → 僅在超窄容器當安全閥、避免水平溢出
+     · font-feature-settings: "palt" → CJK 比例字距、自然收緊
+   ============================================================ */
+.zh-headline {
+  font-family: var(--zh);
+  line-break: strict;
+  text-wrap: pretty;
+  word-break: normal;
+  overflow-wrap: break-word;
+  font-feature-settings: "palt" 1, "kern" 1;
+}
+.zh-subhead {
+  font-family: var(--zh);
+  line-break: strict;
+  text-wrap: pretty;
+  word-break: normal;
+  overflow-wrap: break-word;
+  font-feature-settings: "palt" 1, "kern" 1;
+}
+/* 語意單元鎖 · 整塊不被拆行（詞組 / 短句保持完整） */
+.zh-nowrap { white-space: nowrap; }
+
+/* 語意換行控制 · 寬螢幕生效、窄螢幕收掉讓文字自然回流
+   （避免手機因強制 <br> 造成過短行 / 破版） */
+.zh-br { display: inline; }
+@media (max-width: 600px) {
+  .zh-br { display: none; }
+  /* 超窄容器安全閥：若單一 nowrap 語意單元仍超出寬度、允許 break 避免水平溢出 */
+  .zh-headline .zh-nowrap, .zh-subhead .zh-nowrap { white-space: normal; }
+}

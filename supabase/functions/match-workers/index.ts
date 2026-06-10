@@ -6,6 +6,7 @@ import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { rankWorkers, type ClientIntakeForMatch, type MatchResult, type MatchWeights } from "../_shared/match-algorithm.ts";
 import type { UnifiedWorker } from "../_shared/worker-schema.ts";
 import { VERTICAL_ADJACENCY } from "../_shared/vertical-adjacency.ts";
+import { checkRateLimit, getClientIp, rateLimitResponse } from "../_shared/rate-limit.ts";  // 2026-05-29 calcifer doc28 C . 防洗限流
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? Deno.env.get("NEXT_PUBLIC_SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
@@ -127,6 +128,17 @@ serve(async function (req: Request) {
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405, headers: CORS_HEADERS });
   }
+
+  // 2026-05-29 calcifer . doc 28 Part C . IP 限流 (非 admin-only)
+  // 註: match-workers 是雙路徑函式 . admin 用 client_intake_id 跑配對 . 前端 app2.jsx Step 4
+  //     用 inline client payload 即時看推薦 (一般用戶 . 無 admin JWT) . 故不能套 admin-only check
+  //     (會打爆 Step 4) . 改用 IP 限流防洗 . 沙利曼 Gate 5 註: 此函式不燒 Anthropic token
+  //     (純演算法 . 讀 worker pool) . 風險中等 . 限流 30/min 足夠
+  {
+    const rl = await checkRateLimit("match-workers", getClientIp(req), { limit: 30, windowSec: 60 });
+    if (!rl.allowed) return rateLimitResponse(rl, CORS_HEADERS);
+  }
+
   let body: MatchRequestBody;
   try {
     body = await req.json();

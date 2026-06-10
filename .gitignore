@@ -17,3 +17,8 @@ landing-v0.*.html
 .vercel
 .tmp/
 supabase/.temp/
+
+# local backup dirs - do not commit
+.bak-*/
+*.bak
+*.bak-*

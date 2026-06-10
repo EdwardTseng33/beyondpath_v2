@@ -7,6 +7,7 @@ import { calculateMatchScore, explainMatch, type ClientIntakeForMatch } from "..
 import type { UnifiedWorker } from "../_shared/worker-schema.ts";
 import { signDecisionToken, sha256Hex } from "../_shared/jwt-light.ts";
 import { buildDecisionEmail } from "../_shared/decision-email-template.ts";
+import { requireAdmin } from "../_shared/admin.ts";  // 2026-05-29 calcifer doc28 C . admin-only caller check
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? Deno.env.get("NEXT_PUBLIC_SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
@@ -165,6 +166,11 @@ serve(async function (req: Request) {
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405, headers: CORS_HEADERS });
   }
+
+  // 2026-05-29 calcifer . doc 28 Part C Group A . admin-only caller check
+  // send-decision-email 以平台名義發信 . 必須 admin (edwardt0303@gmail.com) JWT . 不允 anon
+  const gate = await requireAdmin(req, CORS_HEADERS);
+  if (!gate.ok) return gate.response;
 
   const missing: string[] = [];
   if (!SUPABASE_URL) missing.push("SUPABASE_URL");

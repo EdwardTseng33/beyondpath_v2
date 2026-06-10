@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BeyondPath · AI 時代的工作交付網路</title>
-<meta name="description" content="BeyondPath 是 AI 時代的發案與接案產品，幫台灣品牌與中小企業把模糊需求變成可驗收交付，用 AI 初審、認證化供給與 milestone 交付降低不確定性。" />
+<title>BeyondPath · 想用 AI 卻不知道找誰？把專案發給已驗證的 AI 工作者</title>
+<meta name="description" content="BeyondPath 幫台灣品牌與中小企業，把模糊需求拆成可驗收的 brief，配對有實戰案例、熟 AI 工具的接案者；用一個小案先驗證成果，再決定要不要擴大投入。" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,19 +23,19 @@
 <!-- Open Graph · FB / LinkedIn / Slack / Discord / WhatsApp -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://beyondpath.tw/landing.html" />
-<meta property="og:title" content="BeyondPath · AI 時代的工作交付網路" />
-<meta property="og:description" content="幫台灣品牌與中小企業把模糊需求變成可驗收交付。AI 初審、認證化供給、Milestone 交付，降低不確定性。" />
+<meta property="og:title" content="BeyondPath · 想用 AI 卻不知道找誰做？" />
+<meta property="og:description" content="把專案發給已驗證的 AI 工作者。需求拆 brief、配對認證接案者、milestone 驗收——比招人快、比亂找接案者穩。" />
 <meta property="og:image" content="https://beyondpath.tw/assets/og-beyondpath.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="BeyondPath · AI 時代的工作交付網路" />
+<meta property="og:image:alt" content="BeyondPath · 已驗證的 AI 工作者配對平台" />
 <meta property="og:site_name" content="BeyondPath" />
 <meta property="og:locale" content="zh_TW" />
 
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="BeyondPath · AI 時代的工作交付網路" />
-<meta name="twitter:description" content="幫台灣品牌與中小企業把模糊需求變成可驗收交付。AI 初審、認證化供給、Milestone 交付，降低不確定性。" />
+<meta name="twitter:title" content="BeyondPath · 想用 AI 卻不知道找誰做？" />
+<meta name="twitter:description" content="把專案發給已驗證的 AI 工作者。需求拆 brief、配對認證接案者、milestone 驗收——比招人快、比亂找接案者穩。" />
 <meta name="twitter:image" content="https://beyondpath.tw/assets/og-beyondpath.png" />
 
 <!-- Favicon -->
@@ -54,7 +54,7 @@
       "name": "BeyondPath",
       "url": "https://beyondpath.tw",
       "logo": "https://beyondpath.tw/assets/og-beyondpath.png",
-      "description": "AI 時代的工作配對網路、媒合台灣品牌與中小企業的發案需求與認證化的 AI 工作者供給。",
+      "description": "台灣 AI 工作配對平台。把模糊需求拆成可驗收 brief，配對有實戰案例的認證接案者，milestone 驗收，省人力省時間少踩坑。",
       "email": "edwardt0303@gmail.com",
       "areaServed": { "@type": "Country", "name": "Taiwan" },
       "founder": { "@type": "Person", "name": "Edward Tsai" }
@@ -64,7 +64,7 @@
       "@id": "https://beyondpath.tw/#website",
       "url": "https://beyondpath.tw",
       "name": "BeyondPath",
-      "description": "AI 時代的工作交付網路",
+      "description": "台灣 AI 工作配對平台",
       "publisher": { "@id": "https://beyondpath.tw/#organization" },
       "inLanguage": "zh-Hant"
     }
@@ -72,7 +72,7 @@
 }
 </script>
 
-<link rel="stylesheet" href="components/styles.css?v=2026-05-25-p0p1">
+<link rel="stylesheet" href="components/styles.css?v=2026-06-01-dash">
 <style>
   /* ========= Base ========= */
   html, body { margin: 0; padding: 0; background: var(--bg); font-family: var(--sans); color: var(--text); }
@@ -138,6 +138,7 @@
   .le-nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; min-height: 56px; box-sizing: border-box; padding: 14px 56px; background: rgba(10,10,11,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-soft); }
   .le-nav .brand { font-family: var(--sans); font-weight: 800; font-size: 18px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
   .le-nav .brand small { font-family: var(--mono); font-size: 9px; font-weight: 500; color: var(--muted); letter-spacing: 0.2em; margin-left: 8px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,0.1); }
+  .le-nav .brand small:empty { display: none; }  /* 去版本號後不留孤兒分隔線 · 2026-05-30 */
   .le-nav .links { display: flex; gap: 28px; margin-left: 60px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; }
   .le-nav .links a { color: var(--muted); text-decoration: none; transition: color 120ms; }
   .le-nav .links a:hover { color: var(--text); }
@@ -221,7 +222,7 @@
 
   .le-hero-trust-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--accent); margin: 24px 0 12px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--accent-line); border-radius: 999px; background: var(--accent-soft); align-self: flex-start; }
 
-  .le-hero-title { font-family: var(--zh); font-size: clamp(40px, 5.4vw, 84px); line-height: 1.18; margin: 0 0 36px; letter-spacing: -0.03em; font-weight: 800; position: relative; max-width: 1080px; word-break: keep-all; text-wrap: balance; }
+  .le-hero-title { font-family: var(--zh); font-size: clamp(38px, 4.6vw, 68px); line-height: 1.2; margin: 0 0 36px; letter-spacing: -0.03em; font-weight: 800; position: relative; max-width: 1080px; word-break: keep-all; text-wrap: balance; }
   .le-hero-title > span { display: block; }
   .le-hero-title .le-grad { display: inline; }
   .le-hero-title .sub { display: block; font-size: 0.62em; color: var(--text-2); font-weight: 700; margin-top: 14px; line-height: 1.3; }
@@ -465,7 +466,7 @@
   .le-finalcta .form button { background: var(--accent); color: var(--bg); border: 0; padding: 0 32px; font-family: var(--mono); font-size: 13px; font-weight: 800; letter-spacing: 0.12em; cursor: pointer; min-height: 56px; }
   .le-finalcta .form .meta { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.16em; margin-top: 12px; display: flex; justify-content: space-between; }
 
-  .le-footer-nav { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; gap: 40px; padding-top: 48px; border-top: 1px solid var(--line); }
+  .le-footer-nav { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-top: 48px; border-top: 1px solid var(--line); }
   @media (max-width: 900px) { .le-footer-nav { grid-template-columns: 1fr 1fr; gap: 24px; } }
   .le-footer-nav .brand-col .name { font-family: var(--sans); font-weight: 800; font-size: 28px; margin-bottom: 14px; }
   .le-footer-nav .brand-col .tag { font-family: var(--zh); font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 280px; }
@@ -532,8 +533,8 @@
 <body>
 <div class="bp-disclaimer-top" id="bp-disc-top">
   <span class="icon">●</span>
-  <span class="label" data-i18n="disc.top_label">EARLY BETA · 邀請制</span>
-  <span class="body"><span data-i18n="disc.top_body_before">首批案件 BeyondPath 認證 worker 配對、24h 內系統回覆 · </span><a href="waitlist.html" data-i18n="disc.top_link">加入 waitlist →</a></span>
+  <span class="label" data-i18n="disc.top_label">開放申請</span>
+  <span class="body"><span data-i18n="disc.top_body_before">認證制接案網路 · 註冊即可發案、接案者經認證進池 · 系統 24h 內回覆 · </span><a href="app.html?role=client" data-i18n="disc.top_link">立即發案 →</a></span>
   <button class="close" onclick="document.getElementById('bp-disc-top').style.display='none'; sessionStorage.setItem('bp-disc-closed','1');" data-i18n-attr="aria-label:disc.top_close_aria" aria-label="關閉提醒">×</button>
 </div>
 <script>
@@ -590,16 +591,16 @@
 </script>
 <div id="root"></div>
 <footer class="bp-disclaimer-foot">
-  <span data-i18n="disc.foot_text">BeyondPath · Early Beta v0.8 · 2026-05-15 · 邀請制 · 平台品質審核中 · 律師合約完整版審視中 · </span><a href="legal/privacy.html" data-i18n="disc.foot_privacy">隱私權與服務條款</a> · <a href="waitlist.html" data-i18n="disc.foot_waitlist">加入 waitlist →</a>
+  <span data-i18n="disc.foot_text">BeyondPath · 開放申請 · 認證制接案網路 · </span><a href="legal/privacy.html" data-i18n="disc.foot_privacy">隱私權與服務條款</a> · <a href="app.html?role=client" data-i18n="disc.foot_waitlist">立即發案 →</a>
 </footer>
 <!-- i18n bundle (must load BEFORE React+Babel) · Phase 1 Step 1 -->
-<script src="components/i18n/index.js?v=2026-05-25-i18n-r2"></script>
-<script src="components/i18n/dict.zh.js?v=2026-05-25-i18n-r2"></script>
-<script src="components/i18n/dict.en.js?v=2026-05-25-i18n-r2"></script>
+<script src="components/i18n/index.js?v=2026-06-01-dash"></script>
+<script src="components/i18n/dict.zh.js?v=2026-06-01-dash"></script>
+<script src="components/i18n/dict.en.js?v=2026-06-01-dash"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx?v=2026-05-25-i18n-r2"></script>
+<script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx?v=2026-06-01-dash"></script>
 
 <script type="text/babel" data-presets="env,react">
 const { useState, useEffect, useRef, useMemo } = React;
@@ -815,7 +816,7 @@ function EStaticBar() {
       <div className="item">
         <span className="le-pulse" style={{ display: "inline-block", width: 6, height: 6, background: "var(--accent)", borderRadius: 99 }}></span>
         <span className="k">{t("staticbar.network_label", "NETWORK")}</span>
-        <span style={{ color: "var(--text)", marginLeft: "auto" }}>{t("staticbar.network_value", "v0.5β · TAIWAN BETA")}</span>
+        <span style={{ color: "var(--text)", marginLeft: "auto" }}>{t("staticbar.network_value", "TAIWAN")}</span>
       </div>
       <div className="item">
         <span className="k">{t("staticbar.review_label", "FIRST REVIEW")}</span>
@@ -841,7 +842,7 @@ function ENav() {
       <a className="brand" href="landing.html" aria-label="BeyondPath · back to home" title="Back to home" style={{ textDecoration: "none", color: "inherit" }}>
         <span className="le-mark" aria-hidden="true"></span>
         <span>Beyond<span className="le-acc">Path</span></span>
-        <small>{t("nav.brand_version", "v0.5β")}</small>
+        <small>{t("nav.brand_version", "")}</small>
       </a>
       <div className="links">
         <a href="#problem">{t("nav.link_problem", "Problem")}</a>
@@ -854,7 +855,7 @@ function ENav() {
       <div className="actions">
         <BPLangSwitcher />
         <a href="sign-in.html?role=client" className="btn-ghost">{t("nav.cta_signin", "SIGN IN")}</a>
-        <a href="app.html?role=worker&onboarding=1" className="btn-primary">{t("nav.cta_apply", "▲ APPLY · BETA")}</a>
+        <a href="app.html?role=worker&onboarding=1" className="btn-primary">{t("nav.cta_apply", "申請接案")}</a>
       </div>
     </nav>
   );
@@ -864,15 +865,15 @@ function ENav() {
 function EPocTracker() {
   useLangRerender();
   const rows = [
-    { label: t("poc.row1_label", "合格供給端認證"), sub: t("poc.row1_sub", "Tier B / B+ · 樣本邀請名單收集中"), stat: t("poc.row1_stat", "啟動內測") },
-    { label: t("poc.row2_label", "媒合付費交付專案"), sub: t("poc.row2_sub", "NPS ≥ 50 · 首批客戶名單建構中"), stat: t("poc.row2_stat", "啟動內測") },
-    { label: t("poc.row3_label", "雙邊 NPS 評鑑"), sub: t("poc.row3_sub", "client + worker · 內測收集後啟用"), stat: t("poc.row3_stat", "Q3 2026") }
+    { label: t("poc.row1_label", "合格供給端認證"), sub: t("poc.row1_sub", "Tier B / B+ · 開放申請 · 認證審核中"), stat: t("poc.row1_stat", "上線") },
+    { label: t("poc.row2_label", "媒合付費交付專案"), sub: t("poc.row2_sub", "NPS ≥ 50 · 發案方開放進案"), stat: t("poc.row2_stat", "上線") },
+    { label: t("poc.row3_label", "雙邊 NPS 評鑑"), sub: t("poc.row3_sub", "client + worker · 累積專案後啟用"), stat: t("poc.row3_stat", "Q3 2026") }
   ];
   return (
     <div className="le-poc" id="poc-tracker">
       <div className="le-poc-h">
-        <span className="ttl">{t("poc.header_title", "◆ Q3 2026 啟動內測")}</span>
-        <span className="target">{t("poc.header_target", "PRIVATE BETA · ROADMAP")}</span>
+        <span className="ttl">{t("poc.header_title", "◆ Q3 2026 里程碑")}</span>
+        <span className="target">{t("poc.header_target", "TAIWAN · ROADMAP")}</span>
       </div>
       <div className="le-poc-rows">
         {rows.map((r, i) => (
@@ -912,11 +913,16 @@ function EHero() {
       <div className="le-hero-content">
         <div className="le-hero-eyebrow">
           <span className="dot le-pulse"></span>
-          <span>{t("hero.eyebrow", "// AI ERA WORK NETWORK · 台灣 beta · 發案與接案雙邊認證")}</span>
+          <span>{t("hero.eyebrow", "// AI ERA WORK NETWORK · 台灣 · 發案與接案雙邊認證")}</span>
         </div>
-        <h1 className="le-hero-title le-zh">
-          <span>{t("hero.headline_part1_before", "加入 ")}<span className="le-grad">{t("hero.headline_part1_ai", "AI")}</span>{t("hero.headline_part1_after", " 工作的下一個時代。")}</span>
-          <span className="sub">{t("hero.headline_sub", "把不確定，變成可驗收的交付。")}</span>
+        {/* 2026-06-01 卡西法 · 中文折行根治：.zh-headline 機制 + .zh-nowrap 語意單元鎖 + .zh-br 語意換行（窄螢幕自動收）*/}
+        <h1 className="le-hero-title le-zh zh-headline">
+          <span>
+            <span className="zh-nowrap">{t("hero.headline_l1_before", "想用 ")}<span className="le-grad">{t("hero.headline_part1_ai", "AI")}</span>{t("hero.headline_l1_after", "，")}</span><span className="zh-nowrap">{t("hero.headline_l1_u2", "卻不知道找誰做？")}</span><br className="zh-br" /><span className="zh-nowrap">{t("hero.headline_l2_u1", "把專案發給")}{t("hero.headline_l2_u2", "已驗證的 AI 工作者。")}</span>
+          </span>
+          <span className="sub zh-subhead">
+            <span className="zh-nowrap">{t("hero.headline_sub_u1", "比招人快、")}</span><span className="zh-nowrap">{t("hero.headline_sub_u2", "比亂找接案者穩、")}</span><span className="zh-nowrap">{t("hero.headline_sub_u3", "比只買工具更接近成果。")}</span>
+          </span>
         </h1>
         {/* v0.4.9 wave 6 #6 · Takeaway pills · 讓用戶 1 秒掌握 LP 賣什麼（Edward 反饋「無法快速掌握重點」） */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, margin: "20px 0 28px" }}>
@@ -975,7 +981,7 @@ function EHero() {
         <div className="le-telemetry">
           <div className="cell">
             <span className="badge target">SPEC</span>
-            <div className="l">{t("hero.tel_focus_label", "BETA FOCUS")}</div>
+            <div className="l">{t("hero.tel_focus_label", "FOCUS")}</div>
             <div className="v" style={{ color: "var(--accent)" }}>{t("hero.tel_focus_value", "SMB")}</div>
           </div>
           <div className="cell">
@@ -1001,10 +1007,10 @@ function EUseCases() {
   return (
     <section className="le-section" id="beta-use-cases" style={{ paddingTop: 72, paddingBottom: 72 }}>
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("usecases.eyebrow", "◆ BETA USE CASES · 第一批最適合發的案子")}</div>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("usecases.eyebrow", "◆ USE CASES · 最適合發的案子")}</div>
         <h2 className="le-h2" style={{ marginBottom: 22 }}>{t("usecases.headline_part1", "不要先買更多工具。")}<br/>{t("usecases.headline_part2_before", "先把下一個")}<span className="le-acc">{t("usecases.headline_part2_em", "AI 專案")}</span>{t("usecases.headline_part2_after", "交付出來。")}</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.65, maxWidth: 900, marginTop: -8, marginBottom: 32 }}>
-          {t("usecases.intro", "BeyondPath beta 先收「範圍清楚、交付可驗收、用 AI 能明顯加速」的交付專案。你不用先懂工具，只要知道你希望交出什麼結果。")}
+          {t("usecases.intro", "BeyondPath 先收「範圍清楚、交付可驗收、用 AI 能明顯加速」的交付專案。你不用先懂工具，只要知道你希望交出什麼結果。")}
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
           {cases.map((c, i) => (
@@ -1350,7 +1356,7 @@ function ETier() {
         <div className="le-tier-onboard" style={{ marginTop: 28, maxWidth: 560, marginLeft: "auto", marginRight: "auto", padding: "16px 0 16px 20px", borderLeft: "2px solid var(--accent)", display: "grid", gridTemplateColumns: "auto 1fr", gap: 16, alignItems: "start" }}>
           <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase", fontWeight: 700, whiteSpace: "nowrap" }}>{t("tier.day1_label_part1", "▸ DAY 1")}<br/>{t("tier.day1_label_part2", "路徑")}</div>
           <div className="le-zh" style={{ fontSize: 13, lineHeight: 1.7, color: "var(--text-2)" }}>
-            {t("tier.day1_body_main", "通過認證 → 進入 beta 首案候選池 → 第一批案件優先從認證名單裡媒合。")}<br/>
+            {t("tier.day1_body_main", "通過認證 → 進入首案候選池 → 第一批案件優先從認證名單裡媒合。")}<br/>
             <span style={{ fontSize: 12, color: "var(--muted)" }}>{t("tier.day1_body_sub", "我們先把案例、工具流與交付品質整理成客戶看得懂的證據，再逐步累積 NPS 與推薦權重。")}</span>
           </div>
         </div>
@@ -1600,13 +1606,13 @@ function EFinalCta() {
       <div className="ghost">BeyondPath</div>
       <div className="inner">
         <div style={{ maxWidth: 720, margin: "0 auto 56px", padding: "32px 28px", border: "1px solid var(--line)", borderRadius: 4, background: "rgba(255,255,255,0.015)" }}>
-          <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.18em", color: "var(--accent-dim)", textTransform: "uppercase", marginBottom: 16 }}>{t("finalcta.roadmap_label", "◆ ROADMAP · 在你按下排隊前 · 我們的進度")}</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.18em", color: "var(--accent-dim)", textTransform: "uppercase", marginBottom: 16 }}>{t("finalcta.roadmap_label", "◆ ROADMAP · 在你開案前 · 我們的進度")}</div>
           <EPocTracker />
         </div>
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("finalcta.eyebrow", "◆ JOIN · PRIVATE BETA")}</div>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("finalcta.eyebrow", "◆ JOIN · OPEN")}</div>
         <h2 className="h">{t("finalcta.headline", "加入第一批 AI 工作網路。")}</h2>
         <div className="grid">
-          <div className="blurb le-zh">{t("finalcta.blurb", "第一批 beta 先用 AI 初審與人工覆核並行。發案方可以留下需求，把不確定的 AI 專案拆成可驗收流程；接案者可以提交作品與 AI workflow，讓能力被認證、被理解、被推薦。")}</div>
+          <div className="blurb le-zh">{t("finalcta.blurb", "AI 初審與人工覆核並行。發案方可以留下需求，把不確定的 AI 專案拆成可驗收流程；接案者可以提交作品與 AI workflow，讓能力被認證、被理解、被推薦。")}</div>
           <div className="form">
             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10, marginBottom: 14 }}>
               <a href="app.html?role=client&step=0" className="le-cta-primary" style={{ padding: "14px 18px", fontSize: 12 }}>
@@ -1621,29 +1627,28 @@ function EFinalCta() {
                 {t("finalcta.cta_demo", "先看 Worker Console demo →")}
               </a>
             </div>
-            <a href="waitlist.html" className="le-cta-secondary" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "13px 16px", textDecoration: "none", marginTop: 4 }}>
-              <span>{t("finalcta.cta_waitlist_main", "加入 Beta waitlist →")}</span>
-              <span style={{ fontSize: 10, opacity: 0.6 }}>{t("finalcta.cta_waitlist_sub", "手動覆核")}</span>
+            <a href="app.html?role=client" className="le-cta-secondary" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "13px 16px", textDecoration: "none", marginTop: 4 }}>
+              <span>{t("finalcta.cta_waitlist_main", "立即發案 →")}</span>
+              <span style={{ fontSize: 10, opacity: 0.6 }}>{t("finalcta.cta_waitlist_sub", "開放申請 · 發案方")}</span>
             </a>
             <div className="meta" style={{ marginTop: 10 }}>
-              <span>{t("finalcta.meta_left", "EARLY BETA")}</span>
-              <span className="le-acc">{t("finalcta.meta_right", "送出進人工審核 · 不代表正式合約或付款")}</span>
+              <span>{t("finalcta.meta_left", "OPEN")}</span>
+              <span className="le-acc">{t("finalcta.meta_right", "接案者需通過認證 · 發案方直接開案 · 代收代付正式上線")}</span>
             </div>
           </div>
         </div>
         <div className="le-footer-nav">
           <div className="brand-col">
             <div className="name">Beyond<span className="le-acc">Path</span></div>
-            <div className="tag le-zh">{t("footer.brand_tag", "台灣 beta 先從 AI 內容、網站、自動化與 GTM 交付開始。用 brief、候選人、milestone，把找人與交付風險降下來。")}</div>
+            <div className="tag le-zh">{t("footer.brand_tag", "台灣 AI 時代的工作交付網路，從 AI 內容、網站、自動化與 GTM 交付開始。用 brief、候選人、milestone，把找人與交付風險降下來。")}</div>
             <div className="chips">
               {["TPE", "SGP", "TYO"].map((c) => (<span key={c}>{c}</span>))}
             </div>
           </div>
           {[
-            [t("footer.col_product", "PRODUCT"), [[t("footer.link_protocol", "流程協定 · 12 步"), "#flywheel"], [t("footer.link_engines", "核心引擎 · 6"), "#engines"], [t("footer.link_tier", "Tier 飛輪"), "#tier"], [t("footer.link_trust", "信任機制"), "#trust"], [t("footer.link_why", "WHY BEYONDPATH"), "#moat"]]],
-            [t("footer.col_network", "NETWORK"), [[t("footer.link_client_apply", "客戶申請"), "app.html?role=client&step=0"], [t("footer.link_expert_apply", "Expert 申請"), "app.html?role=worker&onboarding=1"], [t("footer.link_15verticals", "15 領域總覽"), "#network"], [t("footer.link_master_wall", "A+ 大師牆 · 即將上線"), "mailto:edwardt0303@gmail.com?subject=A%2B%20%E5%A4%A7%E5%B8%AB%E7%89%86%E5%85%88%E8%A1%8C%E5%90%8D%E5%96%AE"], [t("footer.link_retainer", "Retainer Plans · 即將上線"), "mailto:edwardt0303@gmail.com?subject=Retainer%20Plans"]]],
-            [t("footer.col_company", "COMPANY"), [[t("footer.link_about", "關於 BeyondPath"), "#whyus"], [t("footer.link_feedback", "合作回饋 · 即將上線"), "#cases"], [t("footer.link_join_us", "加入我們"), "mailto:edwardt0303@gmail.com?subject=Join%20BeyondPath"], [t("footer.link_contact_email", "edwardt0303@gmail.com"), "mailto:edwardt0303@gmail.com"]]],
-            [t("footer.col_legal", "LEGAL"), [[t("footer.link_terms", "Terms · 即將上線"), "mailto:edwardt0303@gmail.com?subject=Terms%20of%20Service"], [t("footer.link_privacy", "Privacy · 即將上線"), "mailto:edwardt0303@gmail.com?subject=Privacy%20Policy"], [t("footer.link_acceptance", "驗收規則"), "#trust"], [t("footer.link_dispute", "爭議紀錄流程"), "#trust"], [t("footer.link_security", "資安白皮書 · v0.4 · 即將上線"), "mailto:edwardt0303@gmail.com?subject=BP%20Security%20Whitepaper"]]]
+            [t("footer.col_act", "立即行動"), [[t("footer.link_client_apply", "客戶提案"), "app.html?role=client&step=0"], [t("footer.link_expert_apply", "接案者申請"), "app.html?role=worker&onboarding=1"], [t("footer.link_contract_verify", "查驗合約真實性"), "/contract-verify.html"], [t("footer.link_contact_email", "寫信 hello@beyondpath.tw"), "mailto:edwardt0303@gmail.com"]]],
+            [t("footer.col_about", "關於我們"), [[t("footer.link_what_is", "我們是誰"), "#whyus"], [t("footer.link_cases", "合作案例"), "#cases"], [t("footer.link_how_we_match", "為什麼 BeyondPath"), "#moat"]]],
+            [t("footer.col_legal", "法律與信任"), [[t("footer.link_terms", "服務條款"), "/legal/terms.html"], [t("footer.link_privacy", "隱私政策"), "/legal/privacy.html"], [t("footer.link_acceptance", "驗收與爭議流程"), "#trust"]]]
           ].map(([h, items]) => (
             <div key={h}>
               <h4>◆ {h}</h4>
@@ -1664,7 +1669,7 @@ function EFinalCta() {
           <div className="center">{t("footer.cities", "TAIPEI × SINGAPORE × TOKYO · Y1→Y3")}</div>
           <div className="right">
             <span className="le-pulse" style={{ display: "inline-block", width: 6, height: 6, background: "var(--accent)", borderRadius: 99 }}></span>
-            {t("footer.version_status", "v0.5β · LIVE · BETA COHORT OPEN")}
+            {t("footer.version_status", "TAIWAN · OPEN")}
           </div>
         </div>
         {t("footer.eu_caveat", "") && (
@@ -1708,7 +1713,7 @@ function EStory() {
                 <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.client_pt2_bold", "② 少管理不確定性")}</b>{t("story.client_pt2_body", " · 留下需求、")}<b style={{ color: "var(--accent)" }}>{t("story.client_pt2_em", "24 小時")}</b>{t("story.client_pt2_tail", "先知道候選方向與下一步，不用自己發 30 封訊息。")}
               </div>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.client_pt3_bold", "③ AI 先幫你判斷")}</b>{t("story.client_pt3_tail", " · POC 階段先由 AI 拆範圍、看候選方向，再由人工覆核交付條件。")}
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.client_pt3_bold", "③ AI 先幫你判斷")}</b>{t("story.client_pt3_tail", " · AI 先拆範圍、看候選方向，再由人工覆核交付條件。")}
               </div>
               <div>
                 <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.client_pt4_bold", "④ 交付可驗收")}</b>{t("story.client_pt4_tail", " · 每案先定 milestone 與交付標準，避免「做了很多但不知道算不算完成」。")}
@@ -1732,10 +1737,10 @@ function EStory() {
             </div>
             <div className="le-zh" style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 15, color: "var(--text)", lineHeight: 1.55, wordBreak: "keep-all", textWrap: "pretty" }}>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.worker_pt1_bold", "① 進入首案池")}</b>{t("story.worker_pt1_tail", " · 通過認證後進入 beta 候選名單，第一批案件優先從名單媒合。")}
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.worker_pt1_bold", "① 進入首案池")}</b>{t("story.worker_pt1_tail", " · 通過認證後進入首案候選名單，第一批案件優先從名單媒合。")}
               </div>
               <div>
-                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.worker_pt2_bold", "② 不靠低價比稿")}</b>{t("story.worker_pt2_tail", " · beta 前期逐案確認報價與分潤，先讓好交付被看見，而不是比誰便宜。")}
+                <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.worker_pt2_bold", "② 不靠低價比稿")}</b>{t("story.worker_pt2_tail", " · 平台逐案確認報價，先讓好交付被看見，而不是比誰便宜。")}
               </div>
               <div>
                 <b style={{ color: "var(--accent)", fontWeight: 700 }}>{t("story.worker_pt3_bold", "③ 讓客戶看懂你貴在哪")}</b>{t("story.worker_pt3_tail", " · 案例、工具流、交付品質會被整理成 Tier 證據。")}

@@ -7,7 +7,7 @@
 //   - BeyondPath collected Tier B application (worker)
 //   - Stage 1 ~28% / Tier A < 10% expectation framing
 //   - AI 拆解 + 人工覆核並行 framing
-//   - Early Beta / 不代收付款 / 失敗 fallback mailto
+//   - 正式版 v1.0 / 代收代付 (綠界) / 失敗 fallback mailto
 // Style aligned with _shared/decision-email-template.ts
 // Note: font-family uses serif/monospace generic names only (avoid quoted custom font names)
 
@@ -56,7 +56,7 @@ function emailShell(opts: { eyebrow: string; title: string; body: string; homepa
       opts.body +
       "<hr style=\"border:none;border-top:1px solid #2a2a2e;margin:24px 0;\"/>" +
       "<p style=\"color:#9a9aa3;font-size:12px;margin:0 0 8px;\">- BeyondPath . <a href=\"" + opts.homepage + "\" style=\"color:#c7e84a;text-decoration:none;\">" + opts.homepage + "</a></p>" +
-      "<p style=\"color:#6a6a72;font-size:10px;font-family:monospace;letter-spacing:0.04em;margin:8px 0 0;\">Early Beta . 不代收付款 . 互動 demo . 正式服務於 2026 Q3 啟動</p>" +
+      "<p style=\"color:#6a6a72;font-size:10px;font-family:monospace;letter-spacing:0.04em;margin:8px 0 0;\">BeyondPath v1.0 . 案款由平台透過綠界第三方支付代收代付（非 escrow . 見條款 §3.4）</p>" +
     "</div></body></html>"
   );
 }
@@ -92,8 +92,8 @@ export function buildClientAckEmail(input: ClientAckInput): BuiltEmail {
     timeline ? "  時程：" + timeline : null,
     enterpriseFlags.length > 0 ? "  Enterprise：" + enterpriseFlags.join(" . ") : null,
     "",
-    "Early Beta 須知：",
-    "  . Early Beta . 不代收專案款、worker 跟你直接結算",
+    "金流與合作須知：",
+    "  . 案款由 BeyondPath 透過綠界第三方支付代收、扣抵服務費後撥付接案者（代收代付、非 escrow）",
     "  . 試做案 NT$30-100k 起、做完才決定要不要 retainer",
     "  . 不簽長約、不綁定",
     "",
@@ -125,9 +125,9 @@ export function buildClientAckEmail(input: ClientAckInput): BuiltEmail {
     "</ol>" +
     "<div style=\"font-family:monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;\">▍ 我們收到的 brief / BRIEF SUMMARY</div>" +
     "<table style=\"width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;\">" + briefRows + "</table>" +
-    "<div style=\"font-family:monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;\">▍ Early Beta 須知 / FYI</div>" +
+    "<div style=\"font-family:monospace;font-size:10px;letter-spacing:0.12em;color:#9a9aa3;text-transform:uppercase;margin-bottom:12px;\">▍ 金流與合作須知 / FYI</div>" +
     "<ul style=\"color:#c8c6c0;line-height:1.75;font-size:13px;margin:0 0 24px;padding-left:20px;\">" +
-      "<li>Early Beta . <b style=\"color:#c7e84a;\">不代收專案款</b>、worker 跟你直接結算</li>" +
+      "<li>案款由 BeyondPath 透過綠界第三方支付 <b style=\"color:#c7e84a;\">代收代付</b>（扣抵服務費後撥付接案者、非 escrow）</li>" +
       "<li>試做案 NT$30-100k 起、做完才決定要不要 retainer</li>" +
       "<li>不簽長約、不綁定</li>" +
     "</ul>" +

@@ -13,6 +13,8 @@
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { verifyDecisionToken, sha256Hex } from "../_shared/jwt-light.ts";
+import { checkRateLimit, getClientIp } from "../_shared/rate-limit.ts";  // 2026-05-29 calcifer doc28 C . 防洗限流
+import { notifyEdward } from "../_shared/notify-edward.ts";  // 2026-06-01 calcifer doc42 M-1 . worker 接受/婉拒推 Edward
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? Deno.env.get("NEXT_PUBLIC_SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
@@ -57,11 +59,53 @@ async function updateDecisionStatus(decisionId: string, action: "accept" | "decl
   return res.ok;
 }
 
+// 2026-06-01 calcifer doc42 M-1 . 取 worker 名 + client 公司 + 案名 . 通知 Edward 用
+// PostgREST embedded resource . 一次 join worker_applications + client_intakes . 不多打 API
+async function fetchDecisionContext(decisionId: string): Promise<{
+  workerName: string; clientName: string; projectTitle: string; vertical: string;
+} | null> {
+  const sel = "select=id," +
+    "worker_applications(display_name,email)," +
+    "client_intakes(company_name,vertical,intake_data)";
+  const url = SUPABASE_URL + "/rest/v1/worker_decisions?id=eq." + encodeURIComponent(decisionId) + "&" + sel + "&limit=1";
+  try {
+    const res = await fetch(url, { headers: authHeaders() });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    const row = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
+    if (!row) return null;
+    const wa = row.worker_applications || {};
+    const ci = row.client_intakes || {};
+    const id = (ci.intake_data && typeof ci.intake_data === "object") ? ci.intake_data : {};
+    // client_intakes 無專屬 title 欄 . 用 brief / description 前 60 字當案件描述 (與 send-decision-email 同源)
+    const briefRaw = id.brief || id.description || id.project_brief || "";
+    const brief = String(briefRaw).replace(/\s+/g, " ").trim();
+    const projectTitle = brief ? (brief.length > 60 ? brief.slice(0, 60) + "…" : brief) : "(無 brief 摘要)";
+    return {
+      workerName: wa.display_name || wa.email || "(worker)",
+      clientName: ci.company_name || "(client)",
+      projectTitle: projectTitle,
+      vertical: ci.vertical || id.vertical || "",
+    };
+  } catch (_e) {
+    return null;
+  }
+}
+
 serve(async function (req: Request) {
   const url = new URL(req.url);
   const token = url.searchParams.get("token") || "";
   const actionRaw = url.searchParams.get("action") || "";
   const action: "accept" | "decline" = actionRaw === "decline" ? "decline" : "accept";
+
+  // 2026-05-29 calcifer . doc 28 Part C . IP 限流 (額外防洗層)
+  // 註: 本函式是 worker 點 email 連結觸發的 GET + 已有 JWT token 簽章驗證 + 一次性 (accepted/declined
+  //     後 redirect already) . 故「不套 admin check」(會打爆 worker 點信流程 . worker 沒 admin JWT) .
+  //     真正 GET->POST 中間頁加固 = doc 14 P0-3 獨立議題 (不在 doc 28 範圍) . 此處只加寬鬆 IP 限流防狂打 .
+  const rl = await checkRateLimit("worker-accept-decline", getClientIp(req), { limit: 30, windowSec: 60 });
+  if (!rl.allowed) {
+    return redirect(buildRedirectUrl(action, "rate-limited"));
+  }
 
   if (!JWT_SECRET || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
     return redirect(buildRedirectUrl(action, "error-config"));
@@ -89,6 +133,21 @@ serve(async function (req: Request) {
   if (!ok) {
     return redirect(buildRedirectUrl(action, "update-failed"));
   }
+
+  // 2026-06-01 calcifer doc42 M-1 . worker 決定後推 Edward (最關鍵缺口 . 原本 0 通知 Edward 空等)
+  // fire-and-forget . 絕不阻斷 worker 的 redirect 體驗
+  fetchDecisionContext(row.id).then(function (ctx) {
+    const c = ctx || { workerName: "(worker)", clientName: "(client)", projectTitle: "", vertical: "" };
+    const eventType = action === "accept" ? "worker_accepted" : "worker_declined";
+    const title = c.workerName + (action === "accept" ? " 接受了邀請" : " 婉拒了邀請");
+    return notifyEdward(eventType, {
+      title: title,
+      workerName: c.workerName,
+      clientName: c.clientName,
+      projectTitle: c.projectTitle,
+      vertical: c.vertical,
+    });
+  }).catch(function () {});
 
   return redirect(buildRedirectUrl(action, "success"));
 });

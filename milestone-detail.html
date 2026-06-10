@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>里程碑交付 · BeyondPath</title>
+<meta name="description" content="BeyondPath 里程碑交付物管理頁。雙方上傳檔案、貼外部連結、查看版本歷史、驗收。" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#0a0a0b" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --surface: #131316;
+  --surface-2: #1a1a1f;
+  --line: rgba(255,255,255,0.08);
+  --line-soft: rgba(255,255,255,0.04);
+  --text: #f0eee8;
+  --text-2: #c8c6c0;
+  --muted: #9a9aa3;
+  --accent: oklch(0.88 0.22 128);
+  --accent-soft: oklch(0.88 0.22 128 / 0.12);
+  --accent-line: oklch(0.88 0.22 128 / 0.4);
+  --warn: oklch(0.82 0.16 75);
+  --err: oklch(0.7 0.18 25);
+  --err-soft: oklch(0.7 0.18 25 / 0.12);
+  --ok: #4ade80;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: "IBM Plex Sans", "Noto Sans TC", system-ui, sans-serif; }
+.shell { max-width: 960px; margin: 0 auto; padding: 24px 20px 80px; }
+.top { display: flex; align-items: center; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+.mark { width: 14px; height: 14px; border-radius: 4px; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.brand { font-weight: 700; letter-spacing: -0.02em; }
+.meta { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 24px; margin-bottom: 16px; }
+h1 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.02em; }
+h2 { font-size: 17px; margin: 24px 0 12px; color: var(--text-2); }
+.sub { color: var(--muted); font-size: 13px; }
+.pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-family: var(--mono); letter-spacing: 0.08em; border: 1px solid var(--accent-line); color: var(--accent); }
+.pill.warn { border-color: var(--warn); color: var(--warn); }
+.pill.ok { border-color: var(--ok); color: var(--ok); }
+.pill.err { border-color: var(--err); color: var(--err); }
+button, .btn { padding: 10px 18px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font-size: 13px; cursor: pointer; font-family: inherit; }
+button:hover { border-color: var(--accent-line); }
+button.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
+button.danger { background: var(--err-soft); color: var(--err); border-color: var(--err); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.err-box { background: var(--err-soft); border: 1px solid var(--err); color: var(--err); padding: 12px 16px; border-radius: 6px; margin: 12px 0; font-size: 13px; }
+.ok-box { background: rgba(74, 222, 128, 0.1); border: 1px solid var(--ok); color: var(--ok); padding: 12px 16px; border-radius: 6px; margin: 12px 0; font-size: 13px; }
+.meta-row { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; font-size: 13px; margin: 12px 0; }
+.meta-row .k { color: var(--muted); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+.meta-row .v { color: var(--text-2); word-break: break-all; }
+.uploader { padding: 24px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; transition: border-color 0.2s; margin: 12px 0; }
+.uploader.dragover { border-color: var(--accent); background: var(--accent-soft); }
+.uploader input[type=file] { display: none; }
+.upload-label { display: inline-block; padding: 10px 20px; background: var(--accent); color: var(--bg); border-radius: 6px; font-weight: 600; cursor: pointer; }
+.file-row { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--surface-2); border-radius: 6px; margin-bottom: 6px; font-size: 13px; }
+.file-row .name { flex: 1; word-break: break-all; }
+.file-row .size { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.version-block { border-left: 3px solid var(--accent-line); padding: 12px 16px; margin: 12px 0; background: var(--surface-2); border-radius: 0 6px 6px 0; }
+.version-block.disputed { border-left-color: var(--err); }
+.version-block .ver-label { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; }
+.version-block .ver-meta { font-family: var(--mono); font-size: 11px; color: var(--muted); margin: 6px 0; }
+.action-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.input, textarea, select { width: 100%; padding: 10px 12px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; color: var(--text); font-family: inherit; font-size: 13px; }
+textarea { resize: vertical; min-height: 80px; }
+label { display: block; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 12px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.tab-row { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin: 16px 0 0; }
+.tab { padding: 10px 16px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; font-size: 13px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-pane.hidden { display: none; }
+.link-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--surface-2); border-radius: 6px; margin-bottom: 6px; font-size: 13px; }
+.link-card .link-type { font-family: var(--mono); font-size: 10px; padding: 3px 8px; background: var(--accent-soft); color: var(--accent); border-radius: 4px; text-transform: uppercase; }
+.link-card a { color: var(--accent); text-decoration: underline; word-break: break-all; }
+@media (max-width: 600px) {
+  .meta-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div class="mark"></div>
+    <div class="brand">BeyondPath · Milestone Deliverables</div>
+    <div class="meta" id="meta-id">—</div>
+  </div>
+  <div id="root">
+    <div class="card">
+      <h1>載入中…</h1>
+      <p class="sub">驗證 token + 拉取里程碑資料</p>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  var SUPABASE_URL = "https://iacwmkcloxjffghrweie.supabase.co";
+  var SUPABASE_ANON_KEY = "sb_publishable_Ke3oOlMiYwQ4_XGhYofF3w_TdBtoQEY";
+  var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  function qs(name) {
+    var m = new RegExp("[?&]" + name + "=([^&]*)").exec(window.location.search);
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+
+  var contractId = qs("contract_id");
+  var milestoneId = qs("milestone_id");
+  var token = qs("token");
+
+  var role = null; // worker | client - 由 token payload decode 取 (簡單路徑: 不再次 verify, 信任 Edge Function 後端)
+  try {
+    if (token) {
+      var parts = token.split(".");
+      if (parts.length === 3) {
+        var pl = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+        role = pl.role;
+      }
+    }
+  } catch (e) {}
+
+  var root = document.getElementById("root");
+  var metaIdEl = document.getElementById("meta-id");
+
+  if (!contractId || !milestoneId || !token || !role) {
+    root.innerHTML = '<div class="card"><h1>連結無效</h1><p class="sub">缺少 contract_id / milestone_id / token / role。請從 BeyondPath 寄出的 email 連結進入。</p></div>';
+    return;
+  }
+  metaIdEl.textContent = role.toUpperCase() + " · " + milestoneId.slice(0, 8);
+
+  function fmtSize(b) {
+    if (b < 1024) return b + " B";
+    if (b < 1024 * 1024) return (b / 1024).toFixed(1) + " KB";
+    return (b / 1024 / 1024).toFixed(2) + " MB";
+  }
+
+  function fmtDate(s) {
+    if (!s) return "—";
+    try {
+      var d = new Date(s);
+      return d.toLocaleString("zh-TW", { dateStyle: "short", timeStyle: "short" });
+    } catch (e) { return s; }
+  }
+
+  function statusLabel(st) {
+    var map = {
+      pending: { label: "Pending", cls: "" },
+      in_progress: { label: "進行中", cls: "warn" },
+      delivered: { label: "已交付 待驗收", cls: "" },
+      approved: { label: "✓ 驗收通過", cls: "ok" },
+      disputed: { label: "✗ 退件", cls: "err" },
+      arbitration: { label: "⚠ 仲裁中", cls: "err" },
+    };
+    return map[st] || { label: st, cls: "" };
+  }
+
+  function render(state) {
+    var m = state.milestone;
+    var c = state.contract;
+    var deliverables = state.deliverables || [];
+    var links = state.links || [];
+    var snap = c.contract_snapshot || {};
+    var st = statusLabel(m.status);
+
+    // 把交付物依 version 分群
+    var byVer = {};
+    for (var i = 0; i < deliverables.length; i++) {
+      var d = deliverables[i];
+      var v = d.version_number || 1;
+      if (!byVer[v]) byVer[v] = [];
+      byVer[v].push(d);
+    }
+    var versions = Object.keys(byVer).map(function (k) { return parseInt(k, 10); }).sort(function (a, b) { return b - a; });
+
+    var canUpload = (role === "worker" && m.status !== "approved" && m.status !== "arbitration" && !m.archived_at) ||
+                    (role === "client" && m.status !== "approved" && !m.archived_at);
+    var canClientAct = role === "client" && m.status === "delivered";
+
+    var html = '';
+    html += '<div class="card">';
+    html += '<h1>' + (m.title || ("里程碑 " + m.milestone_number)) + ' <span class="pill ' + st.cls + '" style="margin-left:8px;font-size:11px;vertical-align:middle">' + st.label + '</span></h1>';
+    html += '<p class="sub">' + (snap.client_name || "Client") + ' ⇄ ' + (snap.worker_name || "Worker") + ' · ' + (m.amount_pct || 30) + '% 釋款</p>';
+    html += '<div class="meta-row">';
+    html += '<div class="k">Contract</div><div class="v">' + c.id.slice(0, 8) + '</div>';
+    html += '<div class="k">Milestone</div><div class="v">#' + m.milestone_number + ' · ' + m.id.slice(0, 8) + '</div>';
+    html += '<div class="k">Attempts</div><div class="v">' + (m.attempts || 1) + ' / 3 max</div>';
+    html += '<div class="k">Dispute</div><div class="v">' + (m.dispute_count || 0) + ' / 3</div>';
+    if (m.due_date) html += '<div class="k">Due</div><div class="v">' + m.due_date + '</div>';
+    if (m.delivered_at) html += '<div class="k">Delivered</div><div class="v">' + fmtDate(m.delivered_at) + '</div>';
+    if (m.approved_at) html += '<div class="k">Approved</div><div class="v">' + fmtDate(m.approved_at) + '</div>';
+    if (m.dispute_reason) html += '<div class="k">Dispute reason</div><div class="v" style="color:var(--err)">' + m.dispute_reason + '</div>';
+    html += '</div>';
+    html += '</div>';
+
+    // 2026-05-29 calcifer . 本階段交付物 (doc 29 §3.4 . B 邊界含上線確認)
+    if (m.deliverable_text) {
+      var dlines = String(m.deliverable_text).split('\n').filter(function (x) { return x && x.trim(); });
+      if (dlines.length) {
+        html += '<div class="card">';
+        html += '<h2 style="margin-top:0">本階段交付物</h2>';
+        html += '<p class="sub" style="margin-bottom:10px">客戶對照下列項目驗收 . 驗收通過即釋款 ' + (m.amount_pct || 30) + '%</p>';
+        for (var di = 0; di < dlines.length; di++) {
+          var dtxt = dlines[di].replace(/^[·\s]+/, '');
+          html += '<div style="padding:8px 0;border-bottom:1px solid var(--line);color:var(--text-2);font-size:14px;line-height:1.6">· ' + dtxt + '</div>';
+        }
+        html += '</div>';
+      }
+    }
+
+    // 上傳區
+    if (canUpload) {
+      html += '<div class="card">';
+      html += '<h2>' + (role === "worker" ? "上傳交付檔案" : "上傳補充材料") + '</h2>';
+      html += '<div class="tab-row">';
+      html += '<div class="tab active" data-tab="file">檔案上傳</div>';
+      html += '<div class="tab" data-tab="link">外部連結 (Figma / GDrive / GitHub)</div>';
+      html += '</div>';
+      html += '<div class="tab-pane" data-pane="file">';
+      html += '<label>選擇檔案 (max 100 MB)</label>';
+      html += '<div class="uploader" id="dropzone">';
+      html += '<input type="file" id="file-input" />';
+      html += '<label for="file-input" class="upload-label">選擇檔案</label>';
+      html += '<div style="margin-top:8px;color:var(--muted);font-size:12px">或拖曳檔案至此</div>';
+      html += '<div id="file-preview" style="margin-top:10px"></div>';
+      html += '</div>';
+      html += '<label>說明 (此版改了什麼)</label>';
+      html += '<textarea id="desc" placeholder="例: v2 修正客戶要求的色票 + 補了 mobile 截圖"></textarea>';
+      html += '<div class="action-row"><button class="primary" id="btn-upload" disabled>上傳交付</button></div>';
+      html += '<div id="upload-msg"></div>';
+      html += '</div>';
+      html += '<div class="tab-pane hidden" data-pane="link">';
+      html += '<label>連結類型</label>';
+      html += '<select id="link-type"><option value="figma">Figma</option><option value="gdrive">Google Drive</option><option value="github">GitHub</option><option value="notion">Notion</option><option value="dropbox">Dropbox</option><option value="other">其他</option></select>';
+      html += '<label>URL</label>';
+      html += '<input class="input" id="link-url" placeholder="https://figma.com/file/..." />';
+      html += '<label>說明</label>';
+      html += '<textarea id="link-desc" placeholder="可選 . 例: 完成稿位於 frame 5-12"></textarea>';
+      html += '<div class="action-row"><button class="primary" id="btn-link">送出連結</button></div>';
+      html += '<div id="link-msg"></div>';
+      html += '</div>';
+      html += '</div>';
+    }
+
+    // 版本歷史
+    html += '<div class="card">';
+    html += '<h2>版本歷史 (' + deliverables.length + ' 個檔案 + ' + links.length + ' 個外部連結)</h2>';
+    if (versions.length === 0 && links.length === 0) {
+      html += '<p class="sub">尚無交付物</p>';
+    }
+    for (var vi = 0; vi < versions.length; vi++) {
+      var ver = versions[vi];
+      var arr = byVer[ver];
+      var verCls = (m.status === "disputed" && ver === versions[0]) ? "version-block disputed" : "version-block";
+      html += '<div class="' + verCls + '">';
+      html += '<div class="ver-label">v' + ver + (vi === 0 ? " · 最新" : "") + '</div>';
+      html += '<div class="ver-meta">' + arr[0].uploaded_by_role + ' · ' + fmtDate(arr[0].uploaded_at) + '</div>';
+      if (arr[0].description) html += '<div style="margin:6px 0;color:var(--text-2);font-size:13px">' + arr[0].description + '</div>';
+      for (var fi = 0; fi < arr.length; fi++) {
+        var d = arr[fi];
+        html += '<div class="file-row">';
+        html += '<div class="name">' + d.file_name + '</div>';
+        html += '<div class="size">' + fmtSize(d.file_size) + '</div>';
+        html += '<button data-dl-id="' + d.id + '" class="btn-dl">下載</button>';
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+
+    if (links.length > 0) {
+      html += '<h2 style="margin-top:16px">外部連結</h2>';
+      for (var li = 0; li < links.length; li++) {
+        var lnk = links[li];
+        html += '<div class="link-card">';
+        html += '<span class="link-type">' + lnk.link_type + '</span>';
+        html += '<a href="' + lnk.url + '" target="_blank" rel="noopener">' + lnk.url + '</a>';
+        html += '</div>';
+        if (lnk.description) html += '<div style="font-size:12px;color:var(--muted);margin:-4px 0 8px 12px">' + lnk.description + '</div>';
+      }
+    }
+    html += '</div>';
+
+    // 客戶 action 區
+    if (canClientAct) {
+      html += '<div class="card">';
+      html += '<h2>驗收動作</h2>';
+      html += '<p class="sub">已退件 ' + (m.dispute_count || 0) + ' / 3 次 . 第 3 次退件後將自動進入仲裁流程</p>';
+      html += '<div class="action-row">';
+      html += '<button class="primary" id="btn-approve">✓ 驗收通過 ( ' + (m.amount_pct || 30) + '% 釋款)</button>';
+      html += '<button class="danger" id="btn-dispute">✗ 要求修改</button>';
+      html += '</div>';
+      html += '<div id="action-msg"></div>';
+      html += '</div>';
+    }
+
+    root.innerHTML = html;
+    wireEvents(state);
+  }
+
+  var pendingFile = null;
+  function fileToBase64(file) {
+    return new Promise(function (resolve, reject) {
+      var fr = new FileReader();
+      fr.onload = function () {
+        var b64 = String(fr.result).split(",")[1] || "";
+        resolve(b64);
+      };
+      fr.onerror = reject;
+      fr.readAsDataURL(file);
+    });
+  }
+
+  function wireEvents(state) {
+    // tab switch
+    var tabs = document.querySelectorAll(".tab");
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].addEventListener("click", function (e) {
+        var t = e.target.getAttribute("data-tab");
+        var allTabs = document.querySelectorAll(".tab");
+        for (var j = 0; j < allTabs.length; j++) allTabs[j].classList.remove("active");
+        e.target.classList.add("active");
+        var panes = document.querySelectorAll(".tab-pane");
+        for (var j = 0; j < panes.length; j++) {
+          var p = panes[j];
+          if (p.getAttribute("data-pane") === t) p.classList.remove("hidden");
+          else p.classList.add("hidden");
+        }
+      });
+    }
+
+    // file upload
+    var fileInput = document.getElementById("file-input");
+    var btnUpload = document.getElementById("btn-upload");
+    var preview = document.getElementById("file-preview");
+    var dropzone = document.getElementById("dropzone");
+    function setFile(f) {
+      pendingFile = f;
+      preview.innerHTML = f ? ('<div style="font-family:var(--mono);font-size:12px;color:var(--accent)">✓ ' + f.name + ' (' + fmtSize(f.size) + ')</div>') : '';
+      if (btnUpload) btnUpload.disabled = !f;
+    }
+    if (fileInput) fileInput.addEventListener("change", function (e) { setFile(e.target.files[0]); });
+    if (dropzone) {
+      dropzone.addEventListener("dragover", function (e) { e.preventDefault(); dropzone.classList.add("dragover"); });
+      dropzone.addEventListener("dragleave", function () { dropzone.classList.remove("dragover"); });
+      dropzone.addEventListener("drop", function (e) {
+        e.preventDefault();
+        dropzone.classList.remove("dragover");
+        if (e.dataTransfer.files.length > 0) setFile(e.dataTransfer.files[0]);
+      });
+    }
+    if (btnUpload) {
+      btnUpload.addEventListener("click", async function () {
+        if (!pendingFile) return;
+        if (pendingFile.size > 100 * 1024 * 1024) {
+          document.getElementById("upload-msg").innerHTML = '<div class="err-box">檔案超過 100 MB . 請改用外部連結</div>';
+          return;
+        }
+        btnUpload.disabled = true;
+        document.getElementById("upload-msg").innerHTML = '<div style="color:var(--muted);font-size:12px;margin-top:8px">上傳中…</div>';
+        try {
+          var b64 = await fileToBase64(pendingFile);
+          var desc = document.getElementById("desc").value || "";
+          var res = await fetch(SUPABASE_URL + "/functions/v1/upload-deliverable", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+            body: JSON.stringify({ milestone_id: milestoneId, role: role, file_base64: b64, file_name: pendingFile.name, mime_type: pendingFile.type || "application/octet-stream", description: desc, token: token }),
+          });
+          var data = await res.json();
+          if (data.ok) {
+            document.getElementById("upload-msg").innerHTML = '<div class="ok-box">✓ 上傳成功 . v' + data.version_number + ' . SHA-256 ' + data.sha256.slice(0, 16) + '…</div>';
+            setTimeout(load, 1200);
+          } else {
+            document.getElementById("upload-msg").innerHTML = '<div class="err-box">✗ ' + (data.error || "上傳失敗") + '</div>';
+            btnUpload.disabled = false;
+          }
+        } catch (e) {
+          document.getElementById("upload-msg").innerHTML = '<div class="err-box">✗ ' + (e.message || String(e)) + '</div>';
+          btnUpload.disabled = false;
+        }
+      });
+    }
+
+    // external link
+    var btnLink = document.getElementById("btn-link");
+    if (btnLink) {
+      btnLink.addEventListener("click", async function () {
+        var lt = document.getElementById("link-type").value;
+        var url = document.getElementById("link-url").value.trim();
+        var ldesc = document.getElementById("link-desc").value || "";
+        if (!url.match(/^https?:\/\//)) {
+          document.getElementById("link-msg").innerHTML = '<div class="err-box">URL 須以 http:// 或 https:// 開頭</div>';
+          return;
+        }
+        btnLink.disabled = true;
+        try {
+          var res = await fetch(SUPABASE_URL + "/functions/v1/add-external-link", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+            body: JSON.stringify({ milestone_id: milestoneId, role: role, link_type: lt, url: url, description: ldesc, token: token }),
+          });
+          var data = await res.json();
+          if (data.ok) {
+            document.getElementById("link-msg").innerHTML = '<div class="ok-box">✓ 連結已送出</div>';
+            setTimeout(load, 800);
+          } else {
+            document.getElementById("link-msg").innerHTML = '<div class="err-box">✗ ' + (data.error || "送出失敗") + '</div>';
+            btnLink.disabled = false;
+          }
+        } catch (e) {
+          document.getElementById("link-msg").innerHTML = '<div class="err-box">✗ ' + (e.message || String(e)) + '</div>';
+          btnLink.disabled = false;
+        }
+      });
+    }
+
+    // 下載
+    var dlBtns = document.querySelectorAll(".btn-dl");
+    for (var i = 0; i < dlBtns.length; i++) {
+      dlBtns[i].addEventListener("click", async function (e) {
+        var btn = e.target;
+        var did = btn.getAttribute("data-dl-id");
+        btn.disabled = true;
+        btn.textContent = "下載中…";
+        try {
+          var res = await fetch(SUPABASE_URL + "/functions/v1/download-deliverable", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+            body: JSON.stringify({ deliverable_id: did, role: role, token: token }),
+          });
+          var data = await res.json();
+          if (data.ok && data.signed_url) {
+            window.open(data.signed_url, "_blank");
+            btn.textContent = "下載";
+          } else {
+            alert("下載失敗: " + (data.error || "unknown"));
+            btn.textContent = "下載";
+          }
+        } catch (e) {
+          alert("下載失敗: " + (e.message || String(e)));
+          btn.textContent = "下載";
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    }
+
+    // approve / dispute (client only)
+    var btnAp = document.getElementById("btn-approve");
+    if (btnAp) {
+      btnAp.addEventListener("click", async function () {
+        if (!window.confirm("確定驗收通過？對應 " + (state.milestone.amount_pct || 30) + "% 釋款給接案者")) return;
+        // 用 service_role 不能直接 . 走另開的 endpoint . 但既有 update-milestone-status 需要 admin auth
+        // 直接給客戶用 PATCH? 不 . 簡化路徑: 走 update-milestone-status 但加 client-token 模式
+        // 為 POC 簡化 . 此頁的 approve/dispute 動作其實需要新 endpoint 'client-acceptance' . 但時間限制下:
+        // 透過 anon 直送 RPC (RLS 會擋 . 所以這條路 not viable)
+        // 改: 通知 admin "客戶想驗收/退件" . 走 email 流程
+        await emailAdmin("approve");
+      });
+    }
+    var btnDp = document.getElementById("btn-dispute");
+    if (btnDp) {
+      btnDp.addEventListener("click", async function () {
+        var reason = window.prompt("退件原因 (詳述哪些不符合):");
+        if (!reason) return;
+        await emailAdmin("dispute", reason);
+      });
+    }
+
+    async function emailAdmin(action, reason) {
+      var msgEl = document.getElementById("action-msg");
+      msgEl.innerHTML = '<div style="color:var(--muted);font-size:12px;margin-top:8px">送出中…</div>';
+      try {
+        // 用 client-acceptance Edge Function (專為 client 驗收 . 走 contract-jwt verify)
+        var res = await fetch(SUPABASE_URL + "/functions/v1/client-acceptance", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+          body: JSON.stringify({ milestone_id: milestoneId, action: action, dispute_reason: reason || null, token: token }),
+        });
+        var data = await res.json();
+        if (data.ok) {
+          msgEl.innerHTML = '<div class="ok-box">✓ ' + (action === "approve" ? "驗收通過已記錄" : "退件已記錄") + (data.arbitration ? " . 退件達 3 次 . 已觸發仲裁" : "") + '</div>';
+          setTimeout(load, 1500);
+        } else {
+          msgEl.innerHTML = '<div class="err-box">✗ ' + (data.error || "失敗") + '</div>';
+        }
+      } catch (e) {
+        msgEl.innerHTML = '<div class="err-box">✗ ' + (e.message || String(e)) + '</div>';
+      }
+    }
+  }
+
+  async function load() {
+    try {
+      // 用 anon 直查 milestone + contract + deliverables + links
+      // 但 RLS 是 admin only -> 我們需要 service_role 路徑
+      // 簡化: 開一個 'get-milestone-detail' Edge Function 用 contract-jwt verify 後 service_role 拉
+      var res = await fetch(SUPABASE_URL + "/functions/v1/get-milestone-detail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
+        body: JSON.stringify({ contract_id: contractId, milestone_id: milestoneId, role: role, token: token }),
+      });
+      var data = await res.json();
+      if (!data.ok) {
+        root.innerHTML = '<div class="card"><h1>載入失敗</h1><div class="err-box">' + (data.error || "未知錯誤") + '</div></div>';
+        return;
+      }
+      render({
+        contract: data.contract,
+        milestone: data.milestone,
+        deliverables: data.deliverables || [],
+        links: data.links || [],
+      });
+    } catch (e) {
+      root.innerHTML = '<div class="card"><h1>載入失敗</h1><div class="err-box">' + (e.message || String(e)) + '</div></div>';
+    }
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>

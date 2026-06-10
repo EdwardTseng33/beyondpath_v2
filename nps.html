@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BeyondPath . 案件評分</title>
+  <link rel="icon" href="/favicon.svg" />
+  <style>
+    :root {
+      --bg: #faf7f2;
+      --surface: #fff;
+      --line: #e8e2d6;
+      --text: #2a2520;
+      --muted: #8a7e6e;
+      --accent: #d4712a;
+      --ok: #4ade80;
+      --danger: #d94a4a;
+      --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    .container { max-width: 600px; margin: 48px auto; padding: 0 20px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 32px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 28px;
+      color: var(--accent);
+    }
+    h1 small {
+      display: block;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      font-style: normal;
+      margin-top: 4px;
+    }
+    .meta {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      margin: 12px 0 24px;
+      padding: 12px;
+      background: rgba(212,113,42,0.04);
+      border-left: 3px solid var(--accent);
+    }
+    label { display: block; margin: 20px 0 8px; font-weight: 600; }
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(11, 1fr);
+      gap: 4px;
+      margin: 8px 0 16px;
+    }
+    .score-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .score-btn:hover { border-color: var(--accent); }
+    .score-btn.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .scale-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-top: 4px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 14px;
+      resize: vertical;
+    }
+    .anon {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 14px;
+      background: rgba(74,222,128,0.06);
+      border: 1px solid rgba(74,222,128,0.25);
+      border-radius: 6px;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+    .anon input { width: 18px; height: 18px; }
+    button.submit {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: 0;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+    }
+    button.submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .alert { padding: 14px; border-radius: 6px; margin: 16px 0; font-size: 13px; }
+    .alert-err { background: rgba(217,74,74,0.08); border: 1px solid rgba(217,74,74,0.3); color: var(--danger); }
+    .alert-ok { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.3); color: #166534; }
+    .footer { margin-top: 24px; font-size: 11px; color: var(--muted); font-family: var(--mono); text-align: center; }
+    @media (max-width: 600px) {
+      .container { margin: 16px auto; }
+      .card { padding: 20px; }
+      h1 { font-size: 22px; }
+      .score-btn { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>邀請您給此次合作評分<small>BeyondPath . NPS Survey</small></h1>
+      <div id="meta" class="meta">驗證中…</div>
+      <div id="form" style="display:none">
+        <label>0-10 . 你會推薦此次合作對象嗎？</label>
+        <div class="score-grid" id="scoreGrid"></div>
+        <div class="scale-labels"><span>0 . 不會推薦</span><span>10 . 強烈推薦</span></div>
+
+        <label for="comment">評論（可選）</label>
+        <textarea id="comment" placeholder="可填寫對此次合作的感想 . 改善建議或亮點"></textarea>
+
+        <div id="anonBox" class="anon" style="display:none">
+          <input type="checkbox" id="anonChk" />
+          <label for="anonChk" style="margin:0;font-weight:400">匿名提交 . BeyondPath 平台會收到分數但不會關聯您的身份</label>
+        </div>
+
+        <button class="submit" id="submitBtn" disabled>送出評分</button>
+      </div>
+      <div id="result" style="display:none"></div>
+      <div class="footer">BeyondPath · Phase 3 結案 NPS</div>
+    </div>
+  </div>
+  <script>
+    window.SUPABASE_URL = "https://nrfeqirsacbtgkfsmlhz.supabase.co";
+    window.SUPABASE_PUBLISHABLE_KEY = "sb_publishable_PLACEHOLDER_replace_with_anon_key";
+  </script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var contractId = params.get("id");
+      var role = params.get("role");
+      var token = params.get("token");
+      var metaEl = document.getElementById("meta");
+      var formEl = document.getElementById("form");
+      var resultEl = document.getElementById("result");
+      var anonBox = document.getElementById("anonBox");
+      var submitBtn = document.getElementById("submitBtn");
+      var selectedScore = -1;
+
+      if (!contractId || !role || !token) {
+        metaEl.innerHTML = "連結不完整 . 請從 email 內的連結進入";
+        return;
+      }
+      metaEl.innerHTML = "合約 <code>" + contractId.slice(0, 8) + "</code> . 您是 " + (role === "client" ? "發案方" : "接案者");
+      formEl.style.display = "block";
+      if (role === "worker") anonBox.style.display = "flex";
+
+      var grid = document.getElementById("scoreGrid");
+      for (var i = 0; i <= 10; i++) {
+        (function (n) {
+          var b = document.createElement("button");
+          b.className = "score-btn";
+          b.type = "button";
+          b.textContent = String(n);
+          b.onclick = function () {
+            selectedScore = n;
+            var btns = grid.querySelectorAll(".score-btn");
+            for (var j = 0; j < btns.length; j++) btns[j].classList.remove("selected");
+            b.classList.add("selected");
+            submitBtn.disabled = false;
+          };
+          grid.appendChild(b);
+        })(i);
+      }
+
+      submitBtn.onclick = function () {
+        if (selectedScore < 0) return;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "送出中…";
+        var comment = document.getElementById("comment").value;
+        var isAnon = document.getElementById("anonChk") ? document.getElementById("anonChk").checked : false;
+        var endpoint = window.SUPABASE_URL + "/functions/v1/submit-nps";
+        fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": window.SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": "Bearer " + window.SUPABASE_PUBLISHABLE_KEY,
+          },
+          body: JSON.stringify({
+            contract_id: contractId,
+            role: role,
+            score: selectedScore,
+            comment: comment,
+            is_anonymous: isAnon,
+            token: token,
+          }),
+        })
+          .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+          .then(function (resp) {
+            if (resp.ok) {
+              formEl.style.display = "none";
+              resultEl.style.display = "block";
+              resultEl.innerHTML = "<div class=\"alert alert-ok\"><strong>✓ 已收到您的評分 . " + selectedScore + " / 10</strong><br/><span style=\"color:#888;font-size:12px\">感謝您協助 BeyondPath 提升媒合品質。</span></div>";
+            } else {
+              resultEl.style.display = "block";
+              resultEl.innerHTML = "<div class=\"alert alert-err\"><strong>送出失敗 . </strong>" + ((resp.data && resp.data.error) || "未知錯誤") + "</div>";
+              submitBtn.disabled = false;
+              submitBtn.textContent = "重新送出";
+            }
+          })
+          .catch(function (e) {
+            resultEl.style.display = "block";
+            resultEl.innerHTML = "<div class=\"alert alert-err\"><strong>網路錯誤 . </strong>" + String(e) + "</div>";
+            submitBtn.disabled = false;
+            submitBtn.textContent = "重新送出";
+          });
+      };
+    })();
+  </script>
+</body>
+</html>
