@@ -242,7 +242,7 @@
         "n": "03",
         "en": "SCOPE + MILESTONE",
         "zh": "Scope × acceptance",
-        "d": "Platform confirms deliverables, timeline, risks and acceptance criteria. Payment handled through platform escrow per terms.",
+        "d": "Platform confirms deliverables, timeline, risks and acceptance criteria. Payment is collected and disbursed by the platform (via ECPay) per terms.",
         "you": "So you → know what 'done' means before kickoff. No hanging the project on verbal agreements."
       },
       {
@@ -330,7 +330,7 @@
         "zh": "Acceptance per project",
         "facts": [
           "Deliverables, timeline and risk defined upfront",
-          "Payment and contract handled between parties",
+          "Payment collected by the platform, disbursed after acceptance",
           "No debating 'is it done?' after the fact"
         ]
       }
@@ -444,16 +444,16 @@
         "stat": "30+ cases · NT$ 145K"
       },
       {
+        "id": "B+",
+        "zh": "Verified+",
+        "sub": "VERIFIED+ · Building track record & NPS",
+        "stat": "10+ cases · —"
+      },
+      {
         "id": "B",
         "zh": "Verified entry",
         "sub": "ENTRY · 4-stage certification complete",
         "stat": "5-30 cases · NT$ 78K"
-      },
-      {
-        "id": "C",
-        "zh": "Trainee",
-        "sub": "TRAINEE · In application / completing docs",
-        "stat": "0-5 cases · —"
       }
     ]
   },
@@ -547,7 +547,7 @@
         "n": "02",
         "tag": "CLIENT",
         "q": "What if the work doesn't get done / quality is off?",
-        "a": "BeyondPath won't throw you into a fully automated black box. We use AI to break down the request, judge domain and risk first, then humans review milestones, acceptance criteria and candidates. Platform handles payment custody per terms; disputes follow the acceptance record flow in our service agreement."
+        "a": "BeyondPath won't throw you into a fully automated black box. We use AI to break down the request, judge domain and risk first, then humans review milestones, acceptance criteria and candidates. The platform collects and disburses project payments per terms; disputes follow the acceptance record flow in our service agreement."
       },
       {
         "n": "03",
@@ -559,7 +559,7 @@
         "n": "04",
         "tag": "CLIENT",
         "q": "Is this more expensive than Fiverr / cheaper than an agency? How do you price?",
-        "a": "We sit between Fiverr and a monthly agency retainer. Platform handles payment custody and charges commission by Tier (see service terms). What you pay for isn't the list; it's scope breakdown, verified candidates, an acceptance framework, and the judgment cost saved from picking wrong."
+        "a": "We sit between Fiverr and a monthly agency retainer. The platform collects & disburses payments and charges commission by Tier (see service terms). What you pay for isn't the list; it's scope breakdown, verified candidates, an acceptance framework, and the judgment cost saved from picking wrong."
       },
       {
         "n": "05",
@@ -571,7 +571,7 @@
         "n": "06",
         "tag": "EXPERT",
         "q": "How does the platform charge me? Do I pay upfront?",
-        "a": "Applying is free — no upfront fee, no exclusivity commitment. After you're matched and a project closes, platform deducts commission by Tier from the payment it custodies. See service terms for rates."
+        "a": "Applying is free — no upfront fee, no exclusivity commitment. After you're matched and a project closes, platform deducts Tier-based commission from the collected payment before disbursing to you. See service terms for rates."
       },
       {
         "n": "07",
@@ -809,8 +809,8 @@
     "h1_step01_zh": "Pick the vertical and upload your brief.",
     "h1_step02_zh": "Fill in the preferences the AI didn't catch.",
     "sub_step01_full": "BeyondPath sorts by vertical — each vertical has its own brief template and dedicated worker pool. Pick a vertical, then use our AI template to structure your brief, or just paste it in and we'll break it down.",
-    "early_beta_label": "◆ Platform payment custody · Commission by Tier",
-    "early_beta_body": " : the platform handles brief breakdown, candidate matching, payment custody and acceptance records; see service terms for commission rates.",
+    "early_beta_label": "◆ Platform-collected payment · Commission by Tier",
+    "early_beta_body": " : the platform handles brief breakdown, candidate matching, payment collection & disbursement and acceptance records; see service terms for commission rates.",
     "section_vertical_zh": "Vertical",
     "section_brief_zh": "Brief",
     "section_enterprise_zh": "Enterprise flow",
@@ -840,7 +840,7 @@
     "about_student_label": "Student / learning",
     "about_student_sub": "School project / portfolio / practice",
     "beta_ack_prefix": "I understand the platform service rules",
-    "beta_ack_body": " : BeyondPath custodies payment per service terms and charges Tier-based commission; submitting a brief enters human review, not an immediate payment or contract.",
+    "beta_ack_body": " : BeyondPath collects and disburses payment per service terms and charges Tier-based commission; submitting a brief enters human review, not an immediate payment or contract.",
     "err_brief_too_short": "Brief is too short (< 20 chars) for AI to break down. Please go back to Step 01 and add more.",
     "err_supabase_not_loaded": "The page isn't fully loaded yet — please refresh.",
     "err_call_failed_prefix": "Call failed: ",
@@ -862,7 +862,7 @@
     "tier_aplus_zh": "Master",
     "tier_s_zh": "Paragon",
     "tier_any_price": "Depends on AI breakdown",
-    "tier_price_note": "※ Price ranges are platform statistics; actual quotes adjust by project complexity + Claude AI advisor recommendation (incl. +15% platform premium)",
+    "tier_price_note": "※ Price ranges are platform statistics; actual quotes adjust by project complexity + Claude AI advisor recommendation (no extra client-side platform fee; service fee is covered by the worker's tier rate)",
     "lbl_deliverables_zh": "Deliverables",
     "deliv_kv": "Hero KV",
     "deliv_reels": "Reels scripts",
@@ -886,7 +886,7 @@
     "bonus_loyalty_zh": "Prioritize past collaborators",
     "bonus_mercy_zh": "Open to new-talent workers (bonus for non-mainstream picks)",
     "vertical_fallback": "your chosen vertical",
-    "step04_pill_poc": "● Live match · platform escrow",
+    "step04_pill_poc": "● Live match · platform-collected payment",
     "pool_real_title": "Real verified worker pool",
     "pool_demo_title": "Building the verified pool in this vertical · sample cases shown below",
     "pool_loading": "● Loading…",
@@ -995,7 +995,7 @@
     "weighting_title": "Your current recommendation weight",
     "tool_subsidy_title": "AI tool subsidy · Tier A+ benefit",
     "subsidy_label": "AI tool subsidy",
-    "no_collect_zh": "Platform custodies payment and charges Tier-based commission. BeyondPath compounds delivery and acceptance evidence to build your long-term trust record.",
+    "no_collect_zh": "The platform collects and disburses payment and charges Tier-based commission. BeyondPath compounds delivery and acceptance evidence to build your long-term trust record.",
     "coach_title": "AI coach · skill assessment",
     "skillgap_label": "skill gap analysis · you vs Tier A+ DTC median",
     "skillgap_rank": "4 / 6 leading · 2 / 6 trailing",

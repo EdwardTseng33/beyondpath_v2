@@ -1,0 +1,28 @@
+# 2026-06-10 P0 fix: 內部文件不得公開部署（QA 發現 docs/ + *.md 整包公開可讀）
+# .vercelignore 存在後會「取代」.gitignore 的排除行為，所以機密類也要在這裡重列
+
+# 機密 / 環境
+.env
+.env.*
+
+# 內部文件（策略 / 稽核 / 計畫書 / 狀態）
+docs/
+*.md
+legal/dpa-template.md
+
+# 開發工具與設定（vercel.json 不可列入）
+.claude/
+.git/
+*.py
+*.sh
+
+# 後端原始碼（跑在 Supabase、不該攤在靜態站上）
+supabase/
+
+# 本機備份與除錯產物
+.bak-*/
+*.bak
+*.bak-*
+test-shell.html
+BeyondPath-prototype.html
+index-offline.html

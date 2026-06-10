@@ -403,7 +403,7 @@ function WorkerDashboard({ inShell = false }) {
               </div>
               <div className="bp-tip" style={{ marginTop: 14 }}>
                 <span style={{ fontFamily: "var(--mono)" }}>commercial terms</span>{" "}
-                <span className="zh">{_t("worker.no_collect_zh", "早期不在平台內代收專案款；報價、付款與合約由雙方自行約定，BeyondPath 先累積驗收與交付證據。")}</span>
+                <span className="zh">{_t("worker.no_collect_zh", "平台代收代付、依 Tier 抽佣；BeyondPath 累積驗收與交付證據，協助你建立長期信任記錄。")}</span>
               </div>
             </>
           )}

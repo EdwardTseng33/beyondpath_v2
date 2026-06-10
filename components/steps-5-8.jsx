@@ -169,9 +169,9 @@ function Step7() {
       <_Top step={7} label="Acceptance · 驗收框架" />
       <div className="bp-main" style={{ gridTemplateColumns: "1fr" }}>
         <div className="bp-content">
-          <div className="bp-eyebrow"><span>Step 07 / Acceptance · 驗收框架</span><span className="pill">prototype · no fund custody</span></div>
+          <div className="bp-eyebrow"><span>Step 07 / Acceptance · 驗收框架</span><span className="pill">代收代付 · via 綠界</span></div>
           <h1 className="bp-h1">Lock scope and acceptance criteria.<br/>
-            <span className="zh" style={{ color: "var(--muted)" }}>BeyondPath 先定義交付與驗收；付款與合約由雙方自行處理。</span>
+            <span className="zh" style={{ color: "var(--muted)" }}>BeyondPath 先定義交付與驗收；案款由平台透過綠界代收、驗收通過後撥付。</span>
           </h1>
           <div style={{ marginTop: 22, display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 18 }}>
             <div className="bp-panel">
@@ -203,19 +203,19 @@ function Step7() {
                   </div>
                 ))}
                 <div style={{ marginTop: 14, padding: "10px 12px", background: "var(--bg-1)", borderRadius: 4, fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>
-                  output · <b style={{ color: "var(--text)" }}>acceptance.md</b> · no platform fund custody
+                  output · <b style={{ color: "var(--text)" }}>acceptance.md</b> · 驗收紀錄連動撥款
                 </div>
               </div>
             </div>
             <div>
               <div className="bp-panel">
-                <div className="bp-panel-h">off-platform commercial terms</div>
+                <div className="bp-panel-h">payment &amp; commercial terms · 代收代付</div>
                 <div className="bp-panel-b" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {[
-                    { n: "付款由雙方自行約定", k: "direct", a: true },
-                    { n: "商務條款由雙方自行處理", k: "no-custody" },
-                    { n: "合約條款由雙方或律師確認", k: "contract" },
-                    { n: "BeyondPath 只保留驗收紀錄", k: "record" },
+                    { n: "案款由平台透過綠界代收", k: "collect", a: true },
+                    { n: "驗收通過後撥付接案者", k: "payout" },
+                    { n: "服務費依 Tier 自案款扣抵", k: "fee" },
+                    { n: "合約與驗收紀錄由平台存證", k: "record" },
                   ].map((p) => (
                     <div key={p.k} style={{
                       padding: "10px 12px",
@@ -238,7 +238,7 @@ function Step7() {
                 {stage === "done" && "✓ Acceptance locked · case ready"}
               </button>
               <div style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", textAlign: "center", lineHeight: 1.6 }}>
-                prototype note · commercial terms and legal contracts are outside BeyondPath
+note · 案款經綠界代收代付 · 費率與細節見服務條款 §3
               </div>
             </div>
           </div>
@@ -258,7 +258,7 @@ function Step7() {
               icon="scales"
               en="MID ARBITRATION"
               zh="品質有爭議"
-              body="雙方提證據，平台協助整理紀錄與建議，不碰付款裁決。"
+              body="雙方提證據，平台依驗收紀錄協助裁定該階段款項的撥付。"
               stat="1.2% 案件觸發"
             />
             <_TrustCard
@@ -289,11 +289,11 @@ function Step7() {
           <div className="bp-escrow-strip">
             <span className="bp-escrow-logo">BeyondPath Acceptance Log</span>
             <span className="bp-escrow-sep">·</span>
-            <span>不保管專案款</span>
+            <span>綠界代收代付</span>
             <span className="bp-escrow-sep">·</span>
-            <span>付款與合約由雙方自行處理</span>
+            <span>驗收通過後撥付接案者</span>
             <span className="bp-escrow-sep">·</span>
-            <span className="bp-escrow-meta">prototype · legal review pending</span>
+            <span className="bp-escrow-meta">服務條款 §3 · 代收代付</span>
           </div>
         </div>
       </div>

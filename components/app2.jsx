@@ -848,7 +848,7 @@ function Step2({ state, set }) {
                   <span className="accent">{fmtNT(result.budget.lo)}</span> –{" "}
                   <span className="accent">{fmtNT(result.budget.hi)}</span>
                 </div>
-                <div className="sub">includes +15% platform premium</div>
+                <div className="sub">市場行情參考 · 客戶端不另收平台費</div>
               </div>
               <div className="bp-rcard bp-rise bp-rise-3">
                 <div className="lbl">Effort · {_t("client.lbl_effort", "總工時")}</div>

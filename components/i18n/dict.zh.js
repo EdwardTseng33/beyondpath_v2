@@ -325,7 +325,7 @@
         "zh": "每案先定驗收點",
         "facts": [
           "交付物、時間、風險先講清楚",
-          "付款與合約先由雙方自行處理",
+          "案款由平台代收、驗收後撥付",
           "避免做完才爭論算不算完成"
         ]
       }
@@ -439,16 +439,16 @@
         "stat": "30+ cases · NT$ 145K"
       },
       {
+        "id": "B+",
+        "zh": "累積",
+        "sub": "VERIFIED+ · 認證後實績與 NPS 累積",
+        "stat": "10+ cases · —"
+      },
+      {
         "id": "B",
         "zh": "認證入門",
         "sub": "ENTRY · 通過 4 階段認證",
         "stat": "5-30 cases · NT$ 78K"
-      },
-      {
-        "id": "C",
-        "zh": "受訓",
-        "sub": "TRAINEE · 申請中 / 補件",
-        "stat": "0-5 cases · —"
       }
     ]
   },
@@ -857,7 +857,7 @@
     "tier_aplus_zh": "大師",
     "tier_s_zh": "典範",
     "tier_any_price": "看 AI 拆解",
-    "tier_price_note": "※ 價格區間為平台統計、實際報價依案件複雜度 + Claude AI 顧問建議調整（含 +15% 平台溢價）",
+    "tier_price_note": "※ 價格區間為平台統計、實際報價依案件複雜度 + Claude AI 顧問建議調整（客戶端不另收平台費、服務費由接案者 Tier 費率涵蓋）",
     "lbl_deliverables_zh": "交付內容",
     "deliv_kv": "KV 主視覺",
     "deliv_reels": "Reels 腳本",

@@ -155,7 +155,7 @@ function buildClientConfirmEmail(row: Record<string, unknown>): { subject: strin
     `  · worker 池 100% AI 認證 (Tier B 起跳、Tier A+ 走平台旗艦媒合)`,
     `  · AI 評估 + 多維配對演算法 + 品質審核層`,
     `  · 試做案 NT$30-100k、做完才決定要不要 retainer`,
-    `  · 不簽長約、不綁定、worker 跟你直接結算`,
+    `  · 不簽長約、不綁定、案款由平台透過綠界代收代付`,
     ``,
     `→ 急的話寫信到 hello@beyondpath.tw`,
     ``,
@@ -197,7 +197,7 @@ function buildClientConfirmEmail(row: Record<string, unknown>): { subject: strin
     <li style="margin-bottom:4px;">worker 池 100% AI 認證（Tier B 起跳、Tier A+ 走平台旗艦媒合）</li>
     <li style="margin-bottom:4px;"><b style="color:#f0eee8;">AI 評估 + 多維配對演算法 + 品質審核層</b></li>
     <li style="margin-bottom:4px;">試做案 <b style="color:#c7e84a;">NT$30-100k</b>、做完才決定要不要 retainer</li>
-    <li>不簽長約、不綁定、worker 跟你直接結算</li>
+    <li>不簽長約、不綁定、案款由平台透過綠界代收代付</li>
   </ul>
 
   <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.6;font-size:13px;">
@@ -485,7 +485,7 @@ function buildClientMatchEmail(row: Record<string, unknown>, opts: { candidates:
     `1. 看完三位 candidate、回信告訴我們你最想先聊哪 1-2 位`,
     `2. BeyondPath 會 wire 你跟該 worker 直接 email（雙方獨立溝通、平台不介入）`,
     `3. Worker 給你完整 SOW + 報價單（用 BeyondPath 範本、雙方對齊 deliverable）`,
-    `4. 試做案 ${trialBudget} 啟動、雙方直接結算（BeyondPath 不碰錢）`,
+    `4. 試做案 ${trialBudget} 啟動、案款由平台透過綠界代收、驗收後撥付`,
     `5. 滿意 → retainer / 不滿意 → 結束、可換 worker`,
     ``,
     `▍試做案怎麼運作`,
@@ -534,7 +534,7 @@ function buildClientMatchEmail(row: Record<string, unknown>, opts: { candidates:
     <li>回信告訴我們你最想先聊哪 1-2 位</li>
     <li>BeyondPath 會 wire 你跟該 worker 直接 email（雙方獨立溝通）</li>
     <li>Worker 給你完整 SOW + 報價單（BP 範本對齊 deliverable）</li>
-    <li>試做案啟動、雙方直接結算（BP 不碰錢）</li>
+    <li>試做案啟動、案款由平台透過綠界代收、驗收後撥付</li>
     <li>滿意 → retainer / 不滿意 → 結束、可換 worker</li>
   </ol>
   <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.65;font-size:13px;">
