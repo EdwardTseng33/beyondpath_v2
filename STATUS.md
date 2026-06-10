@@ -99,10 +99,14 @@
 - 🎬 短影音製作管道（6/10 晚實測 → **#02 v0 樣片已產出**）：Edward 的 Vivago.ai 帳號 · 餘額 1854 點（3 鏡共花 90 點）· Vivago 2.0 模型 9:16/1080p/5s=30 點/段 · 可選 Veo 3.1/Kling（較貴）· 平台另有唇形同步
 - 🎬 **#02 接案者版 v0 樣片**：`BeyondPath2.0/video-production/BP-02-worker-v0.mp4`（44.4s · 1080×1920 · 含台灣腔女聲配音＋6 張字卡）· 製程：Vivago 3 鏡（夜/手機/明亮）＋本機 Pillow 字卡（中文鐵律驗過）＋edge-tts 配音＋ffmpeg 組裝 · 已過 8 格時間軸＋聲波 QA · ⏳ Edward 審中 · 已知待補：無背景音樂（v1 加）· 工作資料夾含全部素材（clips/cards/vo/segs）可重組
 
+### 🔒 試算每日額度（6/10 晚 · Edward 拍板 3/天匿名 · 10/天帳號 · code 完成、沙利曼 GO-with-changes 兩行加固已補）
+- ⏳ 上線包（migration + client-brief-parse 函式 + 前端）等 Edward 點頭
+- fast-follow（沙利曼 #3-5）：pg_cron 清計數表 7 天前舊列（1 週內）/ 額度檢查持續失效推 Slack 告警 / 註冊加摩擦（email 驗證 or captcha、否則帳號額度可被大量註冊稀釋、POC 後追蹤）
+
 ### 其他既有待續
 - worker 端漏斗埋點（client 已補、worker 同類缺口待補）
 - 全站漏斗數據進 admin（需建 funnel_events table + deploy、要 Edward 拍）
-- P1 轉換優化批（QA 抓的其餘卡點：英文版條款 i18n / 領域限制前置告知 / 違約金字眼時機）
+- P1 轉換優化批剩餘：領域限制前置告知（Mia/Vivian、配女巫設計）+ worker 證據展示 PT-4（✅ 英文版條款 i18n、✅ 違約金字眼時機已於 6/10 補強批一解掉）
 
 ## ⚠️ deploy 時必做（cache-buster）
 
