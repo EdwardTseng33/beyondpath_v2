@@ -10,7 +10,7 @@
 // Cost (Claude Sonnet 4.6): ~2000-3000 input + 1500-2500 output tokens / call ≈ NT$0.5-0.8 / case
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
-import { checkRateLimit, getClientIp, rateLimitResponse } from "../_shared/rate-limit.ts";  // 2026-05-29 calcifer doc28 C . 燒 Anthropic token . 限流防洗
+import { checkRateLimit, getClientIp, rateLimitResponse, resolveIdentity, checkDailyLimit, dailyLimitResponse } from "../_shared/rate-limit.ts";  // 2026-05-29 calcifer doc28 C + 2026-06-10 每日額度 . 燒 Anthropic token . 限流防洗
 import { isAdminRequest } from "../_shared/admin.ts";  // admin JWT bypass 限流
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
@@ -143,6 +143,13 @@ serve(async (req: Request) => {
   if (!(await isAdminRequest(req))) {
     const rl = await checkRateLimit("client-brief-parse", getClientIp(req), { limit: 10, windowSec: 60 });
     if (!rl.allowed) return rateLimitResponse(rl, CORS_HEADERS);
+
+    // 2026-06-10 蘇菲 . Edward 拍板每日額度: 匿名 3 次/天/IP · 登入帳號 10 次/天
+    // 防細水長流燒 AI 帳 (分鐘限只擋爆衝)。被擋時 scope 給前端: 匿名→引導登入、帳號→明日再試
+    const who = await resolveIdentity(req);
+    const dailyLimit = who.scope === "account" ? 10 : 3;
+    const dl = await checkDailyLimit("client-brief-parse", who.identity, dailyLimit, who.scope);
+    if (!dl.allowed) return dailyLimitResponse(dl, CORS_HEADERS);
   }
 
   if (!ANTHROPIC_API_KEY) {

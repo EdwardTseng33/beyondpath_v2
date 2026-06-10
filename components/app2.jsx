@@ -704,6 +704,19 @@ function Step2({ state, set }) {
       });
 
       if (invokeError) {
+        // 2026-06-10 . 試算額度 429 友善化 (Edward 拍板: 匿名 3/天 · 登入 10/天)
+        const det = invokeError.details || {};
+        if (invokeError.status === 429) {
+          if (det.error === "daily-limit-exceeded") {
+            setError(det.scope === "account"
+              ? _t("client.err_quota_account", "今日試算已達上限（每天 10 次）。你可以直接送出需求、或明天再試。")
+              : _t("client.err_quota_anon", "今日免費試算次數已用完（每天 3 次）。登入後每天可試算 10 次。"));
+          } else {
+            setError(_t("client.err_quota_burst", "試算太頻繁了，請稍候 1 分鐘再試。"));
+          }
+          setPhase("error");
+          return;
+        }
         setError(_t("client.err_call_failed_prefix", "呼叫失敗：") + (invokeError.message || _t("client.err_unknown", "未知錯誤")));
         setPhase("error");
         return;
@@ -778,22 +791,37 @@ function Step2({ state, set }) {
               {phase === "error" && (
                 <>
                   <div style={{ color: "#e57373" }}>[error] {error}</div>
-                  <button
-                    onClick={runParse}
-                    style={{
-                      marginTop: 14,
-                      padding: "8px 16px",
-                      fontFamily: "var(--mono)",
-                      fontSize: 12,
-                      color: "var(--text)",
-                      background: "var(--accent)",
-                      border: 0,
-                      borderRadius: "var(--r-sm)",
-                      cursor: "pointer",
-                    }}
-                  >
-                    ↻ Retry · 重新拆解
-                  </button>
+                  {/* 2026-06-10 . 匿名額度用完 → 引導登入 (誤傷共用 IP 的人也有出路) */}
+                  {error === _t("client.err_quota_anon", "今日免費試算次數已用完（每天 3 次）。登入後每天可試算 10 次。") ? (
+                    <a
+                      href="/sign-in.html"
+                      style={{
+                        display: "inline-block", marginTop: 14, padding: "8px 16px",
+                        fontFamily: "var(--mono)", fontSize: 12, color: "var(--bg)",
+                        background: "var(--accent)", borderRadius: "var(--r-sm)", textDecoration: "none",
+                      }}
+                    >{_t("client.err_quota_anon_cta", "→ 前往登入")}</a>
+                  ) : (
+                    <button
+                      onClick={runParse}
+                      style={{
+                        marginTop: 14,
+                        padding: "8px 16px",
+                        fontFamily: "var(--mono)",
+                        fontSize: 12,
+                        color: "var(--text)",
+                        background: "var(--accent)",
+                        border: 0,
+                        borderRadius: "var(--r-sm)",
+                        cursor: "pointer",
+                      }}
+                    >
+                      ↻ Retry · 重新拆解
+                    </button>
+                  )}
+                  <div style={{ marginTop: 10, fontFamily: "var(--mono)", fontSize: 10.5, color: "var(--muted)" }}>
+                    {_t("client.quota_note", "免費試算每天 3 次 · 登入後每天 10 次")}
+                  </div>
                 </>
               )}
             </div>

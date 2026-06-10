@@ -107,3 +107,101 @@ export function rateLimitResponse(rl: RateLimitResult, corsHeaders?: Record<stri
     },
   );
 }
+
+// ============================================================
+// 每日額度 (2026-06-10 Edward 拍板: 匿名 3 次/天/IP · 登入 10 次/天/帳號)
+// KV TTL<=120s 記不了一天 → 走 DB (bp_rate_limit_daily RPC . migration 20260610)
+// ============================================================
+
+export interface DailyLimitResult {
+  allowed: boolean;
+  count: number;
+  limit: number;
+  scope: "anon" | "account";
+}
+
+/**
+ * 解析請求身份: Bearer 是真用戶 JWT → account；否則(publishable key / 無) → anon IP。
+ * 回 { identity, scope }。驗證走 GoTrue /auth/v1/user、失敗一律當 anon (fail-down 不 fail-open)。
+ */
+export async function resolveIdentity(req: Request): Promise<{ identity: string; scope: "anon" | "account" }> {
+  const ipFallback = { identity: "ip:" + getClientIp(req), scope: "anon" as const };
+  try {
+    const auth = req.headers.get("authorization") || "";
+    const token = auth.replace(/^Bearer\s+/i, "").trim();
+    const publishable = Deno.env.get("SUPABASE_ANON_KEY") || "";
+    if (!token || token === publishable) return ipFallback;
+
+    const url = Deno.env.get("SUPABASE_URL");
+    if (!url) return ipFallback;
+    const res = await fetch(url + "/auth/v1/user", {
+      headers: { Authorization: "Bearer " + token, apikey: publishable },
+    });
+    if (!res.ok) return ipFallback;
+    const user = await res.json();
+    if (user?.id) return { identity: "user:" + user.id, scope: "account" };
+    return ipFallback;
+  } catch {
+    return ipFallback;
+  }
+}
+
+/**
+ * 每日額度檢查 (原子遞增 . DB RPC)。
+ * fail-open 同 KV 哲學: DB 異常不擋正常用戶、console.warn 留痕。
+ */
+export async function checkDailyLimit(
+  functionName: string,
+  identity: string,
+  limit: number,
+  scope: "anon" | "account",
+): Promise<DailyLimitResult> {
+  try {
+    const url = Deno.env.get("SUPABASE_URL");
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!url || !serviceKey) {
+      console.warn("[rate-limit-daily] missing env . fail-open . " + functionName);
+      return { allowed: true, count: 0, limit, scope };
+    }
+    const res = await fetch(url + "/rest/v1/rpc/bp_rate_limit_daily", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + serviceKey,
+        apikey: serviceKey,
+      },
+      body: JSON.stringify({ p_key: functionName + ":" + identity, p_limit: limit }),
+    });
+    if (!res.ok) {
+      console.warn("[rate-limit-daily] rpc " + res.status + " . fail-open . " + functionName);
+      return { allowed: true, count: 0, limit, scope };
+    }
+    const out = await res.json();
+    return {
+      allowed: out?.allowed !== false,
+      count: Number(out?.count ?? 0),
+      limit: Number(out?.limit ?? limit),
+      scope,
+    };
+  } catch (e) {
+    console.warn("[rate-limit-daily] error . fail-open . " + functionName + " . " + String(e));
+    return { allowed: true, count: 0, limit, scope };
+  }
+}
+
+/**
+ * 組每日額度 429 . error 名跟分鐘版區分、scope 給前端選文案 (匿名→引導登入 / 帳號→明日再試)。
+ */
+export function dailyLimitResponse(dl: DailyLimitResult, corsHeaders?: Record<string, string>): Response {
+  return new Response(
+    JSON.stringify({ ok: false, error: "daily-limit-exceeded", scope: dl.scope, limit: dl.limit }),
+    {
+      status: 429,
+      headers: {
+        "Content-Type": "application/json",
+        "Retry-After": "86400",
+        ...(corsHeaders || {}),
+      },
+    },
+  );
+}
