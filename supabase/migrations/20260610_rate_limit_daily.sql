@@ -42,3 +42,5 @@ $$;
 revoke execute on function bp_rate_limit_daily(text, int) from public;
 revoke execute on function bp_rate_limit_daily(text, int) from anon;
 revoke execute on function bp_rate_limit_daily(text, int) from authenticated;
+-- 沙利曼 Gate 5 #1: 顯式 grant service_role (不依賴專案預設權限沒被動過；漏了 = fail-open 靜默空操作、額度永遠沒作用)
+grant execute on function bp_rate_limit_daily(text, int) to service_role;

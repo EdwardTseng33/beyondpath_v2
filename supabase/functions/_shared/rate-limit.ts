@@ -41,13 +41,16 @@ function getKv(): Promise<Deno.Kv> {
  * prior art: submit-nps 已讀 x-forwarded-for / cf-connecting-ip。
  */
 export function getClientIp(req: Request): string {
+  // 2026-06-10 沙利曼 Gate 5 #2: cf-connecting-ip 優先 (可信代理寫入、client 改不了)
+  // x-forwarded-for 最左跳 client 可偽造 → 原順序可被換 header 繞掉分鐘限 + 匿名日額度
+  // 對齊 repo 既有慣例 (add-external-link 等 6 支函式本地版皆 cf 優先)
+  const cf = req.headers.get("cf-connecting-ip");
+  if (cf) return cf.trim();
   const xff = req.headers.get("x-forwarded-for");
   if (xff) {
     const first = xff.split(",")[0];
     if (first) return first.trim();
   }
-  const cf = req.headers.get("cf-connecting-ip");
-  if (cf) return cf.trim();
   return "unknown";
 }
 

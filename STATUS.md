@@ -96,6 +96,8 @@
 - [51 社群策略](docs/marketing/51-social-strategy.md)：Threads+LinkedIn 雙主力 · 前 6 週全押接案者側 · 30 天日曆 20+ 題
 - ⏳ 等 Edward：(1) 預算檔位拍板 (2) 拍片難度選擇 (3) ✅ PT-1 拉桿已放到 5萬（廣告「小案試水」話術門檻請對齊 5萬、非 3萬）
 - 投放前最後一關：素材定稿後過霍爾 Gate 3 一次（現在不審草稿、避免重複審）
+- 🎬 短影音製作管道（6/10 晚實測 → **#02 v0 樣片已產出**）：Edward 的 Vivago.ai 帳號 · 餘額 1854 點（3 鏡共花 90 點）· Vivago 2.0 模型 9:16/1080p/5s=30 點/段 · 可選 Veo 3.1/Kling（較貴）· 平台另有唇形同步
+- 🎬 **#02 接案者版 v0 樣片**：`BeyondPath2.0/video-production/BP-02-worker-v0.mp4`（44.4s · 1080×1920 · 含台灣腔女聲配音＋6 張字卡）· 製程：Vivago 3 鏡（夜/手機/明亮）＋本機 Pillow 字卡（中文鐵律驗過）＋edge-tts 配音＋ffmpeg 組裝 · 已過 8 格時間軸＋聲波 QA · ⏳ Edward 審中 · 已知待補：無背景音樂（v1 加）· 工作資料夾含全部素材（clips/cards/vo/segs）可重組
 
 ### 其他既有待續
 - worker 端漏斗埋點（client 已補、worker 同類缺口待補）
