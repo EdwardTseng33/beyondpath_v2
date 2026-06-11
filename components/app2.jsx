@@ -316,7 +316,8 @@ function Step1({ state, set, device }) {
           {_t("client.h1_step01_zh", "選擇案件垂直領域，匯入需求文件。")}
         </span>
       </h1>
-      <p className="bp-sub">
+      {/* 2026-06-11 P1 · 390 寬該段最擠、行距 1.65 (witch Gate 2 P1-4) */}
+      <p className="bp-sub" style={{ lineHeight: 1.65 }}>
         {_t("client.sub_step01_short", "先選領域，貼上你的需求 — 平台 AI 幫你拆成可執行任務。")}
         <br /><br />
         <span style={{ color: "var(--accent)", fontWeight: 600 }}>{_t("client.early_beta_label", "◆ 平台代收代付 · 依 Tier 抽佣")}</span>{_t("client.early_beta_body", " ：平台負責需求拆解、候選推薦、代收代付與驗收紀錄；詳見服務條款。")}
@@ -911,7 +912,8 @@ function Step2({ state, set }) {
                 <div className="val">
                   <span className="accent">{result.totalHours}h</span>{" "}
                   <span style={{ color: "var(--muted)", fontSize: 14 }}>
-                    · 8wk · 2-3 expert
+                    {/* 2026-06-11 P1 · 探索 1-2 週、不再對所有案型寫死 8wk (calcifer Gate 1 note) */}
+                    {result.scope === "paid-discovery" ? "· 1-2wk · 單一窗口" : "· 8wk · 2-3 expert"}
                   </span>
                 </div>
                 <div className="sub">multi-expert DAG attached</div>
@@ -1382,23 +1384,24 @@ function Step4({ state, set, device }) {
       </div>
 
       <div className="bp-toolbar">
+        {/* 2026-06-11 P1 · chips 計數改實際 pool 推導、不寫死 (calcifer Gate 1 note) */}
         <button
           className={"bp-chip " + (filter === "all" ? "active" : "")}
           onClick={() => setFilter("all")}
         >
-          all · 5
+          all · {verticalWorkers.length}
         </button>
         <button
           className={"bp-chip " + (filter === "tierA+" ? "active" : "")}
           onClick={() => setFilter("tierA+")}
         >
-          tier A+ · 2
+          tier A+ · {verticalWorkers.filter((w) => w.tier === "A+").length}
         </button>
         <button
           className={"bp-chip " + (filter === "mercy" ? "active" : "")}
           onClick={() => setFilter("mercy")}
         >
-          {_t("client.filter_mercy_boost", "反馬太加成 · 1")}
+          {_t("client.filter_mercy_boost_label", "反馬太加成")} · {verticalWorkers.filter((w) => w.boost && w.boost.mercy > 0).length}
         </button>
         <span style={{ flex: 1 }} />
         <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)" }}>

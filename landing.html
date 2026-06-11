@@ -595,8 +595,8 @@
 </footer>
 <!-- i18n bundle (must load BEFORE React+Babel) · Phase 1 Step 1 -->
 <script src="components/i18n/index.js?v=2026-06-10-pay"></script>
-<script src="components/i18n/dict.zh.js?v=2026-06-11-vert9b"></script>
-<script src="components/i18n/dict.en.js?v=2026-06-11-vert9b"></script>
+<script src="components/i18n/dict.zh.js?v=2026-06-11-vert9c"></script>
+<script src="components/i18n/dict.en.js?v=2026-06-11-vert9c"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
@@ -1442,18 +1442,20 @@ function EVerticals() {
     <section className="le-section" id="network" style={{ padding: "56px 56px" }}>
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 16 }}>{t("network.eyebrow", "◆ NETWORK · 9 領域 + 探索入口、24 小時初步判斷")}</div>
-        <h2 className="le-h2" style={{ fontSize: 32 }}>{t("network.headline_part1", "9 個 ")}<span className="le-acc">{t("network.headline_em", "領域")}</span>{t("network.headline_part2", "，先判斷該找哪一種人。")}</h2>
+        {/* 2026-06-11 P1 · 孤字「人。」修法 = 句子改短「該找誰」+ balance 兜底 (witch Gate 2 P1-1 · balance 實測救不了三 span 結構) */}
+        <h2 className="le-h2" style={{ fontSize: 32, textWrap: "balance" }}>{t("network.headline_part1", "9 個 ")}<span className="le-acc">{t("network.headline_em", "領域")}</span>{t("network.headline_part2", "，先判斷該找誰。")}</h2>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 24 }}>
           {verticals.map((v, i) => {
             const isHot = HOT.indexOf(i) >= 0;
+            const isDiscovery = i === 0; // 2026-06-11 P1 · 探索膠囊獨立樣式、不同類但不更弱 (witch Gate 2 P1-3)
             return (
               <span key={i} style={{
                 fontFamily: "var(--zh)", fontSize: 13, padding: "8px 14px",
-                background: isHot ? "var(--accent)" : "rgba(255,255,255,0.03)",
-                color: isHot ? "var(--bg)" : "var(--text-2)",
-                border: "1px solid " + (isHot ? "var(--accent)" : "var(--line)"),
+                background: isHot ? "var(--accent)" : isDiscovery ? "var(--accent-soft, rgba(199,232,74,0.12))" : "rgba(255,255,255,0.03)",
+                color: isHot ? "var(--bg)" : isDiscovery ? "var(--accent)" : "var(--text-2)",
+                border: isDiscovery ? "1.5px solid var(--accent)" : "1px solid " + (isHot ? "var(--accent)" : "var(--line)"),
                 borderRadius: 999, letterSpacing: "0.02em",
-                fontWeight: isHot ? 700 : 500,
+                fontWeight: isHot ? 700 : isDiscovery ? 600 : 500,
               }}>
                 {isHot && <span style={{ marginRight: 4 }}>●</span>}{v}{isHot && <span style={{ marginLeft: 6, fontFamily: "var(--mono)", fontSize: 10 }}>{t("network.hot_tag", "HOT")}</span>}
               </span>
@@ -1461,7 +1463,7 @@ function EVerticals() {
           })}
         </div>
         <div style={{ marginTop: 16, fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.06em" }}>
-          {t("network.footer", "▸ HOT VERTICALS · +47% MoM growth · DTC + AI Agent")}
+          {t("network.footer", "▸ 主打 4 領域 · AI 客服 / 網站 / 內部工具 / DTC 內容 · 依 2026-06 市場調研拍板")}
         </div>
       </div>
     </section>

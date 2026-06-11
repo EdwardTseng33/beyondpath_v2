@@ -494,7 +494,7 @@
         "n": "00",
         "en": "PAID DISCOVERY",
         "zh": "Paid discovery · entry",
-        "desc": "Not sure what you need yet? 1-2 weeks: requirement spec + clickable prototype + fixed quote. Fully credited toward a full project within 6 months; deliverables are yours either way. Discovery is the entry, not the project — first projects start at NT$50K+, with the discovery fee credited in.",
+        "desc": "Not sure what you need yet? 1-2 weeks: requirement spec + clickable prototype + fixed quote, fully credited toward a full project within 6 months. Discovery is the entry, not the project — first projects start at NT$50K+.",
         "tiers": "Tier A / A+",
         "range": "NT$ 30-50K"
       },
@@ -822,6 +822,7 @@
     "vertical_placeholder": "Search verticals…",
     "vertical_no_match": "No matching vertical. Try clearing the search, or pick 'Other' to route to support.",
     "vertical_lead_tag": "LEAD",
+    "filter_mercy_boost_label": "comeback boost",
     "discovery_entry_tag": "entry product",
     "discovery_title": "Paid Discovery · Not sure what you need yet? Buy certainty first",
     "discovery_blurb": "NT$30-50K · 1-2 weeks: requirement spec + clickable prototype + fixed quote. Fully credited toward a full project started within 6 months; deliverables are yours to keep either way.",

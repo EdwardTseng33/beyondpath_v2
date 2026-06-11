@@ -456,7 +456,7 @@
     "eyebrow": "◆ NETWORK · 9 領域 + 探索入口、24 小時初步判斷",
     "headline_part1": "9 個 ",
     "headline_em": "領域",
-    "headline_part2": "，先判斷該找哪一種人。",
+    "headline_part2": "，先判斷該找誰。",
     "footer": "▸ 主打 4 領域 · AI 客服 / 網站 / 內部工具 / DTC 內容 · 依 2026-06 市場調研拍板",
     "hot_tag": "主打",
     "verticals": [
@@ -489,7 +489,7 @@
         "n": "00",
         "en": "PAID DISCOVERY",
         "zh": "付費需求探索 · 入口",
-        "desc": "還說不清楚需求？1-2 週交付：需求計畫書 + 可點原型 + 固定報價單。6 個月內進正式案全額折抵、不續約交付物也帶得走。探索非正式案——正式首案 NT$50K+ 起、探索費折抵其中。",
+        "desc": "還說不清楚需求？1-2 週交付：需求計畫書 + 可點原型 + 固定報價單。6 個月內進正式案全額折抵。探索非正式案——首案 NT$50K+ 起、探索費折抵其中。",
         "tiers": "Tier A / A+",
         "range": "NT$ 3-5 萬"
       },
@@ -817,6 +817,7 @@
     "vertical_placeholder": "搜尋領域 / search…",
     "vertical_no_match": "沒有符合的領域。試試清除搜尋或切「Other」分流給平台客服。",
     "vertical_lead_tag": "主打",
+    "filter_mercy_boost_label": "反馬太加成",
     "discovery_entry_tag": "入口產品",
     "discovery_title": "付費需求探索 · 還說不清楚需求？先花小錢買確定性",
     "discovery_blurb": "NT$30-50K · 1-2 週：需求計畫書 + 可點原型 + 固定報價單。6 個月內進正式案、探索費全額折抵；不續約、交付物也帶得走。",
