@@ -71,203 +71,162 @@
     "row3_stat": "Accruing"
   },
   "hero": {
-    "eyebrow": "// Taiwan AI Worker Matching · Certified experts · Brief scoping · Milestone acceptance",
-    "headline_part1_before": "Want to use ",
-    "headline_part1_ai": "AI",
-    "headline_part1_after": " but don't know who to hire? Post your project to verified AI workers.",
-    "headline_sub": "Faster than hiring, safer than random freelancers, closer to results than buying tools alone.",
-    "headline_l1_before": "Want to use ",
-    "headline_l1_after": "",
-    "headline_l1_u2": " but not sure who to hire?",
-    "headline_l2_u1": "Post your project to ",
-    "headline_l2_u2": "verified AI workers.",
-    "headline_sub_u1": "Faster than hiring,",
-    "headline_sub_u2": " safer than random freelancers,",
-    "headline_sub_u3": " closer to results than buying tools alone.",
-    "pill_1": "Brief too vague? We scope it into deliverables and acceptance criteria",
-    "pill_2": "AI screens the right candidates — you get direction in 24 hours",
-    "pill_3": "Start with one pilot project, then decide if you want to scale",
-    "blurb_before": "BeyondPath helps Taiwan brands and SMBs turn fuzzy requests into scoped, verifiable briefs — matched to AI workers with real case evidence. ",
-    "blurb_bold": "Start with one pilot project",
-    "blurb_after": " and scale only if it works. Save time, save headcount, avoid bad hires.",
-    "trust_label": "Certified AI workers · AI screening · milestone acceptance",
+    "eyebrow": "// Taiwan · AI project network · Certified workers",
+    "headline_u1": "AI projects, ",
+    "headline_u2": "done by people accountable through acceptance.",
+    "headline_sub_u1": "Verified workers + funds held until acceptance + ",
+    "headline_sub_u2": "24-hour response.",
+    "chip_1": "Candidate direction in 24h",
+    "chip_2": "First project NT$50K+ · no lock-in",
+    "chip_3": "Funds held by platform until acceptance",
     "cta_primary_main": "Post an AI project →",
-    "cta_primary_sub": "Submit brief · Get candidate direction in 24h",
-    "cta_secondary_main": "Apply for worker certification →",
-    "cta_secondary_sub": "Submit cases and AI workflow, get into the first-wave pool",
-    "cta_demo": "Preview the certified worker view →",
-    "stream_label": "◆ AGENT // STREAM",
-    "stream_meta": "tok/s · 38",
-    "legend_before": "▸ ",
-    "legend_spec": "SPEC",
-    "legend_spec_after": " = platform design standard · post-ship acceptance bar   ·   ",
-    "legend_live": "LIVE",
-    "legend_live_after": " = real-time data",
-    "tel_focus_label": "FOCUS",
-    "tel_focus_value": "SMB",
-    "tel_review_label": "REVIEW TIME",
-    "tel_review_value": "24h",
-    "tel_project_label": "FIRST PROJECT",
-    "tel_project_value": "50K+"
+    "cta_primary_sub": "Leave a brief · reply within 24 hours",
+    "cta_secondary_main": "Work with us · apply for certification →",
+    "cta_secondary_sub": "Full certification pass rate < 10%",
+    "cta_demo": "See the actual product →",
+    "term_label": "◆ LIVE PARSE · one sentence → verifiable structure",
+    "term_input": "> I want to run a 618 e-commerce content push",
+    "term_parsing": "▸ parsing...",
+    "term_r1": "✓ Goal: 618 campaign conversion",
+    "term_r2": "✓ Deliverables: short video ×6 · product copy ×12 · EDM ×3",
+    "term_r3": "✓ Timeline: 3 weeks ｜ Budget: NT$ 60-120K",
+    "term_r4": "✓ Acceptance: M1 scripts → M2 drafts → M3 launch"
   },
-  "usecases": {
-    "eyebrow": "◆ USE CASES · Best-fit projects",
+  "offers": {
+    "eyebrow": "◆ OFFERS · What to post · what it costs",
     "headline_part1": "Don't buy more tools.",
     "headline_part2_before": "Ship your next ",
     "headline_part2_em": "AI project",
     "headline_part2_after": " first.",
-    "intro": "BeyondPath takes projects with clear scope, verifiable deliverables and obvious AI acceleration. You don't need to know the tools — you only need to know the result you want.",
+    "punch": "Using AI yourself is free — but so is owning every mistake.",
+    "punch_sub": "Through BeyondPath: verified people + staged payment + someone accountable until acceptance.",
+    "chip_1": "Prices are reference ranges",
+    "chip_2": "Matching plan with budget within 24h",
+    "chip_3": "Funds held by platform until acceptance",
     "label_budget": "BUDGET",
     "label_timeline": "TIMELINE",
-    "cases": [
+    "label_tier": "TIER",
+    "discovery_n": "00",
+    "discovery_en": "PAID DISCOVERY",
+    "discovery_zh": "Paid Discovery · the entry point",
+    "discovery_desc": "Can't articulate the requirement yet? 1-2 weeks: requirement spec + clickable prototype + fixed quote. Fully credited toward a full project within 6 months.",
+    "discovery_range": "NT$ 30-50K",
+    "discovery_tiers": "Tier A / A+",
+    "discovery_cta": "Start with discovery →",
+    "items": [
       {
+        "n": "01",
+        "en": "AI AGENT · CS",
+        "zh": "AI support & workflow automation",
+        "who": "SMBs · ops teams",
+        "deliver": "LINE support bot · internal agents · automation flows",
+        "budget": "NT$ 150-800K",
+        "time": "3-8 weeks",
+        "tiers": "B+ / A+"
+      },
+      {
+        "n": "02",
+        "en": "DTC CONTENT",
+        "zh": "DTC brand content pipeline",
         "who": "DTC / e-commerce brands",
-        "job": "AI content pipeline and product page assets",
-        "deliver": "Short-form video scripts, social assets, EDM, product page copy",
-        "budget": "NT$50K-100K",
-        "time": "2-6 weeks"
+        "deliver": "KV · social assets · product & campaign copy",
+        "budget": "NT$ 50-600K",
+        "time": "2-6 weeks",
+        "tiers": "B / B+ / A+"
       },
       {
-        "who": "Design studios / brand teams",
-        "job": "Brand DNA × AI visual system",
-        "deliver": "Visual templates, prompt spec, asset specs, delivery checklist",
-        "budget": "NT$60K-120K",
-        "time": "3-8 weeks"
+        "n": "03",
+        "en": "REELS · VIDEO",
+        "zh": "Short-form video + Reels",
+        "who": "Brands · e-commerce · education",
+        "deliver": "Script · shoot · edit, end to end",
+        "budget": "NT$ 30-250K",
+        "time": "2-6 weeks",
+        "tiers": "B / B+"
       },
       {
-        "who": "SMBs / lean ops teams",
-        "job": "Website refresh and internal workflow automation",
-        "deliver": "Landing page, support FAQ, automated forms and SOPs",
-        "budget": "NT$50K-150K",
-        "time": "3-8 weeks"
-      },
-      {
-        "who": "B2B SaaS / consulting services",
-        "job": "GTM content and sales assets",
-        "deliver": "Sales deck, demo script, case study pages, lead list workflow",
-        "budget": "NT$50K-120K",
-        "time": "2-6 weeks"
+        "n": "04",
+        "en": "CUSTOM DEV",
+        "zh": "Custom software · internal tools",
+        "who": "SMBs · SaaS teams",
+        "deliver": "API integration · bots · internal systems",
+        "budget": "NT$ 100K-1.2M",
+        "time": "3-8 weeks",
+        "tiers": "B+ / A+"
       }
-    ]
+    ],
+    "data_line_before": "Briefs and contact data are visible only to the platform and AI screening tools — never public, never resold. Request deletion anytime → ",
+    "data_line_link": "privacy policy"
   },
-  "story": {
-    "label": "◆ Why BeyondPath",
-    "headline_part1": "AI makes everyone look like an expert.",
-    "headline_part2": "It also makes it harder to tell who can actually deliver.",
-    "client_eyebrow": "▸ If you're a brand owner",
-    "client_pain": "Your reality · You're not short on budget, and you're not against AI. You're afraid you'll spend the money and still end up coaching, fixing and cleaning up the mess yourself.",
-    "client_get_label": "What you get on BeyondPath →",
-    "client_pt1_bold": "① Validate with a first project",
-    "client_pt1_body": " · Start with a ",
-    "client_pt1_em": "NT$50-100K",
-    "client_pt1_tail": " delivery — no long-term contract on day one.",
-    "client_pt2_bold": "② Less uncertainty to manage",
-    "client_pt2_body": " · Submit your brief, and within ",
-    "client_pt2_em": "24 hours",
-    "client_pt2_tail": " you get candidate direction and next steps — no need to send 30 cold emails.",
-    "client_pt3_bold": "③ AI helps you decide first",
-    "client_pt3_tail": " · AI breaks down scope and shortlists direction; humans review delivery terms.",
-    "client_pt4_bold": "④ Verifiable delivery",
-    "client_pt4_tail": " · Every project starts with milestones and acceptance criteria — no more 'we did a lot, but is it done?'",
-    "client_replace": "▸ Replaces 'friend referral + monthly agency retainer + Fiverr'",
-    "worker_eyebrow": "▸ If you're an expert",
-    "worker_pain": "Your reality · You can already ship AI-powered work, but clients still price you against generic freelancers. They can't see your workflow, your judgment, or your delivery quality.",
-    "worker_get_label": "What you get on BeyondPath →",
-    "worker_pt1_bold": "① Get into the first-wave pool",
-    "worker_pt1_tail": " · Once verified, you join the first-wave shortlist — first projects are matched from this pool.",
-    "worker_pt2_bold": "② No race to the bottom on price",
-    "worker_pt2_tail": " · Platform confirms scope and rate per project. Good delivery gets seen — not the cheapest pitch.",
-    "worker_pt3_bold": "③ Show clients why you're worth it",
-    "worker_pt3_tail": " · Cases, toolchain and delivery quality become Tier evidence clients can read.",
-    "worker_pt4_bold": "④ Trust compounds across projects",
-    "worker_pt4_tail": " · Every completed project becomes a recommendation reason for the next — instead of starting from zero each time.",
-    "worker_replace": "▸ Replaces 'cold pitching + low-bid contests + dry pipeline'",
-    "bottom_para_bold": "This isn't another freelance marketplace.",
-    "bottom_para_after": " It's a set of rules that make AI work actually deliverable: scope the brief upfront, verify the workers first, set milestones with standards, close with ratings.",
-    "bottom_cta_client": "Post an AI project →",
-    "bottom_cta_worker": "Apply for worker certification →",
-    "bottom_cta_demo": "Preview the Worker Console →"
-  },
-  "problem": {
-    "eyebrow": "◆ THE ANXIETY · AI didn't amplify tools. It amplified uncertainty.",
+  "fears": {
+    "eyebrow": "◆ TRUST · Three fears · three answers",
     "headline_part1": "AI multiplied opportunity.",
     "headline_part2_before": "It also blew up ",
     "headline_part2_em": "decision cost",
     "headline_part2_after": ".",
-    "intro": "Clients fear hiring the wrong person, betting on the wrong project, not understanding the result. Workers fear their real ability gets benchmarked against cheap templates. BeyondPath isn't filling a tool gap — it's tackling the anxiety, doubt and uncertainty across the AI work network.",
-    "fix_label": "→ How BeyondPath turns it into order",
+    "intro": "Afraid you'll spend the money and still end up coaching, fixing and cleaning up yourself — so we turned the three fears into three mechanisms.",
     "items": [
       {
-        "lbl": "ANXIETY 1 · CLIENTS",
-        "title": "Who can actually deliver?",
-        "pain": "Everyone says they can do AI. You can't tell who can demo, who can make graphics, and who can actually ship a result.",
-        "fix": "BeyondPath: translate capability into readable delivery risk — through AI-first review, portfolio evidence, and candidate reasoning."
+        "mech": "AI REVIEW",
+        "v": "AI",
+        "fear": "Afraid of hiring wrong",
+        "ans": "AI screening + human review — every candidate comes with a written 'why them'."
       },
       {
-        "lbl": "ANXIETY 2 · WORKERS",
-        "title": "How do I get seen?",
-        "pain": "You already have an AI workflow, but the market still puts you back in low-bid contests and friend-of-a-friend intros.",
-        "fix": "BeyondPath: structure your work, toolchain and delivery quality into verified evidence, so good capability has a fairer entry point."
+        "mech": "24H DIRECTION",
+        "v": "24h",
+        "fear": "Afraid of being overcharged",
+        "ans": "Candidate direction and budget sanity-check within 24 hours — you judge before committing."
       },
       {
-        "lbl": "ANXIETY 3 · BOTH SIDES",
-        "title": "What counts as done?",
-        "pain": "The scary part of AI projects isn't starting — it's doing a lot, revising forever, and no one being able to say if it shipped.",
-        "fix": "BeyondPath: scope milestones, deliverables and acceptance criteria before kickoff, so both sides share the same rules from day one."
+        "mech": "MILESTONE",
+        "v": "M1",
+        "fear": "Afraid 'done' never comes",
+        "ans": "Acceptance criteria set before kickoff; funds held by the platform, released on acceptance."
       }
-    ]
+    ],
+    "founder_label": "◆ ACCOUNTABLE",
+    "founder_name": "Edward Tseng",
+    "founder_role": "Founder, BeyondPath",
+    "founder_promise": "During POC, I personally review every project through to acceptance.",
+    "founder_comment": "// a name on the line, not a support script"
   },
   "engines": {
     "eyebrow": "◆ HOW IT WORKS · From fuzzy brief to verifiable delivery",
     "headline_part1": "You only need to describe the result.",
     "headline_part2": "We turn it into something briefable, matchable and verifiable.",
-    "protocol_label": "◆ 12-step protocol · 4 stages",
+    "protocol_label": "◆ Full flow · 4 stages, 12 steps",
+    "expand_hint": "▸ details",
     "items": [
       {
         "n": "01",
         "en": "AI BRIEF PARSER",
-        "zh": "Brief parsing engine",
-        "d": "Turns a natural-language request into goals, deliverables, timeline, budget and acceptance points. AI first-pass, then reviewed by the team.",
-        "you": "So you → don't need to write a pro brief to scope a project clearly"
+        "zh": "Brief parsing",
+        "you": "Scope a project clearly without writing a pro brief",
+        "d": "One plain-language request → goals, deliverables, budget, acceptance points. AI first-pass, human review."
       },
       {
         "n": "02",
-        "en": "TIER MATCH ENGINE",
-        "zh": "Tier matching engine",
-        "d": "Recommends Top 3 based on domain, portfolio, toolchain and delivery history — with reasons for each fit.",
-        "you": "So you → don't email 30 people. You learn what kind of expert to look for, in 24h.",
+        "en": "TIER MATCH",
+        "zh": "Tier matching",
+        "you": "Skip the 30 cold emails — know who to look for in 24h",
+        "d": "Top 3 by domain, portfolio and delivery history — each with a written 'why them'.",
         "static_label": "MATCH · TIER A+ / A / B"
       },
       {
         "n": "03",
         "en": "SCOPE + MILESTONE",
         "zh": "Scope × acceptance",
-        "d": "Platform confirms deliverables, timeline, risks and acceptance criteria. Payment is collected and disbursed by the platform (via ECPay) per terms.",
-        "you": "So you → know what 'done' means before kickoff. No hanging the project on verbal agreements."
+        "you": "Know what 'done' means before kickoff",
+        "d": "Deliverables, timeline and acceptance in writing; funds held, released on acceptance."
       },
       {
         "n": "04",
-        "en": "PROJECT DASHBOARD",
-        "zh": "Project dashboard",
-        "d": "Centralizes progress, versions, deliverables and open items — so projects don't scatter across email, chat and cloud folders.",
-        "you": "So you → see where it's stuck without having to chase",
-        "static_label": "MILESTONE · AUDIT-READY"
-      },
-      {
-        "n": "05",
-        "en": "NPS FLYWHEEL",
-        "zh": "Two-sided NPS flywheel",
-        "d": "Every closeout records client feedback, delivery quality and collaboration history — gradually shaping recommendation weight.",
-        "you": "So you → good workers get seen, not just the well-networked or loud",
-        "static_label": "ANTI-MATTHEW · 5-DIM NPS"
-      },
-      {
-        "n": "06",
-        "en": "RETAINER ENGINE",
-        "zh": "Retainer engine",
-        "d": "If the first project goes well, turn one-off needs into a monthly retainer proposal.",
-        "you": "So you → keep working with people who deliver — not start the search over each time",
-        "static_label": "AUTO-PROPOSAL · MONTHLY"
+        "en": "TRUST FLYWHEEL",
+        "zh": "Trust flywheel",
+        "you": "Keep working with people who deliver — trust compounds per project",
+        "d": "Closing NPS → Tier moves → smooth collaborations roll into monthly retainers.",
+        "static_label": "5-DIM NPS · RETAINER"
       }
     ],
     "stages": [
@@ -297,118 +256,49 @@
       }
     ]
   },
-  "trust3": {
-    "eyebrow": "◆ TRUST · AI screens first, humans verify, acceptance has standards",
-    "headline_part1": "Not an algorithm black box.",
-    "headline_part2_before": "Every step has ",
-    "headline_part2_em": "a human checkpoint",
-    "headline_part2_after": ".",
-    "items": [
-      {
-        "v": "AI",
-        "en": "AI REVIEW",
-        "zh": "AI review + human verify",
-        "facts": [
-          "AI first breaks down the brief and delivery scope",
-          "Humans review candidates and risk",
-          "You're never just dumped into a platform black box"
-        ]
-      },
-      {
-        "v": "24h",
-        "en": "MATCH DIRECTION",
-        "zh": "Candidate direction first",
-        "facts": [
-          "First-cut judgment on domain and budget fit",
-          "Native understanding of briefs in your language",
-          "Direction first, shortlist second"
-        ]
-      },
-      {
-        "v": "M1",
-        "en": "MILESTONE",
-        "zh": "Acceptance per project",
-        "facts": [
-          "Deliverables, timeline and risk defined upfront",
-          "Payment collected by the platform, disbursed after acceptance",
-          "No debating 'is it done?' after the fact"
-        ]
-      }
-    ]
-  },
-  "moat": {
-    "eyebrow": "◆ WHY BEYONDPATH · When LLMs can also match — what's left?",
-    "headline_part1": "LLMs can recommend people.",
-    "headline_part2_before": "Trust comes from ",
-    "headline_part2_em": "delivery evidence",
-    "headline_part2_after": ".",
-    "intro": "BeyondPath doesn't survive on 'better matching than AI.' What we're compounding is delivery records: who built what, with which tools, how the output was accepted, and why they're worth recommending again — the kind of data LLMs can't just scrape.",
-    "items": [
-      {
-        "axis": "LLMs can do",
-        "ttl": "Recommend someone who looks like a fit",
-        "body": "Any LLM will eventually read briefs, generate shortlists and compare portfolios. That becomes table stakes, not a moat.",
-        "peer": "▸ Lists get cheaper over time"
-      },
-      {
-        "axis": "BeyondPath compounds",
-        "ttl": "Who has actually delivered, and how",
-        "body": "We capture AI workflow, deliverables, acceptance records, two-sided NPS and contextual fit — so the next recommendation isn't a guess, it's grounded in delivery evidence.",
-        "peer": "▸ Trust gets thicker with use"
-      },
-      {
-        "axis": "What we're actually building",
-        "ttl": "Not the algorithm — the delivery record",
-        "body": "What's scarce: local-context briefs, industry-specific needs, worker workflow proof, delivery quality and collaboration history. That data shapes BeyondPath's recommendation ranking and certification standards.",
-        "peer": "▸ From 'find someone' to 'trust they'll deliver'"
-      }
-    ]
-  },
   "cases": {
     "eyebrow": "◆ CASE STUDIES · Real projects, real records",
     "headline_part1": "See how BeyondPath ",
     "headline_em": "actually runs",
     "headline_part2": ".",
-    "intro_before": "3 cases are early BeyondPath sample collaborations (DTC vertical) — showing the real shape of brief → match → deliver → accept.",
-    "intro_paren_before": "(14 other verticals accumulating · for a sample in your vertical, ",
-    "intro_paren_link": "submit a brief",
-    "intro_paren_after": " and we'll email a real match within 24h)",
-    "label_brief": "① BRIEF",
-    "label_match": "② MATCH",
-    "label_deliver": "③ DELIVER",
-    "label_accept": "④ ACCEPT",
-    "label_result": "⑤ RESULT · ",
+    "intro_before": "Early sample collaborations in the DTC vertical — open a card for match and acceptance records.",
+    "intro_paren_before": "(other verticals accumulating · submit a brief and get ",
+    "intro_paren_link": "your vertical's matching plan",
+    "intro_paren_after": " by email within 24h)",
+    "label_match": "MATCH",
+    "label_proof": "PROOF · acceptance records",
+    "expand_hint": "▸ open for match & acceptance records",
     "footer_before": "▸ Want more?",
     "footer_link": "Email BeyondPath for the work sample pack",
     "items": [
       {
         "brand": "LUMINE",
         "sector": "DTC skincare",
-        "brief": "Launching 3 'Night Repair' SKUs end of September — needs 2 hero KV variants + 6 IG Reels scripts + 3 product page articles + EDM copy, scheduled across Meta + LINE.",
-        "matched": "Tier A+ domain expert · Visual KV + Brand DNA × AI · match score 92 / 100",
-        "delivered": "2 KVs × 4 alts each · 4-week delivery · NPS 4.94 / 5",
-        "proof": "Delivery evidence: brief, version log, acceptance checklist, NPS 4.94 / 5",
-        "state": "Moved into retainer · ongoing through Q1 2027 launches",
+        "brief": "3-SKU September launch: KVs, Reels scripts and campaign copy.",
+        "badges": ["NPS 4.94 / 5", "4-week delivery", "moved to retainer"],
+        "matched": "Tier A+ domain expert · match score 92 / 100",
+        "proof": "Brief, version log, acceptance checklist, NPS 4.94 / 5",
+        "state": "Closed · renewed through Q1 2027 launches",
         "badge": "Closed · NPS 4.94"
       },
       {
         "brand": "HANA Fragrance",
         "sector": "spring restage",
-        "brief": "2 SKUs in the new fragrance line, spring visual restage — 2 KV variants + 8 social assets in 4 weeks.",
-        "matched": "Same Tier A+ expert (already on LUMINE retainer) · capacity 75% · platform priority recommendation",
-        "delivered": "2 KVs × 4 alts · wk 2 / 4 · 50% progress",
-        "proof": "Delivery evidence: wk 2 versions uploaded, mid-review complete 2/4",
+        "brief": "2-SKU spring visual restage: KVs + 8 social assets.",
+        "badges": ["WK 2 / 4 · ON TRACK", "same expert, repeat booking"],
+        "matched": "Same Tier A+ expert (on LUMINE retainer) · platform priority",
+        "proof": "Wk 2 versions uploaded, mid-review 2 / 4 complete",
         "state": "● In progress · ON TRACK",
         "badge": "In progress · WK 2 / 4"
       },
       {
         "brand": "Plant by Plant",
         "sector": "packaging design",
-        "brief": "Plant-based skincare line packaging refresh — brand DNA spec + 6 SKU packaging dielines in 6 weeks.",
-        "matched": "Tier A+ Brand DNA × AI expert · match score 88 / 100",
-        "delivered": "6 SKU dielines · 32-page brand spec · final review stage",
-        "proof": "Delivery evidence: 6 SKU dielines, 32-page brand spec, final review",
-        "state": "● Final review · WK 6 / 6",
+        "brief": "Packaging refresh: brand spec + 6 SKU dielines.",
+        "badges": ["WK 6/6 · FINAL", "32-page brand spec"],
+        "matched": "Tier A+ Brand DNA × AI · match score 88 / 100",
+        "proof": "6 SKU dielines, 32-page brand spec, final review",
+        "state": "● Final review · WK 6/6",
         "badge": "WK 6 / 6 · FINAL REVIEW"
       }
     ]
@@ -418,12 +308,11 @@
     "headline_part1": "Tier isn't decoration · ",
     "headline_em": "it's recommendation weight",
     "headline_part2": ".",
-    "intro": "Tier is ranked by closing NPS, domain certification, client referrals + Anti-Matthew +10 (slot reserved for workers with no projects in the last 3 months). Workers see 'what's missing to level up'; clients see 'why this worker costs more.'",
+    "intro": "Tier = the evidence for why this person costs more — moved by closing NPS and client referrals. Not bought; delivered. Workers: clients can finally read why you're worth it.",
     "typical_label": "typical",
     "day1_label_part1": "▸ DAY 1",
     "day1_label_part2": "path",
     "day1_body_main": "Get verified → join the first-wave pool → first projects prioritized from the verified list.",
-    "day1_body_sub": "We turn your cases, toolchain and delivery quality into evidence clients can read — then NPS and recommendation weight compound over time.",
     "items": [
       {
         "id": "S",
@@ -462,7 +351,7 @@
     "headline_part1": "9 ",
     "headline_em": "verticals",
     "headline_part2": " — start by knowing what kind of expert to look for.",
-    "footer": "▸ LEAD 4 · AI support agents / web / internal tools / DTC content · set by 2026-06 market research",
+    "footer": "▸ LEAD 4 · AI support agents / web / internal tools / DTC content",
     "hot_tag": "LEAD",
     "verticals": [
       "Paid discovery ⊕",
@@ -475,61 +364,6 @@
       "B2B SaaS GTM",
       "Custom systems · ERP/CRM",
       "Other"
-    ]
-  },
-  "services": {
-    "eyebrow": "◆ SERVICES · What's available now + price reference",
-    "headline_part1": "1 discovery entry + 4 main delivery types — ",
-    "headline_em": "each with matched Tier and budget reference",
-    "headline_part2": ".",
-    "intro": "These ranges are reference, not fixed quotes. Actual price depends on scope complexity, deliverable range and timeline. Submit a brief and within 24h you'll get a matched proposal with suggested budget. Using AI yourself is free — but so are the mistakes. Through BeyondPath you pay for vetted people, staged payments, and a dedicated platform contact on your case until acceptance — funds release only on acceptance (see Terms).",
-    "label_range": "RANGE",
-    "data_label": "◆ DATA HANDLING · How your data is treated",
-    "data_body_before": "Briefs, emails and portfolios submitted to BeyondPath go to our internal team + AI review tools only — not public, not resold. Retention follows business need (future matching and retainer invitations); email ",
-    "data_body_link": "hello@beyondpath.tw",
-    "data_body_after": " any time to request deletion.",
-    "data_cta": "Read the full privacy policy →",
-    "items": [
-      {
-        "n": "00",
-        "en": "PAID DISCOVERY",
-        "zh": "Paid discovery · entry",
-        "desc": "Not sure what you need yet? 1-2 weeks: requirement spec + clickable prototype + fixed quote, fully credited toward a full project within 6 months. Discovery is the entry, not the project — first projects start at NT$50K+.",
-        "tiers": "Tier A / A+",
-        "range": "NT$ 30-50K"
-      },
-      {
-        "n": "01",
-        "en": "AI WORKFLOW",
-        "zh": "AI workflow consulting + build",
-        "desc": "From scoping to toolchain setup, including handoff docs. Common: support automation, content pipelines, internal agents.",
-        "tiers": "Tier B+ / A+",
-        "range": "NT$ 150K-800K"
-      },
-      {
-        "n": "02",
-        "en": "BRAND CONTENT",
-        "zh": "DTC brand content",
-        "desc": "Visual KV, brand DNA, social content ops. Common: skincare / food / design brand launches + ongoing operation.",
-        "tiers": "Tier B / B+ / A+",
-        "range": "NT$ 50K-600K"
-      },
-      {
-        "n": "03",
-        "en": "REELS · VIDEO",
-        "zh": "Short-form video + Reels",
-        "desc": "Script + shoot + edit, end-to-end. Common: brand storytelling, UGC style, product demos, tutorials.",
-        "tiers": "Tier B / B+",
-        "range": "NT$ 30K-250K"
-      },
-      {
-        "n": "04",
-        "en": "CUSTOM DEV",
-        "zh": "Custom software / AI agent / workflows",
-        "desc": "Prototype to production: API integration, bots, internal tools. Common: Slack agents, CRM automation, Make / n8n flows.",
-        "tiers": "Tier B+ / A+",
-        "range": "NT$ 100K-1.2M"
-      }
     ]
   },
   "faq": {
@@ -588,7 +422,7 @@
     "roadmap_label": "◆ ROADMAP · Before you post a project · our progress",
     "eyebrow": "◆ Now open",
     "headline": "Post your AI project to people who've actually done it.",
-    "blurb": "Clients: submit a brief, get candidate direction in 24 hours, then decide whether to proceed — no long-term contract upfront. Workers: submit cases and toolchain, get certified, join the first-wave pool — let good work get seen without racing to the bottom on price.",
+    "blurb": "Leave a brief, get candidate direction within 24 hours — no long-term contract upfront. Workers: submit cases and toolchain, get certified, join the first-wave pool.",
     "cta_client_main": "Post an AI project →",
     "cta_client_sub": "Client",
     "cta_worker_main": "Apply for worker certification →",
@@ -618,7 +452,13 @@
     "link_about": "About BeyondPath",
     "link_feedback": "Collaboration feedback · soon",
     "link_join_us": "Join us",
-    "link_contact_email": "edwardt0303@gmail.com",
+    "link_contact_email": "Email hello@beyondpath.tw",
+    "col_act": "ACT NOW",
+    "col_about": "ABOUT",
+    "link_contract_verify": "Verify a contract",
+    "link_what_is": "Who we are",
+    "link_cases": "Case studies",
+    "link_how_we_match": "Why BeyondPath",
     "link_terms": "Terms · soon",
     "link_privacy": "Privacy · soon",
     "link_acceptance": "Acceptance rules",

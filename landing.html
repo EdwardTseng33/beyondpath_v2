@@ -528,6 +528,57 @@
     /* 圖片防溢 */
     img, svg, canvas { max-width: 100%; height: auto; }
   }
+
+  /* ===== 2026-06-11 redesign · motion tokens（女巫指示書 件五 · 全部一次性、只動 transform/opacity）===== */
+  :root {
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* scroll-reveal 單體 */
+  .le-reveal { opacity: 0; transform: translateY(16px); transition: opacity 280ms var(--ease-reveal), transform 280ms var(--ease-reveal); }
+  .le-reveal.in { opacity: 1; transform: none; }
+  /* 卡群 stagger（80ms 階差） */
+  .le-stagger > * { opacity: 0; transform: translateY(16px); transition: opacity 280ms var(--ease-reveal), transform 280ms var(--ease-reveal); }
+  .le-stagger.in > * { opacity: 1; transform: none; }
+  .le-stagger.in > *:nth-child(2) { transition-delay: 80ms; }
+  .le-stagger.in > *:nth-child(3) { transition-delay: 160ms; }
+  .le-stagger.in > *:nth-child(4) { transition-delay: 240ms; }
+  .le-stagger.in > *:nth-child(5) { transition-delay: 320ms; }
+  .le-stagger.in > *:nth-child(6) { transition-delay: 400ms; }
+  /* progressive disclosure 卡（hover 展開 / 手機 tap .open） */
+  .le-xcard { cursor: pointer; transition: border-color 180ms ease, transform 180ms ease; }
+  .le-xcard:hover { border-color: var(--accent) !important; transform: translateY(-2px); }
+  .le-xcard .xbody { max-height: 0; overflow: hidden; opacity: 0; margin-top: 0; transition: max-height 240ms ease-out, opacity 240ms ease-out, margin-top 240ms ease-out; }
+  .le-xcard:hover .xbody, .le-xcard.open .xbody { max-height: 260px; opacity: 1; margin-top: 10px; }
+  .le-xcard .xhint { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin-top: 8px; transition: color 180ms; }
+  .le-xcard:hover .xhint, .le-xcard.open .xhint { color: var(--accent-dim); }
+  @media (hover: hover) { .le-xcard .xhint { opacity: 0.7; } }
+  /* hero 打字機終端（沿用 .le-stream 的卡感、自帶身形） */
+  .le-term { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border: 1px solid var(--line); background: rgba(255,255,255,0.015); min-height: 178px; }
+  .le-term .label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--accent-dim); text-transform: uppercase; }
+  .le-term-body { display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 13px; line-height: 1.6; }
+  .le-term-line.input { color: var(--text); }
+  .le-term-line.dim { color: var(--muted); }
+  .le-term-line.res { color: var(--accent); animation: le-term-in 280ms var(--ease-out-quint); }
+  @keyframes le-term-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .le-cursor { display: inline-block; margin-left: 2px; color: var(--accent); animation: le-blink 1000ms step-end infinite; }
+  .le-cursor.tail { opacity: 0.5; }
+  @keyframes le-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+  /* 把關人卡 */
+  .le-founder-avatar { width: 64px; height: 64px; flex: none; border: 1px solid var(--accent-line); background: rgba(199,232,74,0.04); display: flex; align-items: center; justify-content: center; }
+  @media (max-width: 640px) { .le-founder { flex-direction: column; align-items: flex-start !important; } }
+  /* 390 寬主標：11 字單元放得下、句號不孤行（38px 地板 × 11 字 = 418px > 358px 容器 → 降 31px） */
+  @media (max-width: 480px) { .le-hero-title { font-size: 31px; } }
+  /* 引擎 6→4 卡後格線 4 欄、避免 3+1 孤兒排版 */
+  #engines .le-engines-grid { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 1100px) { #engines .le-engines-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { #engines .le-engines-grid { grid-template-columns: 1fr; } }
+  /* a11y 兜底：reduced-motion 全部直接顯示終態 */
+  @media (prefers-reduced-motion: reduce) {
+    .le-reveal, .le-stagger > * { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .le-term-line.res { animation: none !important; }
+    .le-cursor { animation: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -595,8 +646,8 @@
 </footer>
 <!-- i18n bundle (must load BEFORE React+Babel) · Phase 1 Step 1 -->
 <script src="components/i18n/index.js?v=2026-06-10-pay"></script>
-<script src="components/i18n/dict.zh.js?v=2026-06-11-vert9c"></script>
-<script src="components/i18n/dict.en.js?v=2026-06-11-vert9c"></script>
+<script src="components/i18n/dict.zh.js?v=2026-06-11-redesign1"></script>
+<script src="components/i18n/dict.en.js?v=2026-06-11-redesign1"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
@@ -619,6 +670,27 @@ function useLangRerender() {
     document.addEventListener("i18n:change", handler);
     return () => document.removeEventListener("i18n:change", handler);
   }, []);
+}
+
+// 2026-06-11 redesign · scroll-reveal（女巫 1.2 鐵律：opacity+translateY 一次性、IntersectionObserver 觸發後 unobserve、reduced-motion 直接顯示終態）
+function useReveal() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if ((window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) || !("IntersectionObserver" in window)) {
+      el.classList.add("in");
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -10% 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return ref;
 }
 
 // Heromark · 5-tier orbital
@@ -845,10 +917,10 @@ function ENav() {
         <small>{t("nav.brand_version", "")}</small>
       </a>
       <div className="links">
-        <a href="#problem">{t("nav.link_problem", "Problem")}</a>
-        <a href="#engines">{t("nav.link_how", "How")}</a>
-        <a href="#trust">{t("nav.link_trust", "Trust")}</a>
+        <a href="#services">{t("nav.link_offers", "Offers")}</a>
         <a href="#cases">{t("nav.link_cases", "Cases")}</a>
+        <a href="#trust">{t("nav.link_trust", "Trust")}</a>
+        <a href="#engines">{t("nav.link_how", "How")}</a>
         <a href="#tier">{t("nav.link_tier", "Tier")}</a>
         <a href="#faq">{t("nav.link_faq", "FAQ")}</a>
       </div>
@@ -891,45 +963,79 @@ function EPocTracker() {
   );
 }
 
-// Hero · v0.6 i18n
+// 2026-06-11 redesign · Hero 打字機（女巫指示書 1.1 方向 A：一句需求 → 拆解結果、打完即停不 loop）
+function TerminalParse() {
+  useLangRerender();
+  const [typed, setTyped] = useState("");
+  const [phase, setPhase] = useState(0); // 0=typing 1=parsing 2..6=results
+  const curLang = (window.BPi18n && window.BPi18n.getLang && window.BPi18n.getLang()) || "zh";
+  useEffect(() => {
+    setTyped(""); setPhase(0); // 切語言重打（EN 模式不漏中文）
+    const input = t("hero.term_input", "> 我想做一波 618 的電商內容");
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setTyped(input); setPhase(6); return;
+    }
+    const timers = [];
+    let iv = null;
+    timers.push(setTimeout(() => {
+      let i = 0;
+      iv = setInterval(() => {
+        i++;
+        setTyped(input.slice(0, i));
+        if (i >= input.length) {
+          clearInterval(iv);
+          timers.push(setTimeout(() => setPhase(1), 400));
+          timers.push(setTimeout(() => setPhase(2), 900));
+          [1, 2, 3, 4].forEach((k) => timers.push(setTimeout(() => setPhase(2 + k), 900 + 180 * k)));
+        }
+      }, 35);
+    }, 600));
+    return () => { timers.forEach(clearTimeout); if (iv) clearInterval(iv); };
+  }, [curLang]);
+  const results = [
+    t("hero.term_r1", "✓ 目標：618 檔期轉換"),
+    t("hero.term_r2", "✓ 交付物：短影音 ×6 · 商品頁文案 ×12 · EDM ×3"),
+    t("hero.term_r3", "✓ 時程：3 週 ｜ 預算：NT$ 60-120K"),
+    t("hero.term_r4", "✓ 驗收：M1 腳本 → M2 初稿 → M3 成品上線"),
+  ];
+  return (
+    <div className="le-term le-card">
+      <span className="label">{t("hero.term_label", "◆ LIVE PARSE · 一句需求 → 可驗收結構")}</span>
+      <div className="le-term-body">
+        <div className="le-term-line input">{typed}{phase === 0 && <span className="le-cursor">▋</span>}</div>
+        {phase >= 1 && <div className="le-term-line dim">{t("hero.term_parsing", "▸ 拆解中...")}{phase === 1 && <span className="le-cursor">▋</span>}</div>}
+        {results.map((r, i) => (
+          phase >= 3 + i ? <div key={i} className="le-term-line res">{r}{i === 3 && <span className="le-cursor tail">_</span>}</div> : null
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Hero · 2026-06-11 redesign · 主標 B「能負責到驗收」(Edward 拍板) + 3 chips + 打字機 · 砍 blurb/legend/telemetry/AGENT STREAM (howl 砍字表 #1)
 function EHero() {
   useLangRerender();
-  const [tokens, setTokens] = useState([]);
-  useEffect(() => {
-    const stream = ["parse(", "brief", ")", "→", "tier", "=", "A+", "·", "match", "(", 3, ")", "→", "scope", "·", "acceptance", "(", "M1", ")", "→", "milestone", "·", "nps", "→", "retainer"];
-    let i = 0;
-    const id = setInterval(() => {
-      setTokens((prev) => {
-        const next = [...prev, stream[i % stream.length]];
-        return next.slice(-22);
-      });
-      i++;
-    }, 360);
-    return () => clearInterval(id);
-  }, []);
   return (
     <section className="le-hero">
       <NeuralMesh />
       <div className="le-hero-content">
         <div className="le-hero-eyebrow">
           <span className="dot le-pulse"></span>
-          <span>{t("hero.eyebrow", "// AI ERA WORK NETWORK · 台灣 · 發案與接案雙邊認證")}</span>
+          <span>{t("hero.eyebrow", "// 台灣 · AI 專案發案網路 · 認證接案者")}</span>
         </div>
-        {/* 2026-06-01 卡西法 · 中文折行根治：.zh-headline 機制 + .zh-nowrap 語意單元鎖 + .zh-br 語意換行（窄螢幕自動收）*/}
         <h1 className="le-hero-title le-zh zh-headline">
           <span>
-            <span className="zh-nowrap">{t("hero.headline_l1_before", "想用 ")}<span className="le-grad">{t("hero.headline_part1_ai", "AI")}</span>{t("hero.headline_l1_after", "，")}</span><span className="zh-nowrap">{t("hero.headline_l1_u2", "卻不知道找誰做？")}</span><br className="zh-br" /><span className="zh-nowrap">{t("hero.headline_l2_u1", "把專案發給")}{t("hero.headline_l2_u2", "已驗證的 AI 工作者。")}</span>
+            <span className="zh-nowrap">{t("hero.headline_u1", "AI 專案，")}</span><span className="zh-nowrap">{t("hero.headline_u2", "交給能負責到驗收的人。")}</span>
           </span>
           <span className="sub zh-subhead">
-            <span className="zh-nowrap">{t("hero.headline_sub_u1", "比招人快、")}</span><span className="zh-nowrap">{t("hero.headline_sub_u2", "比亂找接案者穩、")}</span><span className="zh-nowrap">{t("hero.headline_sub_u3", "比只買工具更接近成果。")}</span>
+            <span className="zh-nowrap">{t("hero.headline_sub_u1", "已驗證的接案者＋驗收前平台代管＋")}</span><span className="zh-nowrap">{t("hero.headline_sub_u2", "24 小時回覆。")}</span>
           </span>
         </h1>
-        {/* v0.4.9 wave 6 #6 · Takeaway pills · 讓用戶 1 秒掌握 LP 賣什麼（Edward 反饋「無法快速掌握重點」） */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, margin: "20px 0 28px" }}>
           {[
-            { k: "1", v: t("hero.pill_1", "把焦慮的需求，拆成範圍、交付物與驗收標準") },
-            { k: "2", v: t("hero.pill_2", "AI 初審適配領域、預算與候選方向") },
-            { k: "3", v: t("hero.pill_3", "用認證化供給與 milestone 降低交付不確定性") },
+            { k: "1", v: t("hero.chip_1", "24h 回覆候選方向") },
+            { k: "2", v: t("hero.chip_2", "首案 NT$50K+ · 不綁約") },
+            { k: "3", v: t("hero.chip_3", "驗收前款項平台代管") },
           ].map((p) => (
             <div key={p.k} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", border: "1px solid var(--accent-line)", borderRadius: 999, background: "rgba(199,232,74,0.04)" }}>
               <span style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.1em" }}>0{p.k}</span>
@@ -938,61 +1044,19 @@ function EHero() {
           ))}
         </div>
         <div className="le-hero-grid">
-          <div className="le-hero-blurb le-zh">
-            {t("hero.blurb_before", "AI 讓每個人都像能交付，也讓發案與接案更焦慮：需求怎麼拆、能力怎麼判斷、成果怎麼驗收。BeyondPath 用 ")}<b>{t("hero.blurb_bold", "AI 初審、認證化供給與 milestone 交付")}</b>{t("hero.blurb_after", "，把模糊需求變成一套可被信任的 AI 工作流程。")}
-          </div>
+          <TerminalParse />
           <div className="le-hero-cta-col">
-            <div className="le-hero-trust-label">
-              <span style={{ display: "inline-block", width: 4, height: 4, background: "var(--accent)", borderRadius: 99 }}></span>
-              {t("hero.trust_label", "next work network · AI review · verified supply")}
-            </div>
             <a href="app.html?role=client&step=0" className="le-cta-primary">
-              <span>{t("hero.cta_primary_main", "我想進入 AI 發案流程 →")}</span>
-              <span style={{ fontSize: 11, opacity: 0.6 }}>{t("hero.cta_primary_sub", "留下需求 · 24 小時內初步回覆")}</span>
+              <span>{t("hero.cta_primary_main", "我要發 AI 專案 →")}</span>
+              <span style={{ fontSize: 11, opacity: 0.6 }}>{t("hero.cta_primary_sub", "留下需求 · 24 小時內回覆")}</span>
             </a>
             <a href="app.html?role=worker&onboarding=1" className="le-cta-secondary">
-              <span>{t("hero.cta_secondary_main", "我想加入 AI 接案網路 →")}</span>
-              <span className="sub">{t("hero.cta_secondary_sub", "提交作品與 AI workflow")}</span>
+              <span>{t("hero.cta_secondary_main", "我想接案 · 申請認證 →")}</span>
+              <span className="sub">{t("hero.cta_secondary_sub", "正式認證通過率 < 10%")}</span>
             </a>
             <a href="app.html?role=worker&view=worker-demo" className="le-zh" style={{ color: "var(--accent)", fontSize: 13, textDecoration: "none", alignSelf: "flex-start", borderBottom: "1px solid var(--accent-line)", paddingBottom: 2 }}>
-              {t("hero.cta_demo", "先看通過後的 Worker Console →")}
+              {t("hero.cta_demo", "先看產品實際畫面 →")}
             </a>
-          </div>
-        </div>
-        <div className="le-stream le-card">
-          <span className="label">{t("hero.stream_label", "◆ AGENT // STREAM")}</span>
-          <div className="tokens">
-            {tokens.map((tk, i) => {
-              let color = "var(--text-2)";
-              if (typeof tk === "number") color = "var(--accent)";
-              else if (["→", "·", "("].includes(tk)) color = "var(--muted)";
-              else if (tk === "tier" || tk === "match" || tk === "acceptance") color = "var(--accent-dim)";
-              else if (tk === "A+" || tk === "M1") color = "var(--accent)";
-              return <span key={i} style={{ color, opacity: i / tokens.length * 0.6 + 0.4 }}>{tk}</span>;
-            })}
-            <span style={{ color: "var(--accent)" }}>▮</span>
-          </div>
-          <span className="meta">{t("hero.stream_meta", "tok/s · 38")}</span>
-        </div>
-        <div className="le-zh" style={{ fontSize: 11, color: "var(--muted)", letterSpacing: "0.06em", margin: "20px 0 10px", fontFamily: "var(--mono)", textTransform: "uppercase" }}>
-          {t("hero.legend_before", "▸ ")}<span style={{ color: "var(--accent)" }}>{t("hero.legend_spec", "SPEC")}</span>{t("hero.legend_spec_after", " = 平台設計標準 · ship 後驗收門檻   ·   ")}<span style={{ color: "var(--accent-dim)" }}>{t("hero.legend_live", "LIVE")}</span>{t("hero.legend_live_after", " = 即時數據")}
-        </div>
-        {/* v0.4.8 wave 5 #7 · Hero 瘦身 · 女巫 fix-1 + 蘇菲共識 · telemetry 4 → 3 cell（VERTICALS=15 已在 Network 段、移除 dup）· EPocTracker 移到 finalCTA 上方 */}
-        <div className="le-telemetry">
-          <div className="cell">
-            <span className="badge target">SPEC</span>
-            <div className="l">{t("hero.tel_focus_label", "FOCUS")}</div>
-            <div className="v" style={{ color: "var(--accent)" }}>{t("hero.tel_focus_value", "SMB")}</div>
-          </div>
-          <div className="cell">
-            <span className="badge target">SPEC</span>
-            <div className="l">{t("hero.tel_review_label", "REVIEW TIME")}</div>
-            <div className="v" style={{ color: "var(--text)" }}>{t("hero.tel_review_value", "24h")}</div>
-          </div>
-          <div className="cell">
-            <span className="badge target">SPEC</span>
-            <div className="l">{t("hero.tel_project_label", "FIRST PROJECT")}</div>
-            <div className="v" style={{ color: "var(--accent)" }}>{t("hero.tel_project_value", "50K+")}</div>
           </div>
         </div>
       </div>
@@ -1001,36 +1065,67 @@ function EHero() {
 }
 
 // v0.5.2 Step 2 i18n · BETA_USE_CASES 改從 dict 取 (usecases.cases · 4 item × 5 field)
-function EUseCases() {
+// 2026-06-11 redesign · EOffers = usecases × services 合併（howl 砍字表 #2+#11：發什麼案·多少錢 · 資訊換容器不刪）
+function EOffers() {
   useLangRerender();
-  const cases = t("usecases.cases", []);
+  const items = t("offers.items", []);
+  const gridRef = useReveal();
+  const stripRef = useReveal();
   return (
-    <section className="le-section" id="beta-use-cases" style={{ paddingTop: 72, paddingBottom: 72 }}>
+    <section className="le-section" id="services" style={{ paddingTop: 72, paddingBottom: 72 }}>
       <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("usecases.eyebrow", "◆ USE CASES · 最適合發的案子")}</div>
-        <h2 className="le-h2" style={{ marginBottom: 22 }}>{t("usecases.headline_part1", "不要先買更多工具。")}<br/>{t("usecases.headline_part2_before", "先把下一個")}<span className="le-acc">{t("usecases.headline_part2_em", "AI 專案")}</span>{t("usecases.headline_part2_after", "交付出來。")}</h2>
-        <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.65, maxWidth: 900, marginTop: -8, marginBottom: 32 }}>
-          {t("usecases.intro", "BeyondPath 先收「範圍清楚、交付可驗收、用 AI 能明顯加速」的交付專案。你不用先懂工具，只要知道你希望交出什麼結果。")}
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("offers.eyebrow", "◆ OFFERS · 發什麼案 · 多少錢")}</div>
+        <h2 className="le-h2" style={{ marginBottom: 18 }}>{t("offers.headline_part1", "不要先買更多工具。")}<br/>{t("offers.headline_part2_before", "先把下一個")}<span className="le-acc">{t("offers.headline_part2_em", "AI 專案")}</span>{t("offers.headline_part2_after", "交付出來。")}</h2>
+        <p className="le-zh" style={{ fontSize: 18, color: "var(--text)", fontWeight: 600, lineHeight: 1.6, maxWidth: 900, marginTop: -6, marginBottom: 6 }}>
+          {t("offers.punch", "自己用 AI 是免費的，但出錯也算自己的。")}
         </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
-          {cases.map((c, i) => (
-            <article key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--line)", padding: "24px 22px", minHeight: 260, display: "flex", flexDirection: "column", gap: 12 }}>
-              <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase" }}>CASE 0{i + 1}</div>
-              <div className="le-zh" style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.5 }}>{c.who}</div>
-              <div className="le-zh" style={{ fontSize: 23, color: "var(--text)", fontWeight: 700, lineHeight: 1.28 }}>{c.job}</div>
-              <div className="le-zh" style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.65, flex: 1 }}>{c.deliver}</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, paddingTop: 12, borderTop: "1px dashed var(--line-soft)" }}>
+        <p className="le-zh" style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.65, maxWidth: 880, marginBottom: 20 }}>
+          {t("offers.punch_sub", "透過 BeyondPath：驗過的人＋分段付款＋出問題有人跟進到驗收通過。")}
+        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 28 }}>
+          {[t("offers.chip_1", "價格為參考區間"), t("offers.chip_2", "24h 內收到含預算的配對方案"), t("offers.chip_3", "驗收前款項平台代管")].map((c, i) => (
+            <span key={i} className="le-zh" style={{ fontSize: 12, color: "var(--text-2)", padding: "6px 12px", border: "1px solid var(--line)", borderRadius: 999 }}>{c}</span>
+          ))}
+        </div>
+        {/* 探索入口 · 全寬置頂 strip */}
+        <a ref={stripRef} href="app.html?role=client&step=0" style={{ display: "block", textDecoration: "none", border: "1.5px solid var(--accent)", background: "rgba(199,232,74,0.05)", padding: "20px 24px", marginBottom: 18 }} className="le-reveal le-discovery-strip">
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: 14 }}>
+            <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em", color: "var(--accent)" }}>{t("offers.discovery_n", "00")} · {t("offers.discovery_en", "PAID DISCOVERY")}</span>
+            <span className="le-zh" style={{ fontSize: 19, fontWeight: 700, color: "var(--text)" }}>{t("offers.discovery_zh", "付費需求探索 · 入口")}</span>
+            <span style={{ fontFamily: "var(--mono)", fontSize: 13, color: "var(--accent)", marginLeft: "auto" }}>{t("offers.discovery_range", "NT$ 3-5 萬")} · {t("offers.discovery_tiers", "Tier A / A+")}</span>
+          </div>
+          <div className="le-zh" style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.7, marginTop: 10, maxWidth: 880 }}>
+            {t("offers.discovery_desc", "還說不清楚需求？1-2 週交付：需求計畫書＋可點原型＋固定報價單。6 個月內進正式案全額折抵。")}
+            <span style={{ color: "var(--accent)", marginLeft: 10, whiteSpace: "nowrap" }}>{t("offers.discovery_cta", "從探索開始 →")}</span>
+          </div>
+        </a>
+        <div ref={gridRef} className="le-stagger" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
+          {items.map((c, i) => (
+            <article key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--line)", padding: "22px 22px", display: "flex", flexDirection: "column", gap: 11 }}>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase" }}>{c.n} · {c.en}</div>
+              <div className="le-zh" style={{ fontSize: 21, color: "var(--text)", fontWeight: 700, lineHeight: 1.3 }}>{c.zh}</div>
+              <div className="le-zh" style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.5 }}>{c.who}</div>
+              <div className="le-zh" style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.6, flex: 1 }}>{c.deliver}</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, paddingTop: 12, borderTop: "1px dashed var(--line-soft)" }}>
                 <div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.12em", color: "var(--muted)", textTransform: "uppercase" }}>{t("usecases.label_budget", "BUDGET")}</div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: 13, color: "var(--accent)", marginTop: 4 }}>{c.budget}</div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", textTransform: "uppercase" }}>{t("offers.label_budget", "BUDGET")}</div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: 11.5, color: "var(--accent)", marginTop: 4, whiteSpace: "nowrap" }}>{c.budget}</div>
                 </div>
                 <div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.12em", color: "var(--muted)", textTransform: "uppercase" }}>{t("usecases.label_timeline", "TIMELINE")}</div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: 13, color: "var(--text)", marginTop: 4 }}>{c.time}</div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", textTransform: "uppercase" }}>{t("offers.label_timeline", "TIMELINE")}</div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: 11.5, color: "var(--text)", marginTop: 4, whiteSpace: "nowrap" }}>{c.time}</div>
+                </div>
+                <div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", textTransform: "uppercase" }}>{t("offers.label_tier", "TIER")}</div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: 11.5, color: "var(--text-2)", marginTop: 4, whiteSpace: "nowrap" }}>{c.tiers}</div>
                 </div>
               </div>
             </article>
           ))}
+        </div>
+        <div className="le-zh" style={{ marginTop: 18, fontSize: 12, color: "var(--muted)", lineHeight: 1.6 }}>
+          {t("offers.data_line_before", "brief 與聯絡資料僅平台與 AI 初審工具可見、不公開不轉售，可隨時要求刪除 → ")}
+          <a href="/legal/privacy.html" style={{ color: "var(--accent-dim)" }}>{t("offers.data_line_link", "隱私政策")}</a>
         </div>
       </div>
     </section>
@@ -1069,30 +1164,48 @@ function ETrustStrip() {
   );
 }
 
-// Problem · 4 path · v0.5.2 Step 2 i18n · PROBLEMS 改從 dict 取 (problem.items)
-function EProblem() {
+// 2026-06-11 redesign · EFears = problem × trust3 合併（howl 砍字表 #4+#6：三個怕×三個答）+ 把關人卡（Edward 拍板放照片+真名+承諾；照片到位前用線條占位、不用假圖）
+// P0 違憲修正：原 problem 區橘金 accent → chartreuse（女巫指示書 §0、passport 紅線 2/3）
+function EFears() {
   useLangRerender();
-  const problems = t("problem.items", []);
+  const items = t("fears.items", []);
+  const gridRef = useReveal();
+  const founderRef = useReveal();
   return (
-    <section className="le-section" id="problem">
+    <section className="le-section" id="trust">
       <div className="inner">
-        <div className="le-cap le-warn" style={{ marginBottom: 24 }}>{t("problem.eyebrow", "◆ THE ANXIETY · AI 時代真正放大的不是工具，是不確定性")}</div>
-        <h2 className="le-h2">{t("problem.headline_part1", "AI 讓機會變多，")}<br/>{t("problem.headline_part2_before", "也讓")}<span className="le-warn">{t("problem.headline_part2_em", "判斷成本")}</span>{t("problem.headline_part2_after", "爆炸。")}</h2>
+        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("fears.eyebrow", "◆ TRUST · 三個怕 · 三個答")}</div>
+        <h2 className="le-h2">{t("fears.headline_part1", "AI 讓機會變多，")}<br/>{t("fears.headline_part2_before", "也讓")}<span className="le-acc">{t("fears.headline_part2_em", "判斷成本")}</span>{t("fears.headline_part2_after", "爆炸。")}</h2>
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
-          {t("problem.intro", "發案方怕找錯人、押錯案、看不懂成果；接案方怕好能力被拿去跟低價模板比較。BeyondPath 要處理的不是工具缺口，而是 AI 工作網路裡的焦慮、不安與不確定性。")}
+          {t("fears.intro", "怕花了錢，最後還是自己在教、自己在改、自己在收拾爛攤子——所以我們把三個怕，做成三個機制。")}
         </p>
-        <div className="le-engines-grid le-problem-grid">
-          {problems.map((p, i) => (
-            <article key={i} className="le-engine-card">
-              <div className="n" style={{ color: "var(--warn)" }}>{p.lbl}</div>
-              <div className="zh le-zh" style={{ fontSize: 22 }}>{p.title}</div>
-              <div className="desc le-zh"><b style={{ color: "var(--warn)" }}>{p.pain}</b></div>
-              <div style={{ paddingTop: 14, borderTop: "1px dashed var(--line-soft)", marginTop: "auto" }}>
-                <div className="n" style={{ color: "var(--accent)", marginBottom: 8 }}>{t("problem.fix_label", "→ BeyondPath 怎麼把它變成秩序")}</div>
-                <div className="desc le-zh">{p.fix}</div>
-              </div>
-            </article>
+        <div ref={gridRef} className="le-trust3-grid le-stagger">
+          {items.map((it, i) => (
+            <div key={i} className="le-trust3-cell">
+              <div className="label" style={{ color: "var(--accent)" }}>{it.mech}</div>
+              <div className="v" style={{ color: "var(--accent)" }}>{it.v}</div>
+              <div className="zh le-zh" style={{ fontWeight: 700 }}>{it.fear}</div>
+              <div className="le-zh" style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.7, marginTop: 8 }}>{it.ans}</div>
+            </div>
           ))}
+        </div>
+        {/* 把關人卡 · 具名問責（howl Q4 verdict：worker 真人化之前、問責的臉 = 創辦人） */}
+        <div ref={founderRef} className="le-reveal le-founder" style={{ marginTop: 28, border: "1px solid var(--line)", background: "rgba(255,255,255,0.015)", padding: "22px 24px", display: "flex", gap: 20, alignItems: "center", maxWidth: 720 }}>
+          <div className="le-founder-avatar" aria-hidden="true">
+            <svg viewBox="0 0 64 64" width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="24" r="11" fill="none" stroke="#c7e84a" strokeWidth="1.5" opacity="0.9" />
+              <path d="M12 56 C12 42 24 38 32 38 C40 38 52 42 52 56" fill="none" stroke="#c7e84a" strokeWidth="1.5" opacity="0.9" />
+            </svg>
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase", marginBottom: 8 }}>{t("fears.founder_label", "◆ 把關人")}</div>
+            <div className="le-zh" style={{ fontSize: 15, color: "var(--text)", lineHeight: 1.7 }}>
+              <b>{t("fears.founder_name", "Edward Tseng")}</b>
+              <span style={{ color: "var(--muted)", marginLeft: 10, fontSize: 13 }}>{t("fears.founder_role", "BeyondPath 創辦人")}</span>
+            </div>
+            <div className="le-zh" style={{ fontSize: 15, color: "var(--text-2)", lineHeight: 1.7, marginTop: 4 }}>{t("fears.founder_promise", "POC 階段，每一案由我親自覆核到驗收通過。")}</div>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent-dim)", marginTop: 8 }}>{t("fears.founder_comment", "// 名字掛在這裡，不是客服話術")}</div>
+          </div>
         </div>
       </div>
     </section>
@@ -1131,18 +1244,19 @@ function EManifesto() {
 
 // Engines · 6 · v0.5.2 Step 2 i18n · 視覺資料 (m/metric) 留 by-index、文字資料走 dict (engines.items)
 // VISUAL_META: m = mock component ref · metric = 純數字徽章 · static_label 從 dict 取 (engines.items[i].static_label)
+// 2026-06-11 redesign · 6→4 卡（howl 砍字表 #5：04 dashboard 砍、05+06 併信任飛輪）
 const ENGINES_VISUAL = [
   { m: "BriefMock",    metric: null  },
   { m: null,           metric: "Top 3" },
   { m: "ContractMock", metric: null  },
-  { m: null,           metric: "M1-M5" },
-  { m: null,           metric: "+10"  },
-  { m: null,           metric: "M+1"  }
+  { m: "NPSMock",      metric: null  }
 ];
 // v0.4.8 wave 5 #9 · Case Study section · v0.5.2 Step 2 i18n · CASE_STUDIES 改 dict (cases.items)
 function ECaseStudies() {
   useLangRerender();
   const items = t("cases.items", []);
+  const [openCase, setOpenCase] = useState(-1);
+  const casesRef = useReveal();
   return (
     <section className="le-section" id="cases">
       <div className="inner">
@@ -1151,27 +1265,38 @@ function ECaseStudies() {
         <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
           {t("cases.intro_before", "3 個 case 為 BeyondPath 早期合作案例樣本（DTC 領域）——展示 brief → 配對 → 交付 → 驗收紀錄的真實樣態。")}<span style={{ color: "var(--muted)", fontSize: 14 }}>{t("cases.intro_paren_before", "（其他 14 領域案例累積中 · 想看你領域範例請")}<a href="app.html?role=client&step=0" style={{ color: "var(--accent)" }}>{t("cases.intro_paren_link", "填 brief")}</a>{t("cases.intro_paren_after", "、實際配對方案 24h 內 email）")}</span>
         </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
-          {items.map((c, i) => (
-            <article key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--line)", padding: "20px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", borderBottom: "1px dashed var(--line-soft)", paddingBottom: 12 }}>
-                <div>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.01em" }}>{c.brand}</div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>{c.sector}</div>
+        {/* 2026-06-11 redesign · 流水帳 → 成績單（howl 砍字表 #8）：徽章行常駐、配對與驗收紀錄收進展開層 */}
+        <div ref={casesRef} className="le-stagger" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
+          {items.map((c, i) => {
+            const isOpen = openCase === i;
+            return (
+              <article key={i} className={"le-xcard" + (isOpen ? " open" : "")} onClick={() => setOpenCase(isOpen ? -1 : i)} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--line)", padding: "20px 22px", display: "flex", flexDirection: "column", gap: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", borderBottom: "1px dashed var(--line-soft)", paddingBottom: 12 }}>
+                  <div>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.01em" }}>{c.brand}</div>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>{c.sector}</div>
+                  </div>
+                  <span style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em", color: "var(--accent)", padding: "3px 6px", border: "1px solid var(--accent-line)", borderRadius: 2, whiteSpace: "nowrap" }}>{c.badge}</span>
                 </div>
-                <span style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em", color: "var(--accent)", padding: "3px 6px", border: "1px solid var(--accent-line)", borderRadius: 2, whiteSpace: "nowrap" }}>{c.badge}</span>
-              </div>
-              <div className="le-zh" style={{ fontSize: 13, lineHeight: 1.7, color: "var(--text-2)" }}>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_brief", "① BRIEF · 需求")}</b>{c.brief}</div>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_match", "② MATCH · 配對")}</b>{c.matched}</div>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_deliver", "③ DELIVER · 交付")}</b>{c.delivered}</div>
-                <div><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_accept", "④ ACCEPT · 驗收")}</b>{c.proof}</div>
-              </div>
-              <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
-                {t("cases.label_result", "⑤ RESULT · ")}{c.state}
-              </div>
-            </article>
-          ))}
+                <div className="le-zh" style={{ fontSize: 14, lineHeight: 1.7, color: "var(--text-2)" }}>{c.brief}</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {(c.badges || []).map((b, j) => (
+                    <span key={j} style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.06em", color: "var(--accent)", padding: "4px 8px", background: "rgba(199,232,74,0.06)", border: "1px solid var(--accent-line)", borderRadius: 2 }}>{b}</span>
+                  ))}
+                </div>
+                <div className="xbody">
+                  <div className="le-zh" style={{ fontSize: 12.5, lineHeight: 1.7, color: "var(--text-2)", paddingTop: 10, borderTop: "1px dashed var(--line-soft)" }}>
+                    <div style={{ marginBottom: 8 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_match", "MATCH · 配對")}</b>{c.matched}</div>
+                    <div><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_proof", "PROOF · 驗收紀錄")}</b>{c.proof}</div>
+                  </div>
+                </div>
+                <div style={{ marginTop: "auto", paddingTop: 10, borderTop: "1px dashed var(--line-soft)", display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
+                  <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", color: "var(--accent-dim)", textTransform: "uppercase" }}>{c.state}</span>
+                  <span className="xhint" style={{ margin: 0 }}>{t("cases.expand_hint", "▸ 點開看配對與驗收紀錄")}</span>
+                </div>
+              </article>
+            );
+          })}
         </div>
         <div style={{ marginTop: 28, textAlign: "center", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", color: "var(--muted)", textTransform: "uppercase" }}>
           {t("cases.footer_before", "▸ 想看更多？")}<a href="mailto:hello@beyondpath.tw?subject=BeyondPath%20%E6%A1%88%E4%BB%B6%E5%B7%A5%E4%BD%9C%E6%A8%A3%E5%93%81" style={{ color: "var(--accent)", textDecoration: "none", borderBottom: "1px solid var(--accent-line)" }}>{t("cases.footer_link", "寫信給 BeyondPath 拿工作樣品包")}</a>
@@ -1199,16 +1324,20 @@ function EEnginesMerged() {
   useLangRerender();
   const engineItems = t("engines.items", []);
   const stageItems = t("engines.stages", []);
+  const [open, setOpen] = useState(-1);
+  const enginesRef = useReveal();
   return (
     <section className="le-section" id="engines">
       <div className="inner">
         <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("engines.eyebrow", "◆ HOW IT WORKS · 從模糊需求到可驗收交付")}</div>
         <h2 className="le-h2">{t("engines.headline_part1", "你只需要說結果。")}<br/>{t("engines.headline_part2", "我們把它變成可開案、可配對、可驗收。")}</h2>
-        <div className="le-engines-grid">
+        {/* 2026-06-11 redesign · progressive disclosure（女巫 1.4 方向 A）：預設露標題+圖+你因此、細節 hover/tap 展開 */}
+        <div className="le-engines-grid le-stagger" ref={enginesRef}>
           {engineItems.map((e, idx) => {
             const v = ENGINES_VISUAL[idx] || { m: null, metric: null };
+            const isOpen = open === idx;
             return (
-              <div key={e.n} className="le-engine-card">
+              <div key={e.n} className={"le-engine-card le-xcard" + (isOpen ? " open" : "")} onClick={() => setOpen(isOpen ? -1 : idx)}>
                 {v.m
                   ? <EngineMock kind={v.m} />
                   : <div className="static-mock"><span className="metric">{v.metric}</span>{e.static_label}</div>}
@@ -1217,10 +1346,11 @@ function EEnginesMerged() {
                   <div className="zh">{e.zh}</div>
                   <div className="en">{e.en}</div>
                 </div>
-                <div className="desc">{e.d}</div>
-                {e.you && (
-                  <div className="le-zh" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontSize: 13, color: "var(--accent)", fontWeight: 600, lineHeight: 1.5 }}>{e.you}</div>
-                )}
+                <div className="le-zh" style={{ marginTop: 10, fontSize: 13, color: "var(--accent)", fontWeight: 600, lineHeight: 1.5 }}>{e.you}</div>
+                <div className="xbody">
+                  <div className="desc le-zh" style={{ paddingTop: 10, borderTop: "1px dashed var(--line-soft)" }}>{e.d}</div>
+                </div>
+                <div className="xhint">{t("engines.expand_hint", "▸ 細節")}</div>
               </div>
             );
           })}
@@ -1356,8 +1486,7 @@ function ETier() {
         <div className="le-tier-onboard" style={{ marginTop: 28, maxWidth: 560, marginLeft: "auto", marginRight: "auto", padding: "16px 0 16px 20px", borderLeft: "2px solid var(--accent)", display: "grid", gridTemplateColumns: "auto 1fr", gap: 16, alignItems: "start" }}>
           <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em", color: "var(--accent)", textTransform: "uppercase", fontWeight: 700, whiteSpace: "nowrap" }}>{t("tier.day1_label_part1", "▸ DAY 1")}<br/>{t("tier.day1_label_part2", "路徑")}</div>
           <div className="le-zh" style={{ fontSize: 13, lineHeight: 1.7, color: "var(--text-2)" }}>
-            {t("tier.day1_body_main", "通過認證 → 進入首案候選池 → 第一批案件優先從認證名單裡媒合。")}<br/>
-            <span style={{ fontSize: 12, color: "var(--muted)" }}>{t("tier.day1_body_sub", "我們先把案例、工具流與交付品質整理成客戶看得懂的證據，再逐步累積 NPS 與推薦權重。")}</span>
+            {t("tier.day1_body_main", "通過認證 → 進入首案候選池 → 第一批案件優先從認證名單裡媒合。")}
           </div>
         </div>
       </div>
@@ -1649,7 +1778,7 @@ function EFinalCta() {
           </div>
           {[
             [t("footer.col_act", "立即行動"), [[t("footer.link_client_apply", "客戶提案"), "app.html?role=client&step=0"], [t("footer.link_expert_apply", "接案者申請"), "app.html?role=worker&onboarding=1"], [t("footer.link_contract_verify", "查驗合約真實性"), "/contract-verify.html"], [t("footer.link_contact_email", "寫信 hello@beyondpath.tw"), "mailto:edwardt0303@gmail.com"]]],
-            [t("footer.col_about", "關於我們"), [[t("footer.link_what_is", "我們是誰"), "#whyus"], [t("footer.link_cases", "合作案例"), "#cases"], [t("footer.link_how_we_match", "為什麼 BeyondPath"), "#moat"]]],
+            [t("footer.col_about", "關於我們"), [[t("footer.link_what_is", "我們是誰"), "#trust"], [t("footer.link_cases", "合作案例"), "#cases"], [t("footer.link_how_we_match", "為什麼 BeyondPath"), "#faq"]]],
             [t("footer.col_legal", "法律與信任"), [[t("footer.link_terms", "服務條款"), "/legal/terms.html"], [t("footer.link_privacy", "隱私政策"), "/legal/privacy.html"], [t("footer.link_acceptance", "驗收與爭議流程"), "#trust"]]]
           ].map(([h, items]) => (
             <div key={h}>
@@ -1846,23 +1975,21 @@ function EWorkerDecisionBanner() {
   );
 }
 
-// Root · v0.4.7 (2026-05-10) wave 4 · Trust 前移到 Engines 後（霍爾 + 蘇菲三方共識最大 ROI · mid-funnel +15-25%）
+// Root · 2026-06-11 redesign（Edward 砍字全上拍板）· 14 區 → 8 區+CTA · 順序照 howl 砍字表：
+// hero → offers(usecases×services) → cases 成績單 → fears(problem×trust3+把關人) → how(engines 4卡) → tier → network → faq → finalcta
+// EStory / EIrreplaceable(moat) 整區撤（精華句已移植）；EUseCases/EProblem/ETrust3/EServicesPricing 由合併版取代
 function LandingRoot() {
   return (
     <div className="le-root">
       <EWorkerDecisionBanner />
       <ENav />
       <EHero />
-      <EUseCases />
-      <EStory />
-      <EProblem />
-      <EEnginesMerged />
-      <ETrust3 />
-      <EIrreplaceable />
+      <EOffers />
       <ECaseStudies />
+      <EFears />
+      <EEnginesMerged />
       <ETier />
       <EVerticals />
-      <EServicesPricing />
       <EFaq />
       <EFinalCta />
     </div>
