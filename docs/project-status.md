@@ -4,7 +4,8 @@ Last updated: 2026-05-11
 
 ## Deployment
 
-- Production: https://prototype-v02.vercel.app/landing.html
+- Production (正式門牌 · 對 Edward 報告一律用這個): https://beyondpath.tw/landing.html
+- Vercel 原生網址（同一專案、同步更新）: https://prototype-v02.vercel.app/landing.html
 - Vercel project name: `prototype-v0.2`
 - Local folder: `C:\Users\Administrator\Claude\BeyondPath2.0\prototype-v0.2`
 
