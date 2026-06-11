@@ -365,7 +365,7 @@ function Step1({ state, set, device }) {
             <span className="ic">{discoveryV.icon}</span>
             <span className="en">{discoveryV.en} · {_t("client.discovery_entry_tag", "入口產品")}</span>
             <span className="zh">{_t("client.discovery_title", "付費需求探索 · 還說不清楚需求？先花小錢買確定性")}</span>
-            <span className="blurb">{_t("client.discovery_blurb", "NT$30-50K · 1-2 週：需求計畫書 + 可點原型 + 固定報價單。進正式案探索費全額折抵；不續約、交付物也帶得走。")}</span>
+            <span className="blurb">{_t("client.discovery_blurb", "NT$30-50K · 1-2 週：需求計畫書 + 可點原型 + 固定報價單。6 個月內進正式案、探索費全額折抵；不續約、交付物也帶得走。")}</span>
             <span className="meta">
               <span>{_t("client.discovery_meta", "全領域通用 · 不綁長約 · 重合約條款只在正式案出現")}</span>
             </span>
@@ -1455,7 +1455,7 @@ function Step4({ state, set, device }) {
               <div style={{ marginTop: 4, fontFamily: "var(--mono)", fontSize: 10.5, color: "var(--accent)", letterSpacing: "0.04em" }}>
                 ✓ {poolState.source === "real"
                   ? _t("client.evidence_real", "平台已驗：認證審核紀錄在案 · 結案數與 NPS 隨案累積")
-                  : _t("client.evidence_demo", "示意卡 · 正式配對附平台驗證：結案紀錄 + NPS 分佈 + 認證審核")}
+                  : _t("client.evidence_demo", "示意卡 · 正式配對附平台驗證：結案紀錄 + NPS 紀錄 + 認證審核")}
                 {typeof w.cases === "number" && w.cases > 0 ? " · " + w.cases + " cases" : ""}
                 {typeof w.nps === "number" && w.nps ? " · NPS " + w.nps : ""}
               </div>
