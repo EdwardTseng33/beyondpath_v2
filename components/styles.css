@@ -162,12 +162,13 @@
 
 .bp-content {
   overflow-y: auto;
-  padding: 28px 36px 0;
+  /* 2026-06-11 Edward 實站審 item1 · 底部呼吸 0 → 48px（捲到底時內容不再貼死 dock） */
+  padding: 28px 36px 48px;
   height: 100%;
   display: flex;
   flex-direction: column;
 }
-.bp-mobile .bp-content { padding: 14px 16px 0; }
+.bp-mobile .bp-content { padding: 14px 16px 40px; }
 
 .bp-rail {
   border-left: 1px solid var(--line-soft);
