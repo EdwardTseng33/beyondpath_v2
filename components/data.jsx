@@ -7,12 +7,44 @@
 // - WORKERS name 'Edward' 全清 (5/16 漏網的 source)
 // - app2.jsx 透過 state.vertical 抓對應 demo
 
+// 2026-06-11 調研批 · 15 卡收斂 9 + 付費需求探索入口
+// 依據: research/ai-case-deliverability-insight-2026-06.md + howl-strategy-memo-2026-06-10.md
+// featured: 'discovery' = 置頂入口 strip、不進 grid · lead: true = 主打 4 垂直
+// 舊 id (video/seo/mkt/cs/localize) 自卡片移除、VERTICAL_DEMO_MAP 保留 entry 供舊 state 回放
 const VERTICALS = [
   {
-    id: 'dtc', cat: 'content',
-    en: 'DTC Content Automation',
-    zh: 'DTC 內容自動化',
-    blurb: '保養 / 健康食品 / 設計品牌的素材產線',
+    id: 'research', cat: 'strategy', featured: 'discovery',
+    en: 'Paid Discovery',
+    zh: '付費需求探索',
+    blurb: '1-2 週交付：需求計畫書 + 可點原型 + 固定報價單 · 進正式案全額折抵',
+    icon: '⊕', sample: 5,
+  },
+  {
+    id: 'agent', cat: 'build', lead: true,
+    en: 'AI Agent / Chatbot',
+    zh: 'AI Agent · 客服自動化',
+    blurb: 'LINE OA / 官網客服 / RAG 知識庫 + 人工接手後台',
+    icon: '✶', sample: 9,
+  },
+  {
+    id: 'web', cat: 'build', lead: true,
+    en: 'Web Design × Build',
+    zh: '網頁設計 + 切版',
+    blurb: 'LP / 官網 / Webflow / Framer · AI 加速設計',
+    icon: '▤', sample: 13,
+  },
+  {
+    id: 'software', cat: 'build', lead: true,
+    en: 'Custom Software Dev',
+    zh: '客製軟體 · 內部工具',
+    blurb: '內部工具 / SaaS MVP / API 整合 · 取代 Excel 手工流程',
+    icon: '◇', sample: 8,
+  },
+  {
+    id: 'dtc', cat: 'content', lead: true,
+    en: 'DTC Growth Content',
+    zh: 'DTC 成長內容引擎',
+    blurb: '短影音 + 素材產線 + SEO 內容 · 月費制穩定出件',
     icon: '◐', sample: 12,
   },
   {
@@ -21,41 +53,6 @@ const VERTICALS = [
     zh: '設計品牌 × AI',
     blurb: '視覺系統 + AI 工具流融合',
     icon: '◒', sample: 9,
-  },
-  {
-    id: 'video', cat: 'content',
-    en: 'Short-form Video',
-    zh: '短影音 · 剪輯',
-    blurb: 'Reels / TikTok / YT shorts 量產 · AI 配音字幕',
-    icon: '▶', sample: 11,
-  },
-  {
-    id: 'web', cat: 'build',
-    en: 'Web Design × Build',
-    zh: '網頁設計 + 切版',
-    blurb: 'LP / 官網 / Webflow / Framer · AI 加速設計',
-    icon: '▤', sample: 13,
-  },
-  {
-    id: 'software', cat: 'build',
-    en: 'Custom Software Dev',
-    zh: '客製化軟體開發',
-    blurb: 'SaaS / 內部工具 / API 整合 · TypeScript stack',
-    icon: '◇', sample: 8,
-  },
-  {
-    id: 'system', cat: 'build',
-    en: 'Custom System Build',
-    zh: '客製化系統開發',
-    blurb: 'ERP / CRM / 工作流 · low-code + AI agent',
-    icon: '◆', sample: 6,
-  },
-  {
-    id: 'agent', cat: 'build',
-    en: 'AI Agent / Chatbot',
-    zh: 'AI Agent · Chatbot 開發',
-    blurb: 'RAG / multi-agent / LLM workflow 部署',
-    icon: '✶', sample: 9,
   },
   {
     id: 'data', cat: 'build',
@@ -72,45 +69,17 @@ const VERTICALS = [
     icon: '◑', sample: 7,
   },
   {
-    id: 'research', cat: 'strategy',
-    en: 'Brand × Market Research',
-    zh: '品牌市場調研計畫',
-    blurb: 'AI 驅動消費者訪談 / 競品分析 / persona',
-    icon: '⊕', sample: 5,
-  },
-  {
-    id: 'mkt', cat: 'growth',
-    en: 'Marketing Service',
-    zh: '行銷服務',
-    blurb: '操盤手、廣告投放、數據儀表',
-    icon: '◓', sample: 14,
-  },
-  {
-    id: 'seo', cat: 'growth',
-    en: 'SEO / Content Ops',
-    zh: 'SEO · 內容營運',
-    blurb: 'AI 量產長尾文 + topical authority 結構',
-    icon: '◭', sample: 8,
-  },
-  {
-    id: 'cs', cat: 'service',
-    en: 'CS Automation',
-    zh: '客服自動化',
-    blurb: 'Multi-agent 客服 + 知識庫',
-    icon: '⊙', sample: 5,
-  },
-  {
-    id: 'localize', cat: 'service',
-    en: 'Translation / Localization',
-    zh: '翻譯 · 在地化',
-    blurb: 'AI 機翻 + 人工潤稿 · 多語上架',
-    icon: '✦', sample: 6,
+    id: 'system', cat: 'build',
+    en: 'Custom System Build',
+    zh: '客製系統 · ERP/CRM 模組',
+    blurb: 'Odoo / CRM 整合 · 建議先走付費需求探索',
+    icon: '◆', sample: 6,
   },
   {
     id: 'other', cat: 'other',
     en: 'Other',
     zh: '其他',
-    blurb: '人工分類，平台客服 24h 介入',
+    blurb: '翻譯在地化 / 行銷操盤 / 其他需求 · 人工分類 24h 介入',
     icon: '○', sample: 0,
   },
 ];
@@ -120,8 +89,6 @@ const VERTICAL_CATS = [
   { id: 'content',  en: 'Content',     zh: '內容' },
   { id: 'build',    en: 'Build',       zh: '開發' },
   { id: 'strategy', en: 'Strategy',    zh: '策略' },
-  { id: 'growth',   en: 'Growth',      zh: '行銷' },
-  { id: 'service',  en: 'Service',     zh: '服務' },
   { id: 'other',    en: 'Other',       zh: '其他' },
 ];
 
@@ -723,48 +690,51 @@ const VERTICAL_DEMO_MAP = {
     suggestedPair: ['w-b2b-1', 'w-b2b-2', 'w-b2b-3'],
   },
 
+  // 2026-06-11 調研批 · research 轉生為全站「付費需求探索」入口產品 (id 不變、保 localStorage / 後端相容)
   research: {
-    brief: `# 品牌市場調研 · 新品上市前消費者訪談
+    brief: `# 付費需求探索 · Paid Discovery
 
-我們是即將上市的新品牌（保健食品類）、需要做完整消費者調研 + 競品分析。
+我們是 25 人食品電商，老闆說要「導入 AI」，但我們說不清楚要什麼：
+客服每天爆量、出貨對帳用 Excel 手工、行銷素材外包很貴。
+想先花小錢把需求弄清楚，再決定投多少。
 
-需求：
-- 消費者深度訪談（30 位、4 個 segment）
-- AI 輔助訪談分析（thematic coding）
-- 競品分析（10 個競品 × 5 維度）
-- Persona 建立（3-5 個）
-- Pricing willingness 調查（200 樣本 quant）
+期待 1-2 週內拿到：
+- 現況流程盤點（客服 / 對帳 / 素材三條線）
+- 哪裡先做、哪裡不值得做的優先序建議
+- 需求計畫書（可直接拿去發案或比價）
+- 可點的畫面原型（老闆看得懂的那種）
+- 固定報價單（之後進正式案可全額折抵）
 
-預算：彈性、中端。
-時間：6-8 週。
-要求：要有 AI 工具流經驗、不要純傳統市調公司報告。`,
+預算：NT$30-50K。
+要求：交付物要能帶走，就算不續約也值回票價。`,
     parse: {
-      industry: { en: 'Brand × Market Research', zh: '品牌市場調研', confidence: 0.90 },
-      scope: 'consumer-research',
+      industry: { en: 'Paid Discovery', zh: '付費需求探索', confidence: 0.95 },
+      scope: 'paid-discovery',
       tasks: [
-        { id: 't1', en: 'Interview × 30', zh: '訪談 × 30', hours: 36, role: 'Research', tier: 'A+' },
-        { id: 't2', en: 'AI Thematic Coding', zh: 'AI 分析', hours: 14, role: 'AI', tier: 'A+' },
-        { id: 't3', en: 'Competitor × 10', zh: '競品分析 × 10', hours: 18, role: 'Strategy', tier: 'A' },
-        { id: 't4', en: 'Persona × 3-5', zh: 'Persona', hours: 12, role: 'Strategy', tier: 'A' },
-        { id: 't5', en: 'Pricing Survey', zh: 'Pricing 調查', hours: 16, role: 'Research', tier: 'A' },
+        { id: 't1', en: 'Stakeholder Interview', zh: '現況訪談 + 流程盤點', hours: 6, role: 'Research', tier: 'A' },
+        { id: 't2', en: 'Opportunity Map', zh: '機會地圖 + 優先序', hours: 6, role: 'Strategy', tier: 'A+' },
+        { id: 't3', en: 'Requirement Spec', zh: '需求計畫書', hours: 8, role: 'Strategy', tier: 'A' },
+        { id: 't4', en: 'Clickable Prototype', zh: '可點原型', hours: 10, role: 'Build', tier: 'A' },
+        { id: 't5', en: 'Fixed Quote', zh: '固定報價單', hours: 2, role: 'Ops', tier: 'A' },
       ],
-      recommendedTier: 'A+',
-      vertical: 'Brand × Market Research',
-      totalHours: 96,
-      budget: { lo: 280_000, hi: 420_000, currency: 'NT$' },
-      contractType: { en: 'Trial Project', zh: '試做案', alt: '可轉年度品牌健檢 retainer' },
+      recommendedTier: 'A',
+      vertical: 'Paid Discovery',
+      totalHours: 32,
+      budget: { lo: 30_000, hi: 50_000, currency: 'NT$' },
+      contractType: { en: 'Paid Discovery', zh: '付費探索', alt: '進正式案探索費全額折抵' },
       flags: [
-        { kind: 'ok', text: '需求邊界清楚、訪談 + quant 雙軌' },
-        { kind: 'warn', text: '30 訪 + 200 quant、建議 2 expert 共案' },
-        { kind: 'info', text: '上市後可擴年度品牌健檢' },
+        { kind: 'ok', text: '交付物可帶走：計畫書 + 原型 + 報價單、不續約也值回票價' },
+        { kind: 'ok', text: '1-2 週短週期、單一窗口' },
+        { kind: 'info', text: '正式案啟動時、探索費全額折抵' },
+        { kind: 'info', text: '重合約條款只在正式案出現、探索階段不簽長約' },
       ],
     },
     workers: [
-      genericWorker('w-res-1', 'Tier A+ 消費者研究員', 'Consumer Interview', 'A+', ['Interview', 'Thematic'], 92, 0.93),
-      genericWorker('w-res-2', 'Tier A+ AI 研究分析師', 'AI Research + Coding', 'A+', ['AI Coding', 'NVivo'], 88, 0.88),
-      genericWorker('w-res-3', 'Tier A 市場分析師', 'Competitor + Pricing', 'A', ['Competitor', 'Survey'], 82, 0.82),
+      genericWorker('w-disc-1', 'Tier A+ Discovery 顧問', 'Discovery Lead · 需求拆解', 'A+', ['需求拆解', '流程盤點'], 92, 0.93),
+      genericWorker('w-disc-2', 'Tier A 原型設計師', 'Prototype · 可點畫面', 'A', ['Figma', 'v0 / Lovable'], 86, 0.88),
+      genericWorker('w-disc-3', 'Tier A 估算分析師', 'Scope + Quote', 'A', ['估算', 'SOW'], 81, 0.82),
     ],
-    suggestedPair: ['w-res-1', 'w-res-2', 'w-res-3'],
+    suggestedPair: ['w-disc-1', 'w-disc-2', 'w-disc-3'],
   },
 
   seo: {

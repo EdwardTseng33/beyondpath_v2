@@ -239,6 +239,7 @@ function Step1({ state, set, device }) {
             const cur = (VERTICALS || []).find((x) => x.id === state.vertical);
             if (!cur) return false;
             if (cur.id === "other") return true;
+            if (cur.featured === "discovery") return true; // 2026-06-11 · 探索 = 平台直接交付、不依賴 pool
             return avail.indexOf(cur.id) !== -1 || avail.indexOf(cur.cat) !== -1;
           })();
           if (!curIsOk) {
@@ -257,6 +258,7 @@ function Step1({ state, set, device }) {
   // 某個 vertical 是否可發案 · null 階段 / RPC 失敗 → 全可選 · other 永遠可選
   // worker verticals 可能含 cat 名 (e.g. 'strategy') · 對映到該 cat 底下所有 vertical
   const isVerticalAvailable = (v) => {
+    if (v.featured === "discovery") return true; // 2026-06-11 · 探索 = 平台直接交付、永遠開
     if (!availVerticals) return true;            // 還沒查到 → 不卡
     if (v.id === "other") return true;           // 其他 (人工媒合) 永遠開
     if (availVerticals.indexOf(v.id) !== -1) return true;     // 直接命中 vertical id
@@ -264,8 +266,12 @@ function Step1({ state, set, device }) {
     return false;
   };
 
+  // 2026-06-11 調研批 · 探索入口獨立成置頂 strip、不進 grid / 不進 chip 計數
+  const discoveryV = (VERTICALS || []).find((v) => v.featured === "discovery");
+  const gridVerticals = useMemo(() => (VERTICALS || []).filter((v) => !v.featured), []);
+
   const filteredVerticals = useMemo(() => {
-    let list = VERTICALS;
+    let list = gridVerticals;
     if (cat !== "all") list = list.filter((v) => v.cat === cat);
     if (q.trim()) {
       const k = q.trim().toLowerCase();
@@ -277,7 +283,7 @@ function Step1({ state, set, device }) {
       );
     }
     return list;
-  }, [cat, q]);
+  }, [cat, q, gridVerticals]);
 
   const useSample = () => {
     setTab("sample");
@@ -330,7 +336,7 @@ function Step1({ state, set, device }) {
         </div>
         <div className="bp-toolbar" style={{ marginTop: 8 }}>
           {VERTICAL_CATS.map((c) => {
-            const count = c.id === "all" ? VERTICALS.length : VERTICALS.filter((v) => v.cat === c.id).length;
+            const count = c.id === "all" ? gridVerticals.length : gridVerticals.filter((v) => v.cat === c.id).length;
             return (
               <button
                 key={c.id}
@@ -343,6 +349,28 @@ function Step1({ state, set, device }) {
             );
           })}
         </div>
+        {/* 2026-06-11 調研批 · 付費需求探索 · 全站入口產品 (research/ai-case-deliverability-insight-2026-06.md 建議 #1) */}
+        {discoveryV && (
+          <button
+            className={"bp-vert " + (state.vertical === discoveryV.id ? "selected" : "")}
+            style={{
+              width: "100%",
+              marginTop: 12,
+              borderColor: "var(--accent-line)",
+              background: state.vertical === discoveryV.id ? undefined : "var(--accent-soft)",
+            }}
+            onClick={() => set({ vertical: discoveryV.id })}
+          >
+            <span className="check">✓</span>
+            <span className="ic">{discoveryV.icon}</span>
+            <span className="en">{discoveryV.en} · {_t("client.discovery_entry_tag", "入口產品")}</span>
+            <span className="zh">{_t("client.discovery_title", "付費需求探索 · 還說不清楚需求？先花小錢買確定性")}</span>
+            <span className="blurb">{_t("client.discovery_blurb", "NT$30-50K · 1-2 週：需求計畫書 + 可點原型 + 固定報價單。進正式案探索費全額折抵；不續約、交付物也帶得走。")}</span>
+            <span className="meta">
+              <span>{_t("client.discovery_meta", "全領域通用 · 不綁長約 · 重合約條款只在正式案出現")}</span>
+            </span>
+          </button>
+        )}
         <div className="bp-vert-grid" style={{ marginTop: 12 }}>
           {filteredVerticals.map((v) => {
             const avail = isVerticalAvailable(v);
@@ -362,8 +390,8 @@ function Step1({ state, set, device }) {
               <span className="blurb">{v.blurb}</span>
               <span className="meta">
                 {avail
-                  ? <span>{v.sample} sample workers</span>
-                  : <span style={{ color: "var(--muted)" }}>worker 累積中</span>}
+                  ? <span>{v.lead ? "★ " + _t("client.vertical_lead_tag", "主打") + " · " : ""}{v.sample} sample workers</span>
+                  : <span style={{ color: "var(--muted)" }}>{v.lead ? "★ " + _t("client.vertical_lead_tag", "主打") + " · " : ""}worker 累積中</span>}
               </span>
             </button>
             );
@@ -1423,6 +1451,14 @@ function Step4({ state, set, device }) {
               </div>
               <div className="role">{w.role}</div>
               <div className="blurb">{w.blurb}</div>
+              {/* 2026-06-11 調研批 · 驗收證據列 (QA 卡點: worker 匿名無法驗 → 給可驗證的履約證據) */}
+              <div style={{ marginTop: 4, fontFamily: "var(--mono)", fontSize: 10.5, color: "var(--accent)", letterSpacing: "0.04em" }}>
+                ✓ {poolState.source === "real"
+                  ? _t("client.evidence_real", "平台已驗：認證審核紀錄在案 · 結案數與 NPS 隨案累積")
+                  : _t("client.evidence_demo", "示意卡 · 正式配對附平台驗證：結案紀錄 + NPS 分佈 + 認證審核")}
+                {typeof w.cases === "number" && w.cases > 0 ? " · " + w.cases + " cases" : ""}
+                {typeof w.nps === "number" && w.nps ? " · NPS " + w.nps : ""}
+              </div>
               <div className="badges">
                 {w.badges.map((b) => (
                   <Badge key={b}>{b}</Badge>
