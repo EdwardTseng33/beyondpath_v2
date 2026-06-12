@@ -486,7 +486,7 @@
     "label_range": "RANGE",
     "data_label": "◆ DATA HANDLING · How your data is treated",
     "data_body_before": "Briefs, emails and portfolios submitted to BeyondPath go to our internal team + AI review tools only — not public, not resold. Retention follows business need (future matching and retainer invitations); email ",
-    "data_body_link": "hello@beyondpath.tw",
+    "data_body_link": "edwardt0303@gmail.com",
     "data_body_after": " any time to request deletion.",
     "data_cta": "Read the full privacy policy →",
     "items": [
@@ -618,7 +618,7 @@
     "link_about": "About BeyondPath",
     "link_feedback": "Collaboration feedback · soon",
     "link_join_us": "Join us",
-    "link_contact_email": "hello@beyondpath.tw",
+    "link_contact_email": "edwardt0303@gmail.com",
     "link_terms": "Terms of Service",
     "link_privacy": "Privacy Policy",
     "link_acceptance": "Acceptance rules",
@@ -627,18 +627,18 @@
     "copyright": "© 2026 BEYONDPATH NETWORK",
     "cities": "TAIPEI × SINGAPORE × TOKYO · Y1->Y3",
     "version_status": "TAIWAN · OPEN",
-    "eu_caveat": "BeyondPath — open applications, primarily Taiwan-based. EU residents: data processing under review · contact hello@beyondpath.tw"
+    "eu_caveat": "BeyondPath — open applications, primarily Taiwan-based. EU residents: data processing under review · contact edwardt0303@gmail.com"
   },
   "banner": {
     "label": "◆ WORKER DECISION",
     "ok_title": "Match invitation accepted",
-    "ok_body": "BeyondPath will prepare a contract draft and initial milestone within 24-72 hours, sent to your email. The client will also be notified that the worker has confirmed. If you don't receive it within 72 hours, contact hello@beyondpath.tw.",
+    "ok_body": "BeyondPath will prepare a contract draft and initial milestone within 24-72 hours, sent to your email. The client will also be notified that the worker has confirmed. If you don't receive it within 72 hours, contact edwardt0303@gmail.com.",
     "decline_title": "Match decline recorded",
     "decline_body": "Thanks for letting us know. We'll keep you in priority for the next fitting project.",
     "error_title": "Match link expired or invalid",
-    "error_body": "Invitation links are valid for 7 days. Please contact BeyondPath: hello@beyondpath.tw",
+    "error_body": "Invitation links are valid for 7 days. Please contact BeyondPath: edwardt0303@gmail.com",
     "default_title": "Thanks for your response",
-    "default_body": "Any questions, contact BeyondPath: hello@beyondpath.tw",
+    "default_body": "Any questions, contact BeyondPath: edwardt0303@gmail.com",
     "close_aria": "Close"
   },
   "misc": {

@@ -63,7 +63,7 @@ function buildWorkerConfirmEmail(row: Record<string, unknown>): { subject: strin
     `台灣首個 AI 認證交付網路、用 AI 評估 + 多維配對演算法媒合 worker 跟品牌。`,
     `目前 prototype 階段、預計 2026 Q3 正式上線。你會是首批 founding worker。`,
     ``,
-    `→ 想補資料 (case 截圖 / 客戶 testimonial) 寫信到 hello@beyondpath.tw`,
+    `→ 想補資料 (case 截圖 / 客戶 testimonial) 寫信到 edwardt0303@gmail.com`,
     ``,
     `— BeyondPath`,
     `${PUBLIC_HOMEPAGE}`,
@@ -102,7 +102,7 @@ function buildWorkerConfirmEmail(row: Record<string, unknown>): { subject: strin
   <p style="color:#9a9aa3;line-height:1.75;font-size:13px;margin:0 0 28px;font-style:italic;">平台<b style="color:#c7e84a;font-style:normal;">現正式營運中</b>。你會是平台<b style="color:#f0eee8;font-style:normal;">早期接案者</b>。</p>
 
   <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.6;font-size:13px;">
-    → 想補資料 (case 截圖 / 客戶 testimonial) 寫信到 <b style="color:#c7e84a;">hello@beyondpath.tw</b>
+    → 想補資料 (case 截圖 / 客戶 testimonial) 寫信到 <b style="color:#c7e84a;">edwardt0303@gmail.com</b>
   </div>
 
   <hr style="border:none;border-top:1px solid #2a2a2e;margin:24px 0;"/>
@@ -157,7 +157,7 @@ function buildClientConfirmEmail(row: Record<string, unknown>): { subject: strin
     `  · 試做案 NT$30-100k、做完才決定要不要 retainer`,
     `  · 不簽長約、不綁定、案款由平台透過綠界代收代付`,
     ``,
-    `→ 急的話寫信到 hello@beyondpath.tw`,
+    `→ 急的話寫信到 edwardt0303@gmail.com`,
     ``,
     `— BeyondPath`,
     `${PUBLIC_HOMEPAGE}`,
@@ -201,7 +201,7 @@ function buildClientConfirmEmail(row: Record<string, unknown>): { subject: strin
   </ul>
 
   <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.6;font-size:13px;">
-    → 急的話寫信到 <b style="color:#c7e84a;">hello@beyondpath.tw</b>
+    → 急的話寫信到 <b style="color:#c7e84a;">edwardt0303@gmail.com</b>
   </div>
 
   <hr style="border:none;border-top:1px solid #2a2a2e;margin:24px 0;"/>
@@ -283,7 +283,7 @@ function buildWorkerPassEmail(row: Record<string, unknown>, opts?: { firstCaseHi
     `  · 公開 portfolio 第一批上架（早鳥曝光）`,
     `  · 累積 case study 進 BeyondPath`,
     ``,
-    `→ 有疑問寫信到 hello@beyondpath.tw`,
+    `→ 有疑問寫信到 edwardt0303@gmail.com`,
     ``,
     `— BeyondPath`,
     PUBLIC_HOMEPAGE,
@@ -309,7 +309,7 @@ function buildWorkerPassEmail(row: Record<string, unknown>, opts?: { firstCaseHi
     <li>累積 case study 進 BeyondPath</li>
   </ul>
   <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.6;font-size:13px;">
-    → 有疑問寫信到 <b style="color:#c7e84a;">hello@beyondpath.tw</b>
+    → 有疑問寫信到 <b style="color:#c7e84a;">edwardt0303@gmail.com</b>
   </div>`;
 
   const html = emailWrapper({
@@ -349,7 +349,7 @@ function buildWorkerHoldEmail(row: Record<string, unknown>, opts?: { missingItem
     `BeyondPath 的價值在於 worker 池品質可信、client 端能信任 Tier 分級。`,
     `補件不是刁難、是讓你的 portfolio 證據更扎實、案件配對更準。`,
     ``,
-    `→ 有疑問寫信到 hello@beyondpath.tw`,
+    `→ 有疑問寫信到 edwardt0303@gmail.com`,
     ``,
     `— BeyondPath`,
     PUBLIC_HOMEPAGE,
@@ -373,7 +373,7 @@ function buildWorkerHoldEmail(row: Record<string, unknown>, opts?: { missingItem
   </ol>
   <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.6;font-size:13px;">
     補件不是刁難、是讓你的 portfolio 證據扎實、案件配對更準。<br/>
-    → 有疑問寫信到 <b style="color:#c7e84a;">hello@beyondpath.tw</b>
+    → 有疑問寫信到 <b style="color:#c7e84a;">edwardt0303@gmail.com</b>
   </div>`;
 
   const html = emailWrapper({
@@ -414,7 +414,7 @@ function buildWorkerRejectEmail(row: Record<string, unknown>, opts?: { gapAreas?
     `這次評估不通過、不代表你的能力不足、可能只是 BP 目前的 vertical / Tier 跟你的工作型態不對齊。`,
     `你還是可以繼續累積你的 AI 工作流跟 case、未來重新申請會更扎實。`,
     ``,
-    `→ 有疑問寫信到 hello@beyondpath.tw`,
+    `→ 有疑問寫信到 edwardt0303@gmail.com`,
     ``,
     `— BeyondPath`,
     PUBLIC_HOMEPAGE,
@@ -435,7 +435,7 @@ function buildWorkerRejectEmail(row: Record<string, unknown>, opts?: { gapAreas?
   <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.65;font-size:13px;">
     這次不通過不代表你能力不足、可能只是 BP 目前的 vertical / Tier 跟你的工作型態不對齊。<br/>
     你可以繼續累積 AI workflow 跟 case、未來重新申請會更扎實。<br/>
-    → 有疑問寫信到 <b style="color:#c7e84a;">hello@beyondpath.tw</b>
+    → 有疑問寫信到 <b style="color:#c7e84a;">edwardt0303@gmail.com</b>
   </div>`;
 
   const html = emailWrapper({
@@ -580,7 +580,7 @@ function buildClientNeedMoreEmail(row: Record<string, unknown>, opts?: { gapItem
     `  · 時程不對齊（worker 滿檔）`,
     `補完這幾項、配對精準度大幅提高、不必你後來自己換 worker。`,
     ``,
-    `→ 急的話寫信到 hello@beyondpath.tw`,
+    `→ 急的話寫信到 edwardt0303@gmail.com`,
     ``,
     `— BeyondPath`,
     PUBLIC_HOMEPAGE,
@@ -599,7 +599,7 @@ function buildClientNeedMoreEmail(row: Record<string, unknown>, opts?: { gapItem
   <div style="background:rgba(255,255,255,0.02);border:1px dashed #2a2a2e;padding:14px 18px;margin:0 0 24px;color:#c8c6c0;line-height:1.65;font-size:13px;">
     直接回信此 thread、補上面項目。<br/>
     BeyondPath <b style="color:#c7e84a;">24h 內</b>完成補評估、回信給你完整配對名單。<br/>
-    → 急的話寫信到 <b style="color:#c7e84a;">hello@beyondpath.tw</b>
+    → 急的話寫信到 <b style="color:#c7e84a;">edwardt0303@gmail.com</b>
   </div>`;
 
   const html = emailWrapper({
@@ -642,7 +642,7 @@ function buildClientVideoInviteEmail(row: Record<string, unknown>, opts?: { cale
     `  · 硬 deadline（活動日 / 上線日）`,
     `  · 過去合作過類似 worker 嗎？覺得最匹配的是什麼風格？`,
     ``,
-    `→ 急的話寫信到 hello@beyondpath.tw`,
+    `→ 急的話寫信到 edwardt0303@gmail.com`,
     ``,
     `— BeyondPath`,
     PUBLIC_HOMEPAGE,
@@ -710,7 +710,7 @@ function buildClientNotFitEmail(row: Record<string, unknown>, opts?: { reason?: 
     `BeyondPath 預計 2026 Q3 正式上線、會逐步擴 vertical。你的 brief 我們有留檔、未來開新 vertical 時主動通知你。`,
     `若你的需求其實有對齊 BP 主場、只是 brief 沒寫清楚、可回信補資料、我們重新評估。`,
     ``,
-    `→ 有疑問寫信到 hello@beyondpath.tw`,
+    `→ 有疑問寫信到 edwardt0303@gmail.com`,
     ``,
     `— BeyondPath`,
     PUBLIC_HOMEPAGE,

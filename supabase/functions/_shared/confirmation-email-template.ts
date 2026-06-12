@@ -35,7 +35,7 @@ export interface BuiltEmail {
   text: string;
 }
 
-const SUPPORT_EMAIL = "hello@beyondpath.tw";
+const SUPPORT_EMAIL = "edwardt0303@gmail.com";
 
 function escapeHtml(s: string): string {
   if (!s) return "";

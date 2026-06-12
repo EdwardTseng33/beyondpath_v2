@@ -595,8 +595,8 @@
 
 <!-- i18n bundle (must load BEFORE React+Babel) · Phase 1 Step 1 -->
 <script src="components/i18n/index.js?v=2026-06-10-pay"></script>
-<script src="components/i18n/dict.zh.js?v=2026-06-12-footer"></script>
-<script src="components/i18n/dict.en.js?v=2026-06-12-footer"></script>
+<script src="components/i18n/dict.zh.js?v=2026-06-12-mail"></script>
+<script src="components/i18n/dict.en.js?v=2026-06-12-mail"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
@@ -1174,7 +1174,7 @@ function ECaseStudies() {
           ))}
         </div>
         <div style={{ marginTop: 28, textAlign: "center", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", color: "var(--muted)", textTransform: "uppercase" }}>
-          {t("cases.footer_before", "▸ 想看更多？")}<a href="mailto:hello@beyondpath.tw?subject=BeyondPath%20%E6%A1%88%E4%BB%B6%E5%B7%A5%E4%BD%9C%E6%A8%A3%E5%93%81" style={{ color: "var(--accent)", textDecoration: "none", borderBottom: "1px solid var(--accent-line)" }}>{t("cases.footer_link", "寫信給 BeyondPath 拿工作樣品包")}</a>
+          {t("cases.footer_before", "▸ 想看更多？")}<a href="mailto:edwardt0303@gmail.com?subject=BeyondPath%20%E6%A1%88%E4%BB%B6%E5%B7%A5%E4%BD%9C%E6%A8%A3%E5%93%81" style={{ color: "var(--accent)", textDecoration: "none", borderBottom: "1px solid var(--accent-line)" }}>{t("cases.footer_link", "寫信給 BeyondPath 拿工作樣品包")}</a>
         </div>
       </div>
     </section>
@@ -1565,7 +1565,7 @@ function EServicesPricing() {
         <div style={{ marginTop: 32, padding: "18px 20px", border: "1px dashed rgba(199,232,74,0.3)", background: "rgba(199,232,74,0.03)", display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center", justifyContent: "space-between" }}>
           <div className="le-zh" style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.7, flex: 1, minWidth: 280 }}>
             <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>{t("services.data_label", "◆ DATA HANDLING · 你的資料怎麼處理")}</span>
-            {t("services.data_body_before", "送出的 brief / email / portfolio 進 BeyondPath 後台、僅平台團隊 + AI 初審工具看得到、不公開、不轉售。資料保留期視業務需要而定（用於未來案件配對與 retainer 邀請）、可隨時寄信到 ")}<a href="mailto:hello@beyondpath.tw?subject=BeyondPath%20%E5%88%AA%E9%99%A4%E8%B3%87%E6%96%99%E8%AB%8B%E6%B1%82" style={{ color: "var(--accent)", borderBottom: "1px solid var(--accent-line)" }}>{t("services.data_body_link", "hello@beyondpath.tw")}</a>{t("services.data_body_after", " 要求刪除你的資料。")}
+            {t("services.data_body_before", "送出的 brief / email / portfolio 進 BeyondPath 後台、僅平台團隊 + AI 初審工具看得到、不公開、不轉售。資料保留期視業務需要而定（用於未來案件配對與 retainer 邀請）、可隨時寄信到 ")}<a href="mailto:edwardt0303@gmail.com?subject=BeyondPath%20%E5%88%AA%E9%99%A4%E8%B3%87%E6%96%99%E8%AB%8B%E6%B1%82" style={{ color: "var(--accent)", borderBottom: "1px solid var(--accent-line)" }}>{t("services.data_body_link", "edwardt0303@gmail.com")}</a>{t("services.data_body_after", " 要求刪除你的資料。")}
           </div>
           <a href="legal/privacy.html" style={{ display: "inline-flex", alignItems: "center", padding: "10px 16px", border: "1px solid var(--accent-line)", color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.12em", textDecoration: "none", textTransform: "uppercase" }}>{t("services.data_cta", "查看完整隱私政策 →")}</a>
         </div>
@@ -1653,7 +1653,7 @@ function EFinalCta() {
             </div>
           </div>
           {[
-            [t("footer.col_act", "立即行動"), [[t("footer.link_client_apply", "客戶提案"), "app.html?role=client&step=0"], [t("footer.link_expert_apply", "接案者申請"), "app.html?role=worker&onboarding=1"], [t("footer.link_contact_email", "寫信 hello@beyondpath.tw"), "mailto:hello@beyondpath.tw"]]],
+            [t("footer.col_act", "立即行動"), [[t("footer.link_client_apply", "客戶提案"), "app.html?role=client&step=0"], [t("footer.link_expert_apply", "接案者申請"), "app.html?role=worker&onboarding=1"], [t("footer.link_contact_email", "寫信 edwardt0303@gmail.com"), "mailto:edwardt0303@gmail.com"]]],
             [t("footer.col_about", "關於我們"), [[t("footer.link_what_is", "我們是誰"), "about.html"], [t("footer.link_cases", "合作案例"), "#cases"], [t("footer.link_how_we_match", "為什麼 BeyondPath"), "#moat"]]],
             [t("footer.col_legal", "法律與信任"), [[t("footer.link_terms", "服務條款"), "/legal/terms.html"], [t("footer.link_privacy", "隱私政策"), "/legal/privacy.html"], [t("footer.link_acceptance", "驗收與爭議流程"), "#trust"], [t("footer.link_contract_verify", "查驗合約真實性"), "/contract-verify.html"]]]
           ].map(([h, items]) => (
@@ -1795,13 +1795,13 @@ function EWorkerDecisionBanner() {
       if (!decision) return;
       let next;
       if (decision === "success" && action === "accept") {
-        next = { kind: "ok", title: t("banner.ok_title", "已接受配對邀請"), body: t("banner.ok_body", "BeyondPath 24-72 小時內準備合約草稿與案件初始 milestone、寄到你的 email。客戶端也會收到「worker 已確認接案」通知。若 72 小時無收信、請聯絡 hello@beyondpath.tw。") };
+        next = { kind: "ok", title: t("banner.ok_title", "已接受配對邀請"), body: t("banner.ok_body", "BeyondPath 24-72 小時內準備合約草稿與案件初始 milestone、寄到你的 email。客戶端也會收到「worker 已確認接案」通知。若 72 小時無收信、請聯絡 edwardt0303@gmail.com。") };
       } else if (decision === "success" && action === "decline") {
         next = { kind: "neutral", title: t("banner.decline_title", "已記錄你婉拒這次配對"), body: t("banner.decline_body", "謝謝告知。下次有適配案件、BeyondPath 仍會優先推薦。") };
       } else if (decision === "error") {
-        next = { kind: "warn", title: t("banner.error_title", "配對連結已過期或無效"), body: t("banner.error_body", "邀請信連結有 7 天效期。請聯絡 BeyondPath：hello@beyondpath.tw") };
+        next = { kind: "warn", title: t("banner.error_title", "配對連結已過期或無效"), body: t("banner.error_body", "邀請信連結有 7 天效期。請聯絡 BeyondPath：edwardt0303@gmail.com") };
       } else {
-        next = { kind: "neutral", title: t("banner.default_title", "感謝你的回應"), body: t("banner.default_body", "若有疑問請聯絡 BeyondPath：hello@beyondpath.tw") };
+        next = { kind: "neutral", title: t("banner.default_title", "感謝你的回應"), body: t("banner.default_body", "若有疑問請聯絡 BeyondPath：edwardt0303@gmail.com") };
       }
       setInfo(next);
       // 清掉 URL query、避免 reload 重複顯示

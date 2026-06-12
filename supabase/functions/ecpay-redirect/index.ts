@@ -34,7 +34,7 @@ function errorPage(msg: string): Response {
     "<style>body{font-family:system-ui,sans-serif;max-width:480px;margin:60px auto;padding:24px;background:#fafafa;line-height:1.7}" +
     "h1{color:#c53030;font-size:20px}.box{background:#fff;border-left:3px solid #c53030;padding:16px;margin:16px 0;font-size:14px;color:#666}" +
     "</style></head><body><h1>付款連結錯誤</h1><div class=\"box\">" + htmlEscape(msg) + "</div>" +
-    "<p style=\"font-size:13px;color:#888\">請聯絡 BeyondPath 客服 . hello@beyondpath.tw</p></body></html>";
+    "<p style=\"font-size:13px;color:#888\">請聯絡 BeyondPath 客服 . edwardt0303@gmail.com</p></body></html>";
   return new Response(body, { status: 400, headers: { "Content-Type": "text/html; charset=utf-8" } });
 }
 

@@ -481,7 +481,7 @@
     "label_range": "RANGE",
     "data_label": "◆ DATA HANDLING · 你的資料怎麼處理",
     "data_body_before": "送出的 brief / email / portfolio 進 BeyondPath 後台、僅平台團隊 + AI 初審工具看得到、不公開、不轉售。資料保留期視業務需要而定（用於未來案件配對與 retainer 邀請）、可隨時寄信到 ",
-    "data_body_link": "hello@beyondpath.tw",
+    "data_body_link": "edwardt0303@gmail.com",
     "data_body_after": " 要求刪除你的資料。",
     "data_cta": "查看完整隱私政策 →",
     "items": [
@@ -613,7 +613,7 @@
     "link_about": "關於 BeyondPath",
     "link_feedback": "合作回饋 · 即將上線",
     "link_join_us": "加入我們",
-    "link_contact_email": "hello@beyondpath.tw",
+    "link_contact_email": "edwardt0303@gmail.com",
     "link_terms": "服務條款",
     "link_privacy": "隱私政策",
     "link_acceptance": "驗收規則",
@@ -627,13 +627,13 @@
   "banner": {
     "label": "◆ WORKER DECISION",
     "ok_title": "已接受配對邀請",
-    "ok_body": "BeyondPath 24-72 小時內準備合約草稿與案件初始 milestone、寄到你的 email。客戶端也會收到「worker 已確認接案」通知。若 72 小時無收信、請聯絡 hello@beyondpath.tw。",
+    "ok_body": "BeyondPath 24-72 小時內準備合約草稿與案件初始 milestone、寄到你的 email。客戶端也會收到「worker 已確認接案」通知。若 72 小時無收信、請聯絡 edwardt0303@gmail.com。",
     "decline_title": "已記錄你婉拒這次配對",
     "decline_body": "謝謝告知。下次有適配案件、BeyondPath 仍會優先推薦。",
     "error_title": "配對連結已過期或無效",
-    "error_body": "邀請信連結有 7 天效期。請聯絡 BeyondPath：hello@beyondpath.tw",
+    "error_body": "邀請信連結有 7 天效期。請聯絡 BeyondPath：edwardt0303@gmail.com",
     "default_title": "感謝你的回應",
-    "default_body": "若有疑問請聯絡 BeyondPath：hello@beyondpath.tw",
+    "default_body": "若有疑問請聯絡 BeyondPath：edwardt0303@gmail.com",
     "close_aria": "關閉"
   },
   "misc": {
