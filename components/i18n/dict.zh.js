@@ -66,162 +66,203 @@
     "row3_stat": "累積中"
   },
   "hero": {
-    "eyebrow": "// 台灣 · AI 專案發案網路 · 認證接案者",
-    "headline_u1": "AI 專案，",
-    "headline_u2": "交給能負責到驗收的人。",
-    "headline_sub_u1": "已驗證的接案者＋驗收前平台代管＋",
-    "headline_sub_u2": "24 小時回覆。",
-    "chip_1": "24h 回覆候選方向",
-    "chip_2": "首案 NT$50K+ · 不綁約",
-    "chip_3": "驗收前款項平台代管",
+    "eyebrow": "// 台灣 AI 工作配對平台 · 認證接案者 · 需求拆 brief · 驗收有標準",
+    "headline_part1_before": "想用 ",
+    "headline_part1_ai": "AI",
+    "headline_part1_after": "，卻不知道找誰做？把專案發給已驗證的 AI 工作者。",
+    "headline_sub": "比招人快、比亂找接案者穩、比只買工具更接近成果。",
+    "headline_l1_before": "想用 ",
+    "headline_l1_after": "，",
+    "headline_l1_u2": "卻不知道找誰做？",
+    "headline_l2_u1": "把專案發給",
+    "headline_l2_u2": "已驗證的 AI 工作者。",
+    "headline_sub_u1": "比招人快、",
+    "headline_sub_u2": "比亂找接案者穩、",
+    "headline_sub_u3": "比只買工具更接近成果。",
+    "pill_1": "需求太模糊？我們幫你拆成範圍、交付物與驗收標準",
+    "pill_2": "AI 初篩適合的接案者，24 小時內給你候選方向",
+    "pill_3": "先跑一個小案驗成果，再決定要不要繼續",
+    "blurb_before": "BeyondPath 幫台灣品牌與中小企業，把模糊需求拆成可驗收的 brief，配對有實戰案例、熟 AI 工具的接案者或小團隊；",
+    "blurb_bold": "用一個小案先驗證成果",
+    "blurb_after": "，再決定要不要擴大投入。省人力、省時間、少踩坑。",
+    "trust_label": "認證接案者 · AI 初篩 · milestone 驗收",
     "cta_primary_main": "我要發 AI 專案 →",
-    "cta_primary_sub": "留下需求 · 24 小時內回覆",
-    "cta_secondary_main": "我想接案 · 申請認證 →",
-    "cta_secondary_sub": "正式認證通過率 < 10%",
-    "cta_demo": "先看產品實際畫面 →",
-    "term_label": "◆ LIVE PARSE · 一句需求 → 可驗收結構",
-    "term_input": "> 我想做一波 618 的電商內容",
-    "term_parsing": "▸ 拆解中...",
-    "term_r1": "✓ 目標：618 檔期轉換",
-    "term_r2": "✓ 交付物：短影音 ×6 · 商品頁文案 ×12 · EDM ×3",
-    "term_r3": "✓ 時程：3 週 ｜ 預算：NT$ 60-120K",
-    "term_r4": "✓ 驗收：M1 腳本 → M2 初稿 → M3 成品上線"
+    "cta_primary_sub": "留下需求 · 24 小時內收到候選方向",
+    "cta_secondary_main": "我想加入接案者認證 →",
+    "cta_secondary_sub": "提交案例與 AI workflow，通過認證進首案池",
+    "cta_demo": "先看通過認證後的接案者畫面 →",
+    "stream_label": "◆ AGENT // STREAM",
+    "stream_meta": "tok/s · 38",
+    "legend_before": "▸ ",
+    "legend_spec": "SPEC",
+    "legend_spec_after": " = 平台設計標準 · ship 後驗收門檻   ·   ",
+    "legend_live": "LIVE",
+    "legend_live_after": " = 即時數據",
+    "tel_focus_label": "FOCUS",
+    "tel_focus_value": "SMB",
+    "tel_review_label": "REVIEW TIME",
+    "tel_review_value": "24h",
+    "tel_project_label": "FIRST PROJECT",
+    "tel_project_value": "50K+"
   },
-  "offers": {
-    "eyebrow": "◆ OFFERS · 發什麼案 · 多少錢",
+  "usecases": {
+    "eyebrow": "◆ USE CASES · 最適合發的案子",
     "headline_part1": "不要先買更多工具。",
     "headline_part2_before": "先把下一個",
     "headline_part2_em": "AI 專案",
     "headline_part2_after": "交付出來。",
-    "punch": "自己用 AI 是免費的，但出錯也算自己的。",
-    "punch_sub": "透過 BeyondPath：驗過的人＋分段付款＋出問題有人跟進到驗收通過。",
-    "chip_1": "價格為參考區間",
-    "chip_2": "24h 內收到含預算的配對方案",
-    "chip_3": "驗收前款項平台代管",
+    "intro": "BeyondPath 先收「範圍清楚、交付可驗收、用 AI 能明顯加速」的交付專案。你不用先懂工具，只要知道你希望交出什麼結果。",
     "label_budget": "BUDGET",
     "label_timeline": "TIMELINE",
-    "label_tier": "TIER",
-    "discovery_n": "00",
-    "discovery_en": "PAID DISCOVERY",
-    "discovery_zh": "付費需求探索 · 入口",
-    "discovery_desc": "還說不清楚需求？1-2 週交付：需求計畫書＋可點原型＋固定報價單。6 個月內進正式案全額折抵。",
-    "discovery_range": "NT$ 3-5 萬",
-    "discovery_tiers": "Tier A / A+",
-    "discovery_cta": "從探索開始 →",
-    "items": [
+    "cases": [
       {
-        "n": "01",
-        "en": "AI AGENT · CS",
-        "zh": "AI 客服與流程自動化",
-        "who": "中小企業 · 營運團隊",
-        "deliver": "LINE 客服 · 內部 agent · 自動化流程",
-        "budget": "NT$ 15-80 萬",
-        "time": "3-8 週",
-        "tiers": "B+ / A+"
+        "who": "DTC 品牌 / 電商品牌",
+        "job": "AI 內容產線與商品頁素材",
+        "deliver": "短影音腳本、社群素材、EDM、商品頁文案",
+        "budget": "NT$50K-100K",
+        "time": "2-6 週"
       },
       {
-        "n": "02",
-        "en": "DTC CONTENT",
-        "zh": "DTC 品牌內容產線",
-        "who": "DTC / 電商品牌",
-        "deliver": "KV · 社群素材 · 商品頁與檔期文案",
-        "budget": "NT$ 5-60 萬",
-        "time": "2-6 週",
-        "tiers": "B / B+ / A+"
+        "who": "設計工作室 / 品牌團隊",
+        "job": "品牌 DNA × AI 視覺系統",
+        "deliver": "視覺模板、Prompt spec、素材規格、交付檢核表",
+        "budget": "NT$60K-120K",
+        "time": "3-8 週"
       },
       {
-        "n": "03",
-        "en": "REELS · VIDEO",
-        "zh": "短影音 + Reels",
-        "who": "品牌 · 電商 · 教育",
-        "deliver": "腳本 · 拍攝 · 剪輯一條龍",
-        "budget": "NT$ 3-25 萬",
-        "time": "2-6 週",
-        "tiers": "B / B+"
+        "who": "中小企業 / 小型營運團隊",
+        "job": "官網改版與內部流程自動化",
+        "deliver": "Landing page、客服 FAQ、自動化表單與 SOP",
+        "budget": "NT$50K-150K",
+        "time": "3-8 週"
       },
       {
-        "n": "04",
-        "en": "CUSTOM DEV",
-        "zh": "客製軟體 · 內部工具",
-        "who": "中小企業 · SaaS 團隊",
-        "deliver": "API 整合 · bot · 內部系統",
-        "budget": "NT$ 10-120 萬",
-        "time": "3-8 週",
-        "tiers": "B+ / A+"
+        "who": "B2B SaaS / 顧問型服務",
+        "job": "GTM 內容與銷售素材",
+        "deliver": "Sales deck、demo script、案例頁、名單整理流程",
+        "budget": "NT$50K-120K",
+        "time": "2-6 週"
       }
-    ],
-    "data_line_before": "brief 與聯絡資料僅平台與 AI 初審工具可見、不公開不轉售，可隨時要求刪除 → ",
-    "data_line_link": "隱私政策"
+    ]
   },
-  "fears": {
-    "eyebrow": "◆ TRUST · 三個怕 · 三個答",
+  "story": {
+    "label": "◆ 為什麼是 BeyondPath",
+    "headline_part1": "AI 讓每個人都像專家。",
+    "headline_part2": "也讓你更難知道誰真的能交付。",
+    "client_eyebrow": "▸ 如果你是品牌主",
+    "client_pain": "你的困境 · 不是沒預算、也不是不想用 AI。只是怕花了錢，最後還是自己在教、自己在改、自己在收拾爛攤子。",
+    "client_get_label": "你來 BeyondPath 拿到 →",
+    "client_pt1_bold": "① 先用首案驗證合作",
+    "client_pt1_body": " · 先從 ",
+    "client_pt1_em": "NT$ 50-100K",
+    "client_pt1_tail": " 交付專案開始，不需要一次簽長約。",
+    "client_pt2_bold": "② 少管理不確定性",
+    "client_pt2_body": " · 留下需求、",
+    "client_pt2_em": "24 小時",
+    "client_pt2_tail": "先知道候選方向與下一步，不用自己發 30 封訊息。",
+    "client_pt3_bold": "③ AI 先幫你判斷",
+    "client_pt3_tail": " · AI 先拆範圍、看候選方向，再由人工覆核交付條件。",
+    "client_pt4_bold": "④ 交付可驗收",
+    "client_pt4_tail": " · 每案先定 milestone 與交付標準，避免「做了很多但不知道算不算完成」。",
+    "client_replace": "▸ 取代「朋友介紹 + 月費代理 + Fiverr」",
+    "worker_eyebrow": "▸ 如果你是接案者",
+    "worker_pain": "你的困境 · 你已經能用 AI 做出成果，但客戶還是把你跟普通接案者拿去比價。他們看不到你的工作方式、判斷力、交付品質。",
+    "worker_get_label": "你來 BeyondPath 拿到 →",
+    "worker_pt1_bold": "① 進入首案池",
+    "worker_pt1_tail": " · 通過認證後進入首案候選名單，第一批案件優先從名單媒合。",
+    "worker_pt2_bold": "② 不靠低價比稿",
+    "worker_pt2_tail": " · 平台逐案確認報價，先讓好交付被看見，而不是比誰便宜。",
+    "worker_pt3_bold": "③ 讓客戶看懂你貴在哪",
+    "worker_pt3_tail": " · 案例、工具流、交付品質會被整理成 Tier 證據。",
+    "worker_pt4_bold": "④ 累積下一案的信任",
+    "worker_pt4_tail": " · 每次結案評價都會累積成下一次推薦理由，而不是每次從零開始。",
+    "worker_replace": "▸ 取代「跑案 + 比稿 + 接不到案」",
+    "bottom_para_bold": "這不是另一個接案平台。",
+    "bottom_para_after": " 這是一套讓 AI 工作真正可以交付的規則：需求拆清楚、接案者先被驗證、每個 milestone 有標準、結案有評鑑。",
+    "bottom_cta_client": "我要發 AI 專案 →",
+    "bottom_cta_worker": "我想加入接案者認證 →",
+    "bottom_cta_demo": "先看 Worker Console →"
+  },
+  "problem": {
+    "eyebrow": "◆ THE ANXIETY · AI 時代真正放大的不是工具，是不確定性",
     "headline_part1": "AI 讓機會變多，",
     "headline_part2_before": "也讓",
     "headline_part2_em": "判斷成本",
     "headline_part2_after": "爆炸。",
-    "intro": "怕花了錢，最後還是自己在教、自己在改、自己在收拾爛攤子——所以我們把三個怕，做成三個機制。",
+    "intro": "發案方怕找錯人、押錯案、看不懂成果；接案方怕好能力被拿去跟低價模板比較。BeyondPath 要處理的不是工具缺口，而是 AI 工作網路裡的焦慮、不安與不確定性。",
+    "fix_label": "→ BeyondPath 怎麼把它變成秩序",
     "items": [
       {
-        "mech": "AI REVIEW",
-        "v": "AI",
-        "fear": "怕找錯人",
-        "ans": "AI 初審＋人工覆核，每個候選都附「為什麼適合」。"
+        "lbl": "ANXIETY 1 · 發案方",
+        "title": "不知道誰真的能交付",
+        "pain": "每個人都說自己會 AI，但你不知道他是會 demo、會做圖，還是真的能把成果交出來。",
+        "fix": "BeyondPath: 用 AI 初審、作品證據與候選理由，先把能力翻譯成可判斷的交付風險。"
       },
       {
-        "mech": "24H DIRECTION",
-        "v": "24h",
-        "fear": "怕被當盤子",
-        "ans": "24 小時先給候選方向與預算判斷，合不合理你先看再決定。"
+        "lbl": "ANXIETY 2 · 接案方",
+        "title": "不知道自己如何被看見",
+        "pain": "你已經有 AI workflow，但市場還是把你放回低價比稿與人脈介紹裡。",
+        "fix": "BeyondPath: 把作品、工具流、交付品質整理成認證化證據，讓好能力有更公平的入口。"
       },
       {
-        "mech": "MILESTONE",
-        "v": "M1",
-        "fear": "怕做完不算完",
-        "ans": "開案先定驗收點，款項平台代管、驗收通過才撥付。"
+        "lbl": "ANXIETY 3 · 雙邊",
+        "title": "不知道什麼算完成",
+        "pain": "AI 專案最可怕的不是開始，而是做了很多、改了很久，最後沒有人說得清楚算不算交付。",
+        "fix": "BeyondPath: 開案前先拆 milestone、交付物與驗收標準，讓合作從第一天就有共同規則。"
       }
-    ],
-    "founder_label": "◆ 把關人",
-    "founder_name": "Edward Tseng",
-    "founder_role": "BeyondPath 創辦人",
-    "founder_promise": "POC 階段，每一案由我親自覆核到驗收通過。",
-    "founder_comment": "// 名字掛在這裡，不是客服話術"
+    ]
   },
   "engines": {
     "eyebrow": "◆ HOW IT WORKS · 從模糊需求到可驗收交付",
     "headline_part1": "你只需要說結果。",
     "headline_part2": "我們把它變成可開案、可配對、可驗收。",
-    "protocol_label": "◆ 全流程 · 4 階段 12 步",
-    "expand_hint": "▸ 細節",
+    "protocol_label": "◆ 12 步協定 · 4 階段",
     "items": [
       {
         "n": "01",
         "en": "AI BRIEF PARSER",
-        "zh": "Brief 拆解",
-        "you": "不用會寫專業 brief，也能把案子說清楚",
-        "d": "一段中文需求 → 目標、交付物、預算、驗收點，AI 初審後人工覆核。"
+        "zh": "Brief 拆解引擎",
+        "d": "把一段中文需求拆成目標、交付物、時程、預算與驗收點。AI 初審後由團隊人工覆核。",
+        "you": "你因此 → 不用先會寫專業 brief，也能把案子說清楚"
       },
       {
         "n": "02",
-        "en": "TIER MATCH",
-        "zh": "Tier 配對",
-        "you": "不發 30 封信，24 小時內知道該找誰",
-        "d": "依領域、作品與交付經驗推薦 Top 3，每個都附「為什麼適合」。",
+        "en": "TIER MATCH ENGINE",
+        "zh": "Tier 配對引擎",
+        "d": "根據領域、作品、工具流與交付經驗推薦 Top 3，並附上為什麼適合。",
+        "you": "你因此 → 不發 30 封信，24 小時內先知道該找哪類人",
         "static_label": "MATCH · TIER A+ / A / B"
       },
       {
         "n": "03",
         "en": "SCOPE + MILESTONE",
         "zh": "範圍 × 驗收點",
-        "you": "開案前就知道什麼算完成",
-        "d": "交付物、時程、驗收標準先白紙黑字；款項代管、驗收後撥付。"
+        "d": "平台先確認交付物、時間、風險與驗收標準；代收代付依服務條款執行。",
+        "you": "你因此 → 開案前先知道什麼算完成，不會把合作押在口頭共識上"
       },
       {
         "n": "04",
-        "en": "TRUST FLYWHEEL",
-        "zh": "信任飛輪",
-        "you": "合作好的人接著做，信任一案一案累積",
-        "d": "結案雙邊 NPS → Tier 升降 → 順的合作直接轉月度 retainer 提案。",
-        "static_label": "5-DIM NPS · RETAINER"
+        "en": "PROJECT DASHBOARD",
+        "zh": "案件儀表板",
+        "d": "把進度、版本、交付物與待確認事項集中，避免案子散在 email、LINE 與雲端檔案裡。",
+        "you": "你因此 → 知道現在卡在哪，不用一直追問",
+        "static_label": "MILESTONE · AUDIT-READY"
+      },
+      {
+        "n": "05",
+        "en": "NPS FLYWHEEL",
+        "zh": "NPS 雙邊飛輪",
+        "d": "每次結案都留下客戶回饋、交付品質與合作紀錄，逐步形成推薦權重。",
+        "you": "你因此 → 好的工作者會被看見，不只靠人脈與聲量",
+        "static_label": "ANTI-MATTHEW · 5-DIM NPS"
+      },
+      {
+        "n": "06",
+        "en": "RETAINER ENGINE",
+        "zh": "Retainer 引擎",
+        "d": "如果第一案合作順利，再把一次性需求整理成可續作的月度合作提案。",
+        "you": "你因此 → 合作好的人可以接著做，不用每次重新找人",
+        "static_label": "AUTO-PROPOSAL · MONTHLY"
       }
     ],
     "stages": [
@@ -251,49 +292,118 @@
       }
     ]
   },
+  "trust3": {
+    "eyebrow": "◆ TRUST · AI 先過濾、人工再覆核、驗收有標準",
+    "headline_part1": "不是把你丟進演算法黑箱。",
+    "headline_part2_before": "每一步都",
+    "headline_part2_em": "有人把關",
+    "headline_part2_after": "。",
+    "items": [
+      {
+        "v": "AI",
+        "en": "AI REVIEW",
+        "zh": "AI 初審 + 人工覆核",
+        "facts": [
+          "先由 AI 拆 brief 與交付範圍",
+          "再由人工覆核候選人與風險",
+          "不讓你直接丟進平台黑箱"
+        ]
+      },
+      {
+        "v": "24h",
+        "en": "MATCH DIRECTION",
+        "zh": "先給候選方向",
+        "facts": [
+          "初判領域與預算是否合理",
+          "中文 brief 原生理解",
+          "先看適配，再談短名單"
+        ]
+      },
+      {
+        "v": "M1",
+        "en": "MILESTONE",
+        "zh": "每案先定驗收點",
+        "facts": [
+          "交付物、時間、風險先講清楚",
+          "案款由平台代收、驗收後撥付",
+          "避免做完才爭論算不算完成"
+        ]
+      }
+    ]
+  },
+  "moat": {
+    "eyebrow": "◆ WHY BEYONDPATH · 當 LLM 也會媒合，我們還剩什麼",
+    "headline_part1": "LLM 可以推薦人。",
+    "headline_part2_before": "但信任來自",
+    "headline_part2_em": "交付證據",
+    "headline_part2_after": "。",
+    "intro": "BeyondPath 不靠「比 AI 更會配對」撐著。我們真正在累積的是交付記錄：誰做過什麼、用了哪些工具、成果怎麼被驗收、下一次為什麼還值得被推薦——這些資料是 LLM 沒辦法直接拿走的東西。",
+    "items": [
+      {
+        "axis": "LLM 可以做",
+        "ttl": "推薦看起來適合的人",
+        "body": "未來任何 LLM 都能讀 brief、生成候選名單、比較作品集。這會變成基本能力，不是護城河。",
+        "peer": "▸ 名單會越來越便宜"
+      },
+      {
+        "axis": "BeyondPath 累積",
+        "ttl": "誰真的交付過，以及怎麼交付",
+        "body": "我們把 AI workflow、交付物、驗收紀錄、雙邊 NPS 與適配情境留下來，讓下一次推薦不是猜測，而是基於交付證據。",
+        "peer": "▸ 信任會越用越厚"
+      },
+      {
+        "axis": "我們真正在建的",
+        "ttl": "不是演算法，是交付記錄與信任積累",
+        "body": "真正稀缺的是台灣語境下的需求、產業情境、接案者工作方式的證據、驗收品質與合作紀錄。這些積累會形成 BeyondPath 的推薦排序與認證標準。",
+        "peer": "▸ 從「找到人」，變成「信任做得出來」"
+      }
+    ]
+  },
   "cases": {
     "eyebrow": "◆ CASE STUDIES · 真實案件實錄",
     "headline_part1": "看 BeyondPath 怎麼",
     "headline_em": "真的在跑",
     "headline_part2": "。",
-    "intro_before": "DTC 領域早期合作案例樣本——點開卡片看配對與驗收紀錄。",
-    "intro_paren_before": "（其他領域累積中 · 丟 brief 後",
-    "intro_paren_link": "24h 內 email",
-    "intro_paren_after": "你領域的配對方案）",
-    "label_match": "MATCH · 配對",
-    "label_proof": "PROOF · 驗收紀錄",
-    "expand_hint": "▸ 點開看配對與驗收紀錄",
+    "intro_before": "3 個 case 為 BeyondPath 早期合作案例樣本（DTC 領域）——展示 brief → 配對 → 交付 → 驗收紀錄的真實樣態。",
+    "intro_paren_before": "（其他 14 領域案例累積中 · 想看你領域範例請",
+    "intro_paren_link": "填 brief",
+    "intro_paren_after": "、實際配對方案 24h 內 email）",
+    "label_brief": "① BRIEF · 需求",
+    "label_match": "② MATCH · 配對",
+    "label_deliver": "③ DELIVER · 交付",
+    "label_accept": "④ ACCEPT · 驗收",
+    "label_result": "⑤ RESULT · ",
     "footer_before": "▸ 想看更多？",
     "footer_link": "寫信給 BeyondPath 拿工作樣品包",
     "items": [
       {
         "brand": "LUMINE",
         "sector": "DTC 保養品",
-        "brief": "9 月上新 3 SKU：KV、Reels 腳本與檔期文案。",
-        "badges": ["NPS 4.94 / 5", "4 週交付", "進入 retainer"],
-        "matched": "Tier A+ 領域專家 · 配對分數 92 / 100",
-        "proof": "brief、版本紀錄、驗收清單、NPS 4.94 / 5",
-        "state": "已結案 · 續約 Q1 2027 上新檔",
+        "brief": "9 月底上新「夜修護」3 SKU、需要 2 版主視覺 KV + 6 支 IG Reels 腳本 + 3 篇官網 + EDM 文案、排程到 Meta + LINE。",
+        "matched": "Tier A+ 領域專家 · Visual KV + Brand DNA × AI · 配對分數 92 / 100",
+        "delivered": "2 KV × 4 alts each · 4 週交付 · NPS 4.94 / 5",
+        "proof": "交付證據：brief、版本紀錄、驗收清單、NPS 4.94 / 5",
+        "state": "進入 retainer · 持續 Q1 2027 上新檔",
         "badge": "已結案 · NPS 4.94"
       },
       {
         "brand": "HANA 香氛",
         "sector": "spring restage",
-        "brief": "新香 2 SKU 春季視覺重整：KV + 8 個社群素材。",
-        "badges": ["WK 2 / 4 · ON TRACK", "同一專家回約"],
-        "matched": "同一位 Tier A+ 專家（LUMINE retainer 中）· 平台優先推薦",
-        "proof": "wk 2 版本上傳、期中檢查完成 2 / 4",
+        "brief": "新香 line 2 個 SKU 春季視覺重新整理、4 週內交 2 版 KV + 8 個 social asset。",
+        "matched": "同一位 Tier A+ 領域專家（已跑 LUMINE retainer）· capacity 75% · 平台優先推薦",
+        "delivered": "2 KV × 4 alts · wk 2 / 4 · 進度 50%",
+        "proof": "交付證據：wk 2 版本上傳、mid review 已完成 2/4",
         "state": "● 進行中 · ON TRACK",
         "badge": "進行中 · WK 2 / 4"
       },
       {
         "brand": "Plant by Plant",
         "sector": "包裝設計",
-        "brief": "植物保養包裝重設：brand spec + 6 SKU dieline。",
-        "badges": ["WK 6/6 · 最終審查", "brand spec 32 頁"],
-        "matched": "Tier A+ Brand DNA × AI · 配對分數 88 / 100",
-        "proof": "6 SKU dieline、brand spec 32 頁、final review",
-        "state": "● 最終審查 · WK 6/6",
+        "brief": "植物保養 line 包裝重設、6 週內交 brand DNA spec + 6 個 SKU packaging dieline。",
+        "matched": "Tier A+ Brand DNA × AI 領域 · 配對分數 88 / 100",
+        "delivered": "6 SKU dieline · brand spec 32 頁 · final review 階段",
+        "proof": "交付證據：6 SKU dieline、brand spec 32 頁、final review",
+        "state": "● final review · WK 6 / 6",
         "badge": "WK 6 / 6 · FINAL REVIEW"
       }
     ]
@@ -303,11 +413,12 @@
     "headline_part1": "Tier 不是裝飾 · ",
     "headline_em": "是推薦排序權重",
     "headline_part2": "。",
-    "intro": "Tier = 這個人為什麼貴的證據——升降看結案 NPS 與客戶推薦，不是買的、是交付出來的。接案者：客戶終於看得懂你貴在哪。",
+    "intro": "Tier 升降基於結案 NPS、領域認證、客戶推薦 + 反馬太 +10（3 個月內無接案保留 slot）。worker 看得到「升級還差什麼」、client 看得到「這個 worker 為什麼貴」。",
     "typical_label": "typical",
     "day1_label_part1": "▸ DAY 1",
     "day1_label_part2": "路徑",
     "day1_body_main": "通過認證 → 進入首案候選池 → 第一批案件優先從認證名單裡媒合。",
+    "day1_body_sub": "我們先把案例、工具流與交付品質整理成客戶看得懂的證據，再逐步累積 NPS 與推薦權重。",
     "items": [
       {
         "id": "S",
@@ -346,7 +457,7 @@
     "headline_part1": "9 個 ",
     "headline_em": "領域",
     "headline_part2": "，先判斷該找誰。",
-    "footer": "▸ 主打 4 領域 · AI 客服 / 網站 / 內部工具 / DTC 內容",
+    "footer": "▸ 主打 4 領域 · AI 客服 / 網站 / 內部工具 / DTC 內容 · 依 2026-06 市場調研拍板",
     "hot_tag": "主打",
     "verticals": [
       "付費需求探索 ⊕",
@@ -359,6 +470,61 @@
       "B2B SaaS GTM",
       "客製系統 · ERP/CRM",
       "其他"
+    ]
+  },
+  "services": {
+    "eyebrow": "◆ SERVICES · 目前可接案 + 價格 reference",
+    "headline_part1": "1 個探索入口 + 4 個主要交付類型、",
+    "headline_em": "每案有適配 Tier 與預算 reference",
+    "headline_part2": "。",
+    "intro": "以下價格區間是 reference、不是固定報價。實際依需求複雜度、交付物範圍、時程而定。送出 brief 後、24h 內你會收到含建議預算的配對方案。自己用 AI 是免費的、但出錯也算自己的——透過 BeyondPath 發案，你買的是驗過的人、分段付款的保護、和出了問題有平台窗口跟進到驗收通過——驗收前款項都由平台代管（詳服務條款）。",
+    "label_range": "RANGE",
+    "data_label": "◆ DATA HANDLING · 你的資料怎麼處理",
+    "data_body_before": "送出的 brief / email / portfolio 進 BeyondPath 後台、僅平台團隊 + AI 初審工具看得到、不公開、不轉售。資料保留期視業務需要而定（用於未來案件配對與 retainer 邀請）、可隨時寄信到 ",
+    "data_body_link": "hello@beyondpath.tw",
+    "data_body_after": " 要求刪除你的資料。",
+    "data_cta": "查看完整隱私政策 →",
+    "items": [
+      {
+        "n": "00",
+        "en": "PAID DISCOVERY",
+        "zh": "付費需求探索 · 入口",
+        "desc": "還說不清楚需求？1-2 週交付：需求計畫書 + 可點原型 + 固定報價單。6 個月內進正式案全額折抵。探索非正式案——首案 NT$50K+ 起、探索費折抵其中。",
+        "tiers": "Tier A / A+",
+        "range": "NT$ 3-5 萬"
+      },
+      {
+        "n": "01",
+        "en": "AI WORKFLOW",
+        "zh": "AI workflow 顧問 + 落地",
+        "desc": "從需求拆解到工具流 setup、含 handoff 文件。常見：客服自動化、內容 pipeline、內部 agent。",
+        "tiers": "Tier B+ / A+",
+        "range": "NT$ 15-80 萬"
+      },
+      {
+        "n": "02",
+        "en": "BRAND CONTENT",
+        "zh": "DTC 品牌內容",
+        "desc": "視覺 KV、brand DNA、社群內容操盤。常見：保養品 / 食品 / 設計品牌 launch + 持續經營。",
+        "tiers": "Tier B / B+ / A+",
+        "range": "NT$ 5-60 萬"
+      },
+      {
+        "n": "03",
+        "en": "REELS · VIDEO",
+        "zh": "短影音 + reels",
+        "desc": "腳本 + 拍攝 + 剪輯 一條龍。常見：品牌敘事、UGC 風格、產品 demo、教學影片。",
+        "tiers": "Tier B / B+",
+        "range": "NT$ 3-25 萬"
+      },
+      {
+        "n": "04",
+        "en": "CUSTOM DEV",
+        "zh": "客製軟體 / AI agent / 工具流",
+        "desc": "從 prototype 到 production：API 整合、bot、內部工具。常見：Slack agent、CRM 自動化、Make/n8n flow。",
+        "tiers": "Tier B+ / A+",
+        "range": "NT$ 10-120 萬"
+      }
     ]
   },
   "faq": {
@@ -417,7 +583,7 @@
     "roadmap_label": "◆ ROADMAP · 在你發案之前 · 我們目前的進度",
     "eyebrow": "◆ 現在開放申請",
     "headline": "把 AI 專案交給真正做過的人。",
-    "blurb": "留下需求，24 小時內收到候選方向——不用先簽長約。接案者提交案例與工具流，通過認證進首案池。",
+    "blurb": "發案方：留下需求，24 小時內收到候選方向，再決定要不要繼續——不用先簽長約。接案者：提交案例與工具流，通過認證進入首案候選池，讓好工作被看見、不靠低價比稿。",
     "cta_client_main": "我要發 AI 專案 →",
     "cta_client_sub": "發案方",
     "cta_worker_main": "我想加入接案者認證 →",
