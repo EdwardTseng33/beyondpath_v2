@@ -590,13 +590,12 @@
   })();
 </script>
 <div id="root"></div>
-<footer class="bp-disclaimer-foot">
-  <span data-i18n="disc.foot_text">BeyondPath · 開放申請 · 認證制接案網路 · </span><a href="legal/privacy.html" data-i18n="disc.foot_privacy">隱私權與服務條款</a> · <a href="app.html?role=client" data-i18n="disc.foot_waitlist">立即發案 →</a>
-</footer>
+<!-- disclaimer footer 移除 2026-06-12 · 與主 footer(React le-footer-nav) 重複、且「服務條款」字樣未連 terms · 主 footer 已完整涵蓋品牌/法律/CTA -->
+
 <!-- i18n bundle (must load BEFORE React+Babel) · Phase 1 Step 1 -->
 <script src="components/i18n/index.js?v=2026-06-10-pay"></script>
-<script src="components/i18n/dict.zh.js?v=2026-06-11-vert9c"></script>
-<script src="components/i18n/dict.en.js?v=2026-06-11-vert9c"></script>
+<script src="components/i18n/dict.zh.js?v=2026-06-12-footer"></script>
+<script src="components/i18n/dict.en.js?v=2026-06-12-footer"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
@@ -1648,9 +1647,9 @@ function EFinalCta() {
             </div>
           </div>
           {[
-            [t("footer.col_act", "立即行動"), [[t("footer.link_client_apply", "客戶提案"), "app.html?role=client&step=0"], [t("footer.link_expert_apply", "接案者申請"), "app.html?role=worker&onboarding=1"], [t("footer.link_contract_verify", "查驗合約真實性"), "/contract-verify.html"], [t("footer.link_contact_email", "寫信 hello@beyondpath.tw"), "mailto:edwardt0303@gmail.com"]]],
-            [t("footer.col_about", "關於我們"), [[t("footer.link_what_is", "我們是誰"), "#whyus"], [t("footer.link_cases", "合作案例"), "#cases"], [t("footer.link_how_we_match", "為什麼 BeyondPath"), "#moat"]]],
-            [t("footer.col_legal", "法律與信任"), [[t("footer.link_terms", "服務條款"), "/legal/terms.html"], [t("footer.link_privacy", "隱私政策"), "/legal/privacy.html"], [t("footer.link_acceptance", "驗收與爭議流程"), "#trust"]]]
+            [t("footer.col_act", "立即行動"), [[t("footer.link_client_apply", "客戶提案"), "app.html?role=client&step=0"], [t("footer.link_expert_apply", "接案者申請"), "app.html?role=worker&onboarding=1"], [t("footer.link_contact_email", "寫信 hello@beyondpath.tw"), "mailto:hello@beyondpath.tw"]]],
+            [t("footer.col_about", "關於我們"), [[t("footer.link_what_is", "我們是誰"), "about.html"], [t("footer.link_cases", "合作案例"), "#cases"], [t("footer.link_how_we_match", "為什麼 BeyondPath"), "#moat"]]],
+            [t("footer.col_legal", "法律與信任"), [[t("footer.link_terms", "服務條款"), "/legal/terms.html"], [t("footer.link_privacy", "隱私政策"), "/legal/privacy.html"], [t("footer.link_acceptance", "驗收與爭議流程"), "#trust"], [t("footer.link_contract_verify", "查驗合約真實性"), "/contract-verify.html"]]]
           ].map(([h, items]) => (
             <div key={h}>
               <h4>◆ {h}</h4>
