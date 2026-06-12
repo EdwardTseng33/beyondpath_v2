@@ -366,7 +366,7 @@
   /* v0.4.6 (2026-05-10) ETier 拿掉 .le-tier-orbit 軌道動畫——Edward feedback「動畫看不懂」、ladder 改 solo 居中 */
   .le-tier-ladder-solo { max-width: 720px; margin: 0 auto; }
   .le-tier-ladder { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); }
-  .le-tier-row { display: grid; grid-template-columns: 90px 1fr 120px; padding: 22px 24px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 12px; }
+  .le-tier-row { display: grid; grid-template-columns: 90px 1fr auto; padding: 22px 24px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 12px; }
   .le-tier-row:last-child { border-bottom: 0; }
   .le-tier-row.featured { background: rgba(199,232,74,0.06); border-left: 3px solid var(--accent); padding-left: 21px; }
   .le-tier-row .id { font-family: var(--sans); font-weight: 800; font-size: 48px; line-height: 0.9; letter-spacing: -0.04em; }
@@ -374,8 +374,9 @@
   .le-tier-row .info .en { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.14em; margin-top: 4px; }
   .le-tier-row .stat { text-align: right; line-height: 1.4; }
   .le-tier-row .stat .l { font-size: 9px; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; display: block; margin-bottom: 4px; font-family: var(--mono); }
-  .le-tier-row .stat .v { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text-2); }
-  @media (max-width: 900px) { .le-tier-row { grid-template-columns: 60px 1fr 80px; padding: 14px 16px; gap: 12px; } .le-tier-row .id { font-size: 32px; } .le-tier-row .info .zh { font-size: 14px; } }
+  .le-tier-row .stat .v { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--muted); display: block; white-space: nowrap; }
+  .le-tier-row .stat .v.amt { font-size: 14px; font-weight: 700; color: var(--text); margin-top: 2px; }
+  @media (max-width: 900px) { .le-tier-row { grid-template-columns: 60px 1fr auto; padding: 14px 16px; gap: 12px; } .le-tier-row .id { font-size: 32px; } .le-tier-row .info .zh { font-size: 14px; } .le-tier-row .stat .v.amt { font-size: 13px; } }
 
   /* ========= Verticals v0.4 heatbar / tablet 3x5 / HOT pulse ========= */
   .le-vert-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
@@ -1336,6 +1337,10 @@ function ETier() {
         <div className="le-tier-ladder le-tier-ladder-solo">
           {items.map((row, i) => {
             const color = TIER_COLORS[i] || "var(--text)";
+            {/* 2026-06-12 stat 拆「件數 / 金額」兩行 · 金額整塊不折斷（原 120px 窄欄把 NT$ 400K+ 折成兩半） */}
+            const statParts = (row.stat || "").split("·").map((s) => s.trim()).filter(Boolean);
+            const statCases = statParts[0] || "";
+            const statAmt = statParts.length > 1 ? statParts.slice(1).join(" · ") : "";
             return (
               <div key={row.id} className={"le-tier-row" + (i === 1 ? " featured" : "")}>
                 <div className="id" style={{ color: color }}>{row.id}</div>
@@ -1345,7 +1350,8 @@ function ETier() {
                 </div>
                 <div className="stat" style={{ color: color }}>
                   <span className="l">{t("tier.typical_label", "typical")}</span>
-                  <span className="v">{row.stat}</span>
+                  <span className="v">{statCases}</span>
+                  {statAmt && <span className="v amt">{statAmt}</span>}
                 </div>
               </div>
             );
