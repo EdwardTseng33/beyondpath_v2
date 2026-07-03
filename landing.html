@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>想用 AI 卻不知道找誰？BeyondPath · 認證制 AI 接案平台</title>
-<meta name="description" content="台灣認證制 AI 接案平台。把模糊需求拆成可驗收的 brief，配對通過認證的 AI 工作者，代收代付、驗收通過後才付款——先用一個小案驗成果，再決定要不要擴大。" />
+<meta name="description" content="台灣認證制 AI 接案平台。把模糊需求拆成可驗收的 brief，配對通過認證的 AI 工作者，分階段付款、做一段看一段——先用一個小案驗成果，再決定要不要擴大。" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,17 +18,18 @@
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="theme-color" content="#0a0a0b" />
 <meta name="author" content="Edward Tsai" />
-<meta name="keywords" content="AI 認證接案, AI 外包, AI 外包驗收, 代收代付 接案, 找 AI 工作者, AI 自動化外包, 認證 AI 工作者, AI 接案平台, AI 接案, BeyondPath" />
+<meta name="keywords" content="AI 認證接案, AI 外包, AI 外包驗收, 分階段付款 接案, 找 AI 工作者, AI 自動化外包, 認證 AI 工作者, AI 接案平台, AI 接案, BeyondPath" />
 
 <!-- Open Graph · FB / LinkedIn / Slack / Discord / WhatsApp -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://beyondpath.tw/landing.html" />
 <meta property="og:title" content="BeyondPath · 想用 AI 卻不知道找誰做？" />
 <meta property="og:description" content="把專案發給已驗證的 AI 工作者。需求拆 brief、配對認證接案者、milestone 驗收——比招人快、比亂找接案者穩。" />
-<meta property="og:image" content="https://beyondpath.tw/assets/og-beyondpath.png" />
+<meta property="og:image" content="https://beyondpath.tw/assets/og-beyondpath-ai-native-workers.png" />
+<meta property="og:image:secure_url" content="https://beyondpath.tw/assets/og-beyondpath-ai-native-workers.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="BeyondPath · 已驗證的 AI 工作者配對平台" />
+<meta property="og:image:alt" content="BeyondPath · AI Native Worker 接案/外包媒合平台" />
 <meta property="og:site_name" content="BeyondPath" />
 <meta property="og:locale" content="zh_TW" />
 
@@ -36,7 +37,8 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="BeyondPath · 想用 AI 卻不知道找誰做？" />
 <meta name="twitter:description" content="把專案發給已驗證的 AI 工作者。需求拆 brief、配對認證接案者、milestone 驗收——比招人快、比亂找接案者穩。" />
-<meta name="twitter:image" content="https://beyondpath.tw/assets/og-beyondpath.png" />
+<meta name="twitter:image" content="https://beyondpath.tw/assets/og-beyondpath-ai-native-workers.png" />
+<meta name="twitter:image:alt" content="BeyondPath · AI Native Worker 接案/外包媒合平台" />
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -53,8 +55,8 @@
       "@id": "https://beyondpath.tw/#organization",
       "name": "BeyondPath",
       "url": "https://beyondpath.tw",
-      "logo": "https://beyondpath.tw/assets/og-beyondpath.png",
-      "description": "台灣 AI 工作配對平台。把模糊需求拆成可驗收 brief，配對有實戰案例的認證接案者，milestone 驗收，省人力省時間少踩坑。",
+      "logo": "https://beyondpath.tw/assets/og-beyondpath-ai-native-workers.png",
+      "description": "台灣認證制 AI 接案平台。把模糊需求拆成可驗收 brief，配對通過認證的 AI 工作者，分階段付款、做一段看一段，省人力省時間少踩坑。",
       "email": "edwardt0303@gmail.com",
       "areaServed": { "@type": "Country", "name": "Taiwan" },
       "founder": { "@type": "Person", "name": "Edward Tsai" }
@@ -64,9 +66,51 @@
       "@id": "https://beyondpath.tw/#website",
       "url": "https://beyondpath.tw",
       "name": "BeyondPath",
-      "description": "台灣 AI 工作配對平台",
+      "description": "台灣認證制 AI 接案平台",
       "publisher": { "@id": "https://beyondpath.tw/#organization" },
       "inLanguage": "zh-Hant"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://beyondpath.tw/#faq",
+      "inLanguage": "zh-Hant",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "我已經有合作的接案者 / 設計師了，為什麼要換 BeyondPath？",
+          "acceptedAnswer": { "@type": "Answer", "text": "你不用換、你可以平行用。BeyondPath 解的是「現有人脈池外、突然要新類型 AI 交付」這個場景——例如你平常合作的設計師不會剪短影音、你又不想為了一支 reels 重新發 30 封 brief。留下需求後，24 小時內先得到適配領域、預算與候選方向；進入短名單後再看 Top 3 配對與理由。首案合不合適你自己判斷、平台不綁約、不收訂閱。" }
+        },
+        {
+          "@type": "Question",
+          "name": "做不出來 / 品質不對怎麼辦？",
+          "acceptedAnswer": { "@type": "Answer", "text": "BeyondPath 不把你丟進全自動黑箱。我們先用 BVP 認證驗過接案者的真本事、再用 AI 拆需求、判斷領域與風險，由人工覆核 milestone、交付標準與候選人。付款採分階段付款（做一段付一段）控管風險，做不好最多損一個里程碑；若對交付成果有爭議，可依服務條款走驗收紀錄流程。" }
+        },
+        {
+          "@type": "Question",
+          "name": "如果 LLM 以後也能媒合人選，BeyondPath 還必要嗎？",
+          "acceptedAnswer": { "@type": "Answer", "text": "如果只是推薦名單，確實會被 LLM 商品化。BeyondPath 要累積的是 LLM 很難直接擁有的交付信任資料：worker 的 AI workflow、真實交付物、驗收紀錄、雙邊 NPS、適合的產業情境與失敗風險。名單只是起點，真正有價值的是「這個人為什麼值得被信任」的證據。" }
+        },
+        {
+          "@type": "Question",
+          "name": "這個比 Fiverr 貴 / 比工作室便宜嗎？怎麼定價？",
+          "acceptedAnswer": { "@type": "Answer", "text": "我們在 Fiverr 跟月費代理之間。成交才收驗證媒合費——依接案者 Tier 按比例向發案方收佣（詳見服務條款），款項分階段付給接案者。你付費買的不是名單，而是驗過的真人才、需求拆解、驗收框架與降低找錯人的判斷成本。" }
+        },
+        {
+          "@type": "Question",
+          "name": "我想接案、要怎麼申請？真的通過率低於 10%？",
+          "acceptedAnswer": { "@type": "Answer", "text": "目前認證走三步：（1）AI 訪談——7 段結構化訪談判你的等級與 6 維能力、（2）實作路考——平台給情境題、你交一份做法、（3）人工覆核——由人實際看過你的證據後決定是否通過。沒過可以隔一段時間補強後重申、平台會回饋哪裡需要補強。同儕互評、客戶模擬案件等更進階的關卡是後續規劃、目前尚未上線。" }
+        },
+        {
+          "@type": "Question",
+          "name": "平台怎麼收費？我需要先付費嗎？",
+          "acceptedAnswer": { "@type": "Answer", "text": "申請認證不用付費，也不需要先承諾排他。接案後依 Tier 收驗證媒合費（成交佣金，詳細費率見服務條款），款項分階段付給你。佣金從結案付款中自動扣除，你不需要事先付任何費用。" }
+        },
+        {
+          "@type": "Question",
+          "name": "如果一段時間沒接到案、平台會幫忙嗎？",
+          "acceptedAnswer": { "@type": "Answer", "text": "會。我們有「反馬太 +10」機制——3 個月內無接案的 worker、配對排序自動 +10 加權；新認證未滿 30 天 +5；首案池保留 20% slot 給新人。前提是你已通過低於 10% 認證——這不是降門檻、是讓已被驗證的人有持續接案機會。同時 AI 教練會主動提示「升 Tier 還差什麼」「哪些領域最近需求高」。" }
+        }
+      ]
     }
   ]
 }
@@ -284,6 +328,86 @@
   .le-poc-row .stat.pending { color: var(--muted); }
   @media (max-width: 900px) { .le-poc { padding: 20px 16px; } .le-poc-row { grid-template-columns: 1fr 100px; gap: 12px; } .le-poc-row .bar { grid-column: 1 / -1; } .le-poc-row .label { font-size: 13px; } .le-poc-row .label .sub { display: block; margin-left: 0; margin-top: 2px; } }
 
+  /* ========= 快速試算 EQuickEstimator (2026-06-16 蘇菲 · 自包含 · 全 .le-est-* 前綴) ========= */
+  .le-est { border-top: 1px solid var(--accent-line); padding: 64px 56px; background:
+            linear-gradient(180deg, rgba(199,232,74,0.035) 0%, rgba(199,232,74,0) 60%), var(--bg); position: relative; }
+  .le-est-inner { max-width: 920px; margin: 0 auto; position: relative; }
+  .le-est-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--accent); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .le-est-eyebrow .dot { display: inline-block; width: 7px; height: 7px; background: var(--accent); border-radius: 99px; }
+  .le-est-title { font-family: var(--zh); font-size: clamp(24px, 3vw, 34px); line-height: 1.3; letter-spacing: -0.02em; font-weight: 800; color: var(--text); margin: 0 0 8px; word-break: keep-all; text-wrap: balance; }
+  .le-est-sub { font-family: var(--zh); font-size: 15px; line-height: 1.7; color: var(--text-2); margin: 0 0 24px; max-width: 40ch; word-break: keep-all; }
+  /* input row */
+  .le-est-box { background: rgba(255,255,255,0.02); border: 1px solid var(--accent-line); border-radius: var(--r-md); padding: 18px; transition: border-color 160ms, box-shadow 160ms; }
+  .le-est-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(199,232,74,0.10); }
+  .le-est-ta { width: 100%; box-sizing: border-box; background: transparent; border: 0; outline: 0; resize: vertical;
+               font-family: var(--zh); font-size: 16px; line-height: 1.6; color: var(--text); min-height: 64px; }
+  .le-est-ta::placeholder { color: var(--muted); }
+  .le-est-row { display: flex; align-items: center; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
+  .le-est-go { background: var(--accent); color: var(--bg); border: 0; border-radius: var(--r-sm); padding: 14px 22px;
+               font-family: var(--mono); font-size: 13px; font-weight: 800; letter-spacing: 0.08em; cursor: pointer;
+               display: inline-flex; align-items: center; gap: 8px; min-height: 48px; transition: opacity 140ms, transform 140ms; }
+  .le-est-go:hover { opacity: 0.92; }
+  .le-est-go:disabled { opacity: 0.5; cursor: not-allowed; }
+  .le-est-hint { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
+  /* loading */
+  .le-est-load { margin-top: 22px; padding: 22px 20px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg-1);
+                 font-family: var(--mono); font-size: 12.5px; color: var(--text-2); display: flex; flex-direction: column; gap: 8px; }
+  .le-est-load .spin { color: var(--accent); display: inline-flex; align-items: center; gap: 10px; }
+  .le-est-dot { width: 8px; height: 8px; border-radius: 99px; background: var(--accent); animation: leEstBlink 1s ease-in-out infinite; }
+  @keyframes leEstBlink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+  .le-est-load .meta { color: var(--muted-2); font-size: 11px; }
+  /* result card (減法 · 4 元素) */
+  .le-est-card { margin-top: 22px; border: 1px solid var(--accent-line); border-radius: var(--r-md); overflow: hidden;
+                 background: linear-gradient(180deg, rgba(199,232,74,0.04) 0%, rgba(199,232,74,0) 40%), var(--bg-1); }
+  .le-est-ind { padding: 18px 22px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .le-est-ind .k { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .le-est-ind .v { font-family: var(--zh); font-size: 18px; font-weight: 700; color: var(--text); }
+  .le-est-ind .scope { font-family: var(--mono); font-size: 11px; color: var(--accent-dim); }
+  .le-est-tasks { padding: 8px 22px 14px; }
+  .le-est-task { display: grid; grid-template-columns: 1fr auto auto; gap: 14px; align-items: center; padding: 11px 0; border-bottom: 1px dashed var(--line-soft); }
+  .le-est-task:last-child { border-bottom: 0; }
+  .le-est-task .nm { font-family: var(--zh); font-size: 14.5px; color: var(--text); line-height: 1.4; word-break: keep-all; }
+  .le-est-task .hr { font-family: var(--mono); font-size: 12px; color: var(--text-2); white-space: nowrap; }
+  .le-est-tier { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--accent-line); color: var(--accent); white-space: nowrap; }
+  .le-est-budget { padding: 20px 22px; border-top: 1px solid var(--line); text-align: center; }
+  .le-est-budget .k { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .le-est-budget .v { font-family: var(--sans); font-weight: 800; font-size: clamp(30px, 5vw, 44px); line-height: 1.1; letter-spacing: -0.03em; color: var(--accent); margin: 6px 0 4px; }
+  .le-est-budget .note { font-family: var(--zh); font-size: 12px; color: var(--muted); }
+  .le-est-foot { padding: 14px 22px; border-top: 1px solid var(--line); background: rgba(0,0,0,0.2);
+                 font-family: var(--mono); font-size: 12px; color: var(--text-2); display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .le-est-foot b { color: var(--accent); font-weight: 700; }
+  /* 2026-06-24 calcifer · 另計費用區（不在工時內的硬成本） */
+  .le-est-extras { padding: 14px 22px; border-top: 1px dashed var(--line); }
+  .le-est-extras-h { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .le-est-extra { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; padding: 5px 0; }
+  .le-est-extra .nm { font-family: var(--zh); font-size: 13.5px; color: var(--text-2); word-break: keep-all; }
+  .le-est-extra .nt { font-family: var(--zh); font-size: 12px; color: var(--muted); text-align: right; }
+  /* card actions */
+  .le-est-acts { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+  .le-est-cta { background: var(--accent); color: var(--bg); border: 0; border-radius: var(--r-sm); padding: 15px 22px;
+                font-family: var(--mono); font-size: 13px; font-weight: 800; letter-spacing: 0.06em; cursor: pointer; text-decoration: none;
+                display: inline-flex; align-items: center; gap: 8px; min-height: 50px; flex: 1; justify-content: center; }
+  .le-est-cta:hover { opacity: 0.92; }
+  .le-est-cta2 { background: transparent; color: var(--text); border: 1px solid var(--text-2); border-radius: var(--r-sm); padding: 15px 22px;
+                 font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; text-decoration: none;
+                 display: inline-flex; align-items: center; gap: 8px; min-height: 50px; justify-content: center; transition: border-color 160ms, background 160ms; }
+  .le-est-cta2:hover { border-color: var(--accent); background: var(--accent-soft); }
+  /* limit / error notice */
+  .le-est-note { margin-top: 22px; padding: 20px 22px; border: 1px solid var(--accent-line); border-radius: var(--r-md); background: rgba(199,232,74,0.03); }
+  .le-est-note .msg { font-family: var(--zh); font-size: 14.5px; line-height: 1.7; color: var(--text); margin: 0 0 14px; word-break: keep-all; }
+  .le-est-note .le-est-acts { margin-top: 0; }
+  /* 375px 窄螢幕 · 單欄堆疊 · 不爆版 */
+  @media (max-width: 560px) {
+    .le-est { padding: 40px 18px; }
+    .le-est-row { gap: 10px; }
+    .le-est-go { width: 100%; justify-content: center; }
+    .le-est-hint { width: 100%; text-align: center; }
+    .le-est-task { grid-template-columns: 1fr auto; gap: 8px 10px; }
+    .le-est-task .nm { grid-column: 1 / -1; }
+    .le-est-acts { flex-direction: column; }
+    .le-est-cta, .le-est-cta2 { width: 100%; flex: none; }
+  }
+
   /* ========= Section common ========= */
   .le-section { padding: 144px 56px; border-top: 1px solid var(--line); position: relative; overflow: hidden; }
   .le-section .inner { max-width: 1320px; margin: 0 auto; position: relative; }
@@ -467,7 +591,7 @@
   .le-finalcta .form button { background: var(--accent); color: var(--bg); border: 0; padding: 0 32px; font-family: var(--mono); font-size: 13px; font-weight: 800; letter-spacing: 0.12em; cursor: pointer; min-height: 56px; }
   .le-finalcta .form .meta { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.16em; margin-top: 12px; display: flex; justify-content: space-between; }
 
-  .le-footer-nav { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-top: 48px; border-top: 1px solid var(--line); }
+  .le-footer-nav { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; padding-top: 48px; border-top: 1px solid var(--line); }
   @media (max-width: 900px) { .le-footer-nav { grid-template-columns: 1fr 1fr; gap: 24px; } }
   .le-footer-nav .brand-col .name { font-family: var(--sans); font-weight: 800; font-size: 28px; margin-bottom: 14px; }
   .le-footer-nav .brand-col .tag { font-family: var(--zh); font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 280px; }
@@ -553,17 +677,30 @@
       if (!window.BPi18n) return;
       var t = window.BPi18n.t;
       var lang = window.BPi18n.getLang();
-      // title + meta
-      var titleEl = document.querySelector('title');
-      if (titleEl) titleEl.textContent = t('meta.title', titleEl.textContent);
-      var descEl = document.querySelector('meta[name="description"]');
-      if (descEl) descEl.setAttribute('content', t('meta.description', descEl.getAttribute('content')));
-      var ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle) ogTitle.setAttribute('content', t('meta.og_title', ogTitle.getAttribute('content')));
-      var ogDesc = document.querySelector('meta[property="og:description"]');
-      if (ogDesc) ogDesc.setAttribute('content', t('meta.og_description', ogDesc.getAttribute('content')));
-      var ogLocale = document.querySelector('meta[property="og:locale"]');
-      if (ogLocale) ogLocale.setAttribute('content', lang === 'en' ? 'en_US' : 'zh_TW');
+      // SEO 守門 (2026-06-27): head meta (title/description/og/og:locale) 只在
+      // 「使用者明確選了語言」時才覆寫 — 明確 = URL ?lang= 有值, 或 localStorage 有存。
+      // 只從 navigator 推斷出的語言 (例: Googlebot 用 en locale 爬) 一律維持靜態中文 head,
+      // 避免乾淨的中文 <title>/description/og 被英文 dict 覆蓋掉 (SEO 索引被污染)。
+      // body [data-i18n] 的翻譯不受此守門影響, 照常依 getLang() 切換。
+      var explicitLang = false;
+      try {
+        var _qp = new URLSearchParams(window.location.search).get('lang');
+        if (_qp) { explicitLang = true; }
+        else if (window.localStorage.getItem('beyondpath_lang')) { explicitLang = true; }
+      } catch (e) { explicitLang = false; }
+      if (explicitLang) {
+        // title + meta (僅在明確選語時覆寫)
+        var titleEl = document.querySelector('title');
+        if (titleEl) titleEl.textContent = t('meta.title', titleEl.textContent);
+        var descEl = document.querySelector('meta[name="description"]');
+        if (descEl) descEl.setAttribute('content', t('meta.description', descEl.getAttribute('content')));
+        var ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle) ogTitle.setAttribute('content', t('meta.og_title', ogTitle.getAttribute('content')));
+        var ogDesc = document.querySelector('meta[property="og:description"]');
+        if (ogDesc) ogDesc.setAttribute('content', t('meta.og_description', ogDesc.getAttribute('content')));
+        var ogLocale = document.querySelector('meta[property="og:locale"]');
+        if (ogLocale) ogLocale.setAttribute('content', lang === 'en' ? 'en_US' : 'zh_TW');
+      }
       // text content
       var nodes = document.querySelectorAll('[data-i18n]');
       for (var i = 0; i < nodes.length; i++) {
@@ -595,12 +732,16 @@
 
 <!-- i18n bundle (must load BEFORE React+Babel) · Phase 1 Step 1 -->
 <script src="components/i18n/index.js?v=2026-06-10-pay"></script>
-<script src="components/i18n/dict.zh.js?v=2026-06-12-mail"></script>
-<script src="components/i18n/dict.en.js?v=2026-06-12-mail"></script>
+<script src="components/i18n/dict.zh.js?v=2026-06-17-tryux"></script>
+<script src="components/i18n/dict.en.js?v=2026-06-17-tryux"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 <script type="text/babel" data-presets="env,react" src="components/i18n/LangSwitcher.jsx?v=2026-06-10-pay"></script>
+
+<!-- 2026-06-16 蘇菲 · 首頁「快速試算」需要 window.bpAiParse → 載 Supabase client（同 app.html 用法） -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="components/supabase.js?v=2026-06-17-hidefx"></script>
 
 <script type="text/babel" data-presets="env,react">
 const { useState, useEffect, useRef, useMemo } = React;
@@ -1139,47 +1280,6 @@ const ENGINES_VISUAL = [
   { m: null,           metric: "+10"  },
   { m: null,           metric: "M+1"  }
 ];
-// v0.4.8 wave 5 #9 · Case Study section · v0.5.2 Step 2 i18n · CASE_STUDIES 改 dict (cases.items)
-function ECaseStudies() {
-  useLangRerender();
-  const items = t("cases.items", []);
-  return (
-    <section className="le-section" id="cases">
-      <div className="inner">
-        <div className="le-cap le-acc" style={{ marginBottom: 24 }}>{t("cases.eyebrow", "◆ CASE STUDIES · 真實案件實錄")}</div>
-        <h2 className="le-h2">{t("cases.headline_part1", "看 BeyondPath 怎麼")}<span className="le-acc">{t("cases.headline_em", "真的在跑")}</span>{t("cases.headline_part2", "。")}</h2>
-        <p className="le-zh" style={{ fontSize: 18, color: "var(--text-2)", lineHeight: 1.6, maxWidth: 880, marginTop: -32, marginBottom: 32 }}>
-          {t("cases.intro_before", "3 個 case 為 BeyondPath 早期合作案例樣本（DTC 領域）——展示 brief → 配對 → 交付 → 驗收紀錄的真實樣態。")}<span style={{ color: "var(--muted)", fontSize: 14 }}>{t("cases.intro_paren_before", "（其他 14 領域案例累積中 · 想看你領域範例請")}<a href="app.html?role=client&step=0" style={{ color: "var(--accent)" }}>{t("cases.intro_paren_link", "填 brief")}</a>{t("cases.intro_paren_after", "、實際配對方案 24h 內 email）")}</span>
-        </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
-          {items.map((c, i) => (
-            <article key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--line)", padding: "20px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", borderBottom: "1px dashed var(--line-soft)", paddingBottom: 12 }}>
-                <div>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.01em" }}>{c.brand}</div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>{c.sector}</div>
-                </div>
-                <span style={{ fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em", color: "var(--accent)", padding: "3px 6px", border: "1px solid var(--accent-line)", borderRadius: 2, whiteSpace: "nowrap" }}>{c.badge}</span>
-              </div>
-              <div className="le-zh" style={{ fontSize: 13, lineHeight: 1.7, color: "var(--text-2)" }}>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_brief", "① BRIEF · 需求")}</b>{c.brief}</div>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_match", "② MATCH · 配對")}</b>{c.matched}</div>
-                <div style={{ marginBottom: 10 }}><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_deliver", "③ DELIVER · 交付")}</b>{c.delivered}</div>
-                <div><b style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.12em", display: "block", marginBottom: 4 }}>{t("cases.label_accept", "④ ACCEPT · 驗收")}</b>{c.proof}</div>
-              </div>
-              <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px dashed var(--line-soft)", fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", color: "var(--accent-dim)", textTransform: "uppercase" }}>
-                {t("cases.label_result", "⑤ RESULT · ")}{c.state}
-              </div>
-            </article>
-          ))}
-        </div>
-        <div style={{ marginTop: 28, textAlign: "center", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", color: "var(--muted)", textTransform: "uppercase" }}>
-          {t("cases.footer_before", "▸ 想看更多？")}<a href="mailto:edwardt0303@gmail.com?subject=BeyondPath%20%E6%A1%88%E4%BB%B6%E5%B7%A5%E4%BD%9C%E6%A8%A3%E5%93%81" style={{ color: "var(--accent)", textDecoration: "none", borderBottom: "1px solid var(--accent-line)" }}>{t("cases.footer_link", "寫信給 BeyondPath 拿工作樣品包")}</a>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // v0.4.7 wave 4 #3 · 過場 epigraph · 女巫提案 · 破前段 monotone（problem→engines 之間呼吸口）
 function EEpigraph() {
@@ -1640,7 +1740,7 @@ function EFinalCta() {
             </a>
             <div className="meta" style={{ marginTop: 10 }}>
               <span>{t("finalcta.meta_left", "OPEN")}</span>
-              <span className="le-acc">{t("finalcta.meta_right", "接案者需通過認證 · 發案方直接開案 · 代收代付正式上線")}</span>
+              <span className="le-acc">{t("finalcta.meta_right", "接案者需通過認證 · 發案方直接開案 · 分階段付款正式上線")}</span>
             </div>
           </div>
         </div>
@@ -1654,7 +1754,6 @@ function EFinalCta() {
           </div>
           {[
             [t("footer.col_act", "立即行動"), [[t("footer.link_client_apply", "客戶提案"), "app.html?role=client&step=0"], [t("footer.link_expert_apply", "接案者申請"), "app.html?role=worker&onboarding=1"], [t("footer.link_contact_email", "寫信 edwardt0303@gmail.com"), "mailto:edwardt0303@gmail.com"]]],
-            [t("footer.col_about", "關於我們"), [[t("footer.link_what_is", "我們是誰"), "about.html"], [t("footer.link_cases", "合作案例"), "#cases"], [t("footer.link_how_we_match", "為什麼 BeyondPath"), "#moat"]]],
             [t("footer.col_legal", "法律與信任"), [[t("footer.link_terms", "服務條款"), "/legal/terms.html"], [t("footer.link_privacy", "隱私政策"), "/legal/privacy.html"], [t("footer.link_acceptance", "驗收與爭議流程"), "#trust"], [t("footer.link_contract_verify", "查驗合約真實性"), "/contract-verify.html"]]]
           ].map(([h, items]) => (
             <div key={h}>
@@ -1677,6 +1776,7 @@ function EFinalCta() {
           <div className="right">
             <span className="le-pulse" style={{ display: "inline-block", width: 6, height: 6, background: "var(--accent)", borderRadius: 99 }}></span>
             {t("footer.version_status", "TAIWAN · OPEN")}
+            <a href="updates.html" title="更新內容" style={{ color: "var(--accent)", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.06em", textDecoration: "none", borderBottom: "1px solid var(--accent-line)", paddingBottom: 1, marginLeft: 2 }}>v1.5.0</a>
           </div>
         </div>
         {t("footer.eu_caveat", "") && (
@@ -1851,6 +1951,234 @@ function EWorkerDecisionBanner() {
   );
 }
 
+// ====================================================================
+// EQuickEstimator · 首頁「案件發包快速試算」(2026-06-16 蘇菲 · 卡西法 spec)
+// 自包含 component（獨立 state / 獨立 fetch）· 不碰 EHero render 中段、無 var hoisting 連鎖風險
+// 呼叫現成 window.bpAiParse.parseBrief()（components/supabase.js）· 後端額度 匿名2/登入5
+// 減法結果卡 = 4 元素：① 產業判斷 ② 任務清單 3-4 條 ③ 預算區間 ④ footer 總工時+Tier
+// 產品紅線：鎖死「拆解 + 估區間」、不滑進「省多少%」對照（依賴未到位的報價規則）
+// ====================================================================
+const BP_TRYIT_SAMPLE = "我想做一個賣手沖咖啡豆的品牌官網，要能線上下單";
+function EQuickEstimator() {
+  useLangRerender();
+  const [brief, setBrief] = useState("");
+  const [phase, setPhase] = useState("idle"); // idle | loading | done | limit | error
+  const [result, setResult] = useState(null);
+  const [limitScope, setLimitScope] = useState("anon"); // anon | account
+  const [errMsg, setErrMsg] = useState("");
+
+  const fmtNT = (n) => {
+    if (n == null || isNaN(n)) return "—";
+    return "NT$" + Math.round(n).toLocaleString("en-US");
+  };
+  // 2026-06-24 calcifer · 工時改「工作天」（÷8、取最近 0.5）· Edward「總不能一天 24h 都算工時」
+  const toDays = (h) => {
+    if (h == null || isNaN(h)) return "—";
+    const d = Math.max(0.5, Math.round((Number(h) / 8) * 2) / 2);
+    return (Number.isInteger(d) ? d : d.toFixed(1)) + " 天";
+  };
+
+  async function runEstimate() {
+    const typed = (brief || "").trim();
+    const text = typed || BP_TRYIT_SAMPLE;
+    // 只在「用戶自己打的」太短時擋；空手點按鈕＝用範例句 fallback、直接放行（範例句保證 ≥20）
+    if (typed && typed.length < 20) {
+      setErrMsg(t("est.err_too_short", "需求描述太短了，多寫幾句（至少 20 字）我才拆得準。"));
+      setPhase("error");
+      return;
+    }
+    if (!window.bpAiParse) {
+      setErrMsg(t("est.err_not_loaded", "AI 服務還在載入，請稍等一下重整頁面再試。"));
+      setPhase("error");
+      return;
+    }
+    setPhase("loading");
+    setResult(null);
+    setErrMsg("");
+    try {
+      const { data, error } = await window.bpAiParse.parseBrief({ brief: text });
+      if (error) {
+        const det = error.details || {};
+        if (error.status === 429) {
+          if (det.error === "daily-limit-exceeded") {
+            setLimitScope(det.scope === "account" ? "account" : "anon");
+            setPhase("limit");
+          } else {
+            setErrMsg(t("est.err_burst", "試算太頻繁了，請稍候 1 分鐘再試。"));
+            setPhase("error");
+          }
+          return;
+        }
+        setErrMsg((error.message || t("est.err_unknown", "未知錯誤")));
+        setPhase("error");
+        return;
+      }
+      if (!data || !data.ok || !data.parsed) {
+        setErrMsg(t("est.err_parse", "AI 拆解失敗，請換個說法再試一次。"));
+        setPhase("error");
+        return;
+      }
+      setResult(data.parsed);
+      setPhase("done");
+    } catch (e) {
+      setErrMsg(e?.message || t("est.err_network", "網路錯誤、請重試"));
+      setPhase("error");
+    }
+  }
+
+  function reset() {
+    setBrief("");
+    setResult(null);
+    setErrMsg("");
+    setPhase("idle");
+  }
+
+  // 主 CTA：把 brief 存 sessionStorage、導去正式發案流程預填
+  function goFormalize() {
+    const text = (brief || "").trim() || BP_TRYIT_SAMPLE;
+    try { sessionStorage.setItem("bp_tryit_brief", text); } catch (e) {}
+    window.location.href = "app.html?role=client&prefill=1";
+  }
+
+  // 2026-06-24 calcifer · 顯示全部 tasks（原本 slice(0,4) 只秀 4 項、藏掉一半、加總對不上總工時）· Edward 要像專業報價單
+  const tasks = (result && Array.isArray(result.tasks)) ? result.tasks : [];
+  const extras = (result && Array.isArray(result.extras)) ? result.extras : [];
+
+  return (
+    <section className="le-est" id="quick-estimator">
+      <div className="le-est-inner">
+        <div className="le-est-eyebrow">
+          <span className="dot"></span>
+          <span>{t("est.eyebrow", "// 快速試算 · AI 拆需求 · 30 秒看區間")}</span>
+        </div>
+        <h2 className="le-est-title le-zh">{t("est.title", "先說一句你想做什麼，AI 幫你拆成可估的案子")}</h2>
+        <p className="le-est-sub le-zh">{t("est.sub", "不用註冊、不用想清楚規格。打一句話，我們把它拆成任務、估出工時跟預算區間。")}</p>
+
+        <div className="le-est-box">
+          <textarea
+            className="le-est-ta le-zh"
+            value={brief}
+            onChange={(e) => setBrief(e.target.value)}
+            placeholder={BP_TRYIT_SAMPLE}
+            disabled={phase === "loading"}
+          />
+        </div>
+        <div className="le-est-row">
+          <button className="le-est-go" onClick={runEstimate} disabled={phase === "loading"}>
+            {phase === "loading" ? t("est.btn_running", "拆解中…") : t("est.btn_go", "先試算 · 再決定 →")}
+          </button>
+          <span className="le-est-hint le-zh">{t("est.hint", "免費 · 不用註冊 · 範例句可直接試")}</span>
+          {/* 2026-06-17 calcifer · 不會寫？套範本 — 同 app2 Step1、灌入填空骨架接住描述不出需求的中小企業主 */}
+          <button
+            type="button"
+            className="le-zh"
+            onClick={() => setBrief(t("client.brief_tpl_skeleton", "我是（產業／品牌）＿＿＿。我想做＿＿＿，要能＿＿＿（最重要的功能）。預算大概＿＿＿，希望＿＿＿前完成。"))}
+            disabled={phase === "loading"}
+            style={{ background: "none", border: 0, padding: 0, color: "var(--accent)", cursor: "pointer", fontSize: 12, textDecoration: "underline", textUnderlineOffset: 2 }}
+          >
+            {t("client.brief_tpl_link", "不會寫？套範本")}
+          </button>
+        </div>
+
+        {phase === "loading" && (
+          <div className="le-est-load">
+            <span className="spin"><span className="le-est-dot"></span>{t("est.loading", "AI 正在讀你的需求…")}</span>
+            <span className="meta">{t("est.loading_meta", "AI · 拆解任務 + 估工時 · 預估 5-15 秒")}</span>
+          </div>
+        )}
+
+        {phase === "done" && result && (
+          <>
+            <div className="le-est-card bp-rise">
+              {/* ① 產業判斷一行 */}
+              <div className="le-est-ind">
+                <span className="k">{t("est.r_industry", "AI 判斷")}</span>
+                <span className="v le-zh">{(result.industry && result.industry.zh) || "—"}</span>
+                {result.vertical && <span className="scope">{result.vertical}</span>}
+              </div>
+              {/* ② 任務清單 3-4 條 */}
+              <div className="le-est-tasks">
+                {tasks.map((tk, i) => (
+                  <div className="le-est-task" key={tk.id || i}>
+                    <span className="nm le-zh">{tk.zh || tk.en || "—"}</span>
+                    <span className="hr">{toDays(tk.hours)}</span>
+                    <span className="le-est-tier">Tier {tk.tier}</span>
+                  </div>
+                ))}
+              </div>
+              {/* ③ 預算區間（最大字） */}
+              <div className="le-est-budget">
+                <div className="k">{t("est.r_budget", "預估報價區間")}</div>
+                <div className="v">{fmtNT(result.budget && result.budget.lo)} – {fmtNT(result.budget && result.budget.hi)}</div>
+                <div className="note le-zh">{t("est.r_budget_note", "這是依需求拆解的初步報價、實際依範圍與接案者微調。")}</div>
+              </div>
+              {/* ③.5 另計費用（2026-06-24 calcifer · 不在工時內的硬成本、像報價單的「另計」欄）*/}
+              {extras.length > 0 && (
+                <div className="le-est-extras">
+                  <div className="le-est-extras-h le-zh">{t("est.r_extras", "另計費用（不在工時內）")}</div>
+                  {extras.map((ex, i) => (
+                    <div className="le-est-extra" key={i}>
+                      <span className="nm le-zh">{ex.name || "—"}</span>
+                      <span className="nt le-zh">{ex.note || ""}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {/* ④ footer：總工期（工作天）+ 建議 Tier */}
+              <div className="le-est-foot">
+                <span>{t("est.r_total_days", "預估工期")} <b>{toDays(result.totalHours)}</b></span>
+                <span>{t("est.r_rec_tier", "建議")} <b>Tier {result.recommendedTier}</b></span>
+              </div>
+            </div>
+            <div className="le-est-acts">
+              <a className="le-est-cta" onClick={goFormalize} role="button" tabIndex={0}
+                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") goFormalize(); }}>
+                {t("est.cta_formalize", "正式發出這個案子 →")}
+              </a>
+              <button className="le-est-cta2" onClick={reset}>{t("est.cta_retry", "再試一個別的")}</button>
+            </div>
+          </>
+        )}
+
+        {phase === "limit" && (
+          <div className="le-est-note">
+            {limitScope === "account" ? (
+              <>
+                <p className="msg le-zh">{t("est.limit_account", "今日試算已達上限（每天 5 次）。你可以直接把需求發出來、或明天再試。")}</p>
+                <div className="le-est-acts">
+                  <a className="le-est-cta" onClick={goFormalize} role="button" tabIndex={0}
+                     onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") goFormalize(); }}>{t("est.limit_direct", "直接發案 →")}</a>
+                  <button className="le-est-cta2" onClick={reset}>{t("est.limit_tomorrow", "明天再試")}</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="msg le-zh">{t("est.limit_anon", "今天免費試算用完了。登入後每天可以試 5 次。")}</p>
+                <div className="le-est-acts">
+                  <a className="le-est-cta2" href="sign-in.html">{t("est.limit_signin", "登入 →")}</a>
+                  <a className="le-est-cta" onClick={goFormalize} role="button" tabIndex={0}
+                     onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") goFormalize(); }}>{t("est.limit_direct2", "直接把需求發出來 →")}</a>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {phase === "error" && (
+          <div className="le-est-note">
+            <p className="msg le-zh">{errMsg || t("est.err_unknown", "出了點狀況，請再試一次。")}</p>
+            <div className="le-est-acts">
+              <button className="le-est-cta" onClick={runEstimate}>{t("est.err_retry", "再試一次 →")}</button>
+              <a className="le-est-cta2" onClick={goFormalize} role="button" tabIndex={0}
+                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") goFormalize(); }}>{t("est.err_direct", "直接發案")}</a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 // Root · v0.4.7 (2026-05-10) wave 4 · Trust 前移到 Engines 後（霍爾 + 蘇菲三方共識最大 ROI · mid-funnel +15-25%）
 function LandingRoot() {
   return (
@@ -1858,13 +2186,13 @@ function LandingRoot() {
       <EWorkerDecisionBanner />
       <ENav />
       <EHero />
+      <EQuickEstimator />
       <EUseCases />
       <EStory />
       <EProblem />
       <EEnginesMerged />
       <ETrust3 />
       <EIrreplaceable />
-      <ECaseStudies />
       <ETier />
       <EVerticals />
       <EServicesPricing />
